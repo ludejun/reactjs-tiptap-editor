@@ -182,10 +182,11 @@ export function ImageCropper({
   return (
     <>
       <Button
-        className='richtext-mt-1 richtext-w-full'
+        className='richtext-h-auto richtext-p-0 richtext-text-xs richtext-font-normal'
         disabled={disabled}
         onClick={handleClick}
         size='sm'
+        variant='link'
       >
         {t('editor.image.dialog.tab.uploadCrop')}
       </Button>

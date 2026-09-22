@@ -3,12 +3,29 @@ import { clamp, isNumber, throttle } from 'lodash-es';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { IMAGE_MAX_SIZE, IMAGE_MIN_SIZE, IMAGE_THROTTLE_WAIT_TIME } from '@/constants';
+import { parseRotation } from '@/extensions/Image/Image';
+import { useLocale } from '@/locales';
 
 import type { NodeViewProps } from '@tiptap/react';
 
 interface Size {
   width: number;
   height: number;
+}
+
+/** Marks the caption input so the node view can hand its events back to it. */
+export const CAPTION_CLASS = 'image-view__caption';
+
+/** True when the node sits inside the caption input rather than the image. */
+export function isInsideImageCaption(node: EventTarget | Node | null): boolean {
+  const element = node instanceof Element ? node : ((node as Node | null)?.parentElement ?? null);
+
+  return !!element?.closest(`.${CAPTION_CLASS}`);
+}
+
+/** True when the event came from the caption input rather than the image. */
+export function isImageCaptionEvent({ event }: { event: Event }): boolean {
+  return isInsideImageCaption(event.target);
 }
 
 const ResizeDirection = {
@@ -20,11 +37,14 @@ const ResizeDirection = {
 
 function ImageView(props: NodeViewProps) {
   const { updateAttributes } = props;
+  const { t } = useLocale();
 
   const [maxSize, setMaxSize] = useState<Size>({
     width: IMAGE_MAX_SIZE,
     height: IMAGE_MAX_SIZE,
   });
+
+  const [naturalSize, setNaturalSize] = useState<Size>({ width: 0, height: 0 });
 
   const [originalSize, setOriginalSize] = useState({
     width: 0,
@@ -47,10 +67,55 @@ function ImageView(props: NodeViewProps) {
     direction: string;
   } | null>(null);
 
-  const { align, inline } = props?.node?.attrs;
+  const { align, inline, caption } = props?.node?.attrs;
   const isBlockNode = props?.node?.type?.name === 'imageBlock';
   const isInline = !isBlockNode && (inline === true || inline === 'true');
   const inlineFloat = isInline && (align === 'left' || align === 'right');
+
+  const rotate = parseRotation(props?.node?.attrs?.rotate);
+  const quarterTurn = rotate === 90 || rotate === 270;
+  const hasCaption = isBlockNode && typeof caption === 'string';
+
+  // Focus the caption only when one is actually added, not every time a
+  // document that already has captions renders.
+  const [captionFocusToken, setCaptionFocusToken] = useState(0);
+  const hadCaption = useRef(hasCaption);
+
+  useEffect(() => {
+    if (hasCaption && !hadCaption.current) {
+      setCaptionFocusToken((token) => token + 1);
+    }
+
+    hadCaption.current = hasCaption;
+  }, [hasCaption]);
+
+  /**
+   * A quarter turn keeps the image's layout box but swaps its visual footprint,
+   * so reserve the swapped box and centre the rotated image inside it.
+   * Percentage widths have no pixel size to swap, so they just rotate.
+   */
+  const rotatedBox = useMemo(() => {
+    if (!quarterTurn || !naturalSize.width || !naturalSize.height) {
+      return null;
+    }
+
+    const attrWidth = props?.node?.attrs?.width;
+    const widthPx =
+      typeof attrWidth === 'number'
+        ? attrWidth
+        : typeof attrWidth === 'string' && attrWidth.endsWith('px')
+          ? Number.parseFloat(attrWidth)
+          : null;
+
+    if (attrWidth && widthPx === null) {
+      return null;
+    }
+
+    const displayWidth = widthPx ?? naturalSize.width;
+    const displayHeight = displayWidth * (naturalSize.height / naturalSize.width);
+
+    return { width: displayHeight, height: displayWidth };
+  }, [quarterTurn, naturalSize, props?.node?.attrs?.width]);
 
   const imgAttrs = useMemo(() => {
     const { src, alt, width: w, height: h, flipX, flipY } = props?.node?.attrs;
@@ -59,11 +124,18 @@ function ImageView(props: NodeViewProps) {
     const height = isNumber(h) ? `${h}px` : h;
     const transformStyles: string[] = [];
 
+    if (rotatedBox) transformStyles.push('translate(-50%, -50%)');
     if (flipX) transformStyles.push('rotateX(180deg)');
     if (flipY) transformStyles.push('rotateY(180deg)');
+    if (rotate) transformStyles.push(`rotate(${rotate}deg)`);
     const transform = transformStyles.join(' ');
 
     const floatStyle = inlineFloat ? { float: align } : {};
+    // `.ProseMirror img { max-width: 100% }` would re-clamp the image to the
+    // swapped (narrower) box and leave it floating in a half-empty frame.
+    const rotatedStyle: React.CSSProperties = rotatedBox
+      ? { position: 'absolute', left: '50%', top: '50%', maxWidth: 'none', maxHeight: 'none' }
+      : {};
 
     return {
       src: src || undefined,
@@ -73,9 +145,10 @@ function ImageView(props: NodeViewProps) {
         height: height || undefined,
         transform: transform || 'none',
         ...floatStyle,
+        ...rotatedStyle,
       },
     };
-  }, [props?.node?.attrs, inlineFloat, align]);
+  }, [props?.node?.attrs, inlineFloat, align, rotate, rotatedBox]);
 
   const imageMaxStyle = useMemo(() => {
     const {
@@ -89,6 +162,10 @@ function ImageView(props: NodeViewProps) {
     setOriginalSize({
       width: e.currentTarget.width,
       height: e.currentTarget.height,
+    });
+    setNaturalSize({
+      width: e.currentTarget.naturalWidth,
+      height: e.currentTarget.naturalHeight,
     });
   }
 
@@ -238,10 +315,10 @@ function ImageView(props: NodeViewProps) {
       <span
         data-drag-handle
         draggable='true'
-        style={imageMaxStyle}
         className={`image-view__body ${props?.selected ? 'image-view__body--focused' : ''} ${
           resizing ? 'image-view__body--resizing' : ''
         }`}
+        style={rotatedBox ? { width: rotatedBox.width, height: rotatedBox.height } : imageMaxStyle}
       >
         <img
           alt={imgAttrs.alt}
@@ -270,7 +347,120 @@ function ImageView(props: NodeViewProps) {
           </span>
         )}
       </span>
+
+      {hasCaption ? (
+        <ImageCaption
+          align={align}
+          editable={props?.editor.view.editable}
+          focusToken={captionFocusToken}
+          onCommit={(value) => updateAttributes({ caption: value })}
+          placeholder={t('editor.image.caption.placeholder')}
+          value={caption}
+        />
+      ) : null}
     </NodeViewWrapper>
+  );
+}
+
+interface ImageCaptionProps {
+  align?: string;
+  editable: boolean;
+  /** Bumped by the node view each time a caption is added. */
+  focusToken: number;
+  onCommit: (value: string) => void;
+  placeholder: string;
+  value: string;
+}
+
+/**
+ * The caption lives in the node's `caption` attribute rather than in the
+ * document, so a plain input edits it.
+ *
+ * The text is held locally and only written back on blur or Enter. Dispatching
+ * a transaction per keystroke pulled focus back into the editor after the first
+ * character and tore down any in-flight IME composition, so Chinese (and every
+ * other composed script) could not be typed at all.
+ *
+ * `CAPTION_CLASS` is what `stopEvent` on the node view matches, which is what
+ * keeps ProseMirror from turning a click here into a selection of the image —
+ * with the image node selected, the next keystroke replaced it.
+ */
+function ImageCaption({
+  align,
+  editable,
+  focusToken,
+  onCommit,
+  placeholder,
+  value,
+}: ImageCaptionProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [draft, setDraft] = useState(value);
+
+  // Follow changes made elsewhere (undo, collaboration, the toolbar toggle).
+  useEffect(() => {
+    setDraft(value);
+  }, [value]);
+
+  // Put the cursor after the prefilled "Figure n:" so the user types on from it.
+  useEffect(() => {
+    if (!focusToken || !editable) {
+      return;
+    }
+
+    const input = inputRef.current;
+
+    if (!input) {
+      return;
+    }
+
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+    // Only react to a new token; `value` changes on every keystroke.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusToken, editable]);
+
+  if (!editable) {
+    return value ? (
+      <span className={CAPTION_CLASS} style={{ textAlign: align as never }}>
+        {value}
+      </span>
+    ) : null;
+  }
+
+  const commit = (next: string) => {
+    if (next !== value) {
+      onCommit(next);
+    }
+  };
+
+  return (
+    <input
+      className={CAPTION_CLASS}
+      contentEditable={false}
+      onBlur={() => commit(draft)}
+      onChange={(event) => setDraft(event.target.value)}
+      onKeyDown={(event) => {
+        // Never let the editor's keymap see these keys.
+        event.stopPropagation();
+
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          commit(event.currentTarget.value);
+          inputRef.current?.blur();
+        }
+
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          setDraft(value);
+          inputRef.current?.blur();
+        }
+      }}
+      onMouseDown={(event) => event.stopPropagation()}
+      placeholder={placeholder}
+      ref={inputRef}
+      style={{ textAlign: align as never }}
+      value={draft}
+    />
   );
 }
 

@@ -3,7 +3,10 @@ import TiptapImage from '@tiptap/extension-image';
 import { NodeSelection, type EditorState } from '@tiptap/pm/state';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 
-import ImageView from '@/extensions/Image/components/ImageView';
+import ImageView, {
+  isImageCaptionEvent,
+  isInsideImageCaption,
+} from '@/extensions/Image/components/ImageView';
 
 import type { ButtonViewParams, GeneralOptions, JSONContent } from '@/types';
 
@@ -15,8 +18,8 @@ export interface SetImageAttrsOptions {
   src?: string;
   /** The alternative text for the image. */
   alt?: string;
-  /** The caption of the image. */
-  caption?: string;
+  /** The caption of the image; `null` removes it. */
+  caption?: string | null;
   /** The width of the image. */
   width?: number | string | null;
   /** The alignment of the image. */
@@ -27,15 +30,39 @@ export interface SetImageAttrsOptions {
   flipX?: boolean;
   /** image FlipY */
   flipY?: boolean;
+  /** Clockwise rotation in degrees, one of 0 / 90 / 180 / 270. */
+  rotate?: number;
 }
 
 export const DEFAULT_OPTIONS = {
-  acceptMimes: ['image/jpeg', 'image/gif', 'image/png', 'image/jpg'],
-  maxSize: 1024 * 1024 * 5, // 5MB
+  /**
+   * Everything a browser can render in an `<img>`. Override with
+   * `Image.configure({ acceptMimes })` to narrow or widen it.
+   *
+   * SVG is included because it is a mainstream image format, but note that it
+   * can carry script: it is inert inside an `<img>`, yet a host that serves
+   * uploads as top-level documents from its own origin should sanitise them.
+   */
+  acceptMimes: [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+    'image/avif',
+    'image/bmp',
+    'image/tiff',
+    'image/heic',
+    'image/heif',
+    'image/svg+xml',
+  ],
+  maxSize: 1024 * 1024 * 5, // 5MB, override with `Image.configure({ maxSize })`
   multiple: true,
   resourceImage: 'both' as const,
   defaultInline: false,
-  enableAlt: true,
+  // Off by default: mature editors do not ask for alt text while inserting.
+  // Turn it on with `Image.configure({ enableAlt: true })`.
+  enableAlt: false,
 };
 
 function parseBooleanHTMLAttribute(value: string | boolean | null | undefined): boolean | null {
@@ -82,13 +109,48 @@ function getImageAttrsFromElement(element: HTMLElement, inlineFallback = false) 
   return {
     src: img.getAttribute('src'),
     alt: img.getAttribute('alt'),
-    caption: img.getAttribute('caption'),
+    // The caption is rendered as its own element; the `caption` attribute is the
+    // pre-1.0.47 form and is still read so older documents keep theirs.
+    caption: element.querySelector('.image-caption')?.textContent ?? img.getAttribute('caption'),
     width: parseImageWidth(width),
     align: img.getAttribute('align') || element.style.textAlign || null,
     inline,
     flipX: flipX === 'true',
     flipY: flipY === 'true',
+    rotate: parseRotation(img.getAttribute('data-rotate')),
   };
+}
+
+/**
+ * Reads `data-rotate` from the element or the image inside it.
+ *
+ * Attribute-level `parseHTML` is handed whatever element the parse rule matched
+ * — the `div.image` wrapper as well as a bare `img` — and tiptap only falls back
+ * to the rule's own `getAttrs` when this returns null, so an absent attribute
+ * must not come back as 0.
+ */
+function readRotateAttribute(element: HTMLElement): number | null {
+  const own = element.getAttribute('data-rotate');
+
+  if (own !== null) {
+    return parseRotation(own);
+  }
+
+  const nested = element.querySelector?.('img')?.getAttribute('data-rotate');
+
+  return nested === null || nested === undefined ? null : parseRotation(nested);
+}
+
+/** Normalises any stored value to one of 0 / 90 / 180 / 270. */
+export function parseRotation(value: string | number | null | undefined): number {
+  const degrees = typeof value === 'number' ? value : Number.parseInt(value ?? '', 10);
+
+  if (!Number.isFinite(degrees)) {
+    return 0;
+  }
+
+  const normalized = (((Math.round(degrees / 90) * 90) % 360) + 360) % 360;
+  return normalized;
 }
 
 /**
@@ -116,10 +178,14 @@ function isEmptyParagraphNextToLegacyBlockImage(element: HTMLElement): boolean {
   );
 }
 
-function getTransformStyle(flipX: boolean, flipY: boolean): string {
-  return flipX || flipY
-    ? `transform: rotateX(${flipX ? '180' : '0'}deg) rotateY(${flipY ? '180' : '0'}deg);`
-    : '';
+function getTransformStyle(flipX: boolean, flipY: boolean, rotate: number = 0): string {
+  const transforms: string[] = [];
+
+  if (flipX) transforms.push('rotateX(180deg)');
+  if (flipY) transforms.push('rotateY(180deg)');
+  if (rotate) transforms.push(`rotate(${rotate}deg)`);
+
+  return transforms.length ? `transform: ${transforms.join(' ')};` : '';
 }
 
 function getActiveImageNodeName(state: EditorState, fallbackName: string): string {
@@ -133,7 +199,12 @@ function getActiveImageNodeName(state: EditorState, fallbackName: string): strin
   return fallbackName;
 }
 
-function getImageInsertNodeName(state: EditorState, inline: boolean, fallbackName: string): string {
+/** Which node an inserted image becomes: the block node unless asked for inline. */
+export function getImageInsertNodeName(
+  state: EditorState,
+  inline: boolean,
+  fallbackName: string
+): string {
   if (!inline && state.schema.nodes[IMAGE_BLOCK_NAME]) {
     return IMAGE_BLOCK_NAME;
   }
@@ -270,6 +341,24 @@ export const ImageBlock = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
           };
         },
       },
+      rotate: {
+        default: 0,
+        parseHTML: (element) => readRotateAttribute(element as HTMLElement),
+        renderHTML: (attributes) => {
+          const rotate = parseRotation(attributes.rotate);
+          return {
+            'data-rotate': rotate ? String(rotate) : null,
+          };
+        },
+      },
+      caption: {
+        default: null,
+        parseHTML: (element) =>
+          element.closest('.image')?.querySelector('.image-caption')?.textContent ??
+          element.getAttribute('caption'),
+        // Rendered as a sibling element by renderHTML, never as an attribute.
+        renderHTML: () => ({}),
+      },
       width: {
         default: null,
         parseHTML: (element) => {
@@ -313,34 +402,46 @@ export const ImageBlock = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(ImageView);
+    return ReactNodeViewRenderer(ImageView, {
+      // Hand every event inside the caption input back to the input. Without
+      // this ProseMirror treats a click there as selecting the image (so the
+      // next keystroke replaces it) and swallows the keys themselves.
+      stopEvent: isImageCaptionEvent,
+      ignoreMutation: ({ mutation }) => isInsideImageCaption(mutation.target),
+    });
   },
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ node, HTMLAttributes }) {
     const { flipX, flipY, align } = HTMLAttributes;
-    const transformStyle = getTransformStyle(flipX, flipY);
+    const rotate = parseRotation(node.attrs.rotate);
+    const caption = node.attrs.caption;
+    const transformStyle = getTransformStyle(flipX, flipY, rotate);
     const wrapperStyle = align ? `text-align: ${align};` : null;
     const imageHTMLAttributes = {
       ...HTMLAttributes,
       inline: null,
     };
 
+    const image = [
+      'img',
+      mergeAttributes(
+        {
+          height: 'auto',
+          style: transformStyle || null,
+        },
+        this.options.HTMLAttributes,
+        imageHTMLAttributes
+      ),
+    ];
+
+    if (typeof caption !== 'string' || !caption.length) {
+      return ['div', { class: 'image', style: wrapperStyle }, image];
+    }
+
     return [
       'div',
-      {
-        class: 'image',
-        style: wrapperStyle,
-      },
-      [
-        'img',
-        mergeAttributes(
-          {
-            height: 'auto',
-            style: transformStyle || null,
-          },
-          this.options.HTMLAttributes,
-          imageHTMLAttributes
-        ),
-      ],
+      { class: 'image', style: wrapperStyle },
+      image,
+      ['div', { class: 'image-caption' }, caption],
     ];
   },
   parseHTML() {
@@ -448,6 +549,16 @@ export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
           };
         },
       },
+      rotate: {
+        default: 0,
+        parseHTML: (element) => readRotateAttribute(element as HTMLElement),
+        renderHTML: (attributes) => {
+          const rotate = parseRotation(attributes.rotate);
+          return {
+            'data-rotate': rotate ? String(rotate) : null,
+          };
+        },
+      },
       width: {
         default: null,
         parseHTML: (element) => {
@@ -491,7 +602,13 @@ export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(ImageView);
+    return ReactNodeViewRenderer(ImageView, {
+      // Hand every event inside the caption input back to the input. Without
+      // this ProseMirror treats a click there as selecting the image (so the
+      // next keystroke replaces it) and swallows the keys themselves.
+      stopEvent: isImageCaptionEvent,
+      ignoreMutation: ({ mutation }) => isInsideImageCaption(mutation.target),
+    });
   },
   addCommands() {
     return {
@@ -537,12 +654,12 @@ export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
         },
     };
   },
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ node, HTMLAttributes }) {
     const { flipX, flipY, align, inline } = HTMLAttributes;
     const isInline = getBooleanHTMLAttribute(inline);
     const inlineFloat = isInline && (align === 'left' || align === 'right');
 
-    const transformStyle = getTransformStyle(flipX, flipY);
+    const transformStyle = getTransformStyle(flipX, flipY, parseRotation(node.attrs.rotate));
 
     const textAlignStyle =
       !isInline && align === 'center'

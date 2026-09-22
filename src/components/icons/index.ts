@@ -1,6 +1,7 @@
 export * from './AspectRatio';
 export * from './Blockquote';
 export * from './DeleteColumn';
+export * from './ImageCaption';
 export * from './DeleteRow';
 export * from './FileWordOutline';
 export * from './Icon';

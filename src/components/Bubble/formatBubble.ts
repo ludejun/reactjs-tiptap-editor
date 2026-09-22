@@ -1,6 +1,7 @@
 import { deleteSelection } from '@tiptap/pm/commands';
 
 import { ActionButton } from '@/components';
+import { ImageCaptionButton } from '@/components/Bubble/ImageCaptionButton';
 import { BUBBLE_TEXT_LIST, IMAGE_SIZE, VIDEO_SIZE } from '@/constants';
 import { Image, ImageBlock } from '@/extensions/Image';
 
@@ -252,44 +253,30 @@ function videoSizeMenus(editor: Editor, t: (path: string) => string): BubbleMenu
 export function getBubbleImage(editor: Editor, t: (path: string) => string): BubbleMenuItem[] {
   return [
     {
-      type: 'flipX',
+      // One control cycling through quarter turns, in place of the separate
+      // horizontal and vertical flip buttons.
+      type: 'rotate',
       component: ActionButton,
       componentProps: {
         editor,
-        tooltip: t('editor.tooltip.flipX'),
-        icon: 'FlipX',
+        tooltip: t('editor.tooltip.rotate'),
+        icon: 'RotateCwSquare',
         action: () => {
-          const image = getActiveImageAttributes(editor);
-          const { flipX } = image;
+          const { rotate } = getActiveImageAttributes(editor);
           editor
             .chain()
             .focus(undefined, { scrollIntoView: false })
             .updateImage({
-              flipX: !flipX,
+              rotate: ((((Number(rotate) || 0) + 90) % 360) + 360) % 360,
             })
             .run();
         },
       },
     },
     {
-      type: 'flipY',
-      component: ActionButton,
-      componentProps: {
-        editor,
-        tooltip: t('editor.tooltip.flipY'),
-        icon: 'FlipY',
-        action: () => {
-          const image = getActiveImageAttributes(editor);
-          const { flipY } = image;
-          editor
-            .chain()
-            .focus(undefined, { scrollIntoView: false })
-            .updateImage({
-              flipY: !flipY,
-            })
-            .run();
-        },
-      },
+      type: 'caption',
+      component: ImageCaptionButton,
+      componentProps: { editor },
     },
     ...imageSizeMenus(editor, t),
     ...imageAlignMenus(editor, t),

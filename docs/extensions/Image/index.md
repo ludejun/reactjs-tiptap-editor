@@ -183,3 +183,58 @@ Image.configure({
 ```
 
 The library handles the editor UI; your application supplies storage and the upload endpoint. Enforce accepted file types and size limits on that endpoint as well as in the client configuration.
+
+## Options
+
+Everything about the insert dialog is configured on the extension:
+
+```tsx
+Image.configure({
+  // Required to store files anywhere other than a blob: URL.
+  upload: async (file) => (await uploadToYourApi(file)).url,
+
+  // Accepted types, as an `accept` list. The dialog shows the first few of
+  // these plus the size limit under the drop zone.
+  acceptMimes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+
+  // Per-file limit in bytes. Default: 5 MB.
+  maxSize: 10 * 1024 * 1024,
+
+  // Whether more than one file can be picked or dropped at a time. Default: true.
+  multiple: true,
+
+  // 'upload' | 'link' | 'both'. Controls which tabs the dialog shows.
+  resourceImage: 'both',
+
+  // Insert images inline with text rather than as their own block. Default: false.
+  defaultInline: false,
+
+  // Ask for alt text while inserting. Default: false — most editors let you
+  // set it afterwards rather than interrupting the insert.
+  enableAlt: false,
+
+  // Called instead of the built-in toast when a file is rejected or fails.
+  onError: ({ type, message, file }) => reportToYourApp(type, message, file),
+});
+```
+
+The default `acceptMimes` covers JPEG, PNG, GIF, WebP, AVIF, BMP, TIFF, HEIC,
+HEIF and SVG. Note on SVG: it is inert inside an `<img>`, but it can carry
+script, so a host that serves uploads as top-level documents from its own origin
+should sanitise them or serve them from a separate origin. Drop `'image/svg+xml'`
+from `acceptMimes` if you would rather not accept it at all.
+
+## Captions and rotation
+
+Mount `RichTextBubbleImage` to get the image controls. Two of them are worth
+calling out:
+
+- **Rotate** turns the image a quarter turn per click, storing the angle in the
+  node's `rotate` attribute and serialising it as `data-rotate` on the `<img>`.
+  The older `flipx` / `flipy` attributes are still parsed, so documents written
+  by earlier versions keep their flips.
+- **Caption** adds a single caption under a block image, stored in the `caption`
+  attribute and serialised as `<div class="image-caption">` inside the image
+  wrapper. It follows the image's alignment. Clearing the text removes the
+  caption, and the button then adds a fresh one. Inline images have no caption,
+  so the button is disabled for them.
