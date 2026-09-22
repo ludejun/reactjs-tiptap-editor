@@ -40,7 +40,7 @@ function SlashCommandNodeView(
           commands: [
             {
               name: 'askAI',
-              label: 'Ask AI',
+              label: t('editor.ai.title'),
               iconName: 'Sparkles',
               aliases: ['ai', 'write', 'generate'],
               action: ({ editor, range }: Parameters<Command['action']>[0]) => {
@@ -73,11 +73,20 @@ function SlashCommandNodeView(
     }
     const activeItemIndex = selectedGroupIndex * 1000 + selectedCommandIndex;
     const activeItem = activeItemRefs.current[activeItemIndex];
-    if (activeItem) {
-      activeItem.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-      });
+    if (!activeItem) {
+      return;
+    }
+    // Scroll the list only. `Element.scrollIntoView` scrolls every scrollable
+    // ancestor, the window included, and the popup is appended to `<body>`
+    // before it is positioned — so on open it could drag the page to wherever
+    // the popup happened to be.
+    const list = scrollContainer.current;
+    const top = activeItem.offsetTop - list.offsetTop;
+    const bottom = top + activeItem.offsetHeight;
+    if (top < list.scrollTop) {
+      list.scrollTo({ top, behavior: 'smooth' });
+    } else if (bottom > list.scrollTop + list.clientHeight) {
+      list.scrollTo({ top: bottom - list.clientHeight, behavior: 'smooth' });
     }
   }, [selectedCommandIndex, selectedGroupIndex]);
 

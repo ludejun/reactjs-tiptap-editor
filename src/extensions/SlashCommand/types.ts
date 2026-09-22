@@ -15,5 +15,11 @@ export interface Command {
   iconUrl?: string;
   action: ({ editor, range }: { editor: Editor; range: Range }) => void;
   shouldBeHidden?: (editor: Editor) => boolean;
+  /**
+   * Keep the command out of the menu until the reader types something that
+   * matches it. For entries that would otherwise push common blocks below the
+   * fold — deep headings, say — without making them unreachable.
+   */
+  hiddenUntilSearched?: boolean;
   isActive?: (editor: Editor) => boolean;
 }

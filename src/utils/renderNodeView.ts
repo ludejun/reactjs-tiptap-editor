@@ -27,7 +27,16 @@ export function renderNodeViewClosure<T, TSelected = T>(
       onStart(props) {
         if (!props.clientRect) return;
         renderer = new ReactRenderer(node, { props, editor: props.editor });
-        renderer.element.style.position = 'absolute';
+        // Positioned at the caret before it enters the DOM: `updatePosition`
+        // resolves asynchronously, and an unpositioned absolute element would
+        // sit at the end of `<body>` until then.
+        const rect = props.clientRect();
+        const { style } = renderer.element;
+        style.position = 'absolute';
+        if (rect) {
+          style.left = `${rect.left + window.scrollX}px`;
+          style.top = `${rect.bottom + window.scrollY}px`;
+        }
         document.body.appendChild(renderer.element);
         updatePosition(props.editor, renderer.element);
       },

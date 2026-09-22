@@ -23,6 +23,9 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   HEADINGS.forEach((level) => {
     groups[0].commands.push({
       name: `heading${level}`,
+      // H1-H3 cover almost every document; H4-H6 only appear once searched so
+      // that Table, Code block and the rest are not pushed below the fold.
+      hiddenUntilSearched: typeof level === 'number' && level > 3,
       label:
         level === 'Paragraph'
           ? t('editor.paragraph.tooltip')
@@ -112,50 +115,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
     },
   });
 
-  // codeblock
-  groups[0].commands.push({
-    name: 'codeBlock',
-    label: t('editor.codeblock.tooltip'),
-    iconName: 'Code2',
-    description: 'Code block with syntax highlighting',
-    shouldBeHidden: (editor) => editor.isActive('columns'),
-    isActive: (editor) => editor.isActive('codeBlock'),
-    action: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setCodeBlock().run();
-    },
-  });
-
   /* Insert */
-  // name
-  groups[1].commands.push({
-    name: 'image',
-    label: t('editor.image.tooltip'),
-    iconName: 'ImageUp',
-    description: 'Insert a image',
-    aliases: ['image', 'tp', 'tupian'],
-    shouldBeHidden: (editor) => editor.isActive('columns'),
-    action: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).run();
-      const EVENT_ID = EVENTS.UPLOAD_IMAGE(editor.id);
-      emit(EVENT_ID, true);
-    },
-  });
-
-  // video
-  groups[1].commands.push({
-    name: 'video',
-    label: t('editor.video.tooltip'),
-    iconName: 'Video',
-    description: 'Insert a video',
-    aliases: ['video', 'sp', 'shipin'],
-    shouldBeHidden: (editor) => editor.isActive('columns'),
-    action: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).run();
-      const EVENT_ID = EVENTS.UPLOAD_VIDEO(editor.id);
-      emit(EVENT_ID, true);
-    },
-  });
-
   // table
   groups[1].commands.push({
     name: 'table',
@@ -169,8 +129,36 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
         .chain()
         .focus()
         .deleteRange(range)
-        .insertTable({ rows: 3, cols: 3, withHeaderRow: false })
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
         .run();
+    },
+  });
+
+  // codeblock
+  groups[1].commands.push({
+    name: 'codeBlock',
+    label: t('editor.codeblock.tooltip'),
+    iconName: 'Code2',
+    description: 'Code block with syntax highlighting',
+    shouldBeHidden: (editor) => editor.isActive('columns'),
+    isActive: (editor) => editor.isActive('codeBlock'),
+    action: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setCodeBlock().run();
+    },
+  });
+
+  // name
+  groups[1].commands.push({
+    name: 'image',
+    label: t('editor.image.tooltip'),
+    iconName: 'ImageUp',
+    description: 'Insert a image',
+    aliases: ['image', 'tp', 'tupian'],
+    shouldBeHidden: (editor) => editor.isActive('columns'),
+    action: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).run();
+      const EVENT_ID = EVENTS.UPLOAD_IMAGE(editor.id);
+      emit(EVENT_ID, true);
     },
   });
 
@@ -210,6 +198,21 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
     },
   });
 
+  // video
+  groups[1].commands.push({
+    name: 'video',
+    label: t('editor.video.tooltip'),
+    iconName: 'Video',
+    description: 'Insert a video',
+    aliases: ['video', 'sp', 'shipin'],
+    shouldBeHidden: (editor) => editor.isActive('columns'),
+    action: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).run();
+      const EVENT_ID = EVENTS.UPLOAD_VIDEO(editor.id);
+      emit(EVENT_ID, true);
+    },
+  });
+
   // table of contents
   groups[1].commands.push({
     name: 'tableOfContents',
@@ -236,6 +239,10 @@ export function useFilterCommandList(commandList: CommandList[], query: string, 
 
       const labelNormalized = item.label.toLowerCase().trim();
       const queryNormalized = query.toLowerCase().trim();
+
+      if (item.hiddenUntilSearched && !queryNormalized) {
+        return false;
+      }
 
       if (item.aliases) {
         const aliases = item.aliases.map((alias) => alias.toLowerCase().trim());

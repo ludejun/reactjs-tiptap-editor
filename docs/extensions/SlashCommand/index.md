@@ -84,4 +84,10 @@ export function CustomSlashCommands() {
 
 Mount `CustomSlashCommands` in place of the default `SlashCommandList`. Removing `range` prevents the typed slash query from remaining in the document. If an action calls a feature-specific command, register that feature too. Use `shouldBeHidden: (editor) => boolean` to omit a command when its prerequisites are unavailable.
 
+Set `hiddenUntilSearched: true` to keep a command out of the menu until the reader types something matching its label or aliases. It is for entries that are worth having but not worth the space at rest — the default list uses it for headings 4 to 6, so that Table and Code block are not pushed below the fold.
+
+## Default list
+
+The default groups are _Format_ (paragraph, headings 1 to 3, bullet, numbered and task lists, quote) and _Insert_ (table, code block, image, divider, columns, toggle list, video, table of contents), plus an _AI_ entry at the top when the AI extension is registered. Headings 4 to 6 appear once searched.
+
 An omitted or empty `commandList` uses the default list. The command-list store is currently shared across editor instances, so mounting different lists in multiple editors can overwrite one another.
