@@ -1,6 +1,6 @@
 import DragHandle from '@tiptap/extension-drag-handle-react';
 import { type NodeSelection } from '@tiptap/pm/state';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   ActionButton,
@@ -16,6 +16,7 @@ import {
   IconComponent,
 } from '@/components';
 import { Clear } from '@/extensions/Clear';
+import { Column, ColumnNode, MultipleColumnNode } from '@/extensions/Column';
 import { Indent } from '@/extensions/Indent';
 import { TextAlign } from '@/extensions/TextAlign';
 import { useLocale } from '@/locales';
@@ -27,6 +28,31 @@ import type {} from '@tiptap/extension-paragraph';
 import type { Node } from '@tiptap/pm/model';
 import type { Editor } from '@tiptap/react';
 
+/** Height of the handle row: two 32px action buttons side by side. */
+const HANDLE_HEIGHT = 32;
+
+/**
+ * Vertical offset that lines the handle up with the block's first line.
+ *
+ * The plugin pins the handle to the block's top edge, so on a 26px paragraph it
+ * sat below the caret and on a 36px heading above it. Centring it on the first
+ * line box fixes both. Tall blocks (images, tables, code) keep the handle near
+ * the top, which is what every other editor does.
+ */
+function firstLineOffset(element: HTMLElement | null): number {
+  if (!element) {
+    return 0;
+  }
+
+  const style = getComputedStyle(element);
+  const height = element.getBoundingClientRect().height;
+  const lineHeight = Number.parseFloat(style.lineHeight);
+  const paddingTop = Number.parseFloat(style.paddingTop) || 0;
+  const firstLine = Math.min(Number.isFinite(lineHeight) ? lineHeight : height, height);
+
+  return paddingTop + (firstLine - HANDLE_HEIGHT) / 2;
+}
+
 export function RichTextBubbleMenuDragHandle() {
   const editor = useEditorInstance();
   const editable = useEditableEditor();
@@ -35,6 +61,7 @@ export function RichTextBubbleMenuDragHandle() {
   const [currentNode, setCurrentNode] = useState<import('@tiptap/pm/model').Node | null>(null);
   const [currentNodePos, setCurrentNodePos] = useState(-1);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [handleOffset, setHandleOffset] = useState(0);
 
   const hasTextAlignExtension = editor?.extensionManager?.extensions?.some(
     (ext) => ext?.name === TextAlign.name
@@ -45,6 +72,60 @@ export function RichTextBubbleMenuDragHandle() {
   const hasClearExtension = editor?.extensionManager?.extensions?.some(
     (ext) => ext?.name === Clear.name
   );
+  const hasColumnExtension = editor?.extensionManager?.extensions?.some(
+    (ext) => ext?.name === Column.name
+  );
+
+  // Column actions read the selection, so they need a text position inside the
+  // hovered column. Resolve it from the drag handle's node instead of relying on
+  // wherever the caret happens to be.
+  const columnSelectionPos = useMemo(() => {
+    if (!hasColumnExtension || currentNodePos < 0) {
+      return null;
+    }
+
+    const { doc } = editor.state;
+
+    if (currentNodePos > doc.content.size) {
+      return null;
+    }
+
+    const $pos = doc.resolve(currentNodePos);
+
+    for (let depth = $pos.depth; depth >= 0; depth--) {
+      if ($pos.node(depth).type.name === ColumnNode.name) {
+        return $pos.start(depth);
+      }
+    }
+
+    // Hovering the columns wrapper itself: fall back to its first column.
+    if (doc.nodeAt(currentNodePos)?.type.name === MultipleColumnNode.name) {
+      return currentNodePos + 2;
+    }
+
+    return null;
+  }, [editor, currentNodePos, hasColumnExtension]);
+
+  function runColumnCommand(command: 'addColBefore' | 'addColAfter' | 'deleteCol') {
+    if (columnSelectionPos === null) {
+      return;
+    }
+
+    const chain = editor
+      .chain()
+      .setMeta('hideDragHandle', true)
+      .setTextSelection(columnSelectionPos);
+
+    if (command === 'addColBefore') {
+      chain.addColBefore();
+    } else if (command === 'addColAfter') {
+      chain.addColAfter();
+    } else {
+      chain.deleteCol();
+    }
+
+    chain.run();
+  }
 
   function resetTextFormatting() {
     const chain = editor.chain();
@@ -96,9 +177,27 @@ export function RichTextBubbleMenuDragHandle() {
         setCurrentNode(data.node);
       }
       setCurrentNodePos(data.pos);
-      // Force update bubble menu position
+
+      const dom = data.pos >= 0 ? data.editor.view.nodeDOM(data.pos) : null;
+      // `Node` is the ProseMirror one in this module, so narrow via `Element`.
+      const element =
+        dom instanceof HTMLElement ? dom : dom instanceof Element ? dom.parentElement : null;
+
+      setHandleOffset(firstLineOffset(element));
+      // Nudge the editor so the other bubble menus reposition against the block
+      // now under the pointer.
       requestAnimationFrame(() => {
-        data.editor.commands.focus();
+        // This fires on every mouse move onto another block, so it must not
+        // take focus. `hasFocus()` is false both when the reader has clicked
+        // away from the editor and when a node view's own input holds focus
+        // (the image caption), and pulling focus back in either case is wrong.
+        if (!data.editor.view.hasFocus()) {
+          return;
+        }
+
+        // Without `scrollIntoView: false` this scrolls the caret back into
+        // view, so hovering a block after scrolling elsewhere yanks the page.
+        data.editor.commands.focus(null, { scrollIntoView: false });
       });
     },
     []
@@ -162,7 +261,10 @@ export function RichTextBubbleMenuDragHandle() {
       onNodeChange={handleNodeChange}
       pluginKey={'RichTextBubbleMenuDragHandle'}
     >
-      <div className='richtext-flex richtext-items-center richtext-gap-0.5'>
+      <div
+        className='richtext-flex richtext-items-center richtext-gap-0.5'
+        style={{ transform: `translateY(${handleOffset}px)` }}
+      >
         <ActionButton
           action={handleAdd}
           disabled={!editable}
@@ -225,6 +327,51 @@ export function RichTextBubbleMenuDragHandle() {
 
               <span>{t('editor.copy')}</span>
             </DropdownMenuItem>
+
+            {columnSelectionPos !== null ? (
+              <>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className='richtext-flex richtext-gap-3'>
+                    <IconComponent name='Columns' />
+
+                    <span>{t('editor.columns.tooltip')}</span>
+                  </DropdownMenuSubTrigger>
+
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem
+                        className='richtext-flex richtext-gap-3'
+                        onClick={() => runColumnCommand('addColBefore')}
+                      >
+                        <IconComponent name='ColumnAddLeft' />
+
+                        <span>{t('editor.table.menu.insertColumnBefore')}</span>
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        className='richtext-flex richtext-gap-3'
+                        onClick={() => runColumnCommand('addColAfter')}
+                      >
+                        <IconComponent name='ColumnAddRight' />
+
+                        <span>{t('editor.table.menu.insertColumnAfter')}</span>
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        className='richtext-flex richtext-gap-3'
+                        onClick={() => runColumnCommand('deleteCol')}
+                      >
+                        <IconComponent name='DeleteColumn' />
+
+                        <span>{t('editor.table.menu.deleteColumn')}</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </>
+            ) : null}
 
             {hasTextAlignExtension || hasIndentExtension ? <DropdownMenuSeparator /> : null}
 
