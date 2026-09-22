@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { ActionButton, Button, Label } from '@/components';
+import { AIGenerateField } from '@/components/AIGenerateField';
 import {
   Dialog,
   DialogContent,
@@ -83,6 +84,14 @@ export function RichTextKatex() {
         <div style={{ height: '100%', border: '1px solid hsl(var(--border))' }}>
           <div className='richtext-flex richtext-gap-[10px] richtext-rounded-[10px] richtext-p-[10px]'>
             <div className='richtext-flex-1'>
+              <AIGenerateField
+                current={currentValue}
+                editor={editor}
+                instruction='You write LaTeX for KaTeX. Reply with the LaTeX expression only: no $ delimiters, no code fences, no explanation.'
+                placeholder={t('editor.ai.generate.katex')}
+                onResult={setCurrentValue}
+              />
+
               <Label className='mb-[6px]'>Expression</Label>
 
               <Textarea

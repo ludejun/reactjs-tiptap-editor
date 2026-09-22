@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import svg64 from 'svg64';
 
 import { ActionButton } from '@/components/ActionButton';
+import { AIGenerateField } from '@/components/AIGenerateField';
 import { Button } from '@/components/ui';
 import {
   Dialog,
@@ -14,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Mermaid } from '@/extensions/Mermaid/Mermaid';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 import { dataURLtoFile } from '@/utils/file';
 import { shortId } from '@/utils/shortId';
@@ -22,6 +24,7 @@ const defaultCode = 'graph TB\na-->b';
 
 export function RichTextMermaid() {
   const editor = useEditorInstance();
+  const { t } = useLocale();
 
   const buttonProps = useButtonProps<
     import('@/types').ButtonViewReturnComponentProps & { upload?: (file: File) => Promise<string> }
@@ -142,6 +145,16 @@ export function RichTextMermaid() {
             <p>Loading...</p>
           ) : (
             <>
+              <div className='richtext-px-[10px] richtext-pt-[10px]'>
+                <AIGenerateField
+                  current={mermaidCode}
+                  editor={editor}
+                  instruction='You write Mermaid diagrams. Reply with Mermaid source only: no code fences, no explanation.'
+                  placeholder={t('editor.ai.generate.mermaid')}
+                  onResult={setMermaidCode}
+                />
+              </div>
+
               <div className='richtext-flex richtext-gap-[10px] richtext-rounded-[10px] richtext-p-[10px]'>
                 <Textarea
                   autoFocus
