@@ -1,0 +1,1169 @@
+{
+  "name": "richkit",
+  "version": "0.1.0",
+  "description": "A composable React rich-text editor SDK on Tiptap: toolbar, bubble menus, AI, tables, code, images, 16 languages, replay, and a Tailwind-prefixed UI.",
+  "keywords": [
+    "ai",
+    "editor",
+    "markdown",
+    "prosemirror",
+    "react",
+    "rich-text",
+    "shadcn",
+    "tailwind",
+    "tiptap",
+    "wysiwyg"
+  ],
+  "homepage": "https://github.com/ludejun/richkit#readme",
+  "bugs": {
+    "url": "https://github.com/ludejun/richkit/issues"
+  },
+  "license": "MIT",
+  "author": "ludejun",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ludejun/richkit.git"
+  },
+  "files": [
+    "lib",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "./lib/locale-bundle.js",
+    "./lib/locale-bundle.cjs"
+  ],
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "locale-bundle": [
+        "./lib/locale-bundle.d.ts"
+      ],
+      "bubble": [
+        "./lib/bubble.d.ts"
+      ],
+      "theme": [
+        "./lib/theme.d.ts"
+      ],
+      "*": [
+        "./lib/*",
+        "./*"
+      ],
+      "./attachment": [
+        "./lib/extensions/Attachment/index.d.ts"
+      ],
+      "./blockquote": [
+        "./lib/extensions/Blockquote/index.d.ts"
+      ],
+      "./bold": [
+        "./lib/extensions/Bold/index.d.ts"
+      ],
+      "./bulletlist": [
+        "./lib/extensions/BulletList/index.d.ts"
+      ],
+      "./clear": [
+        "./lib/extensions/Clear/index.d.ts"
+      ],
+      "./code": [
+        "./lib/extensions/Code/index.d.ts"
+      ],
+      "./codeblock": [
+        "./lib/extensions/CodeBlock/index.d.ts"
+      ],
+      "./codeview": [
+        "./lib/extensions/CodeView/index.d.ts"
+      ],
+      "./color": [
+        "./lib/extensions/Color/index.d.ts"
+      ],
+      "./drawer": [
+        "./lib/extensions/Drawer/index.d.ts"
+      ],
+      "./emoji": [
+        "./lib/extensions/Emoji/index.d.ts"
+      ],
+      "./excalidraw": [
+        "./lib/extensions/Excalidraw/index.d.ts"
+      ],
+      "./exportpdf": [
+        "./lib/extensions/ExportPdf/index.d.ts"
+      ],
+      "./exportword": [
+        "./lib/extensions/ExportWord/index.d.ts"
+      ],
+      "./exportmarkdown": [
+        "./lib/extensions/ExportMarkdown/index.d.ts"
+      ],
+      "./fontfamily": [
+        "./lib/extensions/FontFamily/index.d.ts"
+      ],
+      "./fontsize": [
+        "./lib/extensions/FontSize/index.d.ts"
+      ],
+      "./formatpainter": [
+        "./lib/extensions/FormatPainter/index.d.ts"
+      ],
+      "./heading": [
+        "./lib/extensions/Heading/index.d.ts"
+      ],
+      "./highlight": [
+        "./lib/extensions/Highlight/index.d.ts"
+      ],
+      "./history": [
+        "./lib/extensions/History/index.d.ts"
+      ],
+      "./horizontalrule": [
+        "./lib/extensions/HorizontalRule/index.d.ts"
+      ],
+      "./iframe": [
+        "./lib/extensions/Iframe/index.d.ts"
+      ],
+      "./image": [
+        "./lib/extensions/Image/index.d.ts"
+      ],
+      "./imagegif": [
+        "./lib/extensions/ImageGif/index.d.ts"
+      ],
+      "./importword": [
+        "./lib/extensions/ImportWord/index.d.ts"
+      ],
+      "./indent": [
+        "./lib/extensions/Indent/index.d.ts"
+      ],
+      "./italic": [
+        "./lib/extensions/Italic/index.d.ts"
+      ],
+      "./katex": [
+        "./lib/extensions/Katex/index.d.ts"
+      ],
+      "./lineheight": [
+        "./lib/extensions/LineHeight/index.d.ts"
+      ],
+      "./link": [
+        "./lib/extensions/Link/index.d.ts"
+      ],
+      "./mention": [
+        "./lib/extensions/Mention/index.d.ts"
+      ],
+      "./mermaid": [
+        "./lib/extensions/Mermaid/index.d.ts"
+      ],
+      "./moremark": [
+        "./lib/extensions/MoreMark/index.d.ts"
+      ],
+      "./column": [
+        "./lib/extensions/Column/index.d.ts"
+      ],
+      "./orderedlist": [
+        "./lib/extensions/OrderedList/index.d.ts"
+      ],
+      "./searchandreplace": [
+        "./lib/extensions/SearchAndReplace/index.d.ts"
+      ],
+      "./shortmessage": [
+        "./lib/extensions/ShortMessage/index.d.ts"
+      ],
+      "./slashcommand": [
+        "./lib/extensions/SlashCommand/index.d.ts"
+      ],
+      "./strike": [
+        "./lib/extensions/Strike/index.d.ts"
+      ],
+      "./richpaste": [
+        "./lib/extensions/RichPaste/index.d.ts"
+      ],
+      "./divider": [
+        "./lib/extensions/Divider/index.d.ts"
+      ],
+      "./recorder": [
+        "./lib/extensions/Recorder/index.d.ts"
+      ],
+      "./table": [
+        "./lib/extensions/Table/index.d.ts"
+      ],
+      "./tasklist": [
+        "./lib/extensions/TaskList/index.d.ts"
+      ],
+      "./textalign": [
+        "./lib/extensions/TextAlign/index.d.ts"
+      ],
+      "./textdirection": [
+        "./lib/extensions/TextDirection/index.d.ts"
+      ],
+      "./textunderline": [
+        "./lib/extensions/TextUnderline/index.d.ts"
+      ],
+      "./twitter": [
+        "./lib/extensions/Twitter/index.d.ts"
+      ],
+      "./video": [
+        "./lib/extensions/Video/index.d.ts"
+      ],
+      "./callout": [
+        "./lib/extensions/Callout/index.d.ts"
+      ],
+      "./details": [
+        "./lib/extensions/Details/index.d.ts"
+      ],
+      "./tableofcontents": [
+        "./lib/extensions/TableOfContents/index.d.ts"
+      ],
+      "./markdownpaste": [
+        "./lib/extensions/MarkdownPaste/index.d.ts"
+      ],
+      "./ai": [
+        "./lib/extensions/AI/index.d.ts"
+      ],
+      "locale": [
+        "./lib/locale.d.ts"
+      ],
+      "locales/*": [
+        "./lib/locales/*.d.ts"
+      ],
+      "bubble/text": [
+        "./lib/components/Bubble/RichTextBubbleText.d.ts"
+      ],
+      "bubble/callout": [
+        "./lib/components/Bubble/RichTextBubbleCallout.d.ts"
+      ],
+      "bubble/drawer": [
+        "./lib/components/Bubble/RichTextBubbleDrawer.d.ts"
+      ],
+      "bubble/excalidraw": [
+        "./lib/components/Bubble/RichTextBubbleExcalidraw.d.ts"
+      ],
+      "bubble/iframe": [
+        "./lib/components/Bubble/RichTextBubbleIframe.d.ts"
+      ],
+      "bubble/katex": [
+        "./lib/components/Bubble/RichTextBubbleKatex.d.ts"
+      ],
+      "bubble/link": [
+        "./lib/components/Bubble/RichTextBubbleLink.d.ts"
+      ],
+      "bubble/media": [
+        "./lib/components/Bubble/RichTextBubbleMedia.d.ts"
+      ],
+      "bubble/mermaid": [
+        "./lib/components/Bubble/RichTextBubbleMermaid.d.ts"
+      ],
+      "bubble/table": [
+        "./lib/components/Bubble/RichTextBubbleTable.d.ts"
+      ],
+      "bubble/twitter": [
+        "./lib/components/Bubble/RichTextBubbleTwitter.d.ts"
+      ],
+      "bubble/drag-handle": [
+        "./lib/components/Bubble/RichTextBubbleMenuDragHandle.d.ts"
+      ],
+      "bubble/ai": [
+        "./lib/components/Bubble/RichTextAIImprove.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./lib/index.d.cts",
+        "default": "./lib/index.cjs"
+      },
+      "import": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
+    },
+    "./locale-bundle": {
+      "require": {
+        "types": "./lib/locale-bundle.d.cts",
+        "default": "./lib/locale-bundle.cjs"
+      },
+      "import": {
+        "types": "./lib/locale-bundle.d.ts",
+        "default": "./lib/locale-bundle.js"
+      }
+    },
+    "./bubble": {
+      "require": {
+        "types": "./lib/bubble.d.cts",
+        "default": "./lib/bubble.cjs"
+      },
+      "import": {
+        "types": "./lib/bubble.d.ts",
+        "default": "./lib/bubble.js"
+      }
+    },
+    "./theme": {
+      "require": {
+        "types": "./lib/theme/theme.d.cts",
+        "default": "./lib/theme.cjs"
+      },
+      "import": {
+        "types": "./lib/theme/theme.d.ts",
+        "default": "./lib/theme.js"
+      }
+    },
+    "./style.css": {
+      "require": "./lib/style.css",
+      "import": "./lib/style.css"
+    },
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json",
+    "./*": "./lib/*",
+    "./attachment": {
+      "require": {
+        "types": "./lib/extensions/Attachment/index.d.ts",
+        "default": "./lib/Attachment.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Attachment/index.d.ts",
+        "default": "./lib/Attachment.js"
+      }
+    },
+    "./blockquote": {
+      "require": {
+        "types": "./lib/extensions/Blockquote/index.d.ts",
+        "default": "./lib/Blockquote.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Blockquote/index.d.ts",
+        "default": "./lib/Blockquote.js"
+      }
+    },
+    "./bold": {
+      "require": {
+        "types": "./lib/extensions/Bold/index.d.ts",
+        "default": "./lib/Bold.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Bold/index.d.ts",
+        "default": "./lib/Bold.js"
+      }
+    },
+    "./bulletlist": {
+      "require": {
+        "types": "./lib/extensions/BulletList/index.d.ts",
+        "default": "./lib/BulletList.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/BulletList/index.d.ts",
+        "default": "./lib/BulletList.js"
+      }
+    },
+    "./clear": {
+      "require": {
+        "types": "./lib/extensions/Clear/index.d.ts",
+        "default": "./lib/Clear.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Clear/index.d.ts",
+        "default": "./lib/Clear.js"
+      }
+    },
+    "./code": {
+      "require": {
+        "types": "./lib/extensions/Code/index.d.ts",
+        "default": "./lib/Code.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Code/index.d.ts",
+        "default": "./lib/Code.js"
+      }
+    },
+    "./codeview": {
+      "require": {
+        "types": "./lib/extensions/CodeView/index.d.ts",
+        "default": "./lib/CodeView.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/CodeView/index.d.ts",
+        "default": "./lib/CodeView.js"
+      }
+    },
+    "./codeblock": {
+      "require": {
+        "types": "./lib/extensions/CodeBlock/index.d.ts",
+        "default": "./lib/CodeBlock.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/CodeBlock/index.d.ts",
+        "default": "./lib/CodeBlock.js"
+      }
+    },
+    "./color": {
+      "require": {
+        "types": "./lib/extensions/Color/index.d.ts",
+        "default": "./lib/Color.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Color/index.d.ts",
+        "default": "./lib/Color.js"
+      }
+    },
+    "./drawer": {
+      "require": {
+        "types": "./lib/extensions/Drawer/index.d.ts",
+        "default": "./lib/Drawer.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Drawer/index.d.ts",
+        "default": "./lib/Drawer.js"
+      }
+    },
+    "./emoji": {
+      "require": {
+        "types": "./lib/extensions/Emoji/index.d.ts",
+        "default": "./lib/Emoji.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Emoji/index.d.ts",
+        "default": "./lib/Emoji.js"
+      }
+    },
+    "./excalidraw": {
+      "require": {
+        "types": "./lib/extensions/Excalidraw/index.d.ts",
+        "default": "./lib/Excalidraw.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Excalidraw/index.d.ts",
+        "default": "./lib/Excalidraw.js"
+      }
+    },
+    "./exportpdf": {
+      "require": {
+        "types": "./lib/extensions/ExportPdf/index.d.ts",
+        "default": "./lib/ExportPdf.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/ExportPdf/index.d.ts",
+        "default": "./lib/ExportPdf.js"
+      }
+    },
+    "./exportword": {
+      "require": {
+        "types": "./lib/extensions/ExportWord/index.d.ts",
+        "default": "./lib/ExportWord.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/ExportWord/index.d.ts",
+        "default": "./lib/ExportWord.js"
+      }
+    },
+    "./exportmarkdown": {
+      "require": {
+        "types": "./lib/extensions/ExportMarkdown/index.d.ts",
+        "default": "./lib/ExportMarkdown.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/ExportMarkdown/index.d.ts",
+        "default": "./lib/ExportMarkdown.js"
+      }
+    },
+    "./fontfamily": {
+      "require": {
+        "types": "./lib/extensions/FontFamily/index.d.ts",
+        "default": "./lib/FontFamily.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/FontFamily/index.d.ts",
+        "default": "./lib/FontFamily.js"
+      }
+    },
+    "./fontsize": {
+      "require": {
+        "types": "./lib/extensions/FontSize/index.d.ts",
+        "default": "./lib/FontSize.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/FontSize/index.d.ts",
+        "default": "./lib/FontSize.js"
+      }
+    },
+    "./formatpainter": {
+      "require": {
+        "types": "./lib/extensions/FormatPainter/index.d.ts",
+        "default": "./lib/FormatPainter.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/FormatPainter/index.d.ts",
+        "default": "./lib/FormatPainter.js"
+      }
+    },
+    "./heading": {
+      "require": {
+        "types": "./lib/extensions/Heading/index.d.ts",
+        "default": "./lib/Heading.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Heading/index.d.ts",
+        "default": "./lib/Heading.js"
+      }
+    },
+    "./highlight": {
+      "require": {
+        "types": "./lib/extensions/Highlight/index.d.ts",
+        "default": "./lib/Highlight.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Highlight/index.d.ts",
+        "default": "./lib/Highlight.js"
+      }
+    },
+    "./history": {
+      "require": {
+        "types": "./lib/extensions/History/index.d.ts",
+        "default": "./lib/History.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/History/index.d.ts",
+        "default": "./lib/History.js"
+      }
+    },
+    "./horizontalrule": {
+      "require": {
+        "types": "./lib/extensions/HorizontalRule/index.d.ts",
+        "default": "./lib/HorizontalRule.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/HorizontalRule/index.d.ts",
+        "default": "./lib/HorizontalRule.js"
+      }
+    },
+    "./iframe": {
+      "require": {
+        "types": "./lib/extensions/Iframe/index.d.ts",
+        "default": "./lib/Iframe.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Iframe/index.d.ts",
+        "default": "./lib/Iframe.js"
+      }
+    },
+    "./image": {
+      "require": {
+        "types": "./lib/extensions/Image/index.d.ts",
+        "default": "./lib/Image.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Image/index.d.ts",
+        "default": "./lib/Image.js"
+      }
+    },
+    "./imagegif": {
+      "require": {
+        "types": "./lib/extensions/ImageGif/index.d.ts",
+        "default": "./lib/ImageGif.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/ImageGif/index.d.ts",
+        "default": "./lib/ImageGif.js"
+      }
+    },
+    "./importword": {
+      "require": {
+        "types": "./lib/extensions/ImportWord/index.d.ts",
+        "default": "./lib/ImportWord.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/ImportWord/index.d.ts",
+        "default": "./lib/ImportWord.js"
+      }
+    },
+    "./indent": {
+      "require": {
+        "types": "./lib/extensions/Indent/index.d.ts",
+        "default": "./lib/Indent.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Indent/index.d.ts",
+        "default": "./lib/Indent.js"
+      }
+    },
+    "./italic": {
+      "require": {
+        "types": "./lib/extensions/Italic/index.d.ts",
+        "default": "./lib/Italic.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Italic/index.d.ts",
+        "default": "./lib/Italic.js"
+      }
+    },
+    "./katex": {
+      "require": {
+        "types": "./lib/extensions/Katex/index.d.ts",
+        "default": "./lib/Katex.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Katex/index.d.ts",
+        "default": "./lib/Katex.js"
+      }
+    },
+    "./lineheight": {
+      "require": {
+        "types": "./lib/extensions/LineHeight/index.d.ts",
+        "default": "./lib/LineHeight.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/LineHeight/index.d.ts",
+        "default": "./lib/LineHeight.js"
+      }
+    },
+    "./link": {
+      "require": {
+        "types": "./lib/extensions/Link/index.d.ts",
+        "default": "./lib/Link.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Link/index.d.ts",
+        "default": "./lib/Link.js"
+      }
+    },
+    "./mention": {
+      "require": {
+        "types": "./lib/extensions/Mention/index.d.ts",
+        "default": "./lib/Mention.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Mention/index.d.ts",
+        "default": "./lib/Mention.js"
+      }
+    },
+    "./mermaid": {
+      "require": {
+        "types": "./lib/extensions/Mermaid/index.d.ts",
+        "default": "./lib/Mermaid.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Mermaid/index.d.ts",
+        "default": "./lib/Mermaid.js"
+      }
+    },
+    "./moremark": {
+      "require": {
+        "types": "./lib/extensions/MoreMark/index.d.ts",
+        "default": "./lib/MoreMark.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/MoreMark/index.d.ts",
+        "default": "./lib/MoreMark.js"
+      }
+    },
+    "./column": {
+      "require": {
+        "types": "./lib/extensions/Column/index.d.ts",
+        "default": "./lib/Column.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Column/index.d.ts",
+        "default": "./lib/Column.js"
+      }
+    },
+    "./orderedlist": {
+      "require": {
+        "types": "./lib/extensions/OrderedList/index.d.ts",
+        "default": "./lib/OrderedList.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/OrderedList/index.d.ts",
+        "default": "./lib/OrderedList.js"
+      }
+    },
+    "./searchandreplace": {
+      "require": {
+        "types": "./lib/extensions/SearchAndReplace/index.d.ts",
+        "default": "./lib/SearchAndReplace.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/SearchAndReplace/index.d.ts",
+        "default": "./lib/SearchAndReplace.js"
+      }
+    },
+    "./shortmessage": {
+      "require": {
+        "types": "./lib/extensions/ShortMessage/index.d.ts",
+        "default": "./lib/ShortMessage.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/ShortMessage/index.d.ts",
+        "default": "./lib/ShortMessage.js"
+      }
+    },
+    "./slashcommand": {
+      "require": {
+        "types": "./lib/extensions/SlashCommand/index.d.ts",
+        "default": "./lib/SlashCommand.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/SlashCommand/index.d.ts",
+        "default": "./lib/SlashCommand.js"
+      }
+    },
+    "./strike": {
+      "require": {
+        "types": "./lib/extensions/Strike/index.d.ts",
+        "default": "./lib/Strike.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Strike/index.d.ts",
+        "default": "./lib/Strike.js"
+      }
+    },
+    "./richpaste": {
+      "require": {
+        "types": "./lib/extensions/RichPaste/index.d.ts",
+        "default": "./lib/RichPaste.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/RichPaste/index.d.ts",
+        "default": "./lib/RichPaste.js"
+      }
+    },
+    "./divider": {
+      "require": {
+        "types": "./lib/extensions/Divider/index.d.ts",
+        "default": "./lib/Divider.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Divider/index.d.ts",
+        "default": "./lib/Divider.js"
+      }
+    },
+    "./recorder": {
+      "require": {
+        "types": "./lib/extensions/Recorder/index.d.ts",
+        "default": "./lib/Recorder.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Recorder/index.d.ts",
+        "default": "./lib/Recorder.js"
+      }
+    },
+    "./table": {
+      "require": {
+        "types": "./lib/extensions/Table/index.d.ts",
+        "default": "./lib/Table.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Table/index.d.ts",
+        "default": "./lib/Table.js"
+      }
+    },
+    "./tasklist": {
+      "require": {
+        "types": "./lib/extensions/TaskList/index.d.ts",
+        "default": "./lib/TaskList.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/TaskList/index.d.ts",
+        "default": "./lib/TaskList.js"
+      }
+    },
+    "./textalign": {
+      "require": {
+        "types": "./lib/extensions/TextAlign/index.d.ts",
+        "default": "./lib/TextAlign.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/TextAlign/index.d.ts",
+        "default": "./lib/TextAlign.js"
+      }
+    },
+    "./textdirection": {
+      "require": {
+        "types": "./lib/extensions/TextDirection/index.d.ts",
+        "default": "./lib/TextDirection.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/TextDirection/index.d.ts",
+        "default": "./lib/TextDirection.js"
+      }
+    },
+    "./textunderline": {
+      "require": {
+        "types": "./lib/extensions/TextUnderline/index.d.ts",
+        "default": "./lib/TextUnderline.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/TextUnderline/index.d.ts",
+        "default": "./lib/TextUnderline.js"
+      }
+    },
+    "./twitter": {
+      "require": {
+        "types": "./lib/extensions/Twitter/index.d.ts",
+        "default": "./lib/Twitter.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Twitter/index.d.ts",
+        "default": "./lib/Twitter.js"
+      }
+    },
+    "./video": {
+      "require": {
+        "types": "./lib/extensions/Video/index.d.ts",
+        "default": "./lib/Video.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Video/index.d.ts",
+        "default": "./lib/Video.js"
+      }
+    },
+    "./callout": {
+      "require": {
+        "types": "./lib/extensions/Callout/index.d.ts",
+        "default": "./lib/Callout.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Callout/index.d.ts",
+        "default": "./lib/Callout.js"
+      }
+    },
+    "./details": {
+      "require": {
+        "types": "./lib/extensions/Details/index.d.ts",
+        "default": "./lib/Details.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Details/index.d.ts",
+        "default": "./lib/Details.js"
+      }
+    },
+    "./tableofcontents": {
+      "require": {
+        "types": "./lib/extensions/TableOfContents/index.d.ts",
+        "default": "./lib/TableOfContents.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/TableOfContents/index.d.ts",
+        "default": "./lib/TableOfContents.js"
+      }
+    },
+    "./markdownpaste": {
+      "require": {
+        "types": "./lib/extensions/MarkdownPaste/index.d.ts",
+        "default": "./lib/MarkdownPaste.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/MarkdownPaste/index.d.ts",
+        "default": "./lib/MarkdownPaste.js"
+      }
+    },
+    "./ai": {
+      "require": {
+        "types": "./lib/extensions/AI/index.d.ts",
+        "default": "./lib/AI.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/AI/index.d.ts",
+        "default": "./lib/AI.js"
+      }
+    },
+    "./locale": {
+      "import": {
+        "types": "./lib/locale.d.ts",
+        "default": "./lib/locale.js"
+      },
+      "require": {
+        "types": "./lib/locale.d.ts",
+        "default": "./lib/locale.cjs"
+      }
+    },
+    "./locales/*": {
+      "types": "./lib/locales/*.d.ts",
+      "import": "./lib/*.js",
+      "require": "./lib/*.cjs"
+    },
+    "./bubble/text": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleText.d.ts",
+        "default": "./lib/RichTextBubbleText.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleText.d.ts",
+        "default": "./lib/RichTextBubbleText.cjs"
+      }
+    },
+    "./bubble/callout": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleCallout.d.ts",
+        "default": "./lib/RichTextBubbleCallout.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleCallout.d.ts",
+        "default": "./lib/RichTextBubbleCallout.cjs"
+      }
+    },
+    "./bubble/drawer": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleDrawer.d.ts",
+        "default": "./lib/RichTextBubbleDrawer.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleDrawer.d.ts",
+        "default": "./lib/RichTextBubbleDrawer.cjs"
+      }
+    },
+    "./bubble/excalidraw": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleExcalidraw.d.ts",
+        "default": "./lib/RichTextBubbleExcalidraw.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleExcalidraw.d.ts",
+        "default": "./lib/RichTextBubbleExcalidraw.cjs"
+      }
+    },
+    "./bubble/iframe": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleIframe.d.ts",
+        "default": "./lib/RichTextBubbleIframe.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleIframe.d.ts",
+        "default": "./lib/RichTextBubbleIframe.cjs"
+      }
+    },
+    "./bubble/katex": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleKatex.d.ts",
+        "default": "./lib/RichTextBubbleKatex.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleKatex.d.ts",
+        "default": "./lib/RichTextBubbleKatex.cjs"
+      }
+    },
+    "./bubble/link": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleLink.d.ts",
+        "default": "./lib/RichTextBubbleLink.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleLink.d.ts",
+        "default": "./lib/RichTextBubbleLink.cjs"
+      }
+    },
+    "./bubble/media": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleMedia.d.ts",
+        "default": "./lib/RichTextBubbleMedia.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleMedia.d.ts",
+        "default": "./lib/RichTextBubbleMedia.cjs"
+      }
+    },
+    "./bubble/mermaid": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleMermaid.d.ts",
+        "default": "./lib/RichTextBubbleMermaid.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleMermaid.d.ts",
+        "default": "./lib/RichTextBubbleMermaid.cjs"
+      }
+    },
+    "./bubble/table": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleTable.d.ts",
+        "default": "./lib/RichTextBubbleTable.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleTable.d.ts",
+        "default": "./lib/RichTextBubbleTable.cjs"
+      }
+    },
+    "./bubble/twitter": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleTwitter.d.ts",
+        "default": "./lib/RichTextBubbleTwitter.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleTwitter.d.ts",
+        "default": "./lib/RichTextBubbleTwitter.cjs"
+      }
+    },
+    "./bubble/drag-handle": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleMenuDragHandle.d.ts",
+        "default": "./lib/RichTextBubbleMenuDragHandle.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleMenuDragHandle.d.ts",
+        "default": "./lib/RichTextBubbleMenuDragHandle.cjs"
+      }
+    },
+    "./bubble/ai": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextAIImprove.d.ts",
+        "default": "./lib/RichTextAIImprove.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextAIImprove.d.ts",
+        "default": "./lib/RichTextAIImprove.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build:lib": "vite build",
+    "build:lib:dev": "vite build  --mode development --watch",
+    "build:playground": "pnpm build:lib && pnpm --dir ./playground run build",
+    "docs:dev": "pnpm --parallel --filter docs... dev",
+    "docs:build": "pnpm --filter docs... build",
+    "docs:preview": "pnpm -C docs preview",
+    "prepublishOnly": "pnpm build:lib",
+    "playground": "pnpm --dir ./playground run dev",
+    "preview": "pnpm --dir ./playground run preview",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "type-check": "tsc",
+    "test:types": "tsc -p tests/tsconfig.json",
+    "verify-commit": "verify-commit-msg",
+    "release": "bumpp -r",
+    "measure:bundle": "node scripts/measure-bundle.mjs"
+  },
+  "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.1",
+    "@floating-ui/dom": "^1.8.0",
+    "@hocuspocus/provider": "^3.4.4",
+    "@radix-ui/react-checkbox": "^1.3.11",
+    "@radix-ui/react-dialog": "^1.1.23",
+    "@radix-ui/react-dropdown-menu": "^2.1.24",
+    "@radix-ui/react-label": "^2.1.15",
+    "@radix-ui/react-popover": "^1.1.23",
+    "@radix-ui/react-select": "^2.3.7",
+    "@radix-ui/react-separator": "^1.1.15",
+    "@radix-ui/react-slot": "^1.3.3",
+    "@radix-ui/react-switch": "^1.3.7",
+    "@radix-ui/react-tabs": "^1.1.21",
+    "@radix-ui/react-toast": "^1.2.23",
+    "@radix-ui/react-toggle": "^1.1.18",
+    "@radix-ui/react-tooltip": "^1.2.16",
+    "@tiptap/core": "^3.29.2",
+    "@tiptap/extension-blockquote": "^3.29.2",
+    "@tiptap/extension-bold": "^3.29.2",
+    "@tiptap/extension-bullet-list": "^3.29.2",
+    "@tiptap/extension-code": "^3.29.2",
+    "@tiptap/extension-code-block": "^3.29.2",
+    "@tiptap/extension-collaboration": "^3.29.2",
+    "@tiptap/extension-collaboration-caret": "^3.29.2",
+    "@tiptap/extension-details": "^3.29.2",
+    "@tiptap/extension-document": "^3.29.2",
+    "@tiptap/extension-drag-handle": "^3.29.2",
+    "@tiptap/extension-drag-handle-react": "^3.29.2",
+    "@tiptap/extension-emoji": "^3.29.2",
+    "@tiptap/extension-hard-break": "^3.29.2",
+    "@tiptap/extension-heading": "^3.29.2",
+    "@tiptap/extension-highlight": "^3.29.2",
+    "@tiptap/extension-horizontal-rule": "^3.29.2",
+    "@tiptap/extension-image": "^3.29.2",
+    "@tiptap/extension-italic": "^3.29.2",
+    "@tiptap/extension-link": "^3.29.2",
+    "@tiptap/extension-list": "^3.29.2",
+    "@tiptap/extension-list-item": "^3.29.2",
+    "@tiptap/extension-mention": "^3.29.2",
+    "@tiptap/extension-node-range": "^3.29.2",
+    "@tiptap/extension-ordered-list": "^3.29.2",
+    "@tiptap/extension-paragraph": "^3.29.2",
+    "@tiptap/extension-strike": "^3.29.2",
+    "@tiptap/extension-subscript": "^3.29.2",
+    "@tiptap/extension-superscript": "^3.29.2",
+    "@tiptap/extension-table": "^3.29.2",
+    "@tiptap/extension-table-of-contents": "^3.29.2",
+    "@tiptap/extension-task-item": "^3.29.2",
+    "@tiptap/extension-task-list": "^3.29.2",
+    "@tiptap/extension-text": "^3.29.2",
+    "@tiptap/extension-text-align": "^3.29.2",
+    "@tiptap/extension-text-style": "^3.29.2",
+    "@tiptap/extension-underline": "^3.29.2",
+    "@tiptap/extensions": "^3.29.2",
+    "@tiptap/markdown": "^3.29.2",
+    "@tiptap/pm": "^3.29.2",
+    "@tiptap/react": "^3.29.2",
+    "@tiptap/suggestion": "^3.29.2",
+    "@tiptap/y-tiptap": "^3.0.8",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.2.6",
+    "deep-equal": "^2.2.3",
+    "docx": "^9.7.1",
+    "easydrawer": "^0.0.15",
+    "frimousse": "^0.3.0",
+    "katex": "^0.16.47",
+    "lodash-es": "^4.18.1",
+    "lucide-react": "^1.42.0",
+    "mammoth": "^1.12.0",
+    "marked": "^15.0.12",
+    "mermaid": "^11.16.1",
+    "prosemirror-docx": "^0.2.1",
+    "rangi": "^2.2.0",
+    "re-resizable": "^6.11.2",
+    "react-colorful": "^5.8.0",
+    "react-image-crop": "^11.1.2",
+    "react-tweet": "^3.3.1",
+    "reactjs-signal": "^2.0.6",
+    "scroll-into-view-if-needed": "^3.1.0",
+    "svg64": "^2.0.0",
+    "y-protocols": "^1.0.7",
+    "yjs": "^13.6.32"
+  },
+  "devDependencies": {
+    "@types/deep-equal": "^1.0.4",
+    "@types/katex": "^0.16.8",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.1",
+    "autoprefixer": "^10.5.4",
+    "bumpp": "^10.4.1",
+    "esno": "^4.8.0",
+    "execa": "^9.6.1",
+    "globby": "^14.1.0",
+    "md5": "^2.3.0",
+    "oxfmt": "^0.55.0",
+    "oxlint": "^1.77.0",
+    "postcss": "^8.5.26",
+    "postcss-replace": "^2.0.1",
+    "postcss-scss": "^4.0.9",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "rolldown": "^1.2.9",
+    "sass": "^1.102.0",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3",
+    "unplugin-dts": "^1.1.0",
+    "verify-commit-msg": "^0.1.0",
+    "vite": "^8.3.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "browserslist": [
+    ">0.3%",
+    "not ie 11",
+    "not dead",
+    "not op_mini all"
+  ],
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "packageManager": "pnpm@8.15.9",
+  "pnpm": {
+    "overrides": {
+      "@excalidraw/excalidraw>nanoid": "3.3.11",
+      "@excalidraw/mermaid-to-excalidraw": "2.0.0",
+      "@excalidraw/mermaid-to-excalidraw>nanoid": "5.1.6",
+      "esbuild": "0.25.12",
+      "prosemirror-view": "1.41.1"
+    }
+  }
+}

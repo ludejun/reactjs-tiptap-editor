@@ -1,0 +1,300 @@
+.ProseMirror {
+  /* Typography */
+  p {
+    @apply richtext-mb-1.5 richtext-leading-relaxed first:richtext-mt-0 last:richtext-mb-0;
+  }
+
+  & > p {
+    @apply richtext-mb-1.5 first:richtext-mt-0 last:richtext-mb-0;
+  }
+
+  h1 {
+    @apply richtext-text-3xl;
+  }
+
+  h2 {
+    @apply richtext-text-2xl;
+  }
+
+  h3 {
+    @apply richtext-text-xl;
+  }
+
+  h4 {
+    @apply richtext-text-lg;
+  }
+
+  h5 {
+    @apply richtext-text-base;
+  }
+
+  h6 {
+    @apply richtext-text-sm;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply richtext-font-bold first:richtext-mt-0 last:richtext-mb-0;
+  }
+
+  h1,
+  h2,
+  h3 {
+    /* Was mt-12 (48px): a gap that large reads as dead space and invites
+       clicks that land in the previous block. */
+    @apply richtext-mt-8;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply richtext-mt-8;
+  }
+
+  a.link {
+    @apply richtext-font-extrabold richtext-text-blue-500 dark:richtext-text-blue-400;
+  }
+
+  mark {
+    @apply richtext-rounded-sm richtext-bg-red-500 richtext-decoration-clone richtext-px-0 richtext-py-1 richtext-text-inherit dark:richtext-bg-red-400;
+  }
+
+  & img {
+    @apply richtext-h-auto richtext-max-w-full;
+  }
+
+  @for $i from 1 through 7 /* max-indent */ {
+    $indent-margin-base: 2em;
+
+    *[data-indent='#{$i}'] {
+      text-indent: $indent-margin-base * $i !important;
+    }
+  }
+  iframe {
+    @apply richtext-border !important;
+    @apply richtext-mt-2 richtext-h-full richtext-w-full richtext-rounded-sm richtext-border-border;
+  }
+
+  /* Block Quote */
+  .blockquote {
+    @apply richtext-rounded-lg richtext-rounded-bl-none richtext-rounded-tl-none richtext-border-l-4 richtext-border-l-neutral-700 richtext-bg-opacity-80 richtext-px-4 richtext-py-2 richtext-text-black;
+    @apply dark:richtext-border-l-neutral-300 dark:richtext-text-white;
+  }
+
+  /* Inline code, GitHub style: a tinted chip that keeps the body text colour.
+     A dark pill looked wrong next to the light code blocks. */
+  code {
+    @apply richtext-rounded richtext-font-mono;
+
+    background: var(--shj-inline-bg);
+    color: inherit;
+    padding: 0.15em 0.35em;
+    font-size: 0.875em;
+  }
+
+  pre {
+    @apply richtext-my-2 richtext-rounded-md !richtext-border !richtext-border-solid;
+    /* Colours come from the shj theme variables (see codeblock.scss) so the
+       block follows the editor's own light/dark class. */
+    border-color: var(--shj-border);
+    background: var(--shj-bg);
+    color: var(--shj-fg);
+    caret-color: var(--shj-fg);
+    padding: var(--richtext-code-padding-y, 12px) 12px;
+    padding-left: var(--richtext-code-gutter-width, 2.75em);
+    overflow-x: auto;
+
+    code {
+      @apply richtext-bg-inherit richtext-p-0 richtext-text-inherit richtext-shadow-none;
+
+      display: block;
+      white-space: pre;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      /* The caret sits in this element, and the inline-code rule above paints it
+         white — invisible now that the block has a light background. */
+      caret-color: inherit;
+    }
+  }
+  /* List */
+  ol {
+    @apply richtext-list-decimal;
+  }
+
+  ul {
+    @apply richtext-list-disc;
+  }
+
+  ul,
+  ol {
+    /* One marker column, sized in ems so it tracks the font size. Markers sit in
+       the gutter and the text keeps close to the surrounding paragraphs. */
+    padding-left: 1.5em;
+    padding-right: 0;
+    @apply richtext-my-2 richtext-py-0 first:richtext-mt-0 last:richtext-mb-0;
+
+    ul,
+    ol {
+      @apply richtext-my-0;
+      padding-left: 1.5em;
+    }
+
+    li {
+      @apply richtext-my-0.5;
+
+      &::marker {
+        @apply richtext-text-foreground/60;
+      }
+    }
+
+    p {
+      @apply richtext-my-0;
+    }
+  }
+
+  & > ul,
+  & > ol {
+    @apply richtext-my-3 first:richtext-mt-0 last:richtext-mb-0;
+  }
+
+  /* Lists nested inside a container block get a tighter gutter: the container
+     already provides its own padding. */
+  td,
+  th,
+  .column,
+  [data-type='detailsContent'] {
+    ul,
+    ol {
+      padding-left: 1.25em;
+      @apply richtext-my-1;
+    }
+  }
+
+  ul[data-type='taskList'] {
+    @apply richtext-list-none richtext-p-0;
+
+    p {
+      @apply richtext-m-0;
+    }
+
+    li {
+      @apply richtext-flex;
+
+      > label {
+        @apply richtext-mr-2 richtext-inline richtext-flex-auto richtext-shrink-0 richtext-grow-0 richtext-select-none;
+      }
+
+      > div {
+        @apply richtext-flex-auto;
+      }
+
+      &[data-checked='true'] {
+        @apply richtext-line-through;
+      }
+    }
+  }
+
+  .image-caption {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    @apply richtext-text-muted-foreground;
+  }
+
+  table {
+    /* `border-collapse` is set below, at a specificity that beats the injected
+       reset. */
+    border: 1px solid;
+    /* Same step down from `--radius` as `pre` (`rounded-md`) and the menus,
+       so a table does not read as rounder than the blocks around it. */
+    border-radius: calc(var(--radius) - 2px);
+    @apply richtext-box-border richtext-block richtext-table-fixed richtext-overflow-x-auto richtext-overflow-y-hidden richtext-border-black/10;
+    @apply dark:richtext-border-white/20;
+
+    td,
+    th {
+      border: 1px solid;
+      @apply richtext-border !important;
+      @apply richtext-relative richtext-box-border richtext-border-black/10 richtext-p-2 richtext-text-left richtext-align-top;
+      @apply dark:richtext-border-white/20;
+      /* `!important` to match the blanket `richtext-border !important` above:
+         each cell draws only its right and bottom edge, the table frame draws
+         the top and left, so no inner line is ever doubled. */
+      border-top-width: 0 !important;
+      border-left-width: 0 !important;
+      /* Gives `width: auto` something to work from, so a two-column table is
+         two readable columns rather than two hairlines. */
+      min-width: 8em;
+
+      &:first-of-type:not(a) {
+        @apply richtext-mt-0;
+      }
+
+      p {
+        @apply richtext-m-0;
+
+        & + p {
+          @apply richtext-mt-3;
+        }
+      }
+    }
+
+    /* The table's own frame already draws these edges. */
+    tr > :last-child {
+      border-right-width: 0 !important;
+    }
+
+    tr:last-child > * {
+      border-bottom-width: 0 !important;
+    }
+
+    /* Clip the corner cells so a header background follows the frame. 1px
+       tighter than the frame, to sit inside the border rather than under it. */
+    tr:first-child > :first-child {
+      border-top-left-radius: calc(var(--radius) - 3px);
+    }
+
+    tr:first-child > :last-child {
+      border-top-right-radius: calc(var(--radius) - 3px);
+    }
+
+    tr:last-child > :first-child {
+      border-bottom-left-radius: calc(var(--radius) - 3px);
+    }
+
+    tr:last-child > :last-child {
+      border-bottom-right-radius: calc(var(--radius) - 3px);
+    }
+
+    th {
+      @apply richtext-bg-black/[0.04] richtext-text-left richtext-font-semibold;
+      @apply dark:richtext-bg-white/[0.06];
+    }
+  }
+}
+
+.richkit .ProseMirror .search-result {
+  background-color: #ffd90080;
+}
+
+.richkit .ProseMirror .search-result-current {
+  background-color: #0dff0080;
+}
+
+/* `separate` rather than `collapse`: a collapsed table ignores `border-radius`
+   entirely, so the table could never follow the host's radius. With spacing
+   zeroed the grid looks identical, as long as each cell draws only its right
+   and bottom edge and the table draws the outer frame — otherwise every inner
+   line would be 2px.
+   The selector carries one extra class on purpose: `resetCSS` sets
+   `border-collapse: collapse` on `.richkit table`, the same
+   specificity as `.ProseMirror table`, and is injected after this stylesheet. */
+.richkit .ProseMirror table {
+  border-collapse: separate;
+  border-spacing: 0;
+}

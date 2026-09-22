@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": ["dist/**", "lib/**", ".claude/**", ".agents/**", "*.min.js"],
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "printWidth": 100,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "semi": true,
+  "sortImports": {
+    "groups": [
+      ["builtin"],
+      ["external"],
+      ["internal"],
+      ["side_effect"],
+      ["parent"],
+      ["sibling"],
+      ["index", "style", "type", "import"]
+    ]
+  },
+  "experimentalTailwindcss": {
+    "config": "./tailwind.config.js",
+    "attributes": ["class", "className"],
+    "functions": ["cn"],
+    "preserveDuplicates": false,
+    "preserveWhitespace": false
+  }
+}

@@ -1,0 +1,57 @@
+import { type Editor } from '@tiptap/core';
+import { EditorContext } from '@tiptap/react';
+import { useEffect, useId, useMemo } from 'react';
+
+import { ReactBusProvider } from '@/components/ReactBus';
+import SlashDialogTrigger from '@/components/SlashDialogTrigger/SlashDialogTrigger';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { RESET_CSS } from '@/constants/resetCSS';
+import { EditorEditableReactive } from '@/store/EditorEditableReactive';
+import { ThemeColorReactive } from '@/store/ThemeColorReactive';
+import { removeCSS, updateCSS } from '@/utils/dynamicCSS';
+
+import '../styles/index.scss';
+
+interface IProviderRichTextProps {
+  editor: Editor;
+  children: React.ReactNode;
+  dark?: boolean;
+}
+
+export function RichTextProvider({ editor, children }: IProviderRichTextProps) {
+  const id = useId();
+  const contextValue = useMemo(() => ({ editor }), [editor]);
+
+  useEffect(() => {
+    updateCSS(RESET_CSS, 'react-tiptap-reset');
+
+    return () => {
+      removeCSS('react-tiptap-reset');
+    };
+  }, []);
+
+  useEffect(() => {
+    if (editor) editor.id = id;
+  }, [id, editor]);
+
+  if (!editor) {
+    return <></>;
+  }
+
+  return (
+    <div className='richkit'>
+      <ReactBusProvider>
+        <EditorContext.Provider value={contextValue}>
+          <TooltipProvider delayDuration={0} disableHoverableContent>
+            {children}
+          </TooltipProvider>
+
+          <EditorEditableReactive editor={editor} />
+
+          <SlashDialogTrigger editorId={id} />
+          <ThemeColorReactive />
+        </EditorContext.Provider>
+      </ReactBusProvider>
+    </div>
+  );
+}

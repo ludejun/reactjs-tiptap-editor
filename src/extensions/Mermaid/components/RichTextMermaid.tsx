@@ -1,0 +1,196 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import svg64 from 'svg64';
+
+import { ActionButton } from '@/components/ActionButton';
+import { AIGenerateField } from '@/components/AIGenerateField';
+import { Button } from '@/components/ui';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Mermaid } from '@/extensions/Mermaid/Mermaid';
+import { useToggleActive } from '@/hooks/useActive';
+import { useButtonProps } from '@/hooks/useButtonProps';
+import { useLocale } from '@/locales';
+import { useEditorInstance } from '@/store/editor';
+import { dataURLtoFile } from '@/utils/file';
+import { shortId } from '@/utils/shortId';
+
+const defaultCode = 'graph TB\na-->b';
+
+export function RichTextMermaid() {
+  const editor = useEditorInstance();
+  const { t } = useLocale();
+
+  const buttonProps = useButtonProps<
+    import('@/types').ButtonViewReturnComponentProps & { upload?: (file: File) => Promise<string> }
+  >(Mermaid.name);
+
+  const { tooltipOptions = {}, isActive = undefined, upload } = buttonProps?.componentProps ?? {};
+
+  const { editorDisabled } = useToggleActive(isActive);
+
+  const [mermaidCode, setMermaidCode] = useState(defaultCode);
+  const [svgCode, setSvgCode] = useState('');
+  const [visible, toggleVisible] = useState(false);
+  const mermaidRef = useRef<HTMLDivElement | null>(null);
+  const [mermaidInstance, setMermaidInstance] = useState<import('mermaid').Mermaid | null>(null);
+  const [loading, toggleLoading] = useState(true);
+
+  const loadMermaid = useCallback((div: HTMLDivElement | null) => {
+    if (!div) return;
+
+    import('mermaid')
+      .then((res) => {
+        setMermaidInstance(res.default);
+      })
+      .finally(() => toggleLoading(false));
+  }, []);
+
+  const renderMermaid = async (value: string) => {
+    try {
+      const { svg } = await mermaidInstance!.render('mermaid-svg', value);
+      setSvgCode(svg);
+    } catch {
+      setSvgCode('');
+    }
+  };
+
+  const mermaidInit = () => {
+    mermaidInstance?.initialize({
+      darkMode: false,
+      startOnLoad: false,
+      // fontFamily:'',
+      fontSize: 12,
+      theme: 'base',
+    });
+    renderMermaid(mermaidCode);
+  };
+
+  useEffect(() => {
+    if (!loading && mermaidInstance && visible) {
+      mermaidInit();
+    }
+  }, [mermaidInstance, visible]);
+
+  useEffect(() => {
+    if (!loading && mermaidInstance && visible) {
+      renderMermaid(mermaidCode);
+    }
+  }, [mermaidInstance && mermaidCode]);
+
+  const setMermaid = async () => {
+    if (mermaidCode === '') {
+      return;
+    }
+    if (mermaidCode) {
+      const svg = mermaidRef.current!.querySelector('svg') as unknown as HTMLElement;
+      const { width, height } = svg.getBoundingClientRect();
+      const name = `mermaid-${shortId()}.svg`;
+      // const { size } = new Blob([svg.outerHTML], {
+      //   type: 'image/svg+xml',
+      // })
+
+      let src = svg64(svg.outerHTML);
+
+      if (upload) {
+        const file = dataURLtoFile(src, name);
+        src = await upload(file);
+      }
+
+      editor
+        ?.chain()
+        .focus()
+        .setMermaid(
+          {
+            type: 'mermaid',
+            src,
+            alt: encodeURIComponent(mermaidCode),
+            width,
+            height,
+          },
+          !!mermaidCode
+        )
+        .run();
+    }
+    toggleVisible(false);
+  };
+
+  return (
+    <Dialog onOpenChange={toggleVisible} open={visible}>
+      <DialogTrigger asChild>
+        <ActionButton
+          disabled={editorDisabled}
+          icon='Mermaid'
+          tooltip='Mermaid'
+          tooltipOptions={tooltipOptions}
+          action={() => {
+            if (editorDisabled) {
+              return;
+            }
+            toggleVisible(true);
+          }}
+        />
+      </DialogTrigger>
+
+      <DialogContent className='richtext-z-[99999] !richtext-max-w-[1300px]'>
+        <DialogTitle>Mermaid</DialogTitle>
+
+        <div ref={loadMermaid} style={{ height: '100%', border: '1px solid hsl(var(--border))' }}>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <>
+              <div className='richtext-px-[10px] richtext-pt-[10px]'>
+                <AIGenerateField
+                  current={mermaidCode}
+                  editor={editor}
+                  instruction='You write Mermaid diagrams. Reply with Mermaid source only: no code fences, no explanation.'
+                  placeholder={t('editor.ai.generate.mermaid')}
+                  onResult={setMermaidCode}
+                />
+              </div>
+
+              <div className='richtext-flex richtext-gap-[10px] richtext-rounded-[10px] richtext-p-[10px]'>
+                <Textarea
+                  autoFocus
+                  className='richtext-flex-1'
+                  onChange={(e) => setMermaidCode(e.currentTarget.value)}
+                  placeholder='Text'
+                  required
+                  rows={10}
+                  value={mermaidCode}
+                  style={{
+                    color: 'hsl(var(--foreground))',
+                  }}
+                />
+
+                <div
+                  className='richtext-flex richtext-flex-1 richtext-items-center richtext-justify-center richtext-rounded-[10px] richtext-p-[10px]'
+                  dangerouslySetInnerHTML={{ __html: svgCode }}
+                  ref={mermaidRef}
+                  style={{
+                    height: '100%',
+                    borderWidth: 1,
+                    minHeight: 500,
+                    background: '#fff',
+                  }}
+                />
+              </div>
+            </>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button disabled={!mermaidInstance} onClick={setMermaid} type='button'>
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

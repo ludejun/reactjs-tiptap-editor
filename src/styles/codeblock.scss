@@ -1,0 +1,148 @@
+/**
+ * Code block theme, GitHub Light / GitHub Dark.
+ *
+ * The values below are the light fallback used when this stylesheet renders
+ * editor output on its own. Inside the editor they are overwritten per mode by
+ * `CODE_THEME` (see store/ThemeColorReactive), because the editor's dark mode
+ * is a set of injected custom properties, not a `.dark` class.
+ */
+:root {
+  --shj-bg: #f6f8fa;
+  --shj-fg: #1f2328;
+  --shj-border: rgb(31 35 40 / 12%);
+  --shj-numbers: #8c959f;
+  --shj-selection: rgb(84 140 210 / 25%);
+  --shj-inline-bg: rgb(175 184 193 / 22%);
+
+  --shj-kwd: #cf222e;
+  --shj-deleted: #82071e;
+  --shj-err: #82071e;
+  --shj-class: #953800;
+  --shj-cmnt: #6e7781;
+  --shj-num: #0550ae;
+  --shj-bool: #0550ae;
+  --shj-type: #0550ae;
+  --shj-oper: #0550ae;
+  --shj-section: #0550ae;
+  --shj-var: #953800;
+  --shj-str: #0a3069;
+  --shj-esc: #0a3069;
+  --shj-func: #8250df;
+  --shj-insert: #116329;
+}
+
+.shj {
+  box-sizing: border-box;
+  max-width: min(100%, 100vw);
+  font-family:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: var(--richtext-code-line-height, 20px);
+  background: var(--shj-bg);
+  color: var(--shj-fg);
+  text-shadow: none;
+}
+
+.shj-inline {
+  display: inline-block;
+  margin: 0;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+.shj-deleted {
+  color: var(--shj-deleted);
+}
+.shj-err {
+  color: var(--shj-err);
+}
+.shj-var {
+  color: var(--shj-var);
+}
+.shj-section {
+  color: var(--shj-section);
+}
+.shj-kwd {
+  color: var(--shj-kwd);
+}
+.shj-class {
+  color: var(--shj-class);
+}
+.shj-insert {
+  color: var(--shj-insert);
+}
+.shj-type {
+  color: var(--shj-type);
+}
+.shj-func {
+  color: var(--shj-func);
+}
+.shj-bool {
+  color: var(--shj-bool);
+}
+.shj-num {
+  color: var(--shj-num);
+}
+.shj-oper {
+  color: var(--shj-oper);
+}
+.shj-str {
+  color: var(--shj-str);
+}
+.shj-cmnt {
+  color: var(--shj-cmnt);
+  font-style: italic;
+}
+
+/* Code block node view: gutter on the left, code scrolls under the numbers. */
+.richtext-code-block {
+  --richtext-code-line-height: 20px;
+  --richtext-code-gutter-width: 2.75em;
+  --richtext-code-padding-y: 12px;
+
+  position: relative;
+}
+
+.richtext-code-block__gutter {
+  position: absolute;
+  top: var(--richtext-code-padding-y);
+  left: 0;
+  width: var(--richtext-code-gutter-width);
+  padding-right: 0.75em;
+  font-family:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: var(--richtext-code-line-height);
+  text-align: right;
+  color: var(--shj-numbers);
+  user-select: none;
+  pointer-events: none;
+}
+
+.richtext-code-block__gutter span {
+  display: block;
+}
+
+.richtext-code-block__toolbar {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+.richtext-code-block:hover .richtext-code-block__toolbar,
+.richtext-code-block__toolbar[data-open='true'] {
+  opacity: 1;
+}
+
+/* the badge the inline-style mode gives a one-line HTTP request */
+.shj-lang-http.shj-oneline .shj-kwd {
+  background: #25f;
+  color: #fff;
+  padding: 5px 7px;
+  border-radius: 5px;
+}
