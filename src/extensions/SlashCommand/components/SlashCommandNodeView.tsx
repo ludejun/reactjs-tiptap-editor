@@ -53,6 +53,9 @@ function SlashCommandNodeView(
       ]
     : commandList;
   const commandQuery = useFilterCommandList(groups, props.query, props.editor);
+  const hasHiddenCommands = groups.some((group) =>
+    group.commands.some((command) => command.hiddenUntilSearched)
+  );
 
   useEffect(() => {
     setSelectedCommandIndex(0);
@@ -222,6 +225,14 @@ function SlashCommandNodeView(
               </Fragment>
             );
           })}
+
+          {/* Rarely used blocks stay out of the default list. Say so, or they
+              look missing. */}
+          {!props.query && hasHiddenCommands ? (
+            <div className='richtext-mx-1 richtext-mt-1 richtext-border-0 richtext-border-t richtext-border-solid richtext-border-border richtext-px-1 richtext-pb-0.5 richtext-pt-1.5 richtext-text-[11px] richtext-text-muted-foreground'>
+              {t('editor.slash.searchMore')}
+            </div>
+          ) : null}
         </div>
       ) : (
         <div className='richtext-p-3'>

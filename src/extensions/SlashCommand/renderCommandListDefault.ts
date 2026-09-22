@@ -6,26 +6,31 @@ import type { CommandList } from './types';
 import type { Editor } from '@tiptap/core';
 
 export function renderCommandListDefault({ t }: { t: (path: string) => string }) {
+  // Insert comes first: someone who opens the menu usually wants a table, a
+  // code block or an image, not a heading they could type with `#`. Anything
+  // used less often is `hiddenUntilSearched`, so the default list stays short
+  // and the search still finds everything.
   const groups: CommandList[] = [
-    {
-      name: 'format',
-      title: t('editor.slash.format'),
-      commands: [],
-    },
     {
       name: 'insert',
       title: t('editor.slash.insert'),
       commands: [],
     },
+    {
+      name: 'format',
+      title: t('editor.slash.format'),
+      commands: [],
+    },
   ];
+  const [insert, format] = groups;
 
   // heading
   HEADINGS.forEach((level) => {
-    groups[0].commands.push({
+    format.commands.push({
       name: `heading${level}`,
-      // H1-H3 cover almost every document; H4-H6 only appear once searched so
-      // that Table, Code block and the rest are not pushed below the fold.
-      hiddenUntilSearched: typeof level === 'number' && level > 3,
+      // H1-H3 cover almost every document; Paragraph and H4-H6 only appear
+      // once searched.
+      hiddenUntilSearched: level === 'Paragraph' || level > 3,
       label:
         level === 'Paragraph'
           ? t('editor.paragraph.tooltip')
@@ -66,7 +71,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   //bulletlist
-  groups[0].commands.push({
+  format.commands.push({
     name: 'bulletList',
     label: t('editor.bulletlist.tooltip'),
     aliases: ['ul', 'yxlb'],
@@ -78,7 +83,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   //orderedlist
-  groups[0].commands.push({
+  format.commands.push({
     name: 'orderedlist',
     label: t('editor.orderedlist.tooltip'),
     aliases: ['ol', 'yxlb'],
@@ -90,7 +95,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   // tasklist
-  groups[0].commands.push({
+  format.commands.push({
     name: 'taskList',
     label: t('editor.tasklist.tooltip'),
     iconName: 'ListTodo',
@@ -103,7 +108,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   // blockquote
-  groups[0].commands.push({
+  format.commands.push({
     name: 'blockquote',
     label: t('editor.blockquote.tooltip'),
     description: '插入引入格式',
@@ -117,7 +122,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
 
   /* Insert */
   // table
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'table',
     label: t('editor.table.tooltip'),
     iconName: 'Table',
@@ -135,7 +140,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   // codeblock
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'codeBlock',
     label: t('editor.codeblock.tooltip'),
     iconName: 'Code2',
@@ -148,7 +153,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   // name
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'image',
     label: t('editor.image.tooltip'),
     iconName: 'ImageUp',
@@ -162,21 +167,37 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
     },
   });
 
+  // divider (replaces horizontalRule when registered)
+  insert.commands.push({
+    name: 'divider',
+    label: t('editor.divider.tooltip'),
+    iconName: 'SeparatorHorizontal',
+    description: 'Insert a divider',
+    aliases: ['divider', 'hr', 'fgx', 'fg', 'line'],
+    shouldBeHidden: (editor) => !editor.schema.nodes.divider,
+    action: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setDivider().run();
+    },
+  });
+
   //horizontalrule
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'horizontalRule',
     label: t('editor.horizontalrule.tooltip'),
     iconName: 'Minus',
     description: 'Insert a horizontal divider',
     aliases: ['hr', 'fgx', 'fg'],
+    shouldBeHidden: (editor) =>
+      !!editor.schema.nodes.divider || !editor.schema.nodes.horizontalRule,
     action: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setHorizontalRule().run();
     },
   });
 
   // columns
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'columns',
+    hiddenUntilSearched: true,
     label: t('editor.columns.tooltip'),
     iconName: 'Columns2',
     description: 'Add two column content',
@@ -186,8 +207,9 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   // details (toggle)
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'details',
+    hiddenUntilSearched: true,
     label: t('editor.details.tooltip'),
     iconName: 'Details',
     description: 'Insert a collapsible toggle block',
@@ -199,8 +221,9 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   // video
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'video',
+    hiddenUntilSearched: true,
     label: t('editor.video.tooltip'),
     iconName: 'Video',
     description: 'Insert a video',
@@ -214,8 +237,9 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   });
 
   // table of contents
-  groups[1].commands.push({
+  insert.commands.push({
     name: 'tableOfContents',
+    hiddenUntilSearched: true,
     label: t('editor.tableofcontents.tooltip'),
     iconName: 'TableOfContents',
     description: 'Insert a live table of contents',
