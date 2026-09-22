@@ -13,7 +13,9 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      '!richtext-peer !richtext-h-4 !richtext-w-4 !richtext-shrink-0 !richtext-rounded-sm !richtext-border !richtext-border-primary !richtext-p-0 !richtext-ring-offset-background focus-visible:!richtext-outline-none focus-visible:!richtext-ring-2 focus-visible:!richtext-ring-ring focus-visible:!richtext-ring-offset-1 disabled:!richtext-cursor-not-allowed disabled:!richtext-opacity-50 data-[state=checked]:!richtext-bg-primary data-[state=checked]:!richtext-text-primary-foreground',
+      // A fixed radius: `rounded-sm` follows `--radius`, and a host that picks a
+      // generous one turns the box into a circle.
+      '!richtext-peer !richtext-h-4 !richtext-w-4 !richtext-shrink-0 !richtext-rounded-[4px] !richtext-border !richtext-border-primary !richtext-p-0 !richtext-ring-offset-background focus-visible:!richtext-outline-none focus-visible:!richtext-ring-2 focus-visible:!richtext-ring-ring focus-visible:!richtext-ring-offset-1 disabled:!richtext-cursor-not-allowed disabled:!richtext-opacity-50 data-[state=checked]:!richtext-bg-primary data-[state=checked]:!richtext-text-primary-foreground',
       className
     )}
     {...props}
