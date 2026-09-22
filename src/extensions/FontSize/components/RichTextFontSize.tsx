@@ -1,12 +1,14 @@
 import React, { Fragment, useMemo } from 'react';
 
 import {
+  ActionButton,
   ActionMenuButton,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  IconComponent,
 } from '@/components';
 import { FontSize } from '@/extensions/FontSize/FontSize';
 import { useActive } from '@/hooks/useActive';
@@ -25,7 +27,19 @@ export interface Item {
   default?: boolean;
 }
 
-export function RichTextFontSize() {
+export interface RichTextFontSizeProps {
+  /**
+   * Render as an icon button instead of a trigger showing the current size.
+   *
+   * The wide trigger earns its space in a main toolbar, where reading the
+   * current size at a glance is the point. In a menu of named rows it is the
+   * one control that does not line up with the rest, so this matches the shape
+   * of `RichTextLineHeight`.
+   */
+  compact?: boolean;
+}
+
+export function RichTextFontSize({ compact = false }: RichTextFontSizeProps = {}) {
   const { t } = useLocale();
   const buttonProps = useButtonProps<{
     icon?: string;
@@ -57,13 +71,21 @@ export function RichTextFontSize() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild disabled={disabled}>
-        <ActionMenuButton
-          disabled={disabled}
-          icon={icon}
-          title={title}
-          tooltip={tooltip}
-          // tooltipOptions={tooltipOptions}
-        />
+        {compact ? (
+          <ActionButton
+            customClass='!richtext-w-12 richtext-h-12'
+            disabled={disabled}
+            icon='FontSize'
+            tooltip={tooltip}
+          >
+            <IconComponent
+              className='richtext-ml-1 richtext-size-3 richtext-text-zinc-500'
+              name='MenuDown'
+            />
+          </ActionButton>
+        ) : (
+          <ActionMenuButton disabled={disabled} icon={icon} title={title} tooltip={tooltip} />
+        )}
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className='richtext-max-h-96 richtext-w-32 richtext-overflow-y-auto'>

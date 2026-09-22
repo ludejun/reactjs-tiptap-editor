@@ -32,30 +32,50 @@ export interface ActionMenuButtonProps {
 }
 
 const ActionMenuButton = React.forwardRef<HTMLButtonElement, ActionMenuButtonProps>(
-  ({ asChild = false, tooltip, ...props }, ref) => {
-    const Icon = icons[props.icon ?? ''];
+  (
+    {
+      asChild = false,
+      tooltip,
+      // Pulled out of the spread below: `title` would otherwise reach the DOM
+      // and the browser would draw its own tooltip next to this one's, and the
+      // rest are not valid button attributes. Everything else has to keep
+      // flowing through, since a `DropdownMenuTrigger asChild` injects its
+      // handlers and aria state as props on this component.
+      title,
+      icon,
+      isActive,
+      dataState,
+      shortcutKeys,
+      color,
+      action,
+      tooltipOptions,
+      ...props
+    },
+    ref
+  ) => {
+    const Icon = icons[icon ?? ''];
     const Comp = asChild ? Slot : Button;
 
     return (
       <Tooltip>
         <TooltipTrigger asChild>
           <Comp
-            className='richtext-h-[32px] richtext-min-w-24 richtext-overflow-hidden richtext-px-[5px] richtext-py-0'
-            data-state={props?.dataState ? 'on' : 'off'} // active background control
+            className='richtext-h-[32px] richtext-min-w-0 richtext-max-w-32 richtext-overflow-hidden richtext-px-1.5 richtext-py-0'
+            data-state={dataState ? 'on' : 'off'} // active background control
             disabled={props?.disabled}
             ref={ref}
             variant='ghost'
             {...props}
           >
             <div className='richtext-flex richtext-h-full richtext-items-center richtext-font-normal'>
-              {props?.title && (
+              {title && (
                 <div className='richtext-grow richtext-truncate richtext-text-left richtext-text-sm'>
-                  {props?.title}
+                  {title}
                 </div>
               )}
 
               {Icon && (
-                <Icon className='richtext-ml-1 richtext-size-3 richtext-shrink-0 richtext-text-zinc-500' />
+                <Icon className='richtext-ml-0.5 richtext-size-3 richtext-shrink-0 richtext-text-zinc-500' />
               )}
             </div>
           </Comp>
@@ -67,9 +87,7 @@ const ActionMenuButton = React.forwardRef<HTMLButtonElement, ActionMenuButtonPro
               {tooltip && <div>{tooltip}</div>}
 
               <div className='richtext-flex'>
-                {!!props?.shortcutKeys?.length && (
-                  <span>{getShortcutKeys(props?.shortcutKeys)}</span>
-                )}
+                {!!shortcutKeys?.length && <span>{getShortcutKeys(shortcutKeys)}</span>}
               </div>
             </div>
           </TooltipContent>

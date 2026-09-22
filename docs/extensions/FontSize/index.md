@@ -50,6 +50,14 @@ export default function FontSizeExample() {
 
 Register `TextStyle`. Configure `fontSizes` with CSS sizes such as `14px` or objects such as `{ name: "Large", value: "24px" }`. Use `editor.chain().focus().setFontSize("18px").run()` or `unsetFontSize()` from your own controls.
 
+## Compact variant
+
+`<RichTextFontSize compact />` renders an icon button instead of a trigger
+showing the current size. The wide trigger earns its space in a main toolbar,
+where reading the size at a glance is the point; in a menu of named rows it is
+the one control that will not line up, so the compact form matches the shape of
+`RichTextLineHeight`.
+
 ## Configuration
 
 ```ts

@@ -1,4 +1,5 @@
 import {
+  ALargeSmall,
   AlignCenter,
   AlignJustify,
   AlignLeft,
@@ -27,6 +28,7 @@ import {
   Frame,
   GripVertical,
   Pilcrow,
+  RotateCwSquare,
   Heading1,
   Heading2,
   Heading3,
@@ -78,6 +80,7 @@ import {
   ZoomOut,
   PencilRuler,
   WrapText,
+  CornerDownLeft,
   Loader2 as Loader,
   X,
   ExternalLink,
@@ -106,6 +109,7 @@ import { ExportPdf } from '@/components/icons/ExportPdf';
 import ExportWord from '@/components/icons/ExportWord';
 import { GifIcon } from '@/components/icons/GIfIcon';
 import { Html } from '@/components/icons/Html';
+import { ImageCaption } from '@/components/icons/ImageCaption';
 import { LeftToRight } from '@/components/icons/LeftToRight';
 import { Mermaid } from '@/components/icons/Mermaid';
 import { RightToLeft } from '@/components/icons/RightToLeft';
@@ -139,6 +143,8 @@ export const icons: Record<
   Code,
   Code2: CodeXml,
   Type,
+  RotateCwSquare,
+  ImageCaption,
   IndentIncrease,
   IndentDecrease,
   List,
@@ -164,6 +170,7 @@ export const icons: Record<
   Replace,
   ChevronsUpDown,
   LineHeight: FormatLineHeight,
+  FontSize: ALargeSmall,
   Word: FileWordOutline,
   HeadingParagraph: Pilcrow,
   Heading1,
@@ -225,6 +232,7 @@ export const icons: Record<
   FlipY: FlipHorizontal,
   PencilRuler,
   WrapText,
+  CornerDownLeft,
   Loader,
   X,
   Html,

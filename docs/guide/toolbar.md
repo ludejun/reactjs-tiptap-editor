@@ -37,6 +37,37 @@ Extend the existing `extensions` array with `Heading.configure({ levels: [1, 2, 
 
 The other controls in this example come from Getting Started. Select text to apply inline formatting; place the cursor in a paragraph to turn it into a heading or list.
 
+## Keep the top row short
+
+Every control is a separate component, so nothing stops you rendering all of
+them — and nothing stops the row wrapping into four lines of identical grey
+icons either. Mature editors all resolve this the same way: a single row of the
+controls used constantly, and an overflow button for the rest. Google Docs has
+"More", Word has the ribbon overflow, TinyMCE a chevron.
+
+A workable split is undo/redo, block type, font family, the inline marks,
+lists and alignment, then link, image, table and code block — roughly eighteen
+controls. Everything else goes behind one button, grouped under small labels:
+text options, blocks, embeds, import and export, tools. Separate the groups in
+the main row with a thin rule so the eye can find them.
+
+Two things are worth knowing before you build the panel behind that button.
+
+Name the controls rather than relying on tooltips — the point of the panel is
+that these are the things nobody recognises by icon. And give the control a
+fixed-width slot before the name: the controls are not one width (`RichTextFontSize`
+is a text trigger, `RichTextIndent` is a pair of buttons, several carry a
+chevron), so a plain `icon + label` row leaves the column of names visibly
+ragged. Put a control too wide for the slot on a full-width row with the
+control at the far end, keeping the name at the same indent.
+
+Also avoid two text triggers side by side in the main row: font family and font
+size both read "Default" until they are used, and next to each other they are
+indistinguishable.
+
+The playground's `RichTextToolbar` implements all of this and is a reasonable
+starting point to copy.
+
 ## Extension options and button placement
 
 Configure behavior in the extension array, for example `Heading.configure({ levels: [1, 2, 3] })`. Render its control as `<RichTextHeading />` inside the provider. Removing that control only removes the toolbar entry; the registered extension still parses content and exposes commands.
