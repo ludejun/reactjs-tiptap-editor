@@ -100,12 +100,48 @@ The playground enables AI and reads `VITE_AI_PROTOCOL`, `VITE_AI_MODEL`,
 
 The preview is rendered as temporary paragraph DOM inside a ProseMirror block widget. It participates in document layout, so long results expand the editor and push following blocks down. It is excluded from saved HTML/JSON until Apply. The follow-up panel sits directly below the preview.
 
+## Attachments
+
+The prompt box accepts images and text files. Images are sent to the model as
+images (OpenAI `image_url`, Anthropic `image` blocks); text files are inlined
+into the prompt under their filename. Both are off switches, not features you
+have to use:
+
+```tsx
+AI.configure({
+  // The model has to accept images. Turn this off when it does not.
+  enableImageInput: true,
+  enableFileInput: true,
+  imageMimes: ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
+  fileMimes: ['text/plain', 'text/markdown', 'text/csv', 'application/json'],
+  maxAttachmentSize: 4 * 1024 * 1024,
+
+  // Fixed targets for Translate, shown as a submenu. Empty (the default)
+  // offers one target: the reader's browser language.
+  translateLanguages: [],
+});
+```
+
+A custom `generate` transport receives the attachments on the message
+(`message.attachments`) and can encode them however its backend expects.
+
 ## Improve selected text
 
 The default `RichTextBubbleText` toolbar includes **Improve** when AI is enabled.
-Presets fix grammar, improve clarity, shorten text, or translate to Vietnamese/English.
+It groups actions the way Notion and Craft do: _Edit selection_ (improve writing,
+fix spelling & grammar, make shorter, make longer, simplify, change tone) and
+_Generate_ (summarize, explain, translate). Rewrites keep the original language,
+so translation is a single entry rather than one per language.
 They run immediately on the selected text and show a preview before Apply.
-**Ask AI** opens an empty prompt for custom instructions.
+
+**Translate** targets the reader's browser language (`navigator.language`), named
+in the menu next to the label, so the common case needs no picking. Set
+`translateLanguages` to a list to replace that entry with a submenu of fixed
+targets.
+**Ask AI anything** opens an empty prompt for custom instructions.
+
+All panel and menu strings go through the editor's locale system; add
+`editor.ai.*` keys to a custom locale to override them.
 
 For a custom `buttonBubble`, import `RichTextAIImprove` from
 `reactjs-tiptap-editor/bubble/ai` and place it inside your toolbar.

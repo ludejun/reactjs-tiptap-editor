@@ -35,6 +35,15 @@ export const AI = Extension.create<AIOptions>({
       generate: null,
       systemPrompt:
         'You are a writing assistant inside a text editor. Follow the user’s instructions. Reply in the user’s language. Return only the final text, without commentary or HTML/Markdown formatting.',
+      enableImageInput: true,
+      enableFileInput: true,
+      imageMimes: ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
+      fileMimes: ['text/plain', 'text/markdown', 'text/csv', 'application/json'],
+      maxAttachmentSize: 1024 * 1024 * 4, // 4MB
+      // Most widely spoken first, so the common choice is at the top.
+      // Empty: "Translate" targets the reader's browser language. Set a list to
+      // get a submenu of fixed targets instead.
+      translateLanguages: [],
     };
   },
   addCommands() {
@@ -44,7 +53,11 @@ export const AI = Extension.create<AIOptions>({
         ({ editor, tr, dispatch }) => {
           if (!editor.isEditable || !tr.selection.$from.parent.isTextblock) return false;
           if (dispatch)
-            tr.setMeta(aiPluginKey, { from: tr.selection.from, to: tr.selection.to, prompt });
+            tr.setMeta(aiPluginKey, {
+              from: tr.selection.from,
+              to: tr.selection.to,
+              prompt,
+            });
           return true;
         },
       closeAI:
@@ -96,7 +109,9 @@ export const AI = Extension.create<AIOptions>({
             const decorations: Decoration[] = [];
             if (range.from !== range.to) {
               decorations.push(
-                Decoration.inline(range.from, range.to, { class: 'richtext-ai-selection' })
+                Decoration.inline(range.from, range.to, {
+                  class: 'richtext-ai-selection',
+                })
               );
             } else if ($pos.depth) {
               decorations.push(
@@ -119,7 +134,12 @@ export const AI = Extension.create<AIOptions>({
                   mount.contentEditable = 'false';
                   return mount;
                 },
-                { key: 'ai-panel', side: -1, stopEvent: () => true, ignoreSelection: true }
+                {
+                  key: 'ai-panel',
+                  side: -1,
+                  stopEvent: () => true,
+                  ignoreSelection: true,
+                }
               )
             );
             return DecorationSet.create(state.doc, decorations);

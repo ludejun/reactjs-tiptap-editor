@@ -40,7 +40,9 @@
     display: block;
     width: 100%;
     box-sizing: border-box;
-    resize: vertical;
+    /* No drag-to-resize grabber; the box scrolls once it hits max-height. */
+    resize: none;
+    overflow-y: auto;
     border: 0;
     background: transparent;
     color: inherit;
@@ -122,9 +124,77 @@
     padding: 0 0 12px;
   }
   .richtext-ai-error {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
     color: #e65f5f;
-    margin: 4px 6px 12px;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* After a result there is no room on the action row, so it gets its own line. */
+  .richtext-ai-error-block {
+    margin: 0 10px 8px;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .richtext-ai-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 8px 6px 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 180px;
+      padding: 3px 4px 3px 6px;
+      border-radius: 6px;
+      background: hsl(var(--muted, 240 5% 96%));
+      font-size: 12px;
+
+      img {
+        width: 18px;
+        height: 18px;
+        border-radius: 3px;
+        object-fit: cover;
+      }
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      button {
+        padding: 2px;
+        border-radius: 4px;
+        color: hsl(var(--muted-foreground, 240 3% 46%));
+
+        &:hover {
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  .richtext-ai-attach {
+    flex-shrink: 0;
+    padding: 4px;
+    border-radius: 6px;
+    color: hsl(var(--muted-foreground, 240 3% 46%));
+
+    &:hover:not(:disabled) {
+      color: inherit;
+      background: hsl(var(--accent, 240 5% 96%));
+    }
   }
 }
 .richtext-ai-selection {
@@ -280,4 +350,14 @@
 }
 .richtext-ai-improve-item svg {
   flex-shrink: 0;
+}
+/* The Translate entry names its target; keep it subordinate to the label. */
+.richtext-ai-improve-target {
+  margin-left: auto;
+  padding-left: 12px;
+  overflow: hidden;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

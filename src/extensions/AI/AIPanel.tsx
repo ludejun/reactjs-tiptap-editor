@@ -1,9 +1,27 @@
-import { ArrowUp, Check, RotateCcw, Sparkles, Square, X } from 'lucide-react';
+import { ArrowUp, Check, Paperclip, RotateCcw, Sparkles, Square, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { useLocale } from '@/locales';
 
 import { generateAIText } from './client';
 
-import type { AIMessage, AIOptions } from './types';
+import type { AIAttachment, AIMessage, AIOptions } from './types';
+
+function readAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function formatSize(bytes: number): string {
+  return bytes >= 1024 * 1024
+    ? `${Math.round(bytes / (1024 * 1024))} MB`
+    : `${Math.round(bytes / 1024)} KB`;
+}
 
 /** Splits text into paragraphs of word tokens; each token keeps its surrounding whitespace. */
 function tokenize(text: string) {
@@ -19,8 +37,11 @@ export interface AIPanelProps {
 }
 
 export function AIPanel({ options, selectedText, initialPrompt, apply, close }: AIPanelProps) {
+  const { t } = useLocale();
   const [prompt, setPrompt] = useState(initialPrompt || '');
   const [tone, setTone] = useState('');
+  const [attachments, setAttachments] = useState<AIAttachment[]>([]);
+  const filePicker = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState('');
   const paragraphs = useMemo(() => (result ? tokenize(result) : []), [result]);
   const total = paragraphs.reduce((sum, tokens) => sum + tokens.length, 0);
@@ -75,8 +96,53 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
     else if (!revealing) input.current?.focus();
   }, [busy, revealing]);
 
+  const imageInput = options.enableImageInput !== false;
+  const fileInput = options.enableFileInput !== false;
+  const canAttach = imageInput || fileInput;
+  const acceptedMimes = [
+    ...(imageInput ? (options.imageMimes ?? []) : []),
+    ...(fileInput ? (options.fileMimes ?? []) : []),
+  ];
+
+  async function addFiles(files: File[]) {
+    const maxSize = options.maxAttachmentSize ?? 4 * 1024 * 1024;
+    const next: AIAttachment[] = [];
+
+    for (const file of files) {
+      const isImage = imageInput && file.type.startsWith('image/');
+      const isFile = fileInput && (options.fileMimes ?? []).includes(file.type);
+
+      if (!isImage && !isFile) {
+        setError(t('editor.ai.error.fileType', { name: file.name }));
+        continue;
+      }
+
+      if (file.size > maxSize) {
+        setError(t('editor.ai.error.fileTooBig', { name: file.name, size: formatSize(maxSize) }));
+        continue;
+      }
+
+      next.push({
+        id: `${file.name}-${file.size}-${file.lastModified}`,
+        name: file.name,
+        mediaType: file.type,
+        dataUrl: await readAsDataUrl(file),
+        kind: isImage ? 'image' : 'file',
+        text: isImage ? undefined : await file.text(),
+      });
+    }
+
+    if (next.length) {
+      setAttachments((current) => [
+        ...current,
+        ...next.filter((item) => !current.some((existing) => existing.id === item.id)),
+      ]);
+    }
+  }
+
   async function submit(retry = false, instruction = prompt) {
-    if (working || controller.current || (!retry && !instruction.trim())) return;
+    if (working || controller.current || (!retry && !instruction.trim() && !attachments.length))
+      return;
     const messages: AIMessage[] = retry
       ? lastRequest.current
       : [
@@ -90,6 +156,7 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
             ]
               .filter(Boolean)
               .join('\n\n'),
+            attachments: attachments.length ? attachments : undefined,
           },
         ];
     if (!messages.length) return;
@@ -105,16 +172,15 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
         signal: active.signal,
       });
       if (active.signal.aborted) return;
-      if (!text.trim()) throw new Error('AI returned no text. Try another prompt.');
+      if (!text.trim()) throw new Error(t('editor.ai.error.empty'));
       history.current = [...messages, { role: 'assistant', content: text }];
       if (text !== result) setRevealed(0);
       setResult(text);
       setPrompt('');
+      setAttachments([]);
     } catch (cause) {
       if (!active.signal.aborted)
-        setError(
-          cause instanceof Error ? cause.message : 'Unable to generate text. Please try again.'
-        );
+        setError(cause instanceof Error ? cause.message : t('editor.ai.error.generic'));
     } finally {
       if (controller.current === active) {
         controller.current = null;
@@ -158,7 +224,7 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
       className='richtext-ai'
       data-richtext-portal
       role='dialog'
-      aria-label='Ask AI'
+      aria-label={t('editor.ai.title')}
       onKeyDown={(event) => {
         if (event.key === 'Escape') {
           event.preventDefault();
@@ -168,14 +234,18 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
       }}
     >
       {result ? (
-        <div className='richtext-ai-preview' aria-label='AI preview' aria-busy={revealing}>
+        <div
+          className='richtext-ai-preview'
+          aria-label={t('editor.ai.preview')}
+          aria-busy={revealing}
+        >
           {preview}
         </div>
       ) : null}
       {busy ? (
         <div className='richtext-ai-loading'>
           <span className='richtext-ai-loading-label' role='status'>
-            AI is writing
+            {t('editor.ai.writing')}
           </span>
           <span className='richtext-ai-loading-dots' aria-hidden='true'>
             <i />
@@ -186,8 +256,8 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
             ref={stopButton}
             type='button'
             className='richtext-ai-loading-stop'
-            aria-label='Stop generating'
-            title='Stop generating'
+            aria-label={t('editor.ai.stop')}
+            title={t('editor.ai.stop')}
             onClick={stop}
           >
             <Square size={10} fill='currentColor' />
@@ -204,20 +274,47 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
           {!result ? (
             <div className='richtext-ai-heading'>
               <span>
-                <Sparkles size={16} /> Ask AI
+                <Sparkles size={16} /> {t('editor.ai.title')}
               </span>
-              <button type='button' aria-label='Close AI' onClick={close}>
+              <button type='button' aria-label={t('editor.ai.close')} onClick={close}>
                 <X size={16} />
               </button>
             </div>
           ) : null}
+
+          {attachments.length ? (
+            <ul className='richtext-ai-attachments'>
+              {attachments.map((attachment) => (
+                <li key={attachment.id}>
+                  {attachment.kind === 'image' ? (
+                    <img alt='' src={attachment.dataUrl} />
+                  ) : (
+                    <Paperclip size={13} />
+                  )}
+                  <span title={attachment.name}>{attachment.name}</span>
+                  <button
+                    type='button'
+                    aria-label={t('editor.ai.attach.remove', { name: attachment.name })}
+                    onClick={() =>
+                      setAttachments((current) =>
+                        current.filter((item) => item.id !== attachment.id)
+                      )
+                    }
+                  >
+                    <X size={12} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+
           <div className='richtext-ai-prompt-row'>
             {result ? <Sparkles className='richtext-ai-prompt-icon' size={17} /> : null}
             <textarea
               ref={input}
-              aria-label={result ? 'Refine AI result' : 'AI prompt'}
+              aria-label={result ? t('editor.ai.refine.label') : t('editor.ai.prompt.label')}
               placeholder={
-                result ? 'Tell AI what else needs to be changed...' : 'Ask AI what you want...'
+                result ? t('editor.ai.refine.placeholder') : t('editor.ai.prompt.placeholder')
               }
               value={prompt}
               disabled={working}
@@ -234,7 +331,7 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
               <button
                 type={revealing ? 'button' : 'submit'}
                 className='richtext-ai-send'
-                aria-label={revealing ? 'Stop generating' : 'Send prompt'}
+                aria-label={revealing ? t('editor.ai.stop') : t('editor.ai.send')}
                 disabled={!revealing && !prompt.trim()}
                 onClick={revealing ? stop : undefined}
               >
@@ -242,63 +339,96 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
               </button>
             ) : null}
           </div>
-          {error ? (
-            <p className='richtext-ai-error' role='alert'>
-              {error}
-            </p>
-          ) : null}
+
           {!result ? (
             <div className='richtext-ai-compose-actions'>
+              {canAttach ? (
+                <>
+                  <button
+                    type='button'
+                    className='richtext-ai-attach'
+                    aria-label={t('editor.ai.attach')}
+                    title={t('editor.ai.attach')}
+                    disabled={working}
+                    onClick={() => filePicker.current?.click()}
+                  >
+                    <Paperclip size={16} />
+                  </button>
+                  <input
+                    accept={acceptedMimes.join(',')}
+                    hidden
+                    multiple
+                    ref={filePicker}
+                    type='file'
+                    onChange={(event) => {
+                      void addFiles(Array.from(event.currentTarget.files ?? []));
+                      event.currentTarget.value = '';
+                    }}
+                  />
+                </>
+              ) : null}
+
               <label className='richtext-ai-tone'>
-                Tone{' '}
+                {t('editor.ai.tone')}{' '}
                 <select
-                  aria-label='Tone'
+                  aria-label={t('editor.ai.tone')}
                   value={tone}
                   disabled={working}
                   onChange={(event) => setTone(event.target.value)}
                 >
-                  <option value=''>Default</option>
-                  <option>Professional</option>
-                  <option>Friendly</option>
-                  <option>Casual</option>
-                  <option>Confident</option>
+                  <option value=''>{t('editor.ai.tone.default')}</option>
+                  <option value='Professional'>{t('editor.ai.tone.professional')}</option>
+                  <option value='Friendly'>{t('editor.ai.tone.friendly')}</option>
+                  <option value='Casual'>{t('editor.ai.tone.casual')}</option>
+                  <option value='Confident'>{t('editor.ai.tone.confident')}</option>
                 </select>
               </label>
-              <span role='status' className='richtext-ai-status'>
-                {working ? 'Writing…' : ''}
+
+              {/* The error sits on this row rather than on a line of its own. */}
+              <span className='richtext-ai-error' role='alert'>
+                {error}
               </span>
+
               {working ? (
-                <button type='button' aria-label='Stop generating' onClick={stop}>
+                <button type='button' aria-label={t('editor.ai.stop')} onClick={stop}>
                   <Square size={16} />
                 </button>
               ) : (
                 <button
                   type='submit'
                   className='richtext-ai-send'
-                  aria-label='Send prompt'
-                  disabled={!prompt.trim()}
+                  aria-label={t('editor.ai.send')}
+                  disabled={!prompt.trim() && !attachments.length}
                 >
                   <ArrowUp size={20} />
                 </button>
               )}
             </div>
           ) : null}
-          {result || error ? (
+
+          {result && error ? (
+            <p className='richtext-ai-error richtext-ai-error-block' role='alert'>
+              {error}
+            </p>
+          ) : null}
+
+          {/* Only a result is worth keeping or discarding; an error just needs a retry. */}
+          {result ? (
             <div className='richtext-ai-actions'>
               <button type='button' disabled={working} onClick={() => void submit(true)}>
-                <RotateCcw size={16} /> Try again
+                <RotateCcw size={16} /> {t('editor.ai.retry')}
               </button>
               <div>
                 <button type='button' onClick={close}>
-                  <X size={16} /> Discard
+                  <X size={16} /> {t('editor.ai.discard')}
                 </button>
                 <button
                   type='button'
                   className='richtext-ai-apply'
-                  disabled={working || !result}
+                  disabled={working}
                   onClick={() => apply(result)}
                 >
-                  <Check size={17} /> Apply
+                  <Check size={17} /> {t('editor.ai.apply')}
                 </button>
               </div>
             </div>
