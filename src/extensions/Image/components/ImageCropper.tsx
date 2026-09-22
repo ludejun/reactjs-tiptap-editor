@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Image as ExtensionImage } from '@/extensions/Image';
+import { rememberUploadedImage } from '@/extensions/Image/imageLifecycle';
 import { useExtension } from '@/hooks/useExtension';
 import { useLocale } from '@/locales';
 import { dataURLtoFile, readImageAsBase64 } from '@/utils/file';
@@ -119,6 +120,7 @@ export function ImageCropper({
       let src = '';
       if (uploadOptions.upload) {
         src = await uploadOptions.upload(fileCrop);
+        rememberUploadedImage(editor, src);
       } else {
         src = URL.createObjectURL(fileCrop);
       }

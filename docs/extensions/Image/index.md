@@ -238,3 +238,40 @@ calling out:
   wrapper. It follows the image's alignment. Clearing the text removes the
   caption, and the button then adds a fresh one. Inline images have no caption,
   so the button is disabled for them.
+
+## Uploads and deleted images
+
+`upload` runs as soon as a file is chosen, so a picture reaches your server
+before the document is saved. If the user then deletes the picture, or never
+saves, the server keeps a file nothing refers to. The extension tracks enough
+to clean that up at save time:
+
+```ts
+import { getImageChanges, markImagesSaved } from 'reactjs-tiptap-editor/image';
+
+async function save(editor: Editor) {
+  const { current, removed, orphaned } = getImageChanges(editor);
+
+  await api.saveDocument({ html: editor.getHTML(), images: current });
+  // `removed`: in the last saved version, gone now.
+  // `orphaned`: uploaded in this session, not in the document — inserted and
+  // deleted again, or cropped and replaced.
+  await api.deleteImages([...removed, ...orphaned]);
+
+  markImagesSaved(editor);
+}
+```
+
+- `getImageChanges(editor, previous?)` compares the document with a snapshot of
+  image sources: the one `markImagesSaved` recorded, or one you pass in (for
+  example the list stored with the document on the server, so the first save
+  after a reload still finds deletions). It returns `current`, `added`,
+  `removed` and `orphaned`.
+- `markImagesSaved(editor)` records the current sources as the new baseline and
+  stops counting them as orphans.
+- `collectImageSources(doc)` lists the sources in any document, for the server
+  side of the comparison.
+
+Undo can bring a deleted picture back, so delete server files at save time and
+not on every edit. Only sources returned by `upload` are ever reported as
+orphaned; pasted or linked URLs are not.

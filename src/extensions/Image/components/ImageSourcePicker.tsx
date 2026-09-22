@@ -14,6 +14,7 @@ import {
 } from '@/components';
 import { ImageCropper } from '@/extensions/Image/components/ImageCropper';
 import { DEFAULT_OPTIONS, getImageInsertNodeName, Image } from '@/extensions/Image/Image';
+import { rememberUploadedImage } from '@/extensions/Image/imageLifecycle';
 import { useExtension } from '@/hooks/useExtension';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
@@ -132,6 +133,10 @@ export function ImageSourcePicker({ onCropOpenChange, onDone }: ImageSourcePicke
           uploadOptions.upload ? await uploadOptions.upload(file) : URL.createObjectURL(file)
         )
       );
+
+      if (uploadOptions.upload) {
+        srcs.forEach((src) => rememberUploadedImage(editor, src));
+      }
 
       insertImages(srcs);
       finish();
