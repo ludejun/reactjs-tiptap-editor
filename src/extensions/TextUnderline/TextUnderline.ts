@@ -1,4 +1,4 @@
-import TiptapUnderline from '@tiptap/extension-underline';
+import { Underline as TiptapUnderline } from '@tiptap/extension-underline';
 
 import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';

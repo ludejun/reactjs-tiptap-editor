@@ -1,5 +1,5 @@
 import { mergeAttributes } from '@tiptap/core';
-import TiptapImage from '@tiptap/extension-image';
+import { Image as TiptapImage } from '@tiptap/extension-image';
 import { NodeSelection, type EditorState } from '@tiptap/pm/state';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 
@@ -8,6 +8,7 @@ import ImageView, {
   isInsideImageCaption,
 } from '@/extensions/Image/components/ImageView';
 
+import type { ImageLifecycleStorage } from '@/extensions/Image/imageLifecycle';
 import type { ButtonViewParams, GeneralOptions, JSONContent } from '@/types';
 
 export * from '@/extensions/Image/components/RichTextImage';
@@ -503,7 +504,9 @@ export const ImageBlock = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
   },
 });
 
-export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
+export * from '@/extensions/Image/imageLifecycle';
+
+export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions, ImageLifecycleStorage>({
   group: 'inline',
   inline: true,
   defining: true,
@@ -526,6 +529,11 @@ export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
         },
       }),
     };
+  },
+  addStorage() {
+    // Lets a host find out at save time which uploads are no longer in the
+    // document; see `getImageChanges`.
+    return { uploaded: new Set<string>(), saved: null };
   },
   addExtensions() {
     return [ImageBlock.configure(this.options)];

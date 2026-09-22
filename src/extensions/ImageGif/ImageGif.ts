@@ -1,5 +1,5 @@
 import { mergeAttributes } from '@tiptap/core';
-import TiptapImage from '@tiptap/extension-image';
+import { Image as TiptapImage } from '@tiptap/extension-image';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 
 import ImageGifView from '@/extensions/ImageGif/components/ImageGifView';

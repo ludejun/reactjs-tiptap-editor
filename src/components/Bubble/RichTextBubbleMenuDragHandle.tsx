@@ -1,4 +1,4 @@
-import DragHandle from '@tiptap/extension-drag-handle-react';
+import { DragHandle } from '@tiptap/extension-drag-handle-react';
 import { type NodeSelection } from '@tiptap/pm/state';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 

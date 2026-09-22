@@ -1,5 +1,8 @@
 import { mergeAttributes } from '@tiptap/core';
-import TiptapImage, { type ImageOptions as TiptapImageOptions } from '@tiptap/extension-image';
+import {
+  Image as TiptapImage,
+  type ImageOptions as TiptapImageOptions,
+} from '@tiptap/extension-image';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 
 import { NodeViewDrawer } from '@/extensions/Drawer/components/NodeViewDrawer/NodeViewDrawer';

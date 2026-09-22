@@ -1,4 +1,4 @@
-import CodeBlock from '@tiptap/extension-code-block';
+import { CodeBlock } from '@tiptap/extension-code-block';
 
 import { RangiPlugin } from './rangi-plugin.js';
 

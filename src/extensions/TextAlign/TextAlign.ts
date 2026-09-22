@@ -1,4 +1,4 @@
-import TiptapTextAlign from '@tiptap/extension-text-align';
+import { TextAlign as TiptapTextAlign } from '@tiptap/extension-text-align';
 
 import type { GeneralOptions } from '@/types';
 import type { Editor, Extension } from '@tiptap/core';
