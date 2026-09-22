@@ -29,7 +29,26 @@ test('individual locales share state with the compatibility bundle and fall back
 
   const bundled = await import('../src/locale-bundle');
   assert.equal(bundled.localeActions, localeActions);
-  for (const language of ['fi', 'hu_HU', 'ja', 'pt_BR', 'vi', 'zh_CN'] as const) {
+  const bundledLanguages = [
+    'bn',
+    'de',
+    'es',
+    'fi',
+    'fr',
+    'hi',
+    'hu_HU',
+    'id',
+    'it',
+    'ja',
+    'ko',
+    'pt_BR',
+    'ru',
+    'tr',
+    'vi',
+    'zh_CN',
+  ] as const;
+
+  for (const language of bundledLanguages) {
     localeActions.setLang(language);
     assert.equal(
       translate('editor.bold.tooltip'),

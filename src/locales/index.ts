@@ -75,6 +75,29 @@ function useLocale() {
   };
 }
 
+/**
+ * Translate outside React.
+ *
+ * `useLocale` is a hook, so modules like the AI transport cannot use it; this
+ * reads the same signal directly.
+ */
+function translate(path: MessageKeysType, params?: Record<string, string | number>): string {
+  try {
+    const { currentLang, message } = langSignal();
+    let template = message[currentLang]?.[path] || message.en?.[path] || path;
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        template = template.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
+      });
+    }
+
+    return template;
+  } catch {
+    return path;
+  }
+}
+
 const localeActions = {
   setLang: (lang: LanguageType | (string & {})) => {
     getSignal(langSignal).setValue((prev) => ({
@@ -99,5 +122,5 @@ const localeActions = {
   },
 };
 
-export { localeActions, useLocale };
+export { localeActions, translate, useLocale };
 export { en };

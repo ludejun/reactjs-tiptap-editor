@@ -27,7 +27,6 @@ function Toolbar() {
 Bubble components must render inside `RichTextProvider`; most require their matching extension.
 
 ```tsx
-import { RichTextBubbleCodeBlock } from 'reactjs-tiptap-editor/bubble/codeblock';
 import { RichTextBubbleImage } from 'reactjs-tiptap-editor/bubble/media';
 import { RichTextBubbleLink } from 'reactjs-tiptap-editor/bubble/link';
 import { RichTextBubbleMenuDragHandle } from 'reactjs-tiptap-editor/bubble/drag-handle';
@@ -39,7 +38,6 @@ function BubbleMenus() {
       <RichTextBubbleText />
       <RichTextBubbleLink />
       <RichTextBubbleImage />
-      <RichTextBubbleCodeBlock />
       <RichTextBubbleMenuDragHandle />
     </>
   );
@@ -90,8 +88,11 @@ export function createHttpImageUpload(endpoint: string): UploadImage {
 
     const data: unknown = await response.json();
     if (
-      typeof data !== 'object' || data === null || !('url' in data) ||
-      typeof data.url !== 'string' || !data.url.trim()
+      typeof data !== 'object' ||
+      data === null ||
+      !('url' in data) ||
+      typeof data.url !== 'string' ||
+      !data.url.trim()
     ) {
       throw new Error('Image upload returned no URL');
     }
@@ -192,12 +193,11 @@ const extensions = [
 
 ```tsx
 import { CodeBlock, RichTextCodeBlock } from 'reactjs-tiptap-editor/codeblock';
-import { RichTextBubbleCodeBlock } from 'reactjs-tiptap-editor/bubble/codeblock';
 
 const extensions = [...baseExtensions, CodeBlock];
 ```
 
-Render `<RichTextCodeBlock />` in the toolbar and, if requested, `<RichTextBubbleCodeBlock />` inside the provider.
+Render `<RichTextCodeBlock />` in the toolbar. The block's own controls (language, copy, delete) ship with the extension as a hover toolbar in the block's top-right corner; there is no bubble component to mount.
 
 ## Export PDF
 
@@ -248,7 +248,7 @@ function LocaleDebug() {
 
 Run registration in app initialization, not repeatedly during component render. `/locale` includes English; register other dictionaries before selecting them. For compatibility, `/locale-bundle` registers all bundled languages as an import side effect.
 
-Language keys differ from some file names: `zh_CN` uses `/locales/zh-cn`, `pt_BR` uses `/locales/pt-br`, and `hu_HU` uses `/locales/hu`. Other keys/files are `en`, `vi`, `fi`, and `ja`.
+Language keys differ from some file names: `zh_CN` uses `/locales/zh-cn`, `pt_BR` uses `/locales/pt-br`, and `hu_HU` uses `/locales/hu`. Other keys match their file name: `en`, `hi`, `es`, `ar`, `fr`, `bn`, `ru`, `id`, `de`, `ja`, `tr`, `vi`, `ko`, `it`, and `fi`.
 
 ## Theme
 
