@@ -17,7 +17,14 @@ import { EditorContent, useEditor, useEditorState } from '@tiptap/react';
 //   document: ydoc,
 // })
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
+import {
+  RichTextProvider,
+  RichTextToolbar,
+  RichTextToolbarDivider,
+  RichTextToolbarMore,
+  RichTextToolbarMoreGroup,
+  RichTextToolbarMoreRow,
+} from 'reactjs-tiptap-editor';
 import { AI } from 'reactjs-tiptap-editor/ai';
 import { Attachment, RichTextAttachment } from 'reactjs-tiptap-editor/attachment';
 import { Blockquote, RichTextBlockquote } from 'reactjs-tiptap-editor/blockquote';
@@ -43,7 +50,7 @@ import { BulletList, RichTextBulletList } from 'reactjs-tiptap-editor/bulletlist
 import { Callout, RichTextCallout } from 'reactjs-tiptap-editor/callout';
 import { Clear, RichTextClear } from 'reactjs-tiptap-editor/clear';
 import { Code, RichTextCode } from 'reactjs-tiptap-editor/code';
-import { CodeBlock, RichTextCodeBlock } from 'reactjs-tiptap-editor/codeblock';
+import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'reactjs-tiptap-editor/codeblock';
 import { CodeView, RichTextCodeView } from 'reactjs-tiptap-editor/codeview';
 import { Color, RichTextColor } from 'reactjs-tiptap-editor/color';
 import {
@@ -53,6 +60,7 @@ import {
   RichTextColumn,
 } from 'reactjs-tiptap-editor/column';
 import { Details, RichTextDetails } from 'reactjs-tiptap-editor/details';
+import { Divider, RichTextDivider } from 'reactjs-tiptap-editor/divider';
 import { Drawer, RichTextDrawer } from 'reactjs-tiptap-editor/drawer';
 import { Emoji, RichTextEmoji } from 'reactjs-tiptap-editor/emoji';
 import { Excalidraw, RichTextExcalidraw } from 'reactjs-tiptap-editor/excalidraw';
@@ -66,7 +74,6 @@ import { Heading, RichTextHeading } from 'reactjs-tiptap-editor/heading';
 import { Highlight, RichTextHighlight } from 'reactjs-tiptap-editor/highlight';
 // build extensions
 import { History, RichTextUndo, RichTextRedo } from 'reactjs-tiptap-editor/history';
-import { HorizontalRule, RichTextHorizontalRule } from 'reactjs-tiptap-editor/horizontalrule';
 import { Iframe, RichTextIframe } from 'reactjs-tiptap-editor/iframe';
 import { Image, RichTextImage } from 'reactjs-tiptap-editor/image';
 import { ImageGif, RichTextImageGif } from 'reactjs-tiptap-editor/imagegif';
@@ -82,6 +89,8 @@ import { Mention } from 'reactjs-tiptap-editor/mention';
 import { Mermaid, RichTextMermaid } from 'reactjs-tiptap-editor/mermaid';
 import { MoreMark } from 'reactjs-tiptap-editor/moremark';
 import { OrderedList, RichTextOrderedList } from 'reactjs-tiptap-editor/orderedlist';
+import { Recorder, getRecording, replayRecording } from 'reactjs-tiptap-editor/recorder';
+import { RichPaste } from 'reactjs-tiptap-editor/richpaste';
 import { SearchAndReplace, RichTextSearchAndReplace } from 'reactjs-tiptap-editor/searchandreplace';
 import { ShortMessage } from 'reactjs-tiptap-editor/shortmessage';
 import { SlashCommand, SlashCommandList } from 'reactjs-tiptap-editor/slashcommand';
@@ -188,6 +197,53 @@ const BaseKit = [
   }),
 ];
 
+/**
+ * Canned answers for the playground: streams markdown in small pieces, the way
+ * a provider would, so the panel's live rendering can be seen without an API
+ * key. `window.__aiGenerate` overrides it (used by the browser checks).
+ */
+async function demoAIGenerate(
+  request: import('reactjs-tiptap-editor/ai').AIRequest,
+  onChunk?: (text: string) => void
+): Promise<string> {
+  const override = (window as unknown as { __aiGenerate?: typeof demoAIGenerate }).__aiGenerate;
+
+  if (override) {
+    return override(request, onChunk);
+  }
+
+  const last = request.messages[request.messages.length - 1]?.content ?? '';
+  const selected = /Selected text:\n([\s\S]*?)(?:\n\n|$)/.exec(last)?.[1]?.trim();
+  const answer = /translate/i.test(last)
+    ? `${selected ?? 'Nothing selected'} *(translated — demo)*`
+    : [
+        '## Summary *(demo answer)*',
+        '',
+        selected ? `You selected **${selected.slice(0, 60)}**.` : 'No text was selected.',
+        '',
+        '| Step | What happens |',
+        '| --- | --- |',
+        '| 1 | Text streams in from the provider |',
+        '| 2 | Markdown is rendered through the editor schema |',
+        '| 3 | Apply inserts real nodes |',
+        '',
+        '```ts',
+        "editor.commands.applyAI('## Summary…');",
+        '```',
+        '',
+        '- [x] streaming',
+        '- [ ] your API key (set `VITE_AI_MODEL` to use a real model)',
+      ].join('\n');
+
+  for (const piece of answer.match(/[\s\S]{1,8}/g) ?? []) {
+    request.signal.throwIfAborted();
+    await new Promise((resolve) => setTimeout(resolve, 12));
+    onChunk?.(piece);
+  }
+
+  return answer;
+}
+
 const extensions = [
   ...BaseKit,
 
@@ -245,7 +301,7 @@ const extensions = [
     API_KEY: import.meta.env.VITE_GIPHY_API_KEY as string,
   }),
   Blockquote,
-  HorizontalRule,
+  Divider,
   Code,
   CodeBlock,
 
@@ -344,8 +400,13 @@ const extensions = [
     apiKey: import.meta.env.VITE_AI_API_KEY || '',
     model: import.meta.env.VITE_AI_MODEL || '',
     baseURL: import.meta.env.VITE_AI_BASE_URL || '',
+    // Without a model the playground answers itself, so the AI flow — streaming,
+    // markdown rendering, Apply — can be tried without a key.
+    generate: import.meta.env.VITE_AI_MODEL ? null : demoAIGenerate,
   }),
   SlashCommand,
+  RichPaste.configure({ detectLanguage: guessLanguage }),
+  Recorder,
   ShortMessage.configure({
     shortcut: 'Shift-Space',
     messages: [
@@ -534,6 +595,79 @@ function Picker<T extends string>({
   );
 }
 
+/** Record a session, then play it back at 4× — the Recorder extension demo. */
+const RecordingControls = ({ editor }: { editor: import('@tiptap/core').Editor | null }) => {
+  const [state, setState] = useState<'idle' | 'recording' | 'replaying'>('idle');
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!editor || state !== 'recording') {
+      return;
+    }
+
+    const tick = () => setCount(getRecording(editor)?.entries.length ?? 0);
+
+    editor.on('transaction', tick);
+
+    return () => {
+      editor.off('transaction', tick);
+    };
+  }, [editor, state]);
+
+  const recording = editor ? getRecording(editor) : null;
+
+  return (
+    <div className='flex items-center gap-1.5'>
+      {state === 'recording' ? (
+        <button
+          className='rounded-md border border-solid border-red-300 bg-red-50 px-2.5 py-1 text-[13px] text-red-700'
+          onClick={() => {
+            editor?.commands.stopRecording();
+            setState('idle');
+          }}
+          type='button'
+        >
+          Stop · {count}
+        </button>
+      ) : (
+        <button
+          className='rounded-md border border-solid border-gray-300 bg-white px-2.5 py-1 text-[13px] text-gray-700 disabled:opacity-50'
+          disabled={!editor || state === 'replaying'}
+          onClick={() => {
+            editor?.commands.startRecording();
+            setCount(0);
+            setState('recording');
+          }}
+          type='button'
+        >
+          Record
+        </button>
+      )}
+
+      <button
+        className='rounded-md border border-solid border-gray-300 bg-white px-2.5 py-1 text-[13px] text-gray-700 disabled:opacity-50'
+        disabled={!editor || !recording?.entries.length || state !== 'idle'}
+        onClick={async () => {
+          if (!editor || !recording) return;
+          setState('replaying');
+          editor.setEditable(false);
+          try {
+            await replayRecording(editor, recording, { speed: 4 });
+          } finally {
+            editor.setEditable(true);
+            setState('idle');
+          }
+        }}
+        type='button'
+      >
+        {state === 'replaying'
+          ? 'Replaying…'
+          : `Replay ×4${recording?.entries.length ? ` (${recording.entries.length})` : ''}`}
+      </button>
+    </div>
+  );
+};
+
 const Header = ({
   editor,
   theme,
@@ -647,207 +781,16 @@ const Header = ({
             />
           </div>
         </Field>
+
+        <Field label='Recording'>
+          <RecordingControls editor={editor} />
+        </Field>
       </div>
     </header>
   );
 };
 
 /** Thin rule between groups of related buttons. */
-const ToolbarDivider = () => <div className='mx-1 h-5 w-px shrink-0 bg-gray-200' />;
-
-/**
- * Clicking the label should do what clicking the control does.
- *
- * Radix triggers open on pointerdown and ignore click; plain action buttons do
- * the opposite. Telling them apart by `aria-haspopup` avoids firing a plain
- * button's action twice.
- */
-function activateControl(row: HTMLElement | null) {
-  const button = row?.querySelector('button');
-
-  if (!button) {
-    return;
-  }
-
-  if (button.getAttribute('aria-haspopup')) {
-    for (const type of ['pointerdown', 'pointerup'] as const) {
-      button.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, button: 0 }));
-    }
-
-    return;
-  }
-
-  button.click();
-}
-
-/** One control in the overflow panel, named rather than left to a tooltip. */
-/**
- * One control in the overflow panel, named rather than left to a tooltip.
- *
- * The controls are not one width — most are a 32px icon, a few carry a
- * chevron, `RichTextFontSize` is a text trigger — so the control sits in a
- * fixed slot and every label in a column starts at the same x. Letting the
- * label follow wherever the control happened to end left the column visibly
- * ragged.
- *
- * `wide` is for a control too big for the slot: the row spans the grid and the
- * control moves to the far end, but the label keeps the same indent as every
- * other row so the column still reads straight.
- */
-const OverflowRow = ({
-  children,
-  label,
-  wide,
-}: {
-  children: React.ReactNode;
-  label: string;
-  wide?: boolean;
-}) => {
-  const row = useRef<HTMLDivElement>(null);
-
-  const name = (
-    <span
-      className='min-w-0 flex-1 cursor-default truncate text-[13px] leading-5 text-gray-700'
-      onClick={() => activateControl(row.current)}
-      title={label}
-    >
-      {label}
-    </span>
-  );
-
-  if (wide) {
-    return (
-      <div
-        className='col-span-2 flex min-w-0 items-center gap-1.5 rounded-md pr-1 hover:bg-gray-50'
-        ref={row}
-      >
-        <span className='w-12 shrink-0' />
-
-        {name}
-
-        {children}
-      </div>
-    );
-  }
-
-  return (
-    <div className='flex min-w-0 items-center gap-1.5 rounded-md pr-1 hover:bg-gray-50' ref={row}>
-      <span className='flex w-12 shrink-0 items-center'>{children}</span>
-
-      {name}
-    </div>
-  );
-};
-
-/** A labelled section of the overflow panel. */
-const OverflowGroup = ({ children, label }: { children: React.ReactNode; label: string }) => (
-  <div className='flex flex-col gap-0.5'>
-    <span className='px-1 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-400'>
-      {label}
-    </span>
-
-    <div className='grid grid-cols-2 gap-x-2'>{children}</div>
-  </div>
-);
-
-/**
- * Everything that does not earn a permanent slot. Mature editors all keep the
- * top row to the handful of controls used constantly and put the rest one
- * click away — Word's ribbon overflow, Google Docs' "More", TinyMCE's chevron.
- */
-const ToolbarOverflow = ({ children, label }: { children: React.ReactNode; label: string }) => {
-  const [open, setOpen] = useState(false);
-  const container = useRef<HTMLDivElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as HTMLElement | null;
-
-      // A control in this panel opens its own dropdown in a portal outside this
-      // subtree. Closing on those clicks would unmount the button and take its
-      // open menu with it.
-      if (
-        target?.closest(
-          '[data-richtext-portal], [data-radix-popper-content-wrapper], [role="dialog"]'
-        )
-      ) {
-        return;
-      }
-
-      if (target && container.current?.contains(target)) {
-        return;
-      }
-
-      // Also hit-test by geometry. While a Radix menu is open it sets
-      // `pointer-events: none` on the body, so a click on the panel behind it
-      // reports <body> as the target and the panel would close itself along
-      // with the menu. The panel is absolutely positioned, so its box is not
-      // part of the trigger wrapper's and has to be measured separately.
-      const hit = [container.current, panel.current].some((element) => {
-        const rect = element?.getBoundingClientRect();
-
-        return (
-          rect &&
-          event.clientX >= rect.left &&
-          event.clientX <= rect.right &&
-          event.clientY >= rect.top &&
-          event.clientY <= rect.bottom
-        );
-      });
-
-      if (hit) {
-        return;
-      }
-
-      setOpen(false);
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-
-    document.addEventListener('pointerdown', onPointerDown, true);
-    document.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown, true);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [open]);
-
-  return (
-    <div className='relative' ref={container}>
-      <button
-        aria-expanded={open}
-        aria-label={label}
-        className='flex size-8 items-center justify-center rounded-md border-none bg-transparent text-gray-600 hover:bg-gray-100 aria-expanded:bg-gray-100'
-        onClick={() => setOpen((previous) => !previous)}
-        title={label}
-        type='button'
-      >
-        <svg fill='currentColor' height='16' viewBox='0 0 16 16' width='16'>
-          <circle cx='3' cy='8' r='1.4' />
-          <circle cx='8' cy='8' r='1.4' />
-          <circle cx='13' cy='8' r='1.4' />
-        </svg>
-      </button>
-
-      {open && (
-        <div
-          className='absolute right-0 top-9 z-20 flex max-h-[70vh] w-[440px] flex-col gap-3 overflow-y-auto rounded-xl border border-solid border-gray-300 bg-white p-3 shadow-lg'
-          ref={panel}
-        >
-          {children}
-        </div>
-      )}
-    </div>
-  );
-};
 
 /** Shared styling for the buttons the playground draws itself. */
 const PANEL_BUTTON_CLASS =
@@ -935,7 +878,7 @@ const IndentButton = ({
   </button>
 );
 
-const RichTextToolbar = ({ editor }: { editor: import('@tiptap/core').Editor | null }) => {
+const PlaygroundToolbar = ({ editor }: { editor: import('@tiptap/core').Editor | null }) => {
   const { t } = useLocale();
 
   return (
@@ -943,12 +886,12 @@ const RichTextToolbar = ({ editor }: { editor: import('@tiptap/core').Editor | n
       <RichTextUndo />
       <RichTextRedo />
 
-      <ToolbarDivider />
+      <RichTextToolbarDivider />
 
       <RichTextHeading />
       <RichTextFontFamily />
 
-      <ToolbarDivider />
+      <RichTextToolbarDivider />
 
       <RichTextBold />
       <RichTextItalic />
@@ -958,14 +901,14 @@ const RichTextToolbar = ({ editor }: { editor: import('@tiptap/core').Editor | n
       <RichTextHighlight />
       <RichTextClear />
 
-      <ToolbarDivider />
+      <RichTextToolbarDivider />
 
       <RichTextBulletList />
       <RichTextOrderedList />
       <RichTextTaskList />
       <RichTextAlign />
 
-      <ToolbarDivider />
+      <RichTextToolbarDivider />
 
       <RichTextLink />
       <RichTextImage />
@@ -973,148 +916,148 @@ const RichTextToolbar = ({ editor }: { editor: import('@tiptap/core').Editor | n
       <RichTextCodeBlock />
 
       <div className='ml-auto flex items-center'>
-        <ToolbarOverflow label={t('editor.more')}>
-          <OverflowGroup label={t('editor.slash.format')}>
-            <OverflowRow label={t('editor.fontSize.tooltip')}>
+        <RichTextToolbarMore label={t('editor.more')}>
+          <RichTextToolbarMoreGroup label={t('editor.slash.format')}>
+            <RichTextToolbarMoreRow label={t('editor.fontSize.tooltip')}>
               <RichTextFontSize compact />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.lineheight.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.lineheight.tooltip')}>
               <RichTextLineHeight />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.superscript.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.superscript.tooltip')}>
               <MarkButton
                 editor={editor}
                 label={t('editor.superscript.tooltip')}
                 mark='superscript'
               />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.subscript.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.subscript.tooltip')}>
               <MarkButton
                 editor={editor}
                 label={t('editor.subscript.tooltip')}
                 mark='subscript'
                 sub
               />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.indent.indent')}>
+            <RichTextToolbarMoreRow label={t('editor.indent.indent')}>
               <IndentButton editor={editor} label={t('editor.indent.indent')} />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.indent.outdent')}>
+            <RichTextToolbarMoreRow label={t('editor.indent.outdent')}>
               <IndentButton editor={editor} label={t('editor.indent.outdent')} outdent />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.format')}>
+            <RichTextToolbarMoreRow label={t('editor.format')}>
               <RichTextFormatPainter />
-            </OverflowRow>
-          </OverflowGroup>
+            </RichTextToolbarMoreRow>
+          </RichTextToolbarMoreGroup>
 
-          <OverflowGroup label={t('editor.slash.insert')}>
-            <OverflowRow label={t('editor.blockquote.tooltip')}>
+          <RichTextToolbarMoreGroup label={t('editor.slash.insert')}>
+            <RichTextToolbarMoreRow label={t('editor.blockquote.tooltip')}>
               <RichTextBlockquote />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.code.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.code.tooltip')}>
               <RichTextCode />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.horizontalrule.tooltip')}>
-              <RichTextHorizontalRule />
-            </OverflowRow>
+            <RichTextToolbarMoreRow label={t('editor.divider.tooltip')}>
+              <RichTextDivider />
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.columns.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.columns.tooltip')}>
               <RichTextColumn />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.callout.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.callout.tooltip')}>
               <RichTextCallout />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.details.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.details.tooltip')}>
               <RichTextDetails />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.tableofcontents.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.tableofcontents.tooltip')}>
               <RichTextTableOfContents />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.emoji.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.emoji.tooltip')}>
               <RichTextEmoji />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.video.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.video.tooltip')}>
               <RichTextVideo />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.imageGif.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.imageGif.tooltip')}>
               <RichTextImageGif />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.attachment.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.attachment.tooltip')}>
               <RichTextAttachment />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.iframe.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.iframe.tooltip')}>
               <RichTextIframe />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.katex.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.katex.tooltip')}>
               <RichTextKatex />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label='Excalidraw'>
+            <RichTextToolbarMoreRow label='Excalidraw'>
               <RichTextExcalidraw />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.mermaid.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.mermaid.tooltip')}>
               <RichTextMermaid />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label='Drawer'>
+            <RichTextToolbarMoreRow label='Drawer'>
               <RichTextDrawer />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.twitter.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.twitter.tooltip')}>
               <RichTextTwitter />
-            </OverflowRow>
-          </OverflowGroup>
+            </RichTextToolbarMoreRow>
+          </RichTextToolbarMoreGroup>
 
-          <OverflowGroup label={t('editor.importExport')}>
-            <OverflowRow label={t('editor.importWord.tooltip')}>
+          <RichTextToolbarMoreGroup label={t('editor.importExport')}>
+            <RichTextToolbarMoreRow label={t('editor.importWord.tooltip')}>
               <RichTextImportWord />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.exportPdf.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.exportPdf.tooltip')}>
               <RichTextExportPdf />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.exportWord.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.exportWord.tooltip')}>
               <RichTextExportWord />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.exportMarkdown.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.exportMarkdown.tooltip')}>
               <RichTextExportMarkdown />
-            </OverflowRow>
-          </OverflowGroup>
+            </RichTextToolbarMoreRow>
+          </RichTextToolbarMoreGroup>
 
-          <OverflowGroup label={t('editor.settings')}>
-            <OverflowRow label={t('editor.searchAndReplace.tooltip')}>
+          <RichTextToolbarMoreGroup label={t('editor.settings')}>
+            <RichTextToolbarMoreRow label={t('editor.searchAndReplace.tooltip')}>
               <RichTextSearchAndReplace />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.textDirection.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.textDirection.tooltip')}>
               <RichTextTextDirection />
-            </OverflowRow>
+            </RichTextToolbarMoreRow>
 
-            <OverflowRow label={t('editor.codeView.tooltip')}>
+            <RichTextToolbarMoreRow label={t('editor.codeView.tooltip')}>
               <RichTextCodeView />
-            </OverflowRow>
-          </OverflowGroup>
-        </ToolbarOverflow>
+            </RichTextToolbarMoreRow>
+          </RichTextToolbarMoreGroup>
+        </RichTextToolbarMore>
       </div>
     </div>
   );
@@ -1155,7 +1098,7 @@ function App() {
       <RichTextProvider editor={editor} dark={theme === 'dark'}>
         <div className='overflow-hidden rounded-[0.5rem] bg-background shadow outline outline-1'>
           <div className='flex max-h-full w-full flex-col'>
-            <RichTextToolbar editor={editor} />
+            <PlaygroundToolbar editor={editor} />
 
             <EditorContent editor={editor} />
 

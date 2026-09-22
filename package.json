@@ -175,6 +175,15 @@
       "./strike": [
         "./lib/extensions/Strike/index.d.ts"
       ],
+      "./richpaste": [
+        "./lib/extensions/RichPaste/index.d.ts"
+      ],
+      "./divider": [
+        "./lib/extensions/Divider/index.d.ts"
+      ],
+      "./recorder": [
+        "./lib/extensions/Recorder/index.d.ts"
+      ],
       "./table": [
         "./lib/extensions/Table/index.d.ts"
       ],
@@ -704,6 +713,36 @@
       "import": {
         "types": "./lib/extensions/Strike/index.d.ts",
         "default": "./lib/Strike.js"
+      }
+    },
+    "./richpaste": {
+      "require": {
+        "types": "./lib/extensions/RichPaste/index.d.ts",
+        "default": "./lib/RichPaste.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/RichPaste/index.d.ts",
+        "default": "./lib/RichPaste.js"
+      }
+    },
+    "./divider": {
+      "require": {
+        "types": "./lib/extensions/Divider/index.d.ts",
+        "default": "./lib/Divider.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Divider/index.d.ts",
+        "default": "./lib/Divider.js"
+      }
+    },
+    "./recorder": {
+      "require": {
+        "types": "./lib/extensions/Recorder/index.d.ts",
+        "default": "./lib/Recorder.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Recorder/index.d.ts",
+        "default": "./lib/Recorder.js"
       }
     },
     "./table": {

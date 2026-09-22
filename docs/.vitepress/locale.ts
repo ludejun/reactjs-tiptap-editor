@@ -94,6 +94,10 @@ export function getLocaleConfig(lang: string) {
           link: `${urlPrefix}/guide/toolbar`,
         },
         {
+          text: t('Customization'),
+          link: `${urlPrefix}/guide/customization`,
+        },
+        {
           text: t('Bubble Menu'),
           link: `${urlPrefix}/guide/bubble-menu`,
         },
@@ -156,6 +160,14 @@ export function getLocaleConfig(lang: string) {
         { text: 'Mermaid', link: '/extensions/Mermaid/index.md' },
         { text: 'MoreMark', link: '/extensions/MoreMark/index.md' },
         { text: 'OrderedList', link: '/extensions/OrderedList/index.md' },
+        {
+          text: 'Recorder',
+          link: '/extensions/Recorder/index.md',
+        },
+        {
+          text: 'RichPaste',
+          link: '/extensions/RichPaste/index.md',
+        },
         {
           text: 'SearchAndReplace',
           link: '/extensions/SearchAndReplace/index.md',

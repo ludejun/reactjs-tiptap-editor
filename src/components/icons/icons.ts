@@ -1,5 +1,6 @@
 import {
   ALargeSmall,
+  SeparatorHorizontal,
   AlignCenter,
   AlignJustify,
   AlignLeft,
@@ -129,6 +130,7 @@ export const icons: Record<
   TextQuote: BlockquoteLeft,
   Strikethrough,
   Minus,
+  SeparatorHorizontal,
   Eraser,
   PaintRoller,
   Redo2,
