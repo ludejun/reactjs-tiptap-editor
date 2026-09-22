@@ -67,12 +67,11 @@ For images, register `Image` in the existing extension array and mount `RichText
 | Menu component             | Required feature                                        | Purpose                         |
 | -------------------------- | ------------------------------------------------------- | ------------------------------- |
 | `RichTextBubbleText`       | Text and the formatting extensions used by its controls | Format selected text.           |
-| `RichTextBubbleLink`       | [Link](/extensions/Link/)                               | Edit an existing link.          |
+| `RichTextBubbleLink`       | [Link](/extensions/Link/)                               | Edit a hovered link.            |
 | `RichTextBubbleImage`      | [Image](/extensions/Image/)                             | Edit a selected image.          |
 | `RichTextBubbleVideo`      | [Video](/extensions/Video/)                             | Edit a selected video.          |
-| `RichTextBubbleTable`      | [Table](/extensions/Table/)                             | Edit table structure and cells. |
+| `RichTextBubbleTable`      | [Table](/extensions/Table/)                             | Table actions, on right click.  |
 | `RichTextBubbleIframe`     | [Iframe](/extensions/Iframe/)                           | Edit an embedded frame.         |
-| `RichTextBubbleColumns`    | [Column and companion nodes](/extensions/Column/)       | Manage column layouts.          |
 | `RichTextBubbleImageGif`   | [ImageGif](/extensions/ImageGif/)                       | Edit a selected GIF.            |
 | `RichTextBubbleDrawer`     | [Drawer](/extensions/Drawer/)                           | Edit a drawing node.            |
 | `RichTextBubbleExcalidraw` | [Excalidraw](/extensions/Excalidraw/)                   | Edit an Excalidraw node.        |
@@ -80,33 +79,39 @@ For images, register `Image` in the existing extension array and mount `RichText
 | `RichTextBubbleTwitter`    | [Twitter](/extensions/Twitter/)                         | Manage a post embed.            |
 | `RichTextBubbleCallout`    | [Callout](/extensions/Callout/)                         | Edit a callout.                 |
 | `RichTextBubbleKatex`      | [Katex](/extensions/Katex/)                             | Edit a mathematical expression. |
-| `RichTextBubbleCodeBlock`  | [CodeBlock](/extensions/CodeBlock/)                     | Access code-block actions.      |
 
 All menu components in this table are exported from `reactjs-tiptap-editor/bubble`. Mount each menu once per editor and only include the menus your editor needs.
+
+`RichTextBubbleTable` is the odd one out: despite the name it mounts a context
+menu rather than a bubble, so the table actions appear where you right-click
+inside a table instead of hovering over the document while the caret is in a cell.
+
+Two blocks deliberately have no bubble menu:
+
+- **Code blocks** render their own toolbar (language, copy, delete) in the block's top-right corner, revealed on hover. It ships with the `CodeBlock` extension, so nothing needs mounting.
+- **Columns** expose their actions through `RichTextBubbleMenuDragHandle`, under the block menu of any block inside a column. Mount the drag handle to get them.
 
 ## Individual imports
 
 Use these public subpaths to make feature dependencies explicit. The existing `/bubble` entry remains supported. Import only the components you mount.
 
-| Component | Subpath after `reactjs-tiptap-editor` |
-| --- | --- |
-| `RichTextBubbleText` | `/bubble/text` |
-| `RichTextBubbleMenuDragHandle` | `/bubble/drag-handle` |
-| `RichTextBubbleColumns` | `/bubble/columns` |
-| `RichTextBubbleCodeBlock` | `/bubble/codeblock` |
-| `RichTextAIImprove` | `/bubble/ai` |
-| `RichTextBubbleCallout` | `/bubble/callout` |
-| `RichTextBubbleDrawer` | `/bubble/drawer` |
-| `RichTextBubbleExcalidraw` | `/bubble/excalidraw` |
-| `RichTextBubbleIframe` | `/bubble/iframe` |
-| `RichTextBubbleKatex` | `/bubble/katex` |
-| `RichTextBubbleLink` | `/bubble/link` |
-| `RichTextBubbleMermaid` | `/bubble/mermaid` |
-| `RichTextBubbleTable` | `/bubble/table` |
-| `RichTextBubbleTwitter` | `/bubble/twitter` |
-| `RichTextBubbleImage` | `/bubble/media` |
-| `RichTextBubbleVideo` | `/bubble/media` |
-| `RichTextBubbleImageGif` | `/bubble/media` |
+| Component                      | Subpath after `reactjs-tiptap-editor` |
+| ------------------------------ | ------------------------------------- |
+| `RichTextBubbleText`           | `/bubble/text`                        |
+| `RichTextBubbleMenuDragHandle` | `/bubble/drag-handle`                 |
+| `RichTextAIImprove`            | `/bubble/ai`                          |
+| `RichTextBubbleCallout`        | `/bubble/callout`                     |
+| `RichTextBubbleDrawer`         | `/bubble/drawer`                      |
+| `RichTextBubbleExcalidraw`     | `/bubble/excalidraw`                  |
+| `RichTextBubbleIframe`         | `/bubble/iframe`                      |
+| `RichTextBubbleKatex`          | `/bubble/katex`                       |
+| `RichTextBubbleLink`           | `/bubble/link`                        |
+| `RichTextBubbleMermaid`        | `/bubble/mermaid`                     |
+| `RichTextBubbleTable`          | `/bubble/table`                       |
+| `RichTextBubbleTwitter`        | `/bubble/twitter`                     |
+| `RichTextBubbleImage`          | `/bubble/media`                       |
+| `RichTextBubbleVideo`          | `/bubble/media`                       |
+| `RichTextBubbleImageGif`       | `/bubble/media`                       |
 
 `/bubble/media` exports the Image, Video, and ImageGif menus together. `RichTextAIImprove` is an AI control; see [AI](/extensions/AI/). The text bubble does not require KaTeX or Yjs. The drag handle still brings collaboration-related dependencies through Tiptap, even in an editor without collaboration.
 

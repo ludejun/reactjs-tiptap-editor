@@ -223,9 +223,6 @@
       "bubble/callout": [
         "./lib/components/Bubble/RichTextBubbleCallout.d.ts"
       ],
-      "bubble/columns": [
-        "./lib/components/Bubble/RichTextBubbleColumns.d.ts"
-      ],
       "bubble/drawer": [
         "./lib/components/Bubble/RichTextBubbleDrawer.d.ts"
       ],
@@ -255,9 +252,6 @@
       ],
       "bubble/drag-handle": [
         "./lib/components/Bubble/RichTextBubbleMenuDragHandle.d.ts"
-      ],
-      "bubble/codeblock": [
-        "./lib/components/Bubble/RichTextBubbleCodeBlock.d.ts"
       ],
       "bubble/ai": [
         "./lib/components/Bubble/RichTextAIImprove.d.ts"
@@ -867,16 +861,6 @@
         "default": "./lib/RichTextBubbleCallout.cjs"
       }
     },
-    "./bubble/columns": {
-      "import": {
-        "types": "./lib/components/Bubble/RichTextBubbleColumns.d.ts",
-        "default": "./lib/RichTextBubbleColumns.js"
-      },
-      "require": {
-        "types": "./lib/components/Bubble/RichTextBubbleColumns.d.ts",
-        "default": "./lib/RichTextBubbleColumns.cjs"
-      }
-    },
     "./bubble/drawer": {
       "import": {
         "types": "./lib/components/Bubble/RichTextBubbleDrawer.d.ts",
@@ -975,16 +959,6 @@
       "require": {
         "types": "./lib/components/Bubble/RichTextBubbleMenuDragHandle.d.ts",
         "default": "./lib/RichTextBubbleMenuDragHandle.cjs"
-      }
-    },
-    "./bubble/codeblock": {
-      "import": {
-        "types": "./lib/components/Bubble/RichTextBubbleCodeBlock.d.ts",
-        "default": "./lib/RichTextBubbleCodeBlock.js"
-      },
-      "require": {
-        "types": "./lib/components/Bubble/RichTextBubbleCodeBlock.d.ts",
-        "default": "./lib/RichTextBubbleCodeBlock.cjs"
       }
     },
     "./bubble/ai": {

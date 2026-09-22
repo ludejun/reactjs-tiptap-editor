@@ -28,7 +28,7 @@ import {
   MultipleColumnNode,
   RichTextColumn,
 } from 'reactjs-tiptap-editor/column';
-import { RichTextBubbleColumns } from 'reactjs-tiptap-editor/bubble/columns';
+import { RichTextBubbleMenuDragHandle } from 'reactjs-tiptap-editor/bubble/drag-handle';
 import 'reactjs-tiptap-editor/style.css';
 
 const DocumentColumn = Document.extend({ content: '(block|columns)+' });
@@ -47,7 +47,7 @@ export default function ColumnExample() {
   return (
     <RichTextProvider editor={editor}>
       <RichTextColumn />
-      <RichTextBubbleColumns />
+      <RichTextBubbleMenuDragHandle />
       <EditorContent editor={editor} />
     </RichTextProvider>
   );
@@ -56,4 +56,4 @@ export default function ColumnExample() {
 
 ## How to use
 
-Register all three exports: `Column` supplies behavior, while `ColumnNode` and `MultipleColumnNode` define the layout nodes. Replace the base Document with `DocumentColumn` as shown below; do not register both. Use `RichTextBubbleColumns` to access contextual column controls.
+Register all three exports: `Column` supplies behavior, while `ColumnNode` and `MultipleColumnNode` define the layout nodes. Replace the base Document with `DocumentColumn` as shown below; do not register both. Column controls (insert column before/after, delete column) live in the block menu of `RichTextBubbleMenuDragHandle`: hover any block inside a column and open the menu.

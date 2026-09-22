@@ -1,5 +1,4 @@
 export * from './RichTextBubbleCallout';
-export * from './RichTextBubbleColumns';
 export * from './RichTextBubbleDrawer';
 export * from './RichTextBubbleExcalidraw';
 export * from './RichTextBubbleIframe';
@@ -11,5 +10,4 @@ export * from './RichTextBubbleTable';
 export * from './RichTextBubbleText';
 export * from './RichTextBubbleTwitter';
 export * from './RichTextBubbleMenuDragHandle';
-export * from './RichTextBubbleCodeBlock';
 export * from './RichTextAIImprove';
