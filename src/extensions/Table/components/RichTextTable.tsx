@@ -28,11 +28,7 @@ export function RichTextTable() {
   function createTable(
     options: Parameters<import('@tiptap/core').Editor['commands']['insertTable']>[0]
   ) {
-    editor
-      .chain()
-      .focus()
-      .insertTable({ ...options, withHeaderRow: false })
-      .run();
+    editor.chain().focus().insertTable(options).run();
   }
 
   return (

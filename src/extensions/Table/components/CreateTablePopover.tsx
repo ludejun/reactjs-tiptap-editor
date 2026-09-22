@@ -159,7 +159,7 @@ function CreateTablePopover(props: IPropsCreateTablePopover) {
   }
 
   function resetTableGridSize(): void {
-    setWithHeaderRow(false);
+    setWithHeaderRow(true);
 
     setTableGridSize({
       rows: TABLE_INIT_GRID_SIZE,

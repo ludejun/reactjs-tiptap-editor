@@ -83,23 +83,40 @@
     @apply dark:richtext-border-l-neutral-300 dark:richtext-text-white;
   }
 
+  /* Inline code, GitHub style: a tinted chip that keeps the body text colour.
+     A dark pill looked wrong next to the light code blocks. */
   code {
-    @apply richtext-rounded-sm richtext-bg-neutral-900 richtext-font-mono richtext-text-white richtext-caret-white richtext-shadow-lg;
+    @apply richtext-rounded richtext-font-mono;
 
-    &::selection {
-      @apply richtext-bg-white/30;
-    }
+    background: var(--shj-inline-bg);
+    color: inherit;
+    padding: 0.15em 0.35em;
+    font-size: 0.875em;
   }
 
   pre {
-    @apply richtext-my-1 richtext-rounded !richtext-border richtext-border-black richtext-border-border richtext-bg-neutral-700 richtext-p-4 richtext-text-white richtext-caret-white dark:richtext-bg-neutral-900;
-
-    *::selection {
-      @apply richtext-bg-white/20;
-    }
+    @apply richtext-my-2 richtext-rounded-md !richtext-border !richtext-border-solid;
+    /* Colours come from the shj theme variables (see codeblock.scss) so the
+       block follows the editor's own light/dark class. */
+    border-color: var(--shj-border);
+    background: var(--shj-bg);
+    color: var(--shj-fg);
+    caret-color: var(--shj-fg);
+    padding: var(--richtext-code-padding-y, 12px) 12px;
+    padding-left: var(--richtext-code-gutter-width, 2.75em);
+    overflow-x: auto;
 
     code {
       @apply richtext-bg-inherit richtext-p-0 richtext-text-inherit richtext-shadow-none;
+
+      display: block;
+      white-space: pre;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      /* The caret sits in this element, and the inline-code rule above paints it
+         white — invisible now that the block has a light background. */
+      caret-color: inherit;
     }
   }
   /* List */
@@ -113,22 +130,47 @@
 
   ul,
   ol {
-    @apply richtext-my-6 richtext-px-8 richtext-py-0 first:richtext-mt-0 last:richtext-mb-0;
+    /* One marker column, sized in ems so it tracks the font size. Markers sit in
+       the gutter and the text keeps close to the surrounding paragraphs. */
+    padding-left: 1.5em;
+    padding-right: 0;
+    @apply richtext-my-2 richtext-py-0 first:richtext-mt-0 last:richtext-mb-0;
 
     ul,
-    ol,
+    ol {
+      @apply richtext-my-0;
+      padding-left: 1.5em;
+    }
+
     li {
-      @apply richtext-my-1;
+      @apply richtext-my-0.5;
+
+      &::marker {
+        @apply richtext-text-foreground/60;
+      }
     }
 
     p {
-      @apply richtext-mb-1 richtext-mt-0;
+      @apply richtext-my-0;
     }
   }
 
   & > ul,
   & > ol {
-    @apply richtext-my-8 first:richtext-mt-0 last:richtext-mb-0;
+    @apply richtext-my-3 first:richtext-mt-0 last:richtext-mb-0;
+  }
+
+  /* Lists nested inside a container block get a tighter gutter: the container
+     already provides its own padding. */
+  td,
+  th,
+  .column,
+  [data-type='detailsContent'] {
+    ul,
+    ol {
+      padding-left: 1.25em;
+      @apply richtext-my-1;
+    }
   }
 
   ul[data-type='taskList'] {
@@ -155,17 +197,37 @@
     }
   }
 
+  .image-caption {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    @apply richtext-text-muted-foreground;
+  }
+
   table {
+    /* `border-collapse` is set below, at a specificity that beats the injected
+       reset. */
     border: 1px solid;
-    @apply richtext-box-border richtext-block richtext-table-fixed richtext-border-collapse richtext-overflow-x-auto richtext-overflow-y-hidden richtext-border-black/10;
+    /* Same step down from `--radius` as `pre` (`rounded-md`) and the menus,
+       so a table does not read as rounder than the blocks around it. */
+    border-radius: calc(var(--radius) - 2px);
+    @apply richtext-box-border richtext-block richtext-table-fixed richtext-overflow-x-auto richtext-overflow-y-hidden richtext-border-black/10;
     @apply dark:richtext-border-white/20;
 
     td,
     th {
       border: 1px solid;
       @apply richtext-border !important;
-      @apply richtext-relative richtext-box-border richtext-min-w-[1em] richtext-border-black/10 richtext-p-2 richtext-text-left richtext-align-top;
+      @apply richtext-relative richtext-box-border richtext-border-black/10 richtext-p-2 richtext-text-left richtext-align-top;
       @apply dark:richtext-border-white/20;
+      /* `!important` to match the blanket `richtext-border !important` above:
+         each cell draws only its right and bottom edge, the table frame draws
+         the top and left, so no inner line is ever doubled. */
+      border-top-width: 0 !important;
+      border-left-width: 0 !important;
+      /* Gives `width: auto` something to work from, so a two-column table is
+         two readable columns rather than two hairlines. */
+      min-width: 8em;
 
       &:first-of-type:not(a) {
         @apply richtext-mt-0;
@@ -180,8 +242,36 @@
       }
     }
 
+    /* The table's own frame already draws these edges. */
+    tr > :last-child {
+      border-right-width: 0 !important;
+    }
+
+    tr:last-child > * {
+      border-bottom-width: 0 !important;
+    }
+
+    /* Clip the corner cells so a header background follows the frame. 1px
+       tighter than the frame, to sit inside the border rather than under it. */
+    tr:first-child > :first-child {
+      border-top-left-radius: calc(var(--radius) - 3px);
+    }
+
+    tr:first-child > :last-child {
+      border-top-right-radius: calc(var(--radius) - 3px);
+    }
+
+    tr:last-child > :first-child {
+      border-bottom-left-radius: calc(var(--radius) - 3px);
+    }
+
+    tr:last-child > :last-child {
+      border-bottom-right-radius: calc(var(--radius) - 3px);
+    }
+
     th {
-      @apply richtext-text-left richtext-font-bold;
+      @apply richtext-bg-black/[0.04] richtext-text-left richtext-font-semibold;
+      @apply dark:richtext-bg-white/[0.06];
     }
   }
 }
@@ -192,4 +282,17 @@
 
 .reactjs-tiptap-editor .ProseMirror .search-result-current {
   background-color: #0dff0080;
+}
+
+/* `separate` rather than `collapse`: a collapsed table ignores `border-radius`
+   entirely, so the table could never follow the host's radius. With spacing
+   zeroed the grid looks identical, as long as each cell draws only its right
+   and bottom edge and the table draws the outer frame — otherwise every inner
+   line would be 2px.
+   The selector carries one extra class on purpose: `resetCSS` sets
+   `border-collapse: collapse` on `.reactjs-tiptap-editor table`, the same
+   specificity as `.ProseMirror table`, and is injected after this stylesheet. */
+.reactjs-tiptap-editor .ProseMirror table {
+  border-collapse: separate;
+  border-spacing: 0;
 }

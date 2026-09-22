@@ -1,24 +1,44 @@
 import { isActive } from '@tiptap/core';
 import { useEditorState } from '@tiptap/react';
-import { BubbleMenu } from '@tiptap/react/menus';
+import { useCallback, useEffect, useState } from 'react';
 
-import { ActionButton, Separator } from '@/components';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+  IconComponent,
+} from '@/components';
 import { Table } from '@/extensions/Table';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 import { useEditableEditor } from '@/store/store';
-
-import type { Editor } from '@tiptap/core';
+import { getShortcutKeys } from '@/utils/plateform';
 
 interface RichTextBubbleTableProps {
   hiddenActions?: string[];
 }
 
+interface MenuPosition {
+  x: number;
+  y: number;
+}
+
+/**
+ * Table actions, opened with a right click inside the table.
+ *
+ * A caret-triggered bubble menu sat on top of the document the whole time the
+ * cursor was in a cell; every other editor puts these behind a context menu.
+ */
 function RichTextBubbleTable({ hiddenActions = [] }: RichTextBubbleTableProps) {
   const { t } = useLocale();
 
   const editable = useEditableEditor();
   const editor = useEditorInstance();
+
+  const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
 
   const can = useEditorState({
     editor,
@@ -38,176 +58,181 @@ function RichTextBubbleTable({ hiddenActions = [] }: RichTextBubbleTableProps) {
     },
   });
 
-  const shouldShow = ({ editor }: { editor: Editor }) => {
-    return isActive(editor.view.state, Table.name);
-  };
+  useEffect(() => {
+    if (!editable) {
+      return;
+    }
+
+    const dom = editor.view.dom;
+
+    const onContextMenu = (event: MouseEvent) => {
+      const cell = (event.target as HTMLElement | null)?.closest?.('td, th');
+
+      if (!cell || !dom.contains(cell)) {
+        return;
+      }
+
+      // Move the caret into the cell that was right-clicked, otherwise the
+      // commands below would act on wherever the caret happened to be. A
+      // multi-cell selection is kept as is.
+      const posAtPointer = editor.view.posAtCoords({ left: event.clientX, top: event.clientY });
+
+      if (posAtPointer && !isActive(editor.view.state, Table.name)) {
+        editor.commands.setTextSelection(posAtPointer.pos);
+      } else if (posAtPointer && editor.state.selection.empty) {
+        editor.commands.setTextSelection(posAtPointer.pos);
+      }
+
+      event.preventDefault();
+      setMenuPosition({ x: event.clientX, y: event.clientY });
+    };
+
+    dom.addEventListener('contextmenu', onContextMenu);
+
+    return () => dom.removeEventListener('contextmenu', onContextMenu);
+  }, [editor, editable]);
 
   const isHidden = (key: string) => hiddenActions.includes(key);
 
-  function onAddColumnBefore() {
-    editor.chain().focus().addColumnBefore().run();
-  }
+  const run = useCallback(
+    (command: () => void) => () => {
+      command();
+      setMenuPosition(null);
+    },
+    []
+  );
 
-  function onAddColumnAfter() {
-    editor.chain().focus().addColumnAfter().run();
-  }
-
-  function onDeleteColumn() {
-    editor.chain().focus().deleteColumn().run();
-  }
-  function onAddRowAbove() {
-    editor.chain().focus().addRowBefore().run();
-  }
-
-  function onAddRowBelow() {
-    editor.chain().focus().addRowAfter().run();
-  }
-
-  function onDeleteRow() {
-    editor.chain().focus().deleteRow().run();
-  }
-
-  function onMergeCell() {
-    editor.chain().focus().mergeCells().run();
-  }
-  function onSplitCell() {
-    editor?.chain().focus().splitCell().run();
-  }
-  function onDeleteTable() {
-    editor.chain().focus().deleteTable().run();
-  }
-
-  // function onSetCellBackground(color: string) {
-  //   editor.chain().focus().setTableCellBackground(color).run();
-  // }
+  const onOpenChange = useCallback((open: boolean) => {
+    if (!open) {
+      setMenuPosition(null);
+    }
+  }, []);
 
   if (!editable) {
     return <></>;
   }
 
+  const items = [
+    {
+      key: 'addColumnBefore',
+      icon: 'BetweenHorizonalEnd',
+      label: t('editor.table.menu.insertColumnBefore'),
+      disabled: !can.addColumnBefore,
+      action: () => editor.chain().focus().addColumnBefore().run(),
+    },
+    {
+      key: 'addColumnAfter',
+      icon: 'BetweenHorizonalStart',
+      label: t('editor.table.menu.insertColumnAfter'),
+      disabled: !can.addColumnAfter,
+      action: () => editor.chain().focus().addColumnAfter().run(),
+    },
+    {
+      key: 'deleteColumn',
+      icon: 'DeleteColumn',
+      label: t('editor.table.menu.deleteColumn'),
+      disabled: !can.deleteColumn,
+      action: () => editor.chain().focus().deleteColumn().run(),
+    },
+    { key: 'separator-rows', separator: true },
+    {
+      key: 'addRowAbove',
+      icon: 'BetweenVerticalEnd',
+      label: t('editor.table.menu.insertRowAbove'),
+      disabled: !can.addRowBefore,
+      action: () => editor.chain().focus().addRowBefore().run(),
+    },
+    {
+      key: 'addRowBelow',
+      icon: 'BetweenVerticalStart',
+      label: t('editor.table.menu.insertRowBelow'),
+      disabled: !can.addRowAfter,
+      action: () => editor.chain().focus().addRowAfter().run(),
+    },
+    {
+      key: 'deleteRow',
+      icon: 'DeleteRow',
+      label: t('editor.table.menu.deleteRow'),
+      disabled: !can.deleteRow,
+      action: () => editor.chain().focus().deleteRow().run(),
+    },
+    { key: 'separator-cells', separator: true },
+    {
+      key: 'mergeCells',
+      icon: 'TableCellsMerge',
+      label: t('editor.table.menu.mergeCells'),
+      disabled: !can.mergeCells,
+      action: () => editor.chain().focus().mergeCells().run(),
+    },
+    {
+      key: 'splitCells',
+      icon: 'TableCellsSplit',
+      label: t('editor.table.menu.splitCells'),
+      disabled: !can.splitCell,
+      action: () => editor.chain().focus().splitCell().run(),
+    },
+    { key: 'separator-table', separator: true },
+    {
+      key: 'insertParagraphAfterTable',
+      icon: 'CornerDownLeft',
+      label: t('editor.table.menu.insertParagraphAfterTable'),
+      disabled: false,
+      // Shown so the shortcut is discoverable; the label reads ⌘ on a Mac
+      // and Ctrl elsewhere.
+      shortcut: getShortcutKeys(['mod', 'Enter']),
+      action: () => editor.chain().focus().insertParagraphAfterTable().run(),
+    },
+    {
+      key: 'deleteTable',
+      icon: 'Trash2',
+      label: t('editor.table.menu.deleteTable'),
+      disabled: !can.deleteTable,
+      destructive: true,
+      action: () => editor.chain().focus().deleteTable().run(),
+    },
+  ] as const;
+
   return (
-    <BubbleMenu
-      editor={editor}
-      options={{ placement: 'bottom', offset: 8, flip: true }}
-      pluginKey={'RichTextBubbleTable'}
-      shouldShow={shouldShow}
-    >
-      <div className='richtext-flex richtext-items-center richtext-gap-2 richtext-rounded-md !richtext-border !richtext-border-solid !richtext-border-border richtext-bg-popover richtext-p-1 richtext-text-popover-foreground richtext-shadow-md richtext-outline-none'>
-        {!isHidden('addColumnBefore') && (
-          <ActionButton
-            action={onAddColumnBefore}
-            disabled={!can.addColumnBefore}
-            icon='BetweenHorizonalEnd'
-            tooltip={t('editor.table.menu.insertColumnBefore')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
-
-        {!isHidden('addColumnAfter') && (
-          <ActionButton
-            action={onAddColumnAfter}
-            disabled={!can.addColumnAfter}
-            icon='BetweenHorizonalStart'
-            tooltip={t('editor.table.menu.insertColumnAfter')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
-
-        {!isHidden('deleteColumn') && (
-          <ActionButton
-            action={onDeleteColumn}
-            disabled={!can.deleteColumn}
-            icon='DeleteColumn'
-            tooltip={t('editor.table.menu.deleteColumn')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
-
-        <Separator
-          className='!richtext-mx-1 !richtext-my-2 !richtext-h-[16px]'
-          orientation='vertical'
+    <DropdownMenu onOpenChange={onOpenChange} open={!!menuPosition}>
+      <DropdownMenuTrigger asChild>
+        <span
+          aria-hidden
+          className='richtext-pointer-events-none richtext-fixed richtext-size-0'
+          style={{ left: menuPosition?.x ?? 0, top: menuPosition?.y ?? 0 }}
         />
+      </DropdownMenuTrigger>
 
-        {!isHidden('addRowAbove') && (
-          <ActionButton
-            action={onAddRowAbove}
-            disabled={!can.addRowBefore}
-            icon='BetweenVerticalEnd'
-            tooltip={t('editor.table.menu.insertRowAbove')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
+      <DropdownMenuContent align='start' className='richtext-w-52' side='bottom' sideOffset={0}>
+        {items.map((item) => {
+          if ('separator' in item) {
+            return <DropdownMenuSeparator key={item.key} />;
+          }
 
-        {!isHidden('addRowBelow') && (
-          <ActionButton
-            action={onAddRowBelow}
-            disabled={!can.addRowAfter}
-            icon='BetweenVerticalStart'
-            tooltip={t('editor.table.menu.insertRowBelow')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
+          if (isHidden(item.key)) {
+            return null;
+          }
 
-        {!isHidden('deleteRow') && (
-          <ActionButton
-            action={onDeleteRow}
-            disabled={!can.deleteRow}
-            icon='DeleteRow'
-            tooltip={t('editor.table.menu.deleteRow')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
+          return (
+            <DropdownMenuItem
+              className={
+                'destructive' in item && item.destructive
+                  ? 'richtext-flex richtext-gap-3 focus:richtext-bg-red-400/30 focus:richtext-text-red-500'
+                  : 'richtext-flex richtext-gap-3'
+              }
+              disabled={item.disabled}
+              key={item.key}
+              onClick={run(item.action)}
+            >
+              <IconComponent name={item.icon} />
 
-        <Separator
-          className='!richtext-mx-1 !richtext-my-2 !richtext-h-[16px]'
-          orientation='vertical'
-        />
+              <span>{item.label}</span>
 
-        {!isHidden('mergeCells') && (
-          <ActionButton
-            action={onMergeCell}
-            disabled={!can.mergeCells}
-            icon='TableCellsMerge'
-            tooltip={t('editor.table.menu.mergeCells')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
-
-        {!isHidden('splitCells') && (
-          <ActionButton
-            action={onSplitCell}
-            disabled={!can.splitCell}
-            icon='TableCellsSplit'
-            tooltip={t('editor.table.menu.splitCells')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
-
-        <Separator
-          className='!richtext-mx-1 !richtext-my-2 !richtext-h-[16px]'
-          orientation='vertical'
-        />
-
-        {/* {!isHidden('setCellBackground') && (
-          <HighlightActionButton
-            action={onSetCellBackground}
-            editor={editor}
-            tooltip={t('editor.table.menu.setCellsBgColor')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}  */}
-
-        {!isHidden('deleteTable') && (
-          <ActionButton
-            action={onDeleteTable}
-            disabled={!can.deleteTable}
-            icon='Trash2'
-            tooltip={t('editor.table.menu.deleteTable')}
-            tooltipOptions={{ sideOffset: 15 }}
-          />
-        )}
-      </div>
-    </BubbleMenu>
+              {'shortcut' in item && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

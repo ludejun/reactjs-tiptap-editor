@@ -3,7 +3,10 @@
   color: hsl(var(--foreground));
 
   .ProseMirror.ProseMirror.ProseMirror {
-    @apply richtext-z-0 richtext-py-16 richtext-pl-20 richtext-pr-8 richtext-caret-black richtext-outline-0 dark:richtext-caret-white lg:richtext-pl-8 lg:richtext-pr-8;
+    @apply richtext-z-0 richtext-py-16 richtext-pl-20 richtext-pr-8 richtext-caret-black dark:richtext-caret-white lg:richtext-pl-8 lg:richtext-pr-8;
+    /* `outline-0` only zeroes the width; the UA still paints its `outline-style:
+       auto` focus ring over the whole editor. */
+    outline: none;
     min-height: 180px;
     padding: 32px 80px;
 
@@ -32,7 +35,10 @@
       table {
         overflow: hidden;
         display: table;
-        width: 100%;
+        /* Only as wide as the columns need; `table-fixed` + a per-cell
+           min-width keeps narrow tables narrow instead of stretching them. */
+        width: auto;
+        max-width: 100%;
 
         .column-resize-handle {
           @apply richtext-pointer-events-none richtext-absolute richtext-bottom-[-2px] richtext-right-[-2px] richtext-top-0 richtext-z-10 richtext-w-1 richtext-bg-primary;
@@ -45,6 +51,13 @@
           @apply richtext-border-double richtext-border-black/20 richtext-bg-black/5;
           @apply dark:richtext-border-white/20 dark:richtext-bg-white/10;
         }
+      }
+    }
+
+    /* Phones have no room for a shrink-to-fit table. */
+    @media (max-width: 768px) {
+      .tableWrapper table {
+        width: 100%;
       }
     }
 
@@ -72,6 +85,16 @@
     :not(.image-view)::selection,
     :not(.search-result)::selection {
       background-color: hsl(var(--accent)) !important;
+    }
+
+    /* The rule above paints selections in `--accent`, a near-white grey that
+       vanishes against the code block's own light background. Code blocks get
+       their own neutral tint — following `--primary` would wash the block in
+       whatever brand colour the host picked. The extra `pre` wins on
+       specificity. */
+    pre :not(.image-view)::selection,
+    pre::selection {
+      background-color: var(--shj-selection) !important;
     }
 
     .is-empty::before {
@@ -175,6 +198,23 @@
       &.focus {
         img {
           @apply richtext-outline richtext-outline-2 richtext-outline-primary;
+        }
+      }
+
+      &__caption {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        outline: none;
+        font-size: 12px;
+        line-height: 1.5;
+        @apply richtext-text-muted-foreground;
+
+        &::placeholder {
+          @apply richtext-text-muted-foreground/60;
         }
       }
 
