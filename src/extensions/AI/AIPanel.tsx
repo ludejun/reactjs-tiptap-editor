@@ -4,8 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocale } from '@/locales';
 
 import { generateAIText } from './client';
+import { markdownToPreviewHTML } from './markdown';
 
-import type { AIAttachment, AIMessage, AIOptions } from './types';
+import type { AIAttachment, AIMessage, AIPanelComponentProps } from './types';
 
 function readAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -23,34 +24,45 @@ function formatSize(bytes: number): string {
     : `${Math.round(bytes / 1024)} KB`;
 }
 
-/** Splits text into paragraphs of word tokens; each token keeps its surrounding whitespace. */
-function tokenize(text: string) {
-  return text.split(/\n\s*\n/).map((paragraph) => paragraph.match(/\s*\S+\s*/g) ?? []);
-}
+export type AIPanelProps = AIPanelComponentProps;
 
-export interface AIPanelProps {
-  options: AIOptions;
-  selectedText: string;
-  initialPrompt?: string;
-  apply: (text: string) => void;
-  close: () => void;
-}
-
-export function AIPanel({ options, selectedText, initialPrompt, apply, close }: AIPanelProps) {
+/**
+ * The AI dialog: prompt, attachments, and the answer rendered as the document
+ * would show it. Text streams in from the provider and is re-rendered through
+ * the editor schema as it arrives, so a table or a code block takes its final
+ * shape while still being written.
+ */
+export function AIPanel({
+  editor,
+  options,
+  selectedText,
+  initialPrompt,
+  apply,
+  close,
+}: AIPanelProps) {
   const { t } = useLocale();
   const [prompt, setPrompt] = useState(initialPrompt || '');
   const [tone, setTone] = useState('');
   const [attachments, setAttachments] = useState<AIAttachment[]>([]);
   const filePicker = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState('');
-  const paragraphs = useMemo(() => (result ? tokenize(result) : []), [result]);
-  const total = paragraphs.reduce((sum, tokens) => sum + tokens.length, 0);
-  const [revealed, setRevealed] = useState(0);
-  const animation = useRef(0);
-  const revealing = revealed < total;
+  const [streaming, setStreaming] = useState(false);
+  // Chunks arrive faster than React should re-render; they are batched per frame.
+  const pending = useRef('');
+  const frame = useRef(0);
+  const previewHtml = useMemo(() => {
+    if (!result) return '';
+    try {
+      return markdownToPreviewHTML(editor, result);
+    } catch {
+      return '';
+    }
+  }, [editor, result]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const working = busy || revealing;
+  const working = busy;
+  // In the review layout the send button doubles as Stop while an answer streams.
+  const revealing = busy;
   const input = useRef<HTMLTextAreaElement>(null);
   const stopButton = useRef<HTMLButtonElement>(null);
   const controller = useRef<AbortController | null>(null);
@@ -73,28 +85,25 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
     };
   }, []);
 
-  useEffect(() => {
-    if (!total) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setRevealed(total);
-      return;
-    }
-    // Words stream in at a steady cadence; each newly mounted word fades in via CSS.
-    const duration = Math.min(total * 60, 5000);
-    const start = performance.now();
-    function tick(now: number) {
-      const count = Math.min(total, Math.max(1, Math.floor(((now - start) / duration) * total)));
-      setRevealed(count);
-      if (count < total) animation.current = requestAnimationFrame(tick);
-    }
-    animation.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animation.current);
-  }, [paragraphs, total]);
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
 
   useEffect(() => {
-    if (busy) stopButton.current?.focus();
-    else if (!revealing) input.current?.focus();
-  }, [busy, revealing]);
+    if (busy && !result) stopButton.current?.focus();
+    else if (!busy) input.current?.focus();
+  }, [busy, result]);
+
+  function flushChunks() {
+    frame.current = 0;
+    if (!pending.current) return;
+    const chunk = pending.current;
+    pending.current = '';
+    setResult((current) => current + chunk);
+  }
+
+  function onChunk(text: string) {
+    pending.current += text;
+    if (!frame.current) frame.current = requestAnimationFrame(flushChunks);
+  }
 
   const imageInput = options.enableImageInput !== false;
   const fileInput = options.enableFileInput !== false;
@@ -164,17 +173,31 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
     const active = new AbortController();
     controller.current = active;
     setBusy(true);
+    setStreaming(true);
     setError('');
+    // A new answer replaces the previous one from its first chunk.
+    let started = false;
+    const streamed = (text: string) => {
+      if (active.signal.aborted) return;
+      if (!started) {
+        started = true;
+        pending.current = '';
+        setResult('');
+      }
+      onChunk(text);
+    };
     try {
-      const text = await generateAIText(options, {
-        messages,
-        systemPrompt: options.systemPrompt,
-        signal: active.signal,
-      });
+      const text = await generateAIText(
+        options,
+        { messages, systemPrompt: options.systemPrompt, signal: active.signal },
+        streamed
+      );
       if (active.signal.aborted) return;
       if (!text.trim()) throw new Error(t('editor.ai.error.empty'));
       history.current = [...messages, { role: 'assistant', content: text }];
-      if (text !== result) setRevealed(0);
+      cancelAnimationFrame(frame.current);
+      frame.current = 0;
+      pending.current = '';
       setResult(text);
       setPrompt('');
       setAttachments([]);
@@ -185,39 +208,30 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
       if (controller.current === active) {
         controller.current = null;
         setBusy(false);
+        setStreaming(false);
         input.current?.focus();
       }
     }
   }
 
   function stop() {
-    cancelAnimationFrame(animation.current);
-    setRevealed(total);
     controller.current?.abort();
     controller.current = null;
+    // Whatever arrived is kept; a partial answer is still worth reviewing.
+    flushChunks();
     setBusy(false);
+    setStreaming(false);
     input.current?.focus();
   }
 
-  let offset = 0;
-  const preview = paragraphs.map((tokens, index) => {
-    const start = offset;
-    offset += tokens.length;
-    // Paragraphs the stream has not reached yet stay unmounted so they take no space.
-    if (index > 0 && revealed <= start) return null;
-    const shown = Math.min(tokens.length, Math.max(0, revealed - start));
-    return (
-      <p key={index}>
-        <span className='richtext-ai-insertion'>
-          {tokens.slice(0, shown).map((token, position) => (
-            <span key={position} className='richtext-ai-word'>
-              {token}
-            </span>
-          ))}
-        </span>
-      </p>
-    );
-  });
+  const preview = options.renderResult ? (
+    options.renderResult({ markdown: result, html: previewHtml, streaming })
+  ) : (
+    <div
+      className={`richtext-ai-rendered ProseMirror ${streaming ? 'richtext-ai-streaming' : ''}`}
+      dangerouslySetInnerHTML={{ __html: previewHtml }}
+    />
+  );
 
   return (
     <div
@@ -237,12 +251,12 @@ export function AIPanel({ options, selectedText, initialPrompt, apply, close }: 
         <div
           className='richtext-ai-preview'
           aria-label={t('editor.ai.preview')}
-          aria-busy={revealing}
+          aria-busy={streaming}
         >
           {preview}
         </div>
       ) : null}
-      {busy ? (
+      {busy && !result ? (
         <div className='richtext-ai-loading'>
           <span className='richtext-ai-loading-label' role='status'>
             {t('editor.ai.writing')}

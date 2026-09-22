@@ -3,11 +3,25 @@ import { Plugin } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
 import { ReactRenderer } from '@tiptap/react';
 
-import { AIPanel, type AIPanelProps } from './AIPanel';
+import { AIPanel } from './AIPanel';
+import { markdownToSlice } from './markdown';
 
-import type { AIOptions } from './types';
+import type { AIOptions, AIPanelComponentProps } from './types';
 
-export type { AIOptions, AIProtocol, AIMessage, AIRequest } from './types';
+export type {
+  AIOptions,
+  AIProtocol,
+  AIMessage,
+  AIRequest,
+  AIResultContext,
+  AIPanelComponentProps,
+} from './types';
+export {
+  markdownToFragment,
+  markdownToHTML,
+  markdownToPreviewHTML,
+  markdownToSlice,
+} from './markdown';
 
 import { aiPluginKey, type AISession } from './state';
 export { aiPluginKey } from './state';
@@ -17,7 +31,8 @@ declare module '@tiptap/core' {
     ai: {
       openAI: (prompt?: string) => ReturnType;
       closeAI: () => ReturnType;
-      applyAI: (text: string) => ReturnType;
+      /** Replaces the AI range with `markdown`, parsed through the editor schema. */
+      applyAI: (markdown: string) => ReturnType;
     };
   }
 }
@@ -33,6 +48,7 @@ export const AI = Extension.create<AIOptions>({
       maxTokens: 2048,
       headers: {},
       generate: null,
+      stream: true,
       systemPrompt:
         'You are a writing assistant inside a text editor. Follow the user’s instructions. Reply in the user’s language. Return only the final text, without commentary or HTML/Markdown formatting.',
       enableImageInput: true,
@@ -67,21 +83,18 @@ export const AI = Extension.create<AIOptions>({
           return true;
         },
       applyAI:
-        (text) =>
-        ({ editor, state, commands }) => {
+        (markdown) =>
+        ({ editor, state, tr, dispatch }) => {
           const range = aiPluginKey.getState(state);
-          if (!editor.isEditable || !range || !text.trim()) return false;
-          // JSON text nodes ensure model output cannot inject HTML or executable markup.
-          return commands.insertContentAt(
-            range,
-            text
-              .replace(/\r\n?/g, '\n')
-              .split('\n')
-              .map((line) => ({
-                type: 'paragraph',
-                content: line ? [{ type: 'text', text: line }] : [],
-              }))
-          );
+          if (!editor.isEditable || !range || !markdown.trim()) return false;
+          if (dispatch) {
+            // Parsed through the schema: headings, lists, tables and code
+            // blocks become real nodes; anything the schema does not know,
+            // including any markup the model may have produced, is dropped.
+            tr.replaceRange(range.from, range.to, markdownToSlice(editor, markdown));
+            tr.setMeta(aiPluginKey, null).scrollIntoView();
+          }
+          return true;
         },
     };
   },
@@ -146,7 +159,8 @@ export const AI = Extension.create<AIOptions>({
           },
         },
         view(view) {
-          let renderer: ReactRenderer<unknown, AIPanelProps> | null = null;
+          let renderer: ReactRenderer<unknown, AIPanelComponentProps> | null = null;
+          const Panel = options.components?.Panel ?? AIPanel;
           let current: AISession | null = null;
           function destroy() {
             renderer?.destroy();
@@ -159,9 +173,10 @@ export const AI = Extension.create<AIOptions>({
             current = next;
             destroy();
             if (!next) return;
-            renderer = new ReactRenderer(AIPanel, {
+            renderer = new ReactRenderer(Panel, {
               editor,
               props: {
+                editor,
                 options,
                 initialPrompt: next.prompt,
                 selectedText: view.state.doc.textBetween(next.from, next.to, '\n'),
@@ -169,8 +184,8 @@ export const AI = Extension.create<AIOptions>({
                   editor.commands.closeAI();
                   editor.commands.focus();
                 },
-                apply: (text: string) => {
-                  if (editor.commands.applyAI(text)) editor.commands.focus();
+                apply: (markdown: string) => {
+                  if (editor.commands.applyAI(markdown)) editor.commands.focus();
                 },
               },
             });

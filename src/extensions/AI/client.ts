@@ -55,8 +55,78 @@ function anthropicContent(message: AIMessage) {
   ];
 }
 
-export async function generateAIText(options: AIOptions, request: AIRequest): Promise<string> {
-  if (options.generate) return options.generate(request);
+/**
+ * Reads a server-sent-events body and hands each text delta to `onChunk`.
+ * Returns the concatenated text.
+ */
+async function readEventStream(
+  response: Response,
+  anthropic: boolean,
+  onChunk: (text: string) => void,
+  signal: AbortSignal
+): Promise<string> {
+  const reader = response.body?.getReader();
+  if (!reader) return '';
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let text = '';
+  const onAbort = () => void reader.cancel().catch(() => undefined);
+  signal.addEventListener('abort', onAbort, { once: true });
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let boundary = buffer.indexOf('\n\n');
+      while (boundary !== -1) {
+        const event = buffer.slice(0, boundary);
+        buffer = buffer.slice(boundary + 2);
+        boundary = buffer.indexOf('\n\n');
+        const data = event
+          .split('\n')
+          .filter((line) => line.startsWith('data:'))
+          .map((line) => line.slice(5).trim())
+          .join('\n');
+        if (!data || data === '[DONE]') continue;
+        let json: Record<string, unknown>;
+        try {
+          json = JSON.parse(data);
+        } catch {
+          continue;
+        }
+        let piece: string | undefined;
+        if (anthropic) {
+          if (json.type === 'content_block_delta') {
+            const delta = json.delta as { type?: string; text?: string } | undefined;
+            if (delta?.type === 'text_delta') piece = delta.text;
+          }
+        } else {
+          piece = (json.choices as { delta?: { content?: string } }[] | undefined)?.[0]?.delta
+            ?.content;
+        }
+        if (typeof piece === 'string' && piece) {
+          text += piece;
+          onChunk(piece);
+        }
+      }
+    }
+  } finally {
+    signal.removeEventListener('abort', onAbort);
+  }
+  return text;
+}
+
+/**
+ * Asks the configured provider for text. With `onChunk` (and `stream` not
+ * disabled) the provider is asked for server-sent events and each delta is
+ * passed on as it arrives; the resolved value is always the full text.
+ */
+export async function generateAIText(
+  options: AIOptions,
+  request: AIRequest,
+  onChunk?: (text: string) => void
+): Promise<string> {
+  if (options.generate) return options.generate(request, onChunk);
   if (!options.model.trim()) throw new Error(translate('editor.ai.error.noModel'));
   if (options.protocol !== 'openai' && options.protocol !== 'anthropic') {
     throw new Error(translate('editor.ai.error.protocol'));
@@ -81,6 +151,7 @@ export async function generateAIText(options: AIOptions, request: AIRequest): Pr
     role: message.role,
     content: anthropic ? anthropicContent(message) : openAIContent(message),
   }));
+  const stream = !!onChunk && options.stream !== false;
   const response = await fetch(`${base}/${anthropic ? 'messages' : 'chat/completions'}`, {
     method: 'POST',
     headers: { ...headers, ...options.headers },
@@ -92,17 +163,24 @@ export async function generateAIText(options: AIOptions, request: AIRequest): Pr
             max_tokens: options.maxTokens,
             system: request.systemPrompt,
             messages,
+            ...(stream ? { stream: true } : {}),
           }
         : {
             model: options.model,
             max_completion_tokens: options.maxTokens,
             messages: [{ role: 'system', content: request.systemPrompt }, ...messages],
+            ...(stream ? { stream: true } : {}),
           }
     ),
   });
   // Do not display raw provider errors: a proxy may include credentials in them.
   if (!response.ok)
     throw new Error(translate('editor.ai.error.request', { status: response.status }));
+  if (stream && /text\/event-stream/i.test(response.headers.get('content-type') ?? '')) {
+    const streamed = await readEventStream(response, anthropic, onChunk!, request.signal);
+    if (!streamed.trim()) throw new Error(translate('editor.ai.error.empty'));
+    return streamed;
+  }
   const data = await response.json();
   const text: unknown = anthropic
     ? Array.isArray(data.content)

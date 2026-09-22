@@ -148,3 +148,49 @@ For a custom `buttonBubble`, import `RichTextAIImprove` from
 You can also run a preset programmatically with
 `editor.commands.openAI('Make the selected text more concise.')`.
 Calling `openAI()` without a prompt retains the manual input flow.
+
+## Streaming and rich answers
+
+Answers stream in. With the built-in transport the provider is asked for server-sent events (OpenAI `stream: true`, Anthropic `content_block_delta`) and each delta is shown as it arrives; set `stream: false` to wait for the whole answer instead. A custom `generate` streams by calling its second argument:
+
+```ts
+AI.configure({
+  generate: async (request, onChunk) => {
+    const response = await fetch('/api/ai', {
+      method: 'POST',
+      body: JSON.stringify(request),
+      signal: request.signal,
+    });
+    let text = '';
+    for await (const chunk of readLines(response.body)) {
+      text += chunk;
+      onChunk?.(chunk); // shown immediately
+    }
+    return text; // the full answer, used for history and Apply
+  },
+});
+```
+
+The answer is treated as markdown and rendered **through the editor's own schema**: a `|` table becomes the editor's table, a fenced block its code block, `##` a heading, `- [ ]` a task list. The preview inside the panel is the exact HTML the editor would save, with the document's styles, so what you see is what Apply inserts — as real nodes, not pasted text. Anything the schema does not know (scripts, unknown tags, attributes) is dropped on the way in.
+
+Apply merges a single-paragraph answer into the paragraph being edited and replaces whole blocks otherwise. The preview lives in the document flow under the selection rather than in a modal, so you can compare it with the surrounding text; it is not part of the document until Apply.
+
+## Custom rendering
+
+Two levels:
+
+- `renderResult({ markdown, html, streaming })` replaces only how the answer is shown — for example to render the markdown with your own component, add a word count, or show a diff against the selection. `html` is the schema-rendered form described above.
+- `components.Panel` replaces the whole dialog. It receives `editor`, `options`, `selectedText`, `initialPrompt`, `apply(markdown)` and `close()`; call `generateAIText(options, request, onChunk)` from `reactjs-tiptap-editor/ai` for the transport, or your own.
+
+```tsx
+AI.configure({
+  renderResult: ({ html, streaming }) => (
+    <div
+      className={streaming ? 'answer answer--live' : 'answer'}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  ),
+});
+```
+
+The helpers behind this are exported too: `markdownToHTML`, `markdownToFragment(editor, md)`, `markdownToSlice(editor, md)` and `markdownToPreviewHTML(editor, md)`.

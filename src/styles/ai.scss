@@ -116,12 +116,13 @@
     padding-top: 10px;
   }
   .richtext-ai-preview {
-    white-space: pre-wrap;
     overflow-wrap: anywhere;
-    color: var(--ai-accent);
+    color: hsl(var(--foreground, 240 5% 90%));
     font-size: 16px;
     line-height: 1.75;
     padding: 0 0 12px;
+    border-left: 3px solid var(--ai-accent);
+    padding-left: 14px;
   }
   .richtext-ai-error {
     flex: 1;
@@ -360,4 +361,39 @@
   font-size: 12px;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* The answer, rendered through the editor schema: the same classes as the
+   document, minus the editor's own chrome (padding, min-height, caret). */
+.reactjs-tiptap-editor .richtext-ai-rendered.ProseMirror {
+  padding: 0 !important;
+  min-height: 0 !important;
+  outline: none;
+  caret-color: transparent;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* A blinking mark after the last block while text is still arriving. */
+.richtext-ai-streaming > :last-child::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--ai-accent);
+  animation: richtext-ai-caret 1s steps(2) infinite;
+}
+
+@keyframes richtext-ai-caret {
+  to {
+    visibility: hidden;
+  }
 }

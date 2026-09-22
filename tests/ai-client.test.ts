@@ -93,3 +93,49 @@ test('proxy, async keys, failures, empty responses, and cancellation', async () 
     globalThis.fetch = original;
   }
 });
+
+test('server-sent events stream deltas and resolve with the full text', async () => {
+  const original = globalThis.fetch;
+  try {
+    for (const protocol of ['openai', 'anthropic'] as const) {
+      const events =
+        protocol === 'openai'
+          ? [
+              'data: {"choices":[{"delta":{"content":"Hel"}}]}\n\n',
+              'data: {"choices":[{"delta":{"content":"lo"}}]}\n\n',
+              'data: [DONE]\n\n',
+            ]
+          : [
+              'event: message_start\ndata: {"type":"message_start"}\n\n',
+              'event: content_block_delta\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":"Hel"}}\n\n',
+              'event: content_block_delta\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":"lo"}}\n\n',
+              'event: message_stop\ndata: {"type":"message_stop"}\n\n',
+            ];
+      globalThis.fetch = async (_url, init) => {
+        assert.equal(JSON.parse(init!.body as string).stream, true);
+        const encoder = new TextEncoder();
+        const body = new ReadableStream({
+          start(controller) {
+            for (const event of events) controller.enqueue(encoder.encode(event));
+            controller.close();
+          },
+        });
+        return new Response(body, { headers: { 'content-type': 'text/event-stream' } });
+      };
+      const chunks: string[] = [];
+      const text = await generateAIText({ ...options, protocol }, request(), (chunk) =>
+        chunks.push(chunk)
+      );
+      assert.equal(text, 'Hello');
+      assert.deepEqual(chunks, ['Hel', 'lo']);
+    }
+    // Without onChunk the request is not a streaming one.
+    globalThis.fetch = async (_url, init) => {
+      assert.equal(JSON.parse(init!.body as string).stream, undefined);
+      return Response.json({ choices: [{ message: { content: 'plain' } }] });
+    };
+    assert.equal(await generateAIText(options, request()), 'plain');
+  } finally {
+    globalThis.fetch = original;
+  }
+});
