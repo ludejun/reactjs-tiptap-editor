@@ -44,7 +44,9 @@
   h1,
   h2,
   h3 {
-    @apply richtext-mt-12;
+    /* Was mt-12 (48px): a gap that large reads as dead space and invites
+       clicks that land in the previous block. */
+    @apply richtext-mt-8;
   }
 
   h4,

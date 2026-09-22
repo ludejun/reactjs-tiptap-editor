@@ -1,4 +1,5 @@
 import { Heading as TiptapHeading } from '@tiptap/extension-heading';
+import { Plugin, PluginKey, Selection } from '@tiptap/pm/state';
 
 import { HEADINGS } from '@/constants';
 
@@ -84,5 +85,52 @@ export const Heading = /* @__PURE__ */ TiptapHeading.extend<HeadingOptions>({
         };
       },
     };
+  },
+  addProseMirrorPlugins() {
+    return [
+      ...(this.parent?.() ?? []),
+      new Plugin({
+        key: new PluginKey('headingGapClick'),
+        props: {
+          handleDOMEvents: {
+            /**
+             * A heading carries a large top margin, and a click in that margin
+             * hits the editor root rather than any block. The browser then
+             * resolves it to the nearest text, which is the end of the block
+             * above — so the caret lands in the wrong paragraph. Clicks in the
+             * gap go to the start of the block below instead, the block the
+             * margin belongs to.
+             */
+            mousedown(view, event) {
+              if (event.target !== view.dom || event.button !== 0) {
+                return false;
+              }
+
+              for (const child of Array.from(view.dom.children)) {
+                const rect = child.getBoundingClientRect();
+
+                if (rect.bottom > event.clientY) {
+                  if (rect.top <= event.clientY) {
+                    // Inside a block's own box: ProseMirror knows better.
+                    return false;
+                  }
+
+                  const pos = view.posAtDOM(child, 0);
+                  const selection = Selection.near(view.state.doc.resolve(pos), 1);
+
+                  view.dispatch(view.state.tr.setSelection(selection));
+                  view.focus();
+                  event.preventDefault();
+
+                  return true;
+                }
+              }
+
+              return false;
+            },
+          },
+        },
+      }),
+    ];
   },
 });
