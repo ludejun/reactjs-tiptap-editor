@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { THEME, useTheme } from '@/theme/theme';
+import { CODE_THEME, THEME, useTheme } from '@/theme/theme';
 import { removeCSS, updateCSS } from '@/utils/dynamicCSS';
 
 export function ThemeColorReactive() {
@@ -18,6 +18,9 @@ export function ThemeColorReactive() {
       return;
     }
 
+    // Syntax colours follow light/dark only, not the accent.
+    const codeTheme = CODE_THEME[themeValue === 'dark' ? 'dark' : 'light'];
+
     updateCSS(
       `
       .reactjs-tiptap-editor, .reactjs-tiptap-editor *,
@@ -31,6 +34,9 @@ export function ThemeColorReactive() {
 
             return `--${key}: ${value};`;
           })
+          .join('\n')}
+        ${Object.entries(codeTheme)
+          .map(([key, value]) => `--${key}: ${value};`)
           .join('\n')}
       }
       `,

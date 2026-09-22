@@ -12,6 +12,8 @@ export interface RangiPluginOptions {
   defaultLanguage?: string | null;
   detect: boolean;
   tokenClassPrefix: string;
+  /** Overrides how an unlabelled block's language is guessed. */
+  detectLanguage?: (code: string) => string;
 }
 
 function resolveLanguage(code: string, language: unknown, options: RangiPluginOptions) {
@@ -23,7 +25,11 @@ function resolveLanguage(code: string, language: unknown, options: RangiPluginOp
     return options.defaultLanguage;
   }
 
-  return options.detect ? detectLanguage(code) : 'plain';
+  if (!options.detect) {
+    return 'plain';
+  }
+
+  return (options.detectLanguage ?? detectLanguage)(code);
 }
 
 function getBlockDecorations(node: ProseMirrorNode, pos: number, options: RangiPluginOptions) {

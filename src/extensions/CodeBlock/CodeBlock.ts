@@ -1,5 +1,9 @@
+import { ReactNodeViewRenderer } from '@tiptap/react';
+
 import type { ButtonViewParams } from '@/types';
 export * from '@/extensions/CodeBlock/components/RichTextCodeBlock';
+import { NodeViewCodeBlock } from '@/extensions/CodeBlock/components/NodeViewCodeBlock';
+import { guessLanguage } from '@/extensions/CodeBlock/detect-language';
 import CodeBlockRangi, {
   CodeBlockRangiOptions,
 } from '@/extensions/CodeBlock/extension-code-block-rangi/src';
@@ -12,6 +16,7 @@ export const CodeBlock = CodeBlockRangi.extend<CodeBlockOptions>({
   addOptions() {
     return {
       ...this.parent?.(),
+      detectLanguageFn: guessLanguage,
       button: ({ editor, t }: ButtonViewParams<CodeBlockOptions>) => {
         return {
           componentProps: {
@@ -24,5 +29,9 @@ export const CodeBlock = CodeBlockRangi.extend<CodeBlockOptions>({
         };
       },
     };
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(NodeViewCodeBlock);
   },
 });

@@ -12,6 +12,9 @@ export interface CodeBlockRangiOptions extends CodeBlockOptions {
   /** Detect the language when neither the node nor the extension specifies one. */
   detectLanguage?: boolean;
 
+  /** Replaces the built-in guesser used when `detectLanguage` is on. */
+  detectLanguageFn?: (code: string) => string;
+
   /** Prefix applied to Rangi token types in the rendered decoration classes. */
   tokenClassPrefix?: string;
 }
@@ -26,6 +29,7 @@ export const CodeBlockRangi = CodeBlock.extend<CodeBlockRangiOptions>({
       ...this.parent?.(),
       languages: undefined,
       detectLanguage: true,
+      detectLanguageFn: undefined,
       tokenClassPrefix: 'shj-',
       languageClassPrefix: 'language-',
       exitOnTripleEnter: true,
@@ -47,6 +51,7 @@ export const CodeBlockRangi = CodeBlock.extend<CodeBlockRangiOptions>({
         languages: this.options.languages,
         defaultLanguage: this.options.defaultLanguage,
         detect: this.options.detectLanguage ? true : false,
+        detectLanguage: this.options.detectLanguageFn,
         tokenClassPrefix: this.options.tokenClassPrefix || 'shj-',
       }),
     ];

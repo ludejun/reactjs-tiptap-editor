@@ -23,7 +23,6 @@ import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { RichTextProvider } from 'reactjs-tiptap-editor';
 import { CodeBlock, RichTextCodeBlock } from 'reactjs-tiptap-editor/codeblock';
-import { RichTextBubbleCodeBlock } from 'reactjs-tiptap-editor/bubble/codeblock';
 import 'reactjs-tiptap-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, CodeBlock];
@@ -40,7 +39,6 @@ export default function CodeBlockExample() {
   return (
     <RichTextProvider editor={editor}>
       <RichTextCodeBlock />
-      <RichTextBubbleCodeBlock />
       <EditorContent editor={editor} />
     </RichTextProvider>
   );
@@ -49,4 +47,4 @@ export default function CodeBlockExample() {
 
 ## How to use
 
-Click the toolbar button to insert a plain-text code block, then use the block’s language control. Mount `RichTextBubbleCodeBlock` for contextual actions. Register this extension in place of any other `codeBlock` extension to avoid duplicate node names.
+Click the toolbar button to insert a plain-text code block. Each block renders its own toolbar in the top-right corner — language picker, copy and delete — revealed on hover, so there is nothing extra to mount. Register this extension in place of any other `codeBlock` extension to avoid duplicate node names.
