@@ -3,7 +3,8 @@ import { Tweet } from 'react-tweet';
 
 export const TWITTER_REGEX_GLOBAL =
   /(https?:\/\/)?(www\.)?x\.com\/(\w{1,15})(\/status\/(\d+))?(\/\S*)?/g;
-export const TWITTER_REGEX = /^https?:\/\/(www\.)?x\.com\/(\w{1,15})(\/status\/(\d+))?(\/\S*)?$/;
+export const TWITTER_REGEX =
+  /^https?:\/\/(www\.)?(?:x|twitter)\.com\/(\w{1,15})(\/status\/(\d+))?(\/\S*)?$/;
 
 export function isValidTwitterUrl(url: string) {
   return url.match(TWITTER_REGEX);

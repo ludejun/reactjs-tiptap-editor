@@ -6,8 +6,11 @@ import NodeViewTweet from '@/extensions/Twitter/components/NodeViewTweet';
 import type { ButtonViewParams } from '@/types';
 export * from '@/extensions/Twitter/components/RichTextTwitter';
 
-const TWITTER_REGEX_GLOBAL = /(https?:\/\/)?(www\.)?x\.com\/(\w{1,15})(\/status\/(\d+))?(\/\S*)?/g;
-const TWITTER_REGEX = /^https?:\/\/(www\.)?x\.com\/(\w{1,15})(\/status\/(\d+))?(\/\S*)?$/;
+// Both hosts: links copied before the rename still say twitter.com.
+const TWITTER_REGEX_GLOBAL =
+  /(https?:\/\/)?(www\.)?(?:x|twitter)\.com\/(\w{1,15})(\/status\/(\d+))?(\/\S*)?/g;
+const TWITTER_REGEX =
+  /^https?:\/\/(www\.)?(?:x|twitter)\.com\/(\w{1,15})(\/status\/(\d+))?(\/\S*)?$/;
 
 function isValidTwitterUrl(url: string) {
   return url.match(TWITTER_REGEX);
