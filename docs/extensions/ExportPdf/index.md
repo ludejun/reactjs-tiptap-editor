@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { ExportPdf, RichTextExportPdf } from 'reactjs-tiptap-editor/exportpdf';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { ExportPdf, RichTextExportPdf } from 'richkit/exportpdf';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, ExportPdf];
 
@@ -142,7 +142,7 @@ type PageMargin =
 Example usage:
 
 ```ts
-import { ExportPdf } from 'reactjs-tiptap-editor/exportpdf';
+import { ExportPdf } from 'richkit/exportpdf';
 
 ExportPdf.configure({
   paperSize: 'A4',

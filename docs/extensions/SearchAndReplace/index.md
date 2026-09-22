@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { SearchAndReplace, RichTextSearchAndReplace } from 'reactjs-tiptap-editor/searchandreplace';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { SearchAndReplace, RichTextSearchAndReplace } from 'richkit/searchandreplace';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, SearchAndReplace];
 

@@ -21,11 +21,11 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Bold } from 'reactjs-tiptap-editor/bold';
-import { Heading } from 'reactjs-tiptap-editor/heading';
-import { ExportMarkdown, RichTextExportMarkdown } from 'reactjs-tiptap-editor/exportmarkdown';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Bold } from 'richkit/bold';
+import { Heading } from 'richkit/heading';
+import { ExportMarkdown, RichTextExportMarkdown } from 'richkit/exportmarkdown';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Heading, ExportMarkdown];
 
@@ -53,26 +53,26 @@ Press the toolbar button to download the document as markdown. The serializer (`
 
 Every node is serialized:
 
-| Content                                                                    | Output                                       |
-| -------------------------------------------------------------------------- | -------------------------------------------- |
-| Headings, paragraphs, bold, italic, strike, code, links, images, lists     | Standard / GFM markdown                      |
-| Task lists, tables, blockquotes, code blocks, horizontal rules, highlight  | GFM markdown                                 |
-| Details (toggle)                                                           | `<details><summary>…</summary>…</details>`   |
-| Callout                                                                    | GitHub alert (`> [!NOTE]`, `> [!TIP]`, …)     |
-| Table of contents block                                                    | `[TOC]`                                      |
-| Katex                                                                      | `$formula$`                                  |
-| Attachment                                                                 | `[file name](url)`                           |
-| Twitter                                                                    | `[url](url)`                                 |
-| Columns                                                                    | Column contents one after another            |
-| Subscript / superscript                                                    | `<sub>` / `<sup>`                             |
-| Video, iframe, mermaid, excalidraw, drawer and other custom nodes          | Rendered as HTML so nothing is lost          |
+| Content                                                                   | Output                                     |
+| ------------------------------------------------------------------------- | ------------------------------------------ |
+| Headings, paragraphs, bold, italic, strike, code, links, images, lists    | Standard / GFM markdown                    |
+| Task lists, tables, blockquotes, code blocks, horizontal rules, highlight | GFM markdown                               |
+| Details (toggle)                                                          | `<details><summary>…</summary>…</details>` |
+| Callout                                                                   | GitHub alert (`> [!NOTE]`, `> [!TIP]`, …)  |
+| Table of contents block                                                   | `[TOC]`                                    |
+| Katex                                                                     | `$formula$`                                |
+| Attachment                                                                | `[file name](url)`                         |
+| Twitter                                                                   | `[url](url)`                               |
+| Columns                                                                   | Column contents one after another          |
+| Subscript / superscript                                                   | `<sub>` / `<sup>`                          |
+| Video, iframe, mermaid, excalidraw, drawer and other custom nodes         | Rendered as HTML so nothing is lost        |
 
 Text styles such as color, font size, font family, alignment and line height are dropped, as markdown has no equivalent.
 
 ## Use from code
 
 ```ts
-import { getMarkdown } from 'reactjs-tiptap-editor/exportmarkdown';
+import { getMarkdown } from 'richkit/exportmarkdown';
 
 // download
 editor.chain().focus().exportToMarkdown({ fileName: 'notes.md' }).run();

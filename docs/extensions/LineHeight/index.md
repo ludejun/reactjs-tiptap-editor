@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { LineHeight, RichTextLineHeight } from 'reactjs-tiptap-editor/lineheight';
+import { RichTextProvider } from 'richkit';
+import { LineHeight, RichTextLineHeight } from 'richkit/lineheight';
 import { TextStyle } from '@tiptap/extension-text-style';
-import 'reactjs-tiptap-editor/style.css';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, LineHeight];
 
@@ -53,7 +53,7 @@ Register `TextStyle`. Select text, then choose a value from the dropdown. `Defau
 ## Configuration
 
 ```ts
-import { LineHeight } from 'reactjs-tiptap-editor/lineheight';
+import { LineHeight } from 'richkit/lineheight';
 
 LineHeight.configure({
   lineHeights: ['Default', '1.5', '2', '2.5'],

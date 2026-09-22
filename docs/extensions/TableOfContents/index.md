@@ -21,13 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Heading } from 'reactjs-tiptap-editor/heading';
-import {
-  TableOfContents,
-  RichTextTableOfContents,
-} from 'reactjs-tiptap-editor/tableofcontents';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Heading } from 'richkit/heading';
+import { TableOfContents, RichTextTableOfContents } from 'richkit/tableofcontents';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, TableOfContents];
 
@@ -69,10 +66,7 @@ editor.chain().focus().insertTableOfContents().run();
 Use the `useTableOfContents` hook to build a sidebar with the same data:
 
 ```tsx
-import {
-  useTableOfContents,
-  scrollToTableOfContentsItem,
-} from 'reactjs-tiptap-editor/tableofcontents';
+import { useTableOfContents, scrollToTableOfContentsItem } from 'richkit/tableofcontents';
 
 function Outline({ editor }) {
   const items = useTableOfContents(editor);
@@ -94,7 +88,7 @@ function Outline({ editor }) {
 ## Options
 
 ```ts
-import { getLinearIndexes } from 'reactjs-tiptap-editor/tableofcontents';
+import { getLinearIndexes } from 'richkit/tableofcontents';
 
 TableOfContents.configure({
   // node types that count as headings (default: ['heading'])

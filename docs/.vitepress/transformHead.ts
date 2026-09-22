@@ -9,14 +9,14 @@ export async function transformHead({ pageData }: TransformContext) {
         'meta',
         {
           property: 'og:image',
-          content: 'https://reactjs-tiptap-editor.vercel.app/og.png',
+          content: 'https://ludejun.github.io/richkit/og.png',
         },
       ],
       [
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://reactjs-tiptap-editor.vercel.app/og.png',
+          content: 'https://ludejun.github.io/richkit/og.png',
         },
       ]
     );
@@ -28,14 +28,14 @@ export async function transformHead({ pageData }: TransformContext) {
       'meta',
       {
         property: 'og:image',
-        content: 'https://reactjs-tiptap-editor.vercel.app/og.png',
+        content: 'https://ludejun.github.io/richkit/og.png',
       },
     ],
     [
       'meta',
       {
         property: 'twitter:image',
-        content: 'https://reactjs-tiptap-editor.vercel.app/og.png',
+        content: 'https://ludejun.github.io/richkit/og.png',
       },
     ]
   );

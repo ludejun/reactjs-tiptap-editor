@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Twitter, RichTextTwitter } from 'reactjs-tiptap-editor/twitter';
-import { RichTextBubbleTwitter } from 'reactjs-tiptap-editor/bubble/twitter';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Twitter, RichTextTwitter } from 'richkit/twitter';
+import { RichTextBubbleTwitter } from 'richkit/bubble/twitter';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, Twitter];
 

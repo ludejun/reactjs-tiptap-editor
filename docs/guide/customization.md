@@ -14,9 +14,9 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
-} from 'reactjs-tiptap-editor';
-import { RichTextBold } from 'reactjs-tiptap-editor/bold';
-import { RichTextTable } from 'reactjs-tiptap-editor/table';
+} from 'richkit';
+import { RichTextBold } from 'richkit/bold';
+import { RichTextTable } from 'richkit/table';
 
 <RichTextToolbar>
   <RichTextBold />
@@ -42,7 +42,7 @@ import { RichTextTable } from 'reactjs-tiptap-editor/table';
       </RichTextToolbarMoreRow>
     </RichTextToolbarMoreGroup>
   </RichTextToolbarMore>
-</RichTextToolbar>
+</RichTextToolbar>;
 ```
 
 `RichTextToolbarMore` keeps a dropdown opened from inside it (font size, line height…) alive while the panel is up, and clicking a row's label triggers its control. Any `RichText*` control from an extension can sit in a row; so can anything of your own. See [Toolbar](/guide/toolbar) for the conventions on what belongs in the top row.
@@ -59,7 +59,9 @@ export const Signature = Extension.create({
       insertSignature:
         () =>
         ({ chain }) =>
-          chain().insertContent('<p>— Ada, ' + new Date().toLocaleDateString() + '</p>').run(),
+          chain()
+            .insertContent('<p>— Ada, ' + new Date().toLocaleDateString() + '</p>')
+            .run(),
     };
   },
 });
@@ -69,7 +71,7 @@ export const Signature = Extension.create({
 
 Two levels, depending on how far you need to go.
 
-**Change how a built-in node looks.** Most nodes carry a `class` or `data-*` hook you can style, and several take render options: `Divider.configure({ renderDivider })` decides the saved HTML, `Image.configure({ HTMLAttributes })` adds attributes, code blocks follow the `CODE_THEME` palette. Styles live behind one root class, `.reactjs-tiptap-editor`, so overriding them needs one more selector than the library uses.
+**Change how a built-in node looks.** Most nodes carry a `class` or `data-*` hook you can style, and several take render options: `Divider.configure({ renderDivider })` decides the saved HTML, `Image.configure({ HTMLAttributes })` adds attributes, code blocks follow the `CODE_THEME` palette. Styles live behind one root class, `.richkit`, so overriding them needs one more selector than the library uses.
 
 **Add a block of your own.** Any Tiptap node works, and a React node view gives it an interactive editing state. The `Divider` extension is a compact example of the whole pattern — attributes, `parseHTML`/`renderHTML` for the saved form, a node view with an input, a plugin that keeps derived attributes in sync — and `Callout` a simpler one:
 
@@ -80,7 +82,11 @@ import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
 const RatingView = ({ node, updateAttributes }) => (
   <NodeViewWrapper className='rating'>
     {[1, 2, 3, 4, 5].map((n) => (
-      <button key={n} onClick={() => updateAttributes({ value: n })} aria-pressed={n <= node.attrs.value}>
+      <button
+        key={n}
+        onClick={() => updateAttributes({ value: n })}
+        aria-pressed={n <= node.attrs.value}
+      >
         ★
       </button>
     ))}
@@ -93,7 +99,10 @@ export const Rating = Node.create({
   atom: true,
   addAttributes: () => ({ value: { default: 0 } }),
   parseHTML: () => [{ tag: 'div[data-type="rating"]' }],
-  renderHTML: ({ HTMLAttributes }) => ['div', mergeAttributes(HTMLAttributes, { 'data-type': 'rating' })],
+  renderHTML: ({ HTMLAttributes }) => [
+    'div',
+    mergeAttributes(HTMLAttributes, { 'data-type': 'rating' }),
+  ],
   addNodeView: () => ReactNodeViewRenderer(RatingView),
 });
 ```

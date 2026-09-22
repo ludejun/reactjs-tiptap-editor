@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Highlight, RichTextHighlight } from 'reactjs-tiptap-editor/highlight';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Highlight, RichTextHighlight } from 'richkit/highlight';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, Highlight];
 
@@ -113,7 +113,7 @@ The extension maintains a shared highlight color state across all instances:
 ### Basic Usage
 
 ```tsx
-import { Highlight } from 'reactjs-tiptap-editor/highlight';
+import { Highlight } from 'richkit/highlight';
 
 const extensions = [Highlight];
 ```
@@ -121,7 +121,7 @@ const extensions = [Highlight];
 ### With Default Color
 
 ```tsx
-import { Highlight } from 'reactjs-tiptap-editor/highlight';
+import { Highlight } from 'richkit/highlight';
 
 const extensions = [
   Highlight.configure({

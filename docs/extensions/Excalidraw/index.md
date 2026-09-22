@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Excalidraw, RichTextExcalidraw } from 'reactjs-tiptap-editor/excalidraw';
-import { RichTextBubbleExcalidraw } from 'reactjs-tiptap-editor/bubble/excalidraw';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Excalidraw, RichTextExcalidraw } from 'richkit/excalidraw';
+import { RichTextBubbleExcalidraw } from 'richkit/bubble/excalidraw';
+import 'richkit/style.css';
 import '@excalidraw/excalidraw/index.css';
 
 const extensions = [Document, Paragraph, Text, Excalidraw];

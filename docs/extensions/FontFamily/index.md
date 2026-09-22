@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { FontFamily, RichTextFontFamily } from 'reactjs-tiptap-editor/fontfamily';
+import { RichTextProvider } from 'richkit';
+import { FontFamily, RichTextFontFamily } from 'richkit/fontfamily';
 import { TextStyle } from '@tiptap/extension-text-style';
-import 'reactjs-tiptap-editor/style.css';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, FontFamily];
 
@@ -94,7 +94,7 @@ face on every platform, so only an explicit choice needs these entries.
 ## Configuration
 
 ```ts
-import { FontFamily } from 'reactjs-tiptap-editor/fontfamily';
+import { FontFamily } from 'richkit/fontfamily';
 
 FontFamily.configure({
   fontFamilyList: ['Arial', 'Georgia', { name: 'Monospace', value: 'monospace' }],

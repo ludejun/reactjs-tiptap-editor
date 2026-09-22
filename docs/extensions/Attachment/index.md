@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Attachment, RichTextAttachment } from 'reactjs-tiptap-editor/attachment';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Attachment, RichTextAttachment } from 'richkit/attachment';
+import 'richkit/style.css';
 
 async function uploadAttachment(file: File): Promise<string> {
   const body = new FormData();

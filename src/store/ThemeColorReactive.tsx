@@ -23,8 +23,8 @@ export function ThemeColorReactive() {
 
     updateCSS(
       `
-      .reactjs-tiptap-editor, .reactjs-tiptap-editor *,
-      .reactjs-tiptap-editor-theme, .reactjs-tiptap-editor-theme *,
+      .richkit, .richkit *,
+      .richkit-theme, .richkit-theme *,
       div[data-richtext-portal], div[data-richtext-portal] * {
         ${Object.entries(themeObject)
           .map(([key, value]) => {

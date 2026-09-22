@@ -1,29 +1,28 @@
 {
-  "name": "reactjs-tiptap-editor",
-  "version": "1.0.46",
-  "description": "A modern WYSIWYG rich text editor based on tiptap and shadcn ui for React",
+  "name": "richkit",
+  "version": "0.1.0",
+  "description": "A composable React rich-text editor SDK on Tiptap: toolbar, bubble menus, AI, tables, code, images, 16 languages, replay, and a Tailwind-prefixed UI.",
   "keywords": [
+    "ai",
     "editor",
+    "markdown",
+    "prosemirror",
     "react",
-    "reactjs-tiptap-editor",
     "rich-text",
+    "shadcn",
+    "tailwind",
     "tiptap",
-    "tiptap-editor",
-    "tiptap-react",
-    "tiptap-react-editor",
-    "tiptap-react-rc-editor",
-    "tiptap-react-rc-rich-text",
-    "tiptap-react-rc-wysiwyg",
-    "tiptap-react-rich-text",
-    "tiptap-react-wysiwyg",
     "wysiwyg"
   ],
-  "homepage": "https://reactjs-tiptap-editor.vercel.app/",
-  "bugs": "https://github.com/hunghg255/reactjs-tiptap-editor/issues",
+  "homepage": "https://github.com/ludejun/richkit#readme",
+  "bugs": {
+    "url": "https://github.com/ludejun/richkit/issues"
+  },
   "license": "MIT",
+  "author": "ludejun",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hunghg255/reactjs-tiptap-editor.git"
+    "url": "git+https://github.com/ludejun/richkit.git"
   },
   "files": [
     "lib",
@@ -1029,8 +1028,6 @@
     "test:types": "tsc -p tests/tsconfig.json",
     "verify-commit": "verify-commit-msg",
     "release": "bumpp -r",
-    "gen-changelog": "esno ./scripts/genExtensions.ts && esno ./scripts/changelog.ts",
-    "gen-contributors": "contributorkit",
     "measure:bundle": "node scripts/measure-bundle.mjs"
   },
   "dependencies": {
@@ -1127,7 +1124,6 @@
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.5.4",
     "bumpp": "^10.4.1",
-    "contributorkit": "^0.0.4",
     "esno": "^4.8.0",
     "execa": "^9.6.1",
     "globby": "^14.1.0",

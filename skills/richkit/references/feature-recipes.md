@@ -8,7 +8,7 @@ Load the relevant section for features beyond the base editor. Snippets extend t
 2. Render the matching `RichText*` component inside `RichTextProvider`.
 
 ```tsx
-import { History, RichTextRedo, RichTextUndo } from 'reactjs-tiptap-editor/history';
+import { History, RichTextRedo, RichTextUndo } from 'richkit/history';
 
 const extensions = [...baseExtensions, History];
 
@@ -27,10 +27,10 @@ function Toolbar() {
 Bubble components must render inside `RichTextProvider`; most require their matching extension.
 
 ```tsx
-import { RichTextBubbleImage } from 'reactjs-tiptap-editor/bubble/media';
-import { RichTextBubbleLink } from 'reactjs-tiptap-editor/bubble/link';
-import { RichTextBubbleMenuDragHandle } from 'reactjs-tiptap-editor/bubble/drag-handle';
-import { RichTextBubbleText } from 'reactjs-tiptap-editor/bubble/text';
+import { RichTextBubbleImage } from 'richkit/bubble/media';
+import { RichTextBubbleLink } from 'richkit/bubble/link';
+import { RichTextBubbleMenuDragHandle } from 'richkit/bubble/drag-handle';
+import { RichTextBubbleText } from 'richkit/bubble/text';
 
 function BubbleMenus() {
   return (
@@ -47,7 +47,7 @@ function BubbleMenus() {
 ## Slash Command
 
 ```tsx
-import { SlashCommand, SlashCommandList } from 'reactjs-tiptap-editor/slashcommand';
+import { SlashCommand, SlashCommandList } from 'richkit/slashcommand';
 
 const extensions = [...baseExtensions, SlashCommand];
 
@@ -110,7 +110,7 @@ export function createHttpImageUpload(endpoint: string): UploadImage {
 Consume the callback in `image-feature.ts`:
 
 ```ts
-import { Image } from 'reactjs-tiptap-editor/image';
+import { Image } from 'richkit/image';
 import type { UploadImage } from './upload-image';
 
 export function createImageExtension(upload: UploadImage) {
@@ -125,7 +125,7 @@ export function createImageExtension(upload: UploadImage) {
 Wire the adapter in app composition, alongside the quickstart's `baseExtensions`:
 
 ```tsx
-import { RichTextImage } from 'reactjs-tiptap-editor/image';
+import { RichTextImage } from 'richkit/image';
 import { createHttpImageUpload } from './http-image-upload';
 import { createImageExtension } from './image-feature';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -148,10 +148,10 @@ Module-level composition fits static configuration. If credentials or callbacks 
 These features also accept upload callbacks in repo examples. Return a `Promise<string>` URL.
 
 ```tsx
-import { Video } from 'reactjs-tiptap-editor/video';
-import { Attachment } from 'reactjs-tiptap-editor/attachment';
-import { Mermaid } from 'reactjs-tiptap-editor/mermaid';
-import { Drawer } from 'reactjs-tiptap-editor/drawer';
+import { Video } from 'richkit/video';
+import { Attachment } from 'richkit/attachment';
+import { Mermaid } from 'richkit/mermaid';
+import { Drawer } from 'richkit/drawer';
 
 Video.configure({ upload: async (file: File) => uploadFile(file) });
 Attachment.configure({ upload: async (file: File) => uploadFile(file) });
@@ -164,7 +164,7 @@ Drawer.configure({ upload: async (file: File) => uploadFile(file) });
 ## Mention
 
 ```tsx
-import { Mention } from 'reactjs-tiptap-editor/mention';
+import { Mention } from 'richkit/mention';
 
 // Replace these demo records with the app's data source.
 const users = [{ id: 'user-1', label: 'Alex' }];
@@ -192,7 +192,7 @@ const extensions = [
 ## Code Block
 
 ```tsx
-import { CodeBlock, RichTextCodeBlock } from 'reactjs-tiptap-editor/codeblock';
+import { CodeBlock, RichTextCodeBlock } from 'richkit/codeblock';
 
 const extensions = [...baseExtensions, CodeBlock];
 ```
@@ -202,7 +202,7 @@ Render `<RichTextCodeBlock />` in the toolbar. The block's own controls (languag
 ## Export PDF
 
 ```tsx
-import { ExportPdf, RichTextExportPdf } from 'reactjs-tiptap-editor/exportpdf';
+import { ExportPdf, RichTextExportPdf } from 'richkit/exportpdf';
 
 const extensions = [
   ...baseExtensions,
@@ -221,7 +221,7 @@ const extensions = [
 ## Export Word
 
 ```tsx
-import { ExportWord, RichTextExportWord } from 'reactjs-tiptap-editor/exportword';
+import { ExportWord, RichTextExportWord } from 'richkit/exportword';
 
 const extensions = [...baseExtensions, ExportWord];
 ```
@@ -229,8 +229,8 @@ const extensions = [...baseExtensions, ExportWord];
 ## Internationalization
 
 ```tsx
-import { en, localeActions, useLocale } from 'reactjs-tiptap-editor/locale';
-import vi from 'reactjs-tiptap-editor/locales/vi';
+import { en, localeActions, useLocale } from 'richkit/locale';
+import vi from 'richkit/locales/vi';
 
 localeActions.setMessage('vi', vi);
 localeActions.setLang('vi');
@@ -253,7 +253,7 @@ Language keys differ from some file names: `zh_CN` uses `/locales/zh-cn`, `pt_BR
 ## Theme
 
 ```tsx
-import { themeActions, useTheme } from 'reactjs-tiptap-editor/theme';
+import { themeActions, useTheme } from 'richkit/theme';
 
 themeActions.setTheme('light'); // or 'dark'
 themeActions.setColor('default'); // "red" | "blue" | "green" | "orange" | "rose" | "violet" | "yellow"

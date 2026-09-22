@@ -278,11 +278,11 @@
   }
 }
 
-.reactjs-tiptap-editor .ProseMirror .search-result {
+.richkit .ProseMirror .search-result {
   background-color: #ffd90080;
 }
 
-.reactjs-tiptap-editor .ProseMirror .search-result-current {
+.richkit .ProseMirror .search-result-current {
   background-color: #0dff0080;
 }
 
@@ -292,9 +292,9 @@
    and bottom edge and the table draws the outer frame — otherwise every inner
    line would be 2px.
    The selector carries one extra class on purpose: `resetCSS` sets
-   `border-collapse: collapse` on `.reactjs-tiptap-editor table`, the same
+   `border-collapse: collapse` on `.richkit table`, the same
    specificity as `.ProseMirror table`, and is injected after this stylesheet. */
-.reactjs-tiptap-editor .ProseMirror table {
+.richkit .ProseMirror table {
   border-collapse: separate;
   border-spacing: 0;
 }

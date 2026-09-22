@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { History, RichTextUndo, RichTextRedo } from 'reactjs-tiptap-editor/history';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { History, RichTextUndo, RichTextRedo } from 'richkit/history';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, History];
 

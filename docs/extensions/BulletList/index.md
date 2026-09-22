@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { BulletList, RichTextBulletList } from 'reactjs-tiptap-editor/bulletlist';
+import { RichTextProvider } from 'richkit';
+import { BulletList, RichTextBulletList } from 'richkit/bulletlist';
 import { ListItem } from '@tiptap/extension-list';
-import 'reactjs-tiptap-editor/style.css';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, ListItem, BulletList];
 

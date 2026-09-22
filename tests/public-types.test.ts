@@ -1,9 +1,9 @@
-import { RichTextBubbleImage } from 'reactjs-tiptap-editor/bubble/media';
-import { RichTextBubbleText } from 'reactjs-tiptap-editor/bubble/text';
-import { Katex } from 'reactjs-tiptap-editor/katex';
-import { localeActions, useLocale } from 'reactjs-tiptap-editor/locale';
-import vi from 'reactjs-tiptap-editor/locales/vi';
-import { ShortMessage } from 'reactjs-tiptap-editor/shortmessage';
+import { RichTextBubbleImage } from 'richkit/bubble/media';
+import { RichTextBubbleText } from 'richkit/bubble/text';
+import { Katex } from 'richkit/katex';
+import { localeActions, useLocale } from 'richkit/locale';
+import vi from 'richkit/locales/vi';
+import { ShortMessage } from 'richkit/shortmessage';
 
 export const deferredKatex = Katex.configure({
   loadKatex: async () => (await import('katex')).default,

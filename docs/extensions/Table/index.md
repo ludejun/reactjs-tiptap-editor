@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Table, RichTextTable } from 'reactjs-tiptap-editor/table';
-import { RichTextBubbleTable } from 'reactjs-tiptap-editor/bubble/table';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Table, RichTextTable } from 'richkit/table';
+import { RichTextBubbleTable } from 'richkit/bubble/table';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, Table];
 

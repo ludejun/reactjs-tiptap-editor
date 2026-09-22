@@ -1,5 +1,5 @@
 ---
-description: How to install reactjs-tiptap-editor
+description: How to install richkit
 
 next:
   text: Toolbar
@@ -8,7 +8,7 @@ next:
 
 # Getting Started
 
-`reactjs-tiptap-editor` combines Tiptap extensions with ready-made React controls. You create the editor instance, choose its features, and compose the interface.
+`richkit` combines Tiptap extensions with ready-made React controls. You create the editor instance, choose its features, and compose the interface.
 
 This guide describes the **1.x composable API** used in this repository. If your app uses `RichTextEditor` or `BaseKit`, start with the [migration guide](/guide/how-to-migrate).
 
@@ -22,25 +22,25 @@ Install the editor and the packages imported by the minimal example:
 
 ::: code-group
 
-```sh [npm]
-npm install reactjs-tiptap-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+```sh [pnpm]
+pnpm add richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
-```sh [pnpm]
-pnpm add reactjs-tiptap-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+```sh [npm]
+npm install richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [bun]
-bun add reactjs-tiptap-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+bun add richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [yarn]
-yarn add reactjs-tiptap-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+yarn add richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 :::
 
-When another example imports an additional `@tiptap/*` package, add that package to your application too. Extension subpaths such as `reactjs-tiptap-editor/bold` are included in the editor package; they are not separate packages to install.
+When another example imports an additional `@tiptap/*` package, add that package to your application too. Extension subpaths such as `richkit/bold` are included in the editor package; they are not separate packages to install.
 
 ## 2. Render a working editor
 
@@ -53,11 +53,11 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Bold, RichTextBold } from 'reactjs-tiptap-editor/bold';
-import { Italic, RichTextItalic } from 'reactjs-tiptap-editor/italic';
-import { History, RichTextUndo, RichTextRedo } from 'reactjs-tiptap-editor/history';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Bold, RichTextBold } from 'richkit/bold';
+import { Italic, RichTextItalic } from 'richkit/italic';
+import { History, RichTextUndo, RichTextRedo } from 'richkit/history';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic, History];
 
@@ -189,7 +189,7 @@ Keep the editor in a client component (`'use client'`) and use `immediatelyRende
 | Toolbar button is missing                     | Register its matching extension and render the button under `RichTextProvider`.   |
 | Unknown node or missing command               | Check required companion extensions on the feature's page.                        |
 | Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.            |
-| UI has no styling                             | Import `reactjs-tiptap-editor/style.css` and any feature-specific stylesheet.     |
+| UI has no styling                             | Import `richkit/style.css` and any feature-specific stylesheet.                   |
 | Content does not change after fetching        | Use `setContent` after loading; `content` initializes the document.               |
 | A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList`; a placeholder is only text. |
 | Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                         |
@@ -197,7 +197,6 @@ Keep the editor in a client component (`'use client'`) and use `immediatelyRende
 ## Add more features
 
 Continue with [Toolbar](/guide/toolbar), [Bubble Menu](/guide/bubble-menu), [Internationalization](/guide/internationalization), and [Custom Theme](/guide/custom-theme). Each extension page includes its setup and usage notes.
-
 
 ## Bundle size and loading
 

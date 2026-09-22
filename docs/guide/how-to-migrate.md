@@ -14,19 +14,19 @@ Keep a sample of your existing saved content and test it with the new extension 
 
 ## What changes
 
-| Legacy API                         | Composable API                                                       |
-| ---------------------------------- | -------------------------------------------------------------------- |
-| Default `RichTextEditor` component | Named `RichTextProvider` with Tiptap's `EditorContent`.              |
-| `extensions` on the component      | `extensions` in `useEditor`.                                         |
-| `content` and `output` props       | `content` in `useEditor`; read `getHTML()` or `getJSON()`.           |
-| `onChangeContent`                  | `onUpdate: ({ editor }) => ...` in `useEditor`.                      |
-| `BaseKit.configure(...)`           | Register the individual base extensions and configure them directly. |
-| Automatically assembled toolbar    | Render `RichText*` controls explicitly inside the provider.          |
-| Bubble menu render configuration   | Mount individual `RichTextBubble*` components.                       |
-| `disabled`                         | `editable` in `useEditor` or `editor.setEditable(...)`.              |
-| `dark`                             | `themeActions.setTheme('light' or 'dark')`.                          |
-| Legacy locale API                  | `localeActions` and `useLocale` from `/locale`; register needed dictionaries.               |
-| `/multicolumn` imports             | `/column` with `Column`, `ColumnNode`, `MultipleColumnNode`.         |
+| Legacy API                         | Composable API                                                                |
+| ---------------------------------- | ----------------------------------------------------------------------------- |
+| Default `RichTextEditor` component | Named `RichTextProvider` with Tiptap's `EditorContent`.                       |
+| `extensions` on the component      | `extensions` in `useEditor`.                                                  |
+| `content` and `output` props       | `content` in `useEditor`; read `getHTML()` or `getJSON()`.                    |
+| `onChangeContent`                  | `onUpdate: ({ editor }) => ...` in `useEditor`.                               |
+| `BaseKit.configure(...)`           | Register the individual base extensions and configure them directly.          |
+| Automatically assembled toolbar    | Render `RichText*` controls explicitly inside the provider.                   |
+| Bubble menu render configuration   | Mount individual `RichTextBubble*` components.                                |
+| `disabled`                         | `editable` in `useEditor` or `editor.setEditable(...)`.                       |
+| `dark`                             | `themeActions.setTheme('light' or 'dark')`.                                   |
+| Legacy locale API                  | `localeActions` and `useLocale` from `/locale`; register needed dictionaries. |
+| `/multicolumn` imports             | `/column` with `Column`, `ColumnNode`, `MultipleColumnNode`.                  |
 
 ## Replace the editor component
 
@@ -40,12 +40,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Bold, RichTextBold } from 'reactjs-tiptap-editor/bold';
-import { Italic, RichTextItalic } from 'reactjs-tiptap-editor/italic';
-import { History, RichTextUndo, RichTextRedo } from 'reactjs-tiptap-editor/history';
-import { RichTextBubbleText } from 'reactjs-tiptap-editor/bubble/text';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Bold, RichTextBold } from 'richkit/bold';
+import { Italic, RichTextItalic } from 'richkit/italic';
+import { History, RichTextUndo, RichTextRedo } from 'richkit/history';
+import { RichTextBubbleText } from 'richkit/bubble/text';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic, History];
 
@@ -152,9 +152,9 @@ See [Toolbar](/guide/toolbar) and [Bubble Menu](/guide/bubble-menu) for componen
 Use actions during client initialization or in preference-change handlers:
 
 ```ts
-import { themeActions } from 'reactjs-tiptap-editor/theme';
-import { localeActions } from 'reactjs-tiptap-editor/locale';
-import vi from 'reactjs-tiptap-editor/locales/vi';
+import { themeActions } from 'richkit/theme';
+import { localeActions } from 'richkit/locale';
+import vi from 'richkit/locales/vi';
 
 themeActions.setTheme('dark');
 localeActions.setMessage('vi', vi);

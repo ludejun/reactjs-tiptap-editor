@@ -39,7 +39,7 @@ export function RichTextProvider({ editor, children }: IProviderRichTextProps) {
   }
 
   return (
-    <div className='reactjs-tiptap-editor'>
+    <div className='richkit'>
       <ReactBusProvider>
         <EditorContext.Provider value={contextValue}>
           <TooltipProvider delayDuration={0} disableHoverableContent>

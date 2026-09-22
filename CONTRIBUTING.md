@@ -1,36 +1,69 @@
-# Contributing Guide
+# Contributing
 
-Thanks for lending a hand 👋
+Thanks for helping out.
 
-## Development
+## Setup
 
-### Setup
-
-- We use [pnpm](https://pnpm.js.org/) to manage dependencies. Install it with `npm i -g pnpm`.
-
-Install dependencies
+RichKit uses [pnpm](https://pnpm.io/).
 
 ```bash
 pnpm install
+pnpm build:lib        # the playground imports the built lib/
+pnpm playground       # http://localhost:8000
+pnpm docs:dev         # documentation site
 ```
 
-Start the Demo server
+Rebuild the library after changing anything under `src/`; the playground does not watch source files. `pnpm build:lib:dev` rebuilds on change.
+
+## Checks
 
 ```bash
-npm run build:lib:dev
-npm run playground
+pnpm type-check
+pnpm lint             # oxlint, 0 errors
+pnpm test:types       # type-checks the tests
+pnpm exec esno --test tests/ai-client.test.ts tests/locale-loading.test.ts tests/word-export.test.ts tests/katex-loader.test.ts tests/rangi-performance.test.ts
+node --test tests/bundle-isolation.test.mjs   # after pnpm build:lib
+pnpm docs:build
 ```
 
-### Packages Structure
+Format only the files you touched: `pnpm exec oxfmt <files>`.
 
-- `src/components`: Contains all the components.
-- `src/hooks`: Contains all the hooks.
-- `src/utils`: Contains all the utility functions.
-- `src/styles`: Contains all the global styles.
-- `src/index.ts`: Exports all the components, hooks, and utility functions.
-- `src/extensions`: Contains all the extensions.
+## Layout
 
-### Coding conventions
+- `src/extensions/<Name>/` — one feature: the Tiptap extension (`<Name>.ts`), its React controls (`components/`), and an `index.ts`. Each folder is a package subpath (`richkit/<name>`) declared in `package.json` under `exports` and `typesVersions`.
+- `src/components/` — shared UI (buttons, menus, toolbar primitives, bubble menus).
+- `src/locales/` — one file per language, 260+ keys each; every key must exist in every file.
+- `src/styles/` — SCSS, compiled into `richkit/style.css`. Tailwind classes carry the `richtext-` prefix.
+- `docs/` — VitePress. Every extension has `docs/extensions/<Name>/index.md` and an entry in `docs/.vitepress/locale.ts`.
+- `playground/` — the demo app.
 
-- We use ESLint to lint and format the codebase. Before you commit, all files will be formatted automatically.
-- We use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). Please use a prefix. If your PR has multiple commits and some of them don't follow the Conventional Commits rule, we'll do a squash merge.
+Adding an extension: create the folder, add the two `package.json` entries, the docs page and sidebar entry, and register it in the playground.
+
+## Commits
+
+Single-line messages, `type(scope): summary`, checked by a hook. Allowed types include `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`. Bodies are not accepted by the hook; put detail in the pull request.
+
+## Bringing in fixes from reactjs-tiptap-editor
+
+RichKit descends from [hunghg255/reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor). The shared history is kept on the `archive/reactjs-tiptap-editor` branch, and `upstream` points at the original repository:
+
+```bash
+git remote add upstream https://github.com/hunghg255/reactjs-tiptap-editor.git  # once
+git fetch upstream
+git log --oneline archive/reactjs-tiptap-editor..upstream/main   # what is new there
+```
+
+Pick individual fixes, never merge branches — the projects have diverged too far for a merge to be meaningful:
+
+```bash
+git cherry-pick -x <sha>            # applies cleanly when the files match
+git cherry-pick -x -X theirs <sha>  # or resolve conflicts by hand
+```
+
+When a fix touches files RichKit has rewritten, read the upstream diff and re-implement the fix here rather than forcing the patch:
+
+```bash
+git show upstream/main~3 -- src/extensions/Table/Table.ts
+```
+
+Package subpaths were renamed (`reactjs-tiptap-editor/...` → `richkit/...`) and the root CSS class is `.richkit`; cherry-picked docs or tests need those adjusted. Record the upstream commit in your message (`-x` does this) so the provenance stays visible.

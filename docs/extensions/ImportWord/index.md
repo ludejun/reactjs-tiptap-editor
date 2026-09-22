@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { ImportWord, RichTextImportWord } from 'reactjs-tiptap-editor/importword';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { ImportWord, RichTextImportWord } from 'richkit/importword';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, ImportWord];
 
@@ -61,7 +61,7 @@ Click the toolbar button and choose a `.docx` file. Import replaces the current 
 For example, replace `ImportWord` in your array with:
 
 ```ts
-import { ImportWord } from 'reactjs-tiptap-editor/importword';
+import { ImportWord } from 'richkit/importword';
 
 ImportWord.configure({
   limit: 5 * 1024 * 1024,
@@ -73,7 +73,6 @@ ImportWord.configure({
 Register the library's `Image` extension to preserve imported images. The ImportWord `upload` handler receives a `File[]` and must resolve to an array of `{ src: string }` objects in the same order. This differs from the Image extension's upload handler, which receives one file and returns one URL string.
 
 Without this handler, converted image sources remain in the HTML. The current upload processing expects base64 image sources from conversion; a custom `convert` implementation returning remote image URLs should handle image storage itself and omit this upload handler.
-
 
 ## Loading behavior
 

@@ -1,5 +1,5 @@
 export const RESET_CSS = `
-.reactjs-tiptap-editor {
+.richkit {
   button,
   input:where([type=button]),
   input:where([type=reset]),

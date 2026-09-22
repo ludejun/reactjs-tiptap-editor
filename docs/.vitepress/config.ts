@@ -5,7 +5,7 @@ import { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms';
 import { getLocaleConfig } from './locale';
 import { transformHead } from './transformHead';
 
-const docsLink = 'https://reactjs-tiptap-editor.vercel.app';
+const docsLink = 'https://ludejun.github.io/richkit';
 
 export default defineConfig({
   lang: 'en-US',

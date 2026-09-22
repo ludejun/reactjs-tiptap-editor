@@ -23,7 +23,7 @@ export function replacer(
 
 export function MarkdownTransform(): Plugin {
   return {
-    name: 'reactjs-tiptap-editor-transform',
+    name: 'richkit-transform',
     enforce: 'pre',
     async transform(code, id) {
       if (!/\.md\b/.test(id)) return null;
@@ -43,10 +43,8 @@ export function MarkdownTransform(): Plugin {
   };
 }
 
-const GITHUB_BLOB_URL =
-  'https://github.com/hunghg255/reactjs-tiptap-editor/blob/master/src/extensions';
-const GITHUB_BLOB_DOCS_URL =
-  'https://github.com/hunghg255/reactjs-tiptap-editor/blob/master/docs/extensions';
+const GITHUB_BLOB_URL = 'https://github.com/ludejun/richkit/blob/master/src/extensions';
+const GITHUB_BLOB_DOCS_URL = 'https://github.com/ludejun/richkit/blob/master/docs/extensions';
 
 export async function getFunctionMarkdown(pkg: string, name: string) {
   const URL =
@@ -62,17 +60,7 @@ export async function getFunctionMarkdown(pkg: string, name: string) {
     .join(' • ');
 
   const sourceSection = `## Source\n\n${links}\n`;
-  const ContributorsSection = `
-## Contributors
-
-<Contributors fn="${pkg}.ts" />
-  `;
-  const changelogSection = `
-## Changelog
-
-<Changelog fn="${pkg}.ts" />
-`;
-  const footer = `\n${sourceSection}\n${ContributorsSection}\n${changelogSection}\n`;
+  const footer = `\n${sourceSection}\n`;
 
   return footer;
 }

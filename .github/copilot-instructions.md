@@ -1,4 +1,4 @@
-# Copilot Instructions for reactjs-tiptap-editor
+# Copilot Instructions for richkit
 
 ## Architecture Overview
 
@@ -10,7 +10,7 @@ This is a modular rich-text editor library built on **Tiptap 3.x** with **Shadcn
 
 ### Key Design Decisions
 
-- **Tree-shakable extensions**: Each of 40+ extensions is independently importable (`reactjs-tiptap-editor/bold`)
+- **Tree-shakable extensions**: Each of 40+ extensions is independently importable (`richkit/bold`)
 - **Tiptap-native**: Uses `@tiptap/react`'s `useEditor` hook directly—no custom wrapper
 - **Signal-based state**: Uses `reactjs-signal` for theme, locale, and editor state
 - **CSS isolation**: All Tailwind classes prefixed with `richtext-` (configured in `vite.config.ts` postcss)
@@ -78,8 +78,8 @@ const useSetValue = () => useSetSignal(signal);
 
 Theme and locale actions are exposed via:
 
-- `reactjs-tiptap-editor/theme` → `themeActions.setTheme()`, `themeActions.setColor()`
-- `reactjs-tiptap-editor/locale-bundle` → `localeActions.setLang()`
+- `richkit/theme` → `themeActions.setTheme()`, `themeActions.setColor()`
+- `richkit/locale-bundle` → `localeActions.setLang()`
 
 ## Development Commands
 

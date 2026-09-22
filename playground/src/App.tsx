@@ -24,11 +24,11 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
-} from 'reactjs-tiptap-editor';
-import { AI } from 'reactjs-tiptap-editor/ai';
-import { Attachment, RichTextAttachment } from 'reactjs-tiptap-editor/attachment';
-import { Blockquote, RichTextBlockquote } from 'reactjs-tiptap-editor/blockquote';
-import { Bold, RichTextBold } from 'reactjs-tiptap-editor/bold';
+} from 'richkit';
+import { AI } from 'richkit/ai';
+import { Attachment, RichTextAttachment } from 'richkit/attachment';
+import { Blockquote, RichTextBlockquote } from 'richkit/blockquote';
+import { Bold, RichTextBold } from 'richkit/bold';
 // Bubble
 import {
   RichTextBubbleCallout,
@@ -45,67 +45,62 @@ import {
   RichTextBubbleText,
   RichTextBubbleTwitter,
   RichTextBubbleMenuDragHandle,
-} from 'reactjs-tiptap-editor/bubble';
-import { BulletList, RichTextBulletList } from 'reactjs-tiptap-editor/bulletlist';
-import { Callout, RichTextCallout } from 'reactjs-tiptap-editor/callout';
-import { Clear, RichTextClear } from 'reactjs-tiptap-editor/clear';
-import { Code, RichTextCode } from 'reactjs-tiptap-editor/code';
-import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'reactjs-tiptap-editor/codeblock';
-import { CodeView, RichTextCodeView } from 'reactjs-tiptap-editor/codeview';
-import { Color, RichTextColor } from 'reactjs-tiptap-editor/color';
-import {
-  Column,
-  ColumnNode,
-  MultipleColumnNode,
-  RichTextColumn,
-} from 'reactjs-tiptap-editor/column';
-import { Details, RichTextDetails } from 'reactjs-tiptap-editor/details';
-import { Divider, RichTextDivider } from 'reactjs-tiptap-editor/divider';
-import { Drawer, RichTextDrawer } from 'reactjs-tiptap-editor/drawer';
-import { Emoji, RichTextEmoji } from 'reactjs-tiptap-editor/emoji';
-import { Excalidraw, RichTextExcalidraw } from 'reactjs-tiptap-editor/excalidraw';
-import { ExportMarkdown, RichTextExportMarkdown } from 'reactjs-tiptap-editor/exportmarkdown';
-import { ExportPdf, RichTextExportPdf } from 'reactjs-tiptap-editor/exportpdf';
-import { ExportWord, RichTextExportWord } from 'reactjs-tiptap-editor/exportword';
-import { FontFamily, RichTextFontFamily } from 'reactjs-tiptap-editor/fontfamily';
-import { FontSize, RichTextFontSize } from 'reactjs-tiptap-editor/fontsize';
-import { FormatPainter, RichTextFormatPainter } from 'reactjs-tiptap-editor/formatpainter';
-import { Heading, RichTextHeading } from 'reactjs-tiptap-editor/heading';
-import { Highlight, RichTextHighlight } from 'reactjs-tiptap-editor/highlight';
+} from 'richkit/bubble';
+import { BulletList, RichTextBulletList } from 'richkit/bulletlist';
+import { Callout, RichTextCallout } from 'richkit/callout';
+import { Clear, RichTextClear } from 'richkit/clear';
+import { Code, RichTextCode } from 'richkit/code';
+import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'richkit/codeblock';
+import { CodeView, RichTextCodeView } from 'richkit/codeview';
+import { Color, RichTextColor } from 'richkit/color';
+import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'richkit/column';
+import { Details, RichTextDetails } from 'richkit/details';
+import { Divider, RichTextDivider } from 'richkit/divider';
+import { Drawer, RichTextDrawer } from 'richkit/drawer';
+import { Emoji, RichTextEmoji } from 'richkit/emoji';
+import { Excalidraw, RichTextExcalidraw } from 'richkit/excalidraw';
+import { ExportMarkdown, RichTextExportMarkdown } from 'richkit/exportmarkdown';
+import { ExportPdf, RichTextExportPdf } from 'richkit/exportpdf';
+import { ExportWord, RichTextExportWord } from 'richkit/exportword';
+import { FontFamily, RichTextFontFamily } from 'richkit/fontfamily';
+import { FontSize, RichTextFontSize } from 'richkit/fontsize';
+import { FormatPainter, RichTextFormatPainter } from 'richkit/formatpainter';
+import { Heading, RichTextHeading } from 'richkit/heading';
+import { Highlight, RichTextHighlight } from 'richkit/highlight';
 // build extensions
-import { History, RichTextUndo, RichTextRedo } from 'reactjs-tiptap-editor/history';
-import { Iframe, RichTextIframe } from 'reactjs-tiptap-editor/iframe';
-import { Image, RichTextImage } from 'reactjs-tiptap-editor/image';
-import { ImageGif, RichTextImageGif } from 'reactjs-tiptap-editor/imagegif';
-import { ImportWord, RichTextImportWord } from 'reactjs-tiptap-editor/importword';
-import { Indent } from 'reactjs-tiptap-editor/indent';
-import { Italic, RichTextItalic } from 'reactjs-tiptap-editor/italic';
-import { Katex, RichTextKatex } from 'reactjs-tiptap-editor/katex';
-import { LineHeight, RichTextLineHeight } from 'reactjs-tiptap-editor/lineheight';
-import { Link, RichTextLink } from 'reactjs-tiptap-editor/link';
-import { localeActions, useLocale } from 'reactjs-tiptap-editor/locale-bundle';
-import { MarkdownPaste } from 'reactjs-tiptap-editor/markdownpaste';
-import { Mention } from 'reactjs-tiptap-editor/mention';
-import { Mermaid, RichTextMermaid } from 'reactjs-tiptap-editor/mermaid';
-import { MoreMark } from 'reactjs-tiptap-editor/moremark';
-import { OrderedList, RichTextOrderedList } from 'reactjs-tiptap-editor/orderedlist';
-import { Recorder, getRecording, replayRecording } from 'reactjs-tiptap-editor/recorder';
-import { RichPaste } from 'reactjs-tiptap-editor/richpaste';
-import { SearchAndReplace, RichTextSearchAndReplace } from 'reactjs-tiptap-editor/searchandreplace';
-import { ShortMessage } from 'reactjs-tiptap-editor/shortmessage';
-import { SlashCommand, SlashCommandList } from 'reactjs-tiptap-editor/slashcommand';
-import { Strike, RichTextStrike } from 'reactjs-tiptap-editor/strike';
-import { Table, RichTextTable } from 'reactjs-tiptap-editor/table';
-import { TableOfContents, RichTextTableOfContents } from 'reactjs-tiptap-editor/tableofcontents';
-import { TaskList, RichTextTaskList } from 'reactjs-tiptap-editor/tasklist';
-import { TextAlign, RichTextAlign } from 'reactjs-tiptap-editor/textalign';
-import { TextDirection, RichTextTextDirection } from 'reactjs-tiptap-editor/textdirection';
-import { TextUnderline, RichTextUnderline } from 'reactjs-tiptap-editor/textunderline';
-import { themeActions, useTheme } from 'reactjs-tiptap-editor/theme';
-import { Twitter, RichTextTwitter } from 'reactjs-tiptap-editor/twitter';
-import { Video, RichTextVideo } from 'reactjs-tiptap-editor/video';
+import { History, RichTextUndo, RichTextRedo } from 'richkit/history';
+import { Iframe, RichTextIframe } from 'richkit/iframe';
+import { Image, RichTextImage } from 'richkit/image';
+import { ImageGif, RichTextImageGif } from 'richkit/imagegif';
+import { ImportWord, RichTextImportWord } from 'richkit/importword';
+import { Indent } from 'richkit/indent';
+import { Italic, RichTextItalic } from 'richkit/italic';
+import { Katex, RichTextKatex } from 'richkit/katex';
+import { LineHeight, RichTextLineHeight } from 'richkit/lineheight';
+import { Link, RichTextLink } from 'richkit/link';
+import { localeActions, useLocale } from 'richkit/locale-bundle';
+import { MarkdownPaste } from 'richkit/markdownpaste';
+import { Mention } from 'richkit/mention';
+import { Mermaid, RichTextMermaid } from 'richkit/mermaid';
+import { MoreMark } from 'richkit/moremark';
+import { OrderedList, RichTextOrderedList } from 'richkit/orderedlist';
+import { Recorder, getRecording, replayRecording } from 'richkit/recorder';
+import { RichPaste } from 'richkit/richpaste';
+import { SearchAndReplace, RichTextSearchAndReplace } from 'richkit/searchandreplace';
+import { ShortMessage } from 'richkit/shortmessage';
+import { SlashCommand, SlashCommandList } from 'richkit/slashcommand';
+import { Strike, RichTextStrike } from 'richkit/strike';
+import { Table, RichTextTable } from 'richkit/table';
+import { TableOfContents, RichTextTableOfContents } from 'richkit/tableofcontents';
+import { TaskList, RichTextTaskList } from 'richkit/tasklist';
+import { TextAlign, RichTextAlign } from 'richkit/textalign';
+import { TextDirection, RichTextTextDirection } from 'richkit/textdirection';
+import { TextUnderline, RichTextUnderline } from 'richkit/textunderline';
+import { themeActions, useTheme } from 'richkit/theme';
+import { Twitter, RichTextTwitter } from 'richkit/twitter';
+import { Video, RichTextVideo } from 'richkit/video';
 
-import 'reactjs-tiptap-editor/style.css';
+import 'richkit/style.css';
 // const ydoc = new Y.Doc()
 import 'katex/dist/katex.min.css';
 import 'easydrawer/styles.css';
@@ -182,7 +177,7 @@ const BaseKit = [
   DocumentColumn,
   Text,
   Dropcursor.configure({
-    class: 'reactjs-tiptap-editor-theme',
+    class: 'richkit-theme',
     color: 'hsl(var(--primary))',
     width: 2,
   }),
@@ -203,7 +198,7 @@ const BaseKit = [
  * key. `window.__aiGenerate` overrides it (used by the browser checks).
  */
 async function demoAIGenerate(
-  request: import('reactjs-tiptap-editor/ai').AIRequest,
+  request: import('richkit/ai').AIRequest,
   onChunk?: (text: string) => void
 ): Promise<string> {
   const override = (window as unknown as { __aiGenerate?: typeof demoAIGenerate }).__aiGenerate;
@@ -439,7 +434,7 @@ const extensions = [
 ];
 
 const DEFAULT = `
-<h1>reactjs-tiptap-editor</h1>
+<h1>richkit</h1>
 <p>A rich text editor built on Tiptap. Everything below is live — edit it, or start from scratch.</p>
 <div class="table-of-contents" data-type="table-of-contents"></div>
 <h2>Text</h2>

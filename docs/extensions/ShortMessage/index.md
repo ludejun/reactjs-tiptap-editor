@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { ShortMessage } from 'reactjs-tiptap-editor/shortmessage';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { ShortMessage } from 'richkit/shortmessage';
+import 'richkit/style.css';
 
 const extensions = [
   Document,
@@ -63,11 +63,11 @@ Place the caret inside a paragraph and press the shortcut. A list of every confi
 
 ## Options
 
-| Option     | Type                                                                                      | Default       | Description                                                                              |
-| ---------- | ----------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------- |
-| `messages` | `{ short: string; long_content: string }[]`                                               | `[]`          | Messages shown in the list. `short` is displayed and used for filtering.                 |
-| `shortcut` | `string`                                                                                  | `'Mod-Space'` | Tiptap keyboard shortcut that opens the list.                                            |
-| `items`    | `({ query, editor }) => ShortMessageItem[] \| Promise<ShortMessageItem[]>`                | —             | Replaces the built-in filter. Receives the text typed after the shortcut; may be async. |
+| Option     | Type                                                                       | Default       | Description                                                                             |
+| ---------- | -------------------------------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------- |
+| `messages` | `{ short: string; long_content: string }[]`                                | `[]`          | Messages shown in the list. `short` is displayed and used for filtering.                |
+| `shortcut` | `string`                                                                   | `'Mod-Space'` | Tiptap keyboard shortcut that opens the list.                                           |
+| `items`    | `({ query, editor }) => ShortMessageItem[] \| Promise<ShortMessageItem[]>` | —             | Replaces the built-in filter. Receives the text typed after the shortcut; may be async. |
 
 ### Custom shortcut
 

@@ -26,12 +26,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { BulletList } from 'reactjs-tiptap-editor/bulletlist';
-import { CodeBlock } from 'reactjs-tiptap-editor/codeblock';
-import { OrderedList } from 'reactjs-tiptap-editor/orderedlist';
-import { RichPaste } from 'reactjs-tiptap-editor/richpaste';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { BulletList } from 'richkit/bulletlist';
+import { CodeBlock } from 'richkit/codeblock';
+import { OrderedList } from 'richkit/orderedlist';
+import { RichPaste } from 'richkit/richpaste';
+import 'richkit/style.css';
 
 const extensions = [Document, Paragraph, Text, BulletList, OrderedList, CodeBlock, RichPaste];
 
@@ -76,7 +76,7 @@ Default: none
 Guesses the language of a pasted block from its text and returns a name the code block understands (an empty string means "unknown"). The code block extension ships a guesser you can reuse:
 
 ```ts
-import { guessLanguage } from 'reactjs-tiptap-editor/codeblock';
+import { guessLanguage } from 'richkit/codeblock';
 
 RichPaste.configure({ detectLanguage: guessLanguage });
 ```

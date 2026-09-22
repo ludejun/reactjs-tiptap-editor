@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'reactjs-tiptap-editor';
-import { Katex, RichTextKatex } from 'reactjs-tiptap-editor/katex';
-import { RichTextBubbleKatex } from 'reactjs-tiptap-editor/bubble/katex';
-import 'reactjs-tiptap-editor/style.css';
+import { RichTextProvider } from 'richkit';
+import { Katex, RichTextKatex } from 'richkit/katex';
+import { RichTextBubbleKatex } from 'richkit/bubble/katex';
+import 'richkit/style.css';
 import 'katex/dist/katex.min.css';
 
 const extensions = [Document, Paragraph, Text, Katex];
@@ -52,7 +52,6 @@ export default function KatexExample() {
 
 Load `katex/dist/katex.min.css` alongside the editor stylesheet. Open the toolbar dialog, enter an expression such as `E = mc^2`, and apply it. Mount `RichTextBubbleKatex` for contextual actions. Install `katex` directly in your app if your package manager cannot resolve the CSS import.
 
-
 ## Renderer loading and chemistry
 
 The renderer loads when a formula node view mounts or a formula dialog opens. Until it is ready, the preview displays the expression as text. Existing formulas can therefore trigger loading on the first editor render. A failed load offers a retry button; invalid formulas remain text. Rendering happens on the client, so server output does not contain rendered formula HTML.
@@ -60,7 +59,7 @@ The renderer loads when a formula node view mounts or a formula dialog opens. Un
 Use the optional `loadKatex` configuration to initialize plugins before rendering. For chemistry commands such as `\ce{H2O}`, install `katex` directly and replace `Katex` in the extension array with:
 
 ```ts
-import { Katex } from 'reactjs-tiptap-editor/katex';
+import { Katex } from 'richkit/katex';
 import 'katex/dist/katex.min.css';
 
 Katex.configure({

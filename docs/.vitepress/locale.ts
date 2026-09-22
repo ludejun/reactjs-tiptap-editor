@@ -4,19 +4,19 @@ import { createTranslate } from './i18n/utils';
 
 import type { DefaultTheme, HeadConfig, LocaleConfig } from 'vitepress';
 
-const docsLink = 'https://reactjs-tiptap-editor.vercel.app';
-const githubRepo = 'hunghg255/reactjs-tiptap-editor';
-const githubLink: 'https://github.com/hunghg255/reactjs-tiptap-editor' = `https://github.com/${githubRepo}`;
+const docsLink = 'https://ludejun.github.io/richkit';
+const githubRepo = 'ludejun/richkit';
+const githubLink: 'https://github.com/ludejun/richkit' = `https://github.com/${githubRepo}`;
 
 const VERSIONS: (DefaultTheme.NavItemWithLink | DefaultTheme.NavItemChildren)[] = [
   { text: `v${version} (current)`, link: '/' },
   {
     text: 'Release Notes',
-    link: 'https://github.com/hunghg255/reactjs-tiptap-editor/releases',
+    link: 'https://github.com/ludejun/richkit/releases',
   },
   {
     text: 'Contributing',
-    link: 'https://github.com/hunghg255/reactjs-tiptap-editor/blob/main/CONTRIBUTING.md',
+    link: 'https://github.com/ludejun/richkit/blob/main/CONTRIBUTING.md',
   },
 ];
 
@@ -24,7 +24,7 @@ export function getLocaleConfig(lang: string) {
   const t = createTranslate(lang);
 
   const urlPrefix = lang && lang !== 'en' ? `/${lang}` : '';
-  const title = t('React Tiptap Editor');
+  const title = t('RichKit');
   const description = t(
     'A modern WYSIWYG rich text editor based on tiptap and shadcn ui for React'
   );
@@ -60,7 +60,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: t('Playground'),
-      link: 'https://reactjs-tiptap-editor-playground.vercel.app/',
+      link: 'https://github.com/ludejun/richkit/tree/main/playground',
     },
     {
       text: t('Skills'),
@@ -69,7 +69,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: 'llmstxt',
-      link: 'https://reactjs-tiptap-editor.vercel.app/llms-full.txt',
+      link: 'https://ludejun.github.io/richkit/llms-full.txt',
     },
     {
       text: `v${version}`,
@@ -92,6 +92,10 @@ export function getLocaleConfig(lang: string) {
         {
           text: t('Toolbar'),
           link: `${urlPrefix}/guide/toolbar`,
+        },
+        {
+          text: t('Features'),
+          link: `${urlPrefix}/guide/features`,
         },
         {
           text: t('Customization'),
@@ -195,7 +199,7 @@ export function getLocaleConfig(lang: string) {
       { icon: 'github', link: githubLink },
       {
         icon: 'npm',
-        link: 'https://www.npmjs.com/package/reactjs-tiptap-editor',
+        link: 'https://www.npmjs.com/package/richkit',
       },
     ],
     footer: {
