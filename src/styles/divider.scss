@@ -1,0 +1,159 @@
+/* Divider: one block, many looks. The saved HTML is
+   <div data-type="divider" class="divider divider--x"><hr>[<span>label</span><hr>]</div>
+   and the node view renders the same shape, so this sheet styles both. */
+.reactjs-tiptap-editor .divider,
+.divider-preview {
+  --divider-color: hsl(var(--border, 240 5.9% 90%));
+  --divider-thickness: 1px;
+
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin: 1.25em 0;
+  position: relative;
+  color: hsl(var(--muted-foreground, 240 3.8% 46.1%));
+  font-size: 0.9em;
+  line-height: 1;
+  user-select: none;
+
+  hr {
+    flex: 1 1 auto;
+    height: 0;
+    margin: 0;
+    border: 0;
+    border-top: var(--divider-thickness) solid var(--divider-color);
+  }
+
+  .divider__label {
+    flex: 0 0 auto;
+    max-width: 60%;
+    padding: 0 0.25em;
+    color: inherit;
+    font: inherit;
+    text-align: center;
+    background: transparent;
+    border: 0;
+    outline: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  input.divider__label {
+    min-width: 2em;
+    width: auto;
+    field-sizing: content;
+    cursor: text;
+    user-select: text;
+  }
+
+  &.divider--dashed hr {
+    border-top-style: dashed;
+  }
+
+  &.divider--dotted hr {
+    border-top-style: dotted;
+    border-top-width: 2px;
+  }
+
+  &.divider--double hr {
+    border-top-style: double;
+    border-top-width: 3px;
+  }
+
+  &.divider--short {
+    justify-content: center;
+
+    hr {
+      flex: 0 0 25%;
+    }
+  }
+
+  /* Glyph dividers: the rule is hidden, the glyphs carry the row. */
+  &.divider--dots,
+  &.divider--stars {
+    justify-content: center;
+    letter-spacing: 0.6em;
+
+    hr {
+      display: none;
+    }
+
+    &::before {
+      content: '\00b7\00b7\00b7';
+      font-size: 1.6em;
+      line-height: 1;
+    }
+  }
+
+  &.divider--stars::before {
+    content: '\2726\2726\2726';
+    font-size: 0.75em;
+  }
+
+  &.divider--number .divider__label {
+    min-width: 1.75em;
+    padding: 0.35em 0.5em;
+    border: 1px solid var(--divider-color);
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.reactjs-tiptap-editor .ProseMirror .divider {
+  &.divider--selected {
+    outline: 2px solid hsl(var(--ring, 240 5% 65%) / 0.6);
+    outline-offset: 6px;
+    border-radius: 2px;
+  }
+
+  &.divider--empty .divider__label::placeholder {
+    color: hsl(var(--muted-foreground, 240 3.8% 46.1%) / 0.6);
+  }
+
+  /* Style picker, shown above a selected divider. */
+  .divider__picker {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 12px);
+    z-index: 30;
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    transform: translateX(-50%);
+    background: hsl(var(--popover, 0 0% 100%));
+    color: hsl(var(--popover-foreground, 240 10% 3.9%));
+    border: 1px solid hsl(var(--border, 240 5.9% 90%));
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+  }
+
+  .divider__pick {
+    display: flex;
+    align-items: center;
+    width: 44px;
+    height: 28px;
+    padding: 0 6px;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-checked='true'] {
+      background: hsl(var(--accent, 240 4.8% 95.9%));
+    }
+
+    .divider-preview {
+      width: 100%;
+      margin: 0;
+      gap: 0.3em;
+      font-size: 0.65em;
+      pointer-events: none;
+    }
+  }
+}
+
+.divider-preview {
+  margin: 0;
+}
