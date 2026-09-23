@@ -1,5 +1,5 @@
 ---
-description: How to install ai-sparkwrite-editor
+description: Install ai-sparkwrite-editor and render a working editor in React or Vue
 
 next:
   text: Toolbar
@@ -8,17 +8,15 @@ next:
 
 # Getting Started
 
-`ai-sparkwrite-editor` combines Tiptap extensions with ready-made React controls. You create the editor instance, choose its features, and compose the interface.
-
-This guide describes the **1.x composable API** used in this repository. If your app uses `RichTextEditor` or `BaseKit`, start with the [migration guide](/guide/how-to-migrate).
+`ai-sparkwrite-editor` is Tiptap extensions plus ready-made controls. You create the editor instance, choose its features, and compose the interface. The same extensions serve both frameworks: React imports each feature from `ai-sparkwrite-editor/<feature>`, Vue imports the extensions from `ai-sparkwrite-editor/core` and the UI from `ai-sparkwrite-editor/vue`.
 
 Working with an AI coding agent? [Install the editor skill](/skills) for package-specific setup, feature recipes, and debugging guidance.
 
-## 1. Install the packages
+Keep every `@tiptap/*` package on one compatible version. This repository uses `^3.29.2`; `@tiptap/vue-3` has to match `@tiptap/core` exactly.
 
-Start with an existing React application. The example below uses Tiptap 3; keep all `@tiptap/*` packages on a compatible version. This repository currently uses `^3.29.2`.
+## React
 
-Install the editor and the packages imported by the minimal example:
+### 1. Install
 
 ::: code-group
 
@@ -40,11 +38,9 @@ yarn add ai-sparkwrite-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/e
 
 :::
 
-When another example imports an additional `@tiptap/*` package, add that package to your application too. Extension subpaths such as `ai-sparkwrite-editor/bold` are included in the editor package; they are not separate packages to install.
+Feature subpaths such as `ai-sparkwrite-editor/bold` are part of the package, not separate installs. When an example imports another `@tiptap/*` package, add that package too.
 
-## 2. Render a working editor
-
-Create `TextEditor.tsx` and render `<TextEditor />` in your application:
+### 2. Render a working editor
 
 ```tsx
 'use client';
@@ -53,18 +49,30 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
+import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
 import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
 import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
 import { History, RichTextUndo, RichTextRedo } from 'ai-sparkwrite-editor/history';
+import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
 import 'ai-sparkwrite-editor/style.css';
 
-const extensions = [Document, Paragraph, Text, Bold, Italic, History];
+const extensions = [
+  Document,
+  Paragraph,
+  Text,
+  History,
+  Bold,
+  Italic,
+  // Keys stay on your server: point baseURL at a proxy, or pass `generate`.
+  AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+  AIAutocomplete,
+];
 
 export default function TextEditor() {
   const editor = useEditor({
     extensions,
-    content: '<p>Select some text and try the toolbar.</p>',
+    content: '<p>Select some text, or press the AI button.</p>',
     immediatelyRender: false,
   });
 
@@ -72,138 +80,148 @@ export default function TextEditor() {
 
   return (
     <RichTextProvider editor={editor}>
-      <div
-        role='toolbar'
-        aria-label='Text formatting'
-        style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}
-      >
+      <RichTextToolbar>
+        <RichTextAI />
+        <RichTextToolbarDivider />
         <RichTextUndo />
         <RichTextRedo />
         <RichTextBold />
         <RichTextItalic />
-      </div>
+      </RichTextToolbar>
       <EditorContent editor={editor} />
+      <RichTextAIComposer />
+      <RichTextBubbleText />
     </RichTextProvider>
   );
 }
 ```
 
-The stylesheet supplies the editor controls and content styles. You can use ordinary CSS for your layout; these examples do not require Tailwind in the consuming app.
+The stylesheet supplies the controls and the content styles; the consuming app does not need Tailwind. Leave the AI pieces out if you do not want them — every feature is opt-in.
 
-## 3. Understand the pieces
+### Next.js and server rendering
 
-| Piece                                 | Responsibility                                                                               |
-| ------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `useEditor`                           | Creates the Tiptap instance and configures content, extensions, and callbacks.               |
-| `Document`, `Paragraph`, `Text`       | Define the minimal document structure. Register each once.                                   |
-| `Bold`, `Image`, etc.                 | Add document nodes, marks, commands, or behavior to `extensions`.                            |
-| `RichTextProvider`                    | Makes the editor available to the library's controls. Wrap the controls and content with it. |
-| `RichTextBold`, `RichTextImage`, etc. | Render controls for registered extensions. Place them in the toolbar yourself.               |
-| `EditorContent`                       | Renders the editable document. It does not add a toolbar.                                    |
+Keep the editor in a client component (`'use client'`) with `immediatelyRender: false`, handle the initial `null` editor before rendering the provider, and import the stylesheet where your framework allows global CSS. See the [Tiptap React integration](https://tiptap.dev/docs/editor/getting-started/install/react).
 
-For each feature, register the extension **and** render its control if you want a button. Importing a button alone does not enable the feature. An extension can also be used through commands without a toolbar button.
+## Vue
 
-Avoid registering both a library extension and a Tiptap extension with the same name. If you use `StarterKit`, disable overlapping features there before adding the library's versions.
+### 1. Install
 
-### Provider props
+::: code-group
 
-| Prop       | Type                 | Usage                                                                                                  |
-| ---------- | -------------------- | ------------------------------------------------------------------------------------------------------ |
-| `editor`   | `Editor`             | Required. Wait until `useEditor` returns an instance.                                                  |
-| `children` | `React.ReactNode`    | Your toolbar, content, and optional menus.                                                             |
-| `dark`     | `boolean` (optional) | Present in the type but not applied by the current provider. Use [theme actions](/guide/custom-theme). |
-
-Editor settings such as `content`, `editable`, and `onUpdate` belong to `useEditor`, not to `RichTextProvider`.
-
-## 4. Read and save content
-
-Read the current value from the editor when your form submits:
-
-```tsx
-// Place this inside TextEditor, after the null guard.
-// Replace console.log with your application's save handler.
-const handleSave = () => {
-  const document = editor.getJSON();
-  console.log(document);
-};
-
-// Render this button inside your JSX.
-<button type='button' onClick={handleSave}>
-  Save
-</button>;
+```sh [pnpm]
+pnpm add ai-sparkwrite-editor @tiptap/vue-3@3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2 lucide-vue-next
 ```
 
-| Method             | Result             | Typical use                                              |
-| ------------------ | ------------------ | -------------------------------------------------------- |
-| `editor.getJSON()` | Tiptap JSON object | Store structured editor content for later editing.       |
-| `editor.getHTML()` | HTML string        | Export HTML for a separate display flow.                 |
-| `editor.getText()` | Plain text         | Previews or text-only processing; formatting is omitted. |
+```sh [npm]
+npm install ai-sparkwrite-editor @tiptap/vue-3@3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2 lucide-vue-next
+```
 
-To notify a parent or form library on edits, add an `onUpdate` callback to the existing `useEditor` options:
+:::
 
-```tsx
+`ai-sparkwrite-editor/vue` depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`; nothing from React is loaded.
+
+### 2. Render a working editor
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { Bold, History, Italic } from 'ai-sparkwrite-editor/core';
+import {
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  RichTextBold,
+  RichTextBubbleText,
+  RichTextItalic,
+  RichTextProvider,
+  RichTextRedo,
+  RichTextToolbar,
+  RichTextToolbarDivider,
+  RichTextUndo,
+} from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const editor = useEditor({
+  extensions: [
+    Document,
+    Paragraph,
+    Text,
+    History,
+    Bold,
+    Italic,
+    AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+    AIAutocomplete,
+  ],
+  content: '<p>Select some text, or press the AI button.</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextToolbar>
+      <RichTextAI />
+      <RichTextToolbarDivider />
+      <RichTextUndo /><RichTextRedo /><RichTextBold /><RichTextItalic />
+    </RichTextToolbar>
+    <EditorContent :editor="editor" />
+    <RichTextAIComposer />
+    <RichTextBubbleText />
+  </RichTextProvider>
+</template>
+```
+
+Block extensions with an interactive node view (`CodeBlock`, `Image`, `Katex`, `Divider`, …) come from `ai-sparkwrite-editor/vue` too, so the Vue node view is attached; everything else comes from `core`. The full list is in [Frameworks](/guide/frameworks). Only English is bundled; register other languages with `localeActions.setMessage` (see [Internationalization](/guide/internationalization)).
+
+## The pieces
+
+| Piece                                      | Responsibility                                                                                 |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `useEditor`                                | Creates the Tiptap instance and configures content, extensions, and callbacks.                 |
+| `Document`, `Paragraph`, `Text`            | Define the minimal document structure. Register each once.                                     |
+| `Bold`, `Image`, `AI`, etc.                | Add nodes, marks, commands, or behaviour to `extensions`.                                      |
+| `RichTextProvider`                         | Makes the editor available to the controls and carries the root class the stylesheet keys off. |
+| `RichTextBold`, `RichTextAI`, etc.         | Controls for registered extensions. Place them in the toolbar yourself.                        |
+| `RichTextAIComposer`, `RichTextBubbleText` | The dock under the editor and the selection menu. Place them after `EditorContent`.            |
+| `EditorContent`                            | Renders the editable document. It does not add a toolbar.                                      |
+
+For each feature, register the extension **and** render its control if you want a button. Importing a control alone does not enable the feature; an extension can also be driven through commands without a button. Avoid registering both a library extension and a Tiptap extension with the same name — if you use `StarterKit`, disable overlapping features there first.
+
+## Save, load, read-only
+
+Read the document in `onUpdate` and debounce network saves:
+
+```ts
 const editor = useEditor({
   extensions,
-  immediatelyRender: false,
   onUpdate: ({ editor }) => {
-    const nextDocument = editor.getJSON();
-    console.log(nextDocument); // Call your form's onChange here.
+    const nextDocument = editor.getJSON(); // or editor.getHTML()
+    save(nextDocument);
   },
 });
 ```
 
-This callback runs on document updates. Debounce network saves rather than making a request on every keystroke. The editor does not save content or upload media automatically.
+Pass saved HTML or Tiptap JSON as `content` when creating the editor. For a document loaded later, call `editor.commands.setContent(html, { emitUpdate: false })` once, not on every `onUpdate`. Keep the extensions that stored content needs registered when loading it; a node the schema does not know cannot be represented.
 
-## 5. Load or replace content
-
-Pass saved HTML or a parsed Tiptap JSON object as `content` when creating the editor. For a document loaded after initialization, call:
-
-```ts
-// Run after loading a document, with a non-null editor instance.
-editor.commands.setContent('<p>Loaded document</p>', { emitUpdate: false });
-```
-
-Use this when opening or resetting a document, not to feed every `onUpdate` value back into the editor. Replacing content repeatedly can disrupt selection and editing. `emitUpdate: false` prevents this replacement from triggering your save callback. See Tiptap's [setContent reference](https://tiptap.dev/docs/editor/api/commands/content/set-content).
-
-Keep the extensions needed by stored content registered when loading it. Unsupported nodes and marks cannot be represented by the editor schema. Test saved documents before removing an extension from an existing application.
-
-## Read-only mode
-
-Set `editable: false` in `useEditor`, or change it later:
-
-```ts
-editor.setEditable(false); // Read-only document.
-editor.setEditable(true); // Resume editing.
-```
-
-For a reader view, render `EditorContent` with the same content extensions and omit editing controls. Custom media and diagram nodes may need their own styles even in read-only mode.
-
-## Next.js and server rendering
-
-Keep the editor in a client component (`'use client'`) and use `immediatelyRender: false`, as shown above. Handle the initial `null` editor before rendering the provider. Put global stylesheet imports in the location allowed by your framework. See the [Tiptap React integration](https://tiptap.dev/docs/editor/getting-started/install/react).
+Read-only: `editable: false` in `useEditor`, or `editor.setEditable(false)` later. The AI dock, menus and Space/Tab entry points hide themselves while the editor is not editable.
 
 ## Troubleshooting
 
-| Symptom                                       | What to check                                                                     |
-| --------------------------------------------- | --------------------------------------------------------------------------------- |
-| Toolbar button is missing                     | Register its matching extension and render the button under `RichTextProvider`.   |
-| Unknown node or missing command               | Check required companion extensions on the feature's page.                        |
-| Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.            |
-| UI has no styling                             | Import `ai-sparkwrite-editor/style.css` and any feature-specific stylesheet.                |
-| Content does not change after fetching        | Use `setContent` after loading; `content` initializes the document.               |
-| A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList`; a placeholder is only text. |
-| Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                         |
+| Symptom                                       | What to check                                                                                        |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| A control is missing                          | Register its extension and render the control under `RichTextProvider`.                              |
+| Unknown node or missing command               | Check the feature's page for companion extensions (lists need `ListItem`, colours need `TextStyle`). |
+| Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.                               |
+| UI has no styling                             | Import `ai-sparkwrite-editor/style.css` and any feature-specific stylesheet.                         |
+| Two copies of `@tiptap/core`                  | Pin `@tiptap/vue-3` (and every `@tiptap/*`) to the same version; a mismatch breaks the schema.       |
+| Content does not change after fetching        | Use `setContent` after loading; `content` only initialises the document.                             |
+| A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList` (React); a placeholder is only text.            |
+| The AI button does nothing                    | Register the `AI` extension; without a model or `generate` the panel shows a configuration error.    |
+| Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                                            |
 
-## Add more features
+## Where next
 
-Continue with [Toolbar](/guide/toolbar), [Bubble Menu](/guide/bubble-menu), [Internationalization](/guide/internationalization), and [Custom Theme](/guide/custom-theme). Each extension page includes its setup and usage notes.
-
-## Bundle size and loading
-
-Import extensions from their feature subpaths and mount only the controls your editor needs. [Bubble Menu](/guide/bubble-menu#individual-imports) lists individual menu entrypoints. For translations, prefer `/locale` with the dictionaries you use; `/locale-bundle` registers every included language. See [Internationalization](/guide/internationalization).
-
-Word converters, upload dialogs provided by `RichTextProvider`, the Drawer canvas, and the Emoji picker load when used. KaTeX loads when a formula is displayed or its dialog opens; see [Katex](/extensions/Katex/#renderer-loading-and-chemistry) for custom loaders and chemistry support. No extra `React.lazy` wrapper is needed for these built-in loading boundaries.
-
-These boundaries reduce initial JavaScript when your production bundler preserves dynamic imports. They do not remove code needed by enabled features. Keep all emitted chunks available when deploying, and retain the editor and feature CSS imports. The full Emoji dictionary remains part of the Emoji extension, and the drag handle still includes collaboration-related dependencies through Tiptap.
-
-Measure your own production build with the extensions and content you actually use. Initial JavaScript, total emitted JavaScript, and the installed package size are different measurements; a smaller initial load can coexist with an unchanged total size.
+[AI](/extensions/AI/) for the composer, autocomplete and providers · [Toolbar](/guide/toolbar) and [Bubble Menu](/guide/bubble-menu) for composing the UI · [Features](/guide/features) for every extension and its import path · [Frameworks](/guide/frameworks) for the core/React/Vue split · [Internationalization](/guide/internationalization) · [Custom Theme](/guide/custom-theme) · [Bundle size](/guide/bundle-size).

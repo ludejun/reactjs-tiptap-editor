@@ -1,14 +1,16 @@
 ---
-description: Migration Guide
+description: Migrating from reactjs-tiptap-editor
 
 next:
   text: Attachment
   link: /extensions/Attachment/index.md
 ---
 
-# Migration Guide
+# Migrating from reactjs-tiptap-editor
 
-Use this guide when moving from the legacy `RichTextEditor` / `BaseKit` API to the **1.x composable API**. For a new project, follow [Getting Started](/guide/getting-started).
+`ai-sparkwrite-editor` descends from [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor). Use this guide when moving an app off that package, or off its legacy `RichTextEditor` / `BaseKit` API, to the composable API used here. For a new project, follow [Getting Started](/guide/getting-started).
+
+Two mechanical changes first: every import path moves from `reactjs-tiptap-editor/<x>` to `ai-sparkwrite-editor/<x>` (subpaths keep their names), and the root CSS class is `.sparkwrite`. Then the API differences below apply.
 
 Keep a sample of your existing saved content and test it with the new extension configuration before switching users over.
 

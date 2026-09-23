@@ -50,7 +50,7 @@ export function EditorThemeToggle() {
 }
 ```
 
-`useTheme()` also returns `color` and `borderRadius`. Call it inside a React component. To follow your host application's appearance, invoke `setTheme` when that application's theme changes.
+`useTheme()` also returns `color` and `borderRadius`. Call it inside a React component. In Vue pass `dark` to `RichTextProvider`; the palette variables live on `.sparkwrite` and can be overridden in CSS. To follow your host application's appearance, invoke `setTheme` when that application's theme changes.
 
 ::: tip Migrating from the old editor
 The current provider type still accepts `dark`, but the implementation does not apply it. Use `themeActions.setTheme` instead of `<RichTextProvider dark={...}>`.

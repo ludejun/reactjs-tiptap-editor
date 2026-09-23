@@ -8,7 +8,7 @@ next:
 
 # Bubble Menu
 
-Bubble menus provide actions near selected text or a selected node. They are separate React components: register the corresponding extensions, then mount the menus inside the same `RichTextProvider` as the document.
+Bubble menus provide actions near selected text or a selected node. They are separate components — React here, and the same names from `ai-sparkwrite-editor/vue` for Vue: register the corresponding extensions, then mount the menus inside the same `RichTextProvider` as the document.
 
 Importing a menu does not mount it, and mounting a menu does not register its extension.
 
@@ -96,22 +96,22 @@ Two blocks deliberately have no bubble menu:
 Use these public subpaths to make feature dependencies explicit. The existing `/bubble` entry remains supported. Import only the components you mount.
 
 | Component                      | Subpath after `ai-sparkwrite-editor` |
-| ------------------------------ | -------------------------- |
-| `RichTextBubbleText`           | `/bubble/text`             |
-| `RichTextBubbleMenuDragHandle` | `/bubble/drag-handle`      |
-| `RichTextAIImprove`            | `/bubble/ai`               |
-| `RichTextBubbleCallout`        | `/bubble/callout`          |
-| `RichTextBubbleDrawer`         | `/bubble/drawer`           |
-| `RichTextBubbleExcalidraw`     | `/bubble/excalidraw`       |
-| `RichTextBubbleIframe`         | `/bubble/iframe`           |
-| `RichTextBubbleKatex`          | `/bubble/katex`            |
-| `RichTextBubbleLink`           | `/bubble/link`             |
-| `RichTextBubbleMermaid`        | `/bubble/mermaid`          |
-| `RichTextBubbleTable`          | `/bubble/table`            |
-| `RichTextBubbleTwitter`        | `/bubble/twitter`          |
-| `RichTextBubbleImage`          | `/bubble/media`            |
-| `RichTextBubbleVideo`          | `/bubble/media`            |
-| `RichTextBubbleImageGif`       | `/bubble/media`            |
+| ------------------------------ | ------------------------------------ |
+| `RichTextBubbleText`           | `/bubble/text`                       |
+| `RichTextBubbleMenuDragHandle` | `/bubble/drag-handle`                |
+| `RichTextAIImprove`            | `/bubble/ai`                         |
+| `RichTextBubbleCallout`        | `/bubble/callout`                    |
+| `RichTextBubbleDrawer`         | `/bubble/drawer`                     |
+| `RichTextBubbleExcalidraw`     | `/bubble/excalidraw`                 |
+| `RichTextBubbleIframe`         | `/bubble/iframe`                     |
+| `RichTextBubbleKatex`          | `/bubble/katex`                      |
+| `RichTextBubbleLink`           | `/bubble/link`                       |
+| `RichTextBubbleMermaid`        | `/bubble/mermaid`                    |
+| `RichTextBubbleTable`          | `/bubble/table`                      |
+| `RichTextBubbleTwitter`        | `/bubble/twitter`                    |
+| `RichTextBubbleImage`          | `/bubble/media`                      |
+| `RichTextBubbleVideo`          | `/bubble/media`                      |
+| `RichTextBubbleImageGif`       | `/bubble/media`                      |
 
 `/bubble/media` exports the Image, Video, and ImageGif menus together. `RichTextAIImprove` is an AI control; see [AI](/extensions/AI/). The text bubble does not require KaTeX or Yjs. The drag handle still brings collaboration-related dependencies through Tiptap, even in an editor without collaboration.
 

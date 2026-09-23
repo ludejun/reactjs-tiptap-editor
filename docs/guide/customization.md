@@ -4,7 +4,7 @@ Four things every host ends up wanting: its own toolbar menus, its own block typ
 
 ## Custom menus
 
-The toolbar is composed from React components, so a custom menu is just another component in the row. The library ships the same building blocks the playground uses:
+The toolbar is composed from components — React below, and the same building blocks from `ai-sparkwrite-editor/vue` for Vue — so a custom menu is just another component in the row. The library ships the same building blocks the playground uses:
 
 ```tsx
 import {
@@ -93,7 +93,7 @@ Two levels, depending on how far you need to go.
 
 **Change how a built-in node looks.** Most nodes carry a `class` or `data-*` hook you can style, and several take render options: `Divider.configure({ renderDivider })` decides the saved HTML, `Image.configure({ HTMLAttributes })` adds attributes, code blocks follow the `CODE_THEME` palette. Styles live behind one root class, `.sparkwrite`, so overriding them needs one more selector than the library uses.
 
-**Add a block of your own.** Any Tiptap node works, and a React node view gives it an interactive editing state. The `Divider` extension is a compact example of the whole pattern — attributes, `parseHTML`/`renderHTML` for the saved form, a node view with an input, a plugin that keeps derived attributes in sync — and `Callout` a simpler one:
+**Add a block of your own.** Any Tiptap node works, and a node view gives it an interactive editing state (React below; in Vue, `VueNodeViewRenderer` on the same node — see [Frameworks](/guide/frameworks)). The `Divider` extension is a compact example of the whole pattern — attributes, `parseHTML`/`renderHTML` for the saved form, a node view with an input, a plugin that keeps derived attributes in sync — and `Callout` a simpler one:
 
 ```tsx
 import { Node, mergeAttributes } from '@tiptap/core';

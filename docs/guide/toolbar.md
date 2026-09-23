@@ -84,7 +84,7 @@ Some controls need companion extensions:
 
 ## Build a custom control
 
-You can call editor commands from an ordinary React button. This example reads the provider's context and subscribes to the state it displays:
+You can call editor commands from an ordinary React button. This example reads the provider's context and subscribes to the state it displays (in Vue, `RichTextToolbarButton`, `useEditorInstance` and `useEditorState` from `ai-sparkwrite-editor/vue` do the same):
 
 ```tsx
 import { useCurrentEditor, useEditorState } from '@tiptap/react';

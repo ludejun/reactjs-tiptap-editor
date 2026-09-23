@@ -39,7 +39,7 @@ export function LanguagePicker() {
 }
 ```
 
-`useLocale()` returns `lang` (the language code) and `t` (a translation function). Call the hook inside a React component. Use `localeActions.setLang` to change the language by code.
+`useLocale()` returns `lang` (the language code) and `t` (a translation function). Call the hook inside a React component; `ai-sparkwrite-editor/vue` exports a `useLocale()` composable with the same shape. Use `localeActions.setLang` to change the language by code.
 
 Locale state is shared across editor instances in the application. The library does not automatically persist a language choice across reloads; restore your application's preference when initializing the client.
 
