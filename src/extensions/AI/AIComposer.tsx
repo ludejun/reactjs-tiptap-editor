@@ -82,7 +82,7 @@ export function RichTextAIComposer({
   accent,
 }: RichTextAIComposerProps) {
   const editor = useEditorInstance();
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const state = useEditorState({
     editor,
     selector: ({ editor }) => ({
@@ -128,7 +128,7 @@ export function RichTextAIComposer({
     const observer = new ResizeObserver(measure);
     observer.observe(row);
     return () => observer.disconnect();
-  }, [showChips, actions, state?.hasSelection, state?.empty]);
+  }, [showChips, actions, state?.hasSelection, state?.empty, lang]);
 
   useEffect(() => {
     if (!moreOpen) return;
@@ -203,6 +203,16 @@ export function RichTextAIComposer({
       (!action.needsSelection || state.hasSelection) && (!action.needsDocument || !state.empty)
   );
 
+  const hasAutocomplete = editor.extensionManager.extensions.some(
+    (extension) => extension.name === 'aiAutocomplete'
+  );
+  const hintText =
+    typeof hint === 'string'
+      ? hint
+      : hasAutocomplete
+        ? t('editor.ai.compose.hint')
+        : t('editor.ai.compose.hint.space');
+
   return (
     <div
       className={`richtext-ai-composer ${gradient ? '' : 'richtext-ai-composer--plain'} ${className}`}
@@ -219,152 +229,9 @@ export function RichTextAIComposer({
         }
       }}
     >
-      {chips.length && !result ? (
-        <div className='richtext-ai-composer-chipline' ref={chipRow}>
-          <div className='richtext-ai-composer-chips' role='group'>
-            {chips.map((action, index) => {
-              const Icon = ICONS[action.icon];
-              const hidden = index >= visibleChips;
-
-              return (
-                <button
-                  key={action.key}
-                  type='button'
-                  data-chip=''
-                  className={hidden ? 'richtext-ai-chip-hidden' : undefined}
-                  aria-hidden={hidden || undefined}
-                  tabIndex={hidden ? -1 : undefined}
-                  title={composerPrompt(action)}
-                  disabled={busy || !state.editable}
-                  onClick={() => void run(composerPrompt(action), action.target)}
-                >
-                  {Icon ? <Icon size={14} /> : null}
-                  {t(action.key)}
-                </button>
-              );
-            })}
-          </div>
-          {visibleChips < chips.length ? (
-            <div className='richtext-ai-composer-more' ref={moreMenu}>
-              <button
-                type='button'
-                aria-haspopup='menu'
-                aria-expanded={moreOpen}
-                aria-label={t('editor.more')}
-                title={t('editor.more')}
-                disabled={busy || !state.editable}
-                onClick={() => setMoreOpen((value) => !value)}
-              >
-                +{chips.length - visibleChips}
-                <ChevronDown size={13} />
-              </button>
-              {moreOpen ? (
-                <div className='richtext-ai-composer-menu' role='menu'>
-                  {chips.slice(visibleChips).map((action) => {
-                    const Icon = ICONS[action.icon];
-
-                    return (
-                      <button
-                        key={action.key}
-                        type='button'
-                        role='menuitem'
-                        title={composerPrompt(action)}
-                        onClick={() => {
-                          setMoreOpen(false);
-                          void run(composerPrompt(action), action.target);
-                        }}
-                      >
-                        {Icon ? <Icon size={14} /> : null}
-                        {t(action.key)}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-
-      <form
-        className='richtext-ai-composer-row'
-        onSubmit={(event) => {
-          event.preventDefault();
-          submit();
-        }}
-      >
-        <Sparkles className='richtext-ai-composer-icon' size={18} />
-        <textarea
-          ref={input}
-          rows={rows}
-          style={{ minHeight: `calc(${rows} * 1.5em + 12px)` }}
-          aria-label={
-            result
-              ? t('editor.ai.compose.refine')
-              : (placeholder ?? t('editor.ai.compose.placeholder'))
-          }
-          placeholder={
-            result
-              ? t('editor.ai.compose.refine')
-              : (placeholder ?? t('editor.ai.compose.placeholder'))
-          }
-          value={prompt}
-          disabled={busy || !state.editable}
-          onChange={(event) => setPrompt(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
-              event.preventDefault();
-              submit();
-            }
-          }}
-        />
-        {!result && showTarget ? (
-          <select
-            aria-label={t('editor.ai.compose.target')}
-            value={effectiveTarget}
-            disabled={busy}
-            onChange={(event) => setTarget(event.target.value as Target)}
-          >
-            {TARGETS.filter((value) => value !== 'selection' || state.hasSelection).map((value) => (
-              <option key={value} value={value}>
-                {t(`editor.ai.compose.target.${value}`)}
-              </option>
-            ))}
-          </select>
-        ) : null}
-        {busy ? (
-          <button
-            type='button'
-            className='richtext-ai-composer-send'
-            aria-label={t('editor.ai.stop')}
-            title={t('editor.ai.stop')}
-            onClick={stop}
-          >
-            <Square size={14} fill='currentColor' />
-          </button>
-        ) : (
-          <button
-            type='submit'
-            className='richtext-ai-composer-send'
-            aria-label={t('editor.ai.send')}
-            title={t('editor.ai.send')}
-            disabled={!prompt.trim() || !state.editable}
-          >
-            <ArrowUp size={18} />
-          </button>
-        )}
-        <button
-          type='button'
-          className='richtext-ai-composer-close'
-          aria-label={t('editor.ai.compose.close')}
-          title={t('editor.ai.compose.close')}
-          onClick={close}
-        >
-          <X size={16} />
-        </button>
-      </form>
-
-      <div className='richtext-ai-composer-status'>
+      {/* Head: the quick actions while idle, progress while writing, the
+          verdict after an answer — and the close button, always at the end. */}
+      <div className='richtext-ai-composer-head'>
         {busy ? (
           <span role='status' className='richtext-ai-composer-writing'>
             <span className='richtext-ai-loading-dots' aria-hidden='true'>
@@ -407,16 +274,176 @@ export function RichTextAIComposer({
               <RotateCcw size={15} /> {t('editor.ai.compose.retry')}
             </button>
           </div>
-        ) : error ? (
+        ) : chips.length ? (
+          <div className='richtext-ai-composer-chipline' ref={chipRow}>
+            <div className='richtext-ai-composer-chips' role='group'>
+              {chips.map((action, index) => {
+                const Icon = ICONS[action.icon];
+                const hidden = index >= visibleChips;
+
+                return (
+                  <button
+                    key={action.key}
+                    type='button'
+                    data-chip=''
+                    className={hidden ? 'richtext-ai-chip-hidden' : undefined}
+                    aria-hidden={hidden || undefined}
+                    tabIndex={hidden ? -1 : undefined}
+                    title={composerPrompt(action)}
+                    disabled={!state.editable}
+                    onClick={() => void run(composerPrompt(action), action.target)}
+                  >
+                    {Icon ? <Icon size={14} /> : null}
+                    {t(action.key)}
+                  </button>
+                );
+              })}
+            </div>
+            {visibleChips < chips.length ? (
+              <div className='richtext-ai-composer-more' ref={moreMenu}>
+                <button
+                  type='button'
+                  aria-haspopup='menu'
+                  aria-expanded={moreOpen}
+                  aria-label={t('editor.more')}
+                  title={t('editor.more')}
+                  disabled={!state.editable}
+                  onClick={() => setMoreOpen((value) => !value)}
+                >
+                  +{chips.length - visibleChips}
+                  <ChevronDown size={13} />
+                </button>
+                {moreOpen ? (
+                  <div className='richtext-ai-composer-menu' role='menu'>
+                    {chips.slice(visibleChips).map((action) => {
+                      const Icon = ICONS[action.icon];
+
+                      return (
+                        <button
+                          key={action.key}
+                          type='button'
+                          role='menuitem'
+                          title={composerPrompt(action)}
+                          onClick={() => {
+                            setMoreOpen(false);
+                            void run(composerPrompt(action), action.target);
+                          }}
+                        >
+                          {Icon ? <Icon size={14} /> : null}
+                          {t(action.key)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <span className='richtext-ai-composer-title'>
+            <Sparkles size={14} /> {t('editor.ai.compose.title')}
+          </span>
+        )}
+        <button
+          type='button'
+          className='richtext-ai-composer-close'
+          aria-label={t('editor.ai.compose.close')}
+          title={t('editor.ai.compose.close')}
+          onClick={close}
+        >
+          <X size={16} />
+        </button>
+      </div>
+
+      {/* The box: prompt on top, the controls in a bar underneath. */}
+      <form
+        className='richtext-ai-composer-box'
+        onSubmit={(event) => {
+          event.preventDefault();
+          submit();
+        }}
+      >
+        <div className='richtext-ai-composer-input'>
+          <Sparkles className='richtext-ai-composer-icon' size={18} />
+          <textarea
+            ref={input}
+            rows={rows}
+            style={{ minHeight: `calc(${rows} * 1.5em)` }}
+            aria-label={
+              result
+                ? t('editor.ai.compose.refine')
+                : (placeholder ?? t('editor.ai.compose.placeholder'))
+            }
+            placeholder={
+              result
+                ? t('editor.ai.compose.refine')
+                : (placeholder ?? t('editor.ai.compose.placeholder'))
+            }
+            value={prompt}
+            disabled={busy || !state.editable}
+            onChange={(event) => setPrompt(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+                event.preventDefault();
+                submit();
+              }
+            }}
+          />
+        </div>
+        <div className='richtext-ai-composer-bar'>
+          {!result && showTarget ? (
+            <select
+              aria-label={t('editor.ai.compose.target')}
+              value={effectiveTarget}
+              disabled={busy}
+              onChange={(event) => setTarget(event.target.value as Target)}
+            >
+              {TARGETS.filter((value) => value !== 'selection' || state.hasSelection).map(
+                (value) => (
+                  <option key={value} value={value}>
+                    {t(`editor.ai.compose.target.${value}`)}
+                  </option>
+                )
+              )}
+            </select>
+          ) : (
+            <span />
+          )}
+          {busy ? (
+            <button
+              type='button'
+              className='richtext-ai-composer-send'
+              aria-label={t('editor.ai.stop')}
+              title={t('editor.ai.stop')}
+              onClick={stop}
+            >
+              <Square size={14} fill='currentColor' />
+            </button>
+          ) : (
+            <button
+              type='submit'
+              className='richtext-ai-composer-send'
+              aria-label={t('editor.ai.send')}
+              title={t('editor.ai.send')}
+              disabled={!prompt.trim() || !state.editable}
+            >
+              <ArrowUp size={18} />
+            </button>
+          )}
+        </div>
+      </form>
+
+      {error ? (
+        <div className='richtext-ai-composer-foot'>
           <span role='alert' className='richtext-ai-composer-error'>
             {error}
           </span>
-        ) : hint ? (
-          <span className='richtext-ai-composer-hint'>
-            {typeof hint === 'string' ? hint : t('editor.ai.compose.hint')}
-          </span>
-        ) : null}
-      </div>
+        </div>
+      ) : hint && !result && !busy ? (
+        <div className='richtext-ai-composer-foot'>
+          <span className='richtext-ai-composer-hint'>{hintText}</span>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -301,6 +301,7 @@ const locale = {
   'editor.ai.compose.retry': '重试',
   'editor.ai.compose.close': '关闭 AI 写作台',
   'editor.ai.compose.hint': '空行按空格呼出 AI · Tab 接受灰色建议',
+  'editor.ai.compose.hint.space': '空行按空格呼出 AI',
   'editor.ai.autocomplete': 'AI 续写建议',
   'editor.ai.autocomplete.on': '建议已开启',
   'editor.ai.autocomplete.off': '建议已关闭',

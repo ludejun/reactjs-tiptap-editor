@@ -411,7 +411,8 @@
   white-space: pre-wrap;
 }
 
-/* The composer dock under the editor. */
+/* The composer dock under the editor: a head line (quick actions, progress or
+   verdict, close), the prompt box, and a footer hint. */
 .richtext-ai-composer {
   --ai-accent: #804dff;
   --ai-accent-2: #38bdf8;
@@ -454,9 +455,25 @@
     }
   }
 }
+
+.richtext-ai-composer-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+}
+.richtext-ai-composer-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ai-accent);
+  font-size: 12px;
+  font-weight: 600;
+}
 /* One line: the chips clip, the "+N" button beside them never does. */
 .richtext-ai-composer-chipline {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   gap: 6px;
   min-width: 0;
@@ -480,9 +497,6 @@
   button {
     flex-shrink: 0;
     white-space: nowrap;
-  }
-
-  button {
     padding: 4px 10px;
     border-radius: 999px;
     border: 1px solid hsl(var(--border));
@@ -494,24 +508,29 @@
     }
     &:hover:not(:disabled) {
       border-color: var(--ai-accent);
-      background: #804dff14;
+      background: color-mix(in srgb, var(--ai-accent) 8%, transparent);
     }
   }
 }
-.richtext-ai-composer-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 8px 6px 12px;
-  /* The prompt box is two lines tall; the icon sits on the first line,
-     the controls stay centred on the box. */
-  .richtext-ai-composer-icon {
-    align-self: flex-start;
-    margin-top: calc(6px + (1.5em - 18px) / 2);
+.richtext-ai-composer .richtext-ai-composer-close {
+  margin-left: auto;
+  padding: 6px;
+  color: hsl(var(--muted-foreground));
+  &:hover {
+    color: inherit;
+    background: hsl(var(--accent));
   }
-  border-radius: 14px;
-  /* A gradient border: the popover colour fills the padding box, the gradient
-     the border box, and the gradient slides slowly. */
+}
+
+/* The box: a gradient border (popover colour fills the padding box, the
+   gradient the border box, and it slides slowly), the prompt on top and the
+   controls in a bar underneath. */
+.richtext-ai-composer-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 8px 6px 12px;
+  border-radius: 16px;
   border: 1px solid transparent;
   background:
     linear-gradient(hsl(var(--popover)), hsl(var(--popover))) padding-box,
@@ -530,6 +549,11 @@
   &:focus-within {
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--ai-accent) 30%, transparent);
   }
+}
+.richtext-ai-composer-input {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 
   textarea {
     flex: 1;
@@ -540,32 +564,46 @@
     color: inherit;
     font: inherit;
     line-height: 1.5;
-    padding: 6px 0;
+    padding: 4px 0;
     outline: none;
     /* Two lines by default (the component sets min-height from `rows`);
        field-sizing lets it grow with the text up to max-height. */
-    min-height: calc(2 * 1.5em + 12px);
+    min-height: calc(2 * 1.5em);
     max-height: 160px;
     field-sizing: content;
     &::placeholder {
       color: hsl(var(--muted-foreground));
     }
   }
+}
+.richtext-ai-composer-icon {
+  flex-shrink: 0;
+  color: var(--ai-accent);
+  /* On the first line of text: textarea padding plus half the line-height gap. */
+  margin-top: calc(4px + (1.5em - 18px) / 2);
+}
+.richtext-ai-composer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
   select {
     border: 0;
     background: hsl(var(--muted));
     color: hsl(var(--foreground));
     font: inherit;
     font-size: 12px;
-    border-radius: 8px;
-    padding: 4px 6px;
+    border-radius: 999px;
+    padding: 4px 10px;
     outline: none;
-    max-width: 10rem;
+    max-width: 12rem;
+    cursor: pointer;
+    &:focus-visible {
+      outline: 2px solid var(--ai-accent);
+      outline-offset: 1px;
+    }
   }
-}
-.richtext-ai-composer-icon {
-  flex-shrink: 0;
-  color: var(--ai-accent);
 }
 .richtext-ai-composer .richtext-ai-composer-send {
   width: 30px;
@@ -575,21 +613,14 @@
   background: var(--ai-accent);
   color: #fff;
   &:hover:not(:disabled) {
-    background: #7040eb;
+    background: color-mix(in srgb, var(--ai-accent) 88%, black);
   }
 }
-.richtext-ai-composer .richtext-ai-composer-close {
-  padding: 6px;
-  color: hsl(var(--muted-foreground));
-  &:hover {
-    color: inherit;
-    background: hsl(var(--accent));
-  }
-}
-.richtext-ai-composer-status {
+
+.richtext-ai-composer-foot {
   display: flex;
   align-items: center;
-  min-height: 22px;
+  min-height: 18px;
   padding: 0 4px;
   color: hsl(var(--muted-foreground));
   font-size: 12px;
@@ -621,7 +652,7 @@
     background: var(--ai-accent);
     color: #fff;
     &:hover:not(:disabled) {
-      background: #7040eb;
+      background: color-mix(in srgb, var(--ai-accent) 88%, black);
     }
   }
 }
@@ -641,7 +672,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .richtext-ai-composer-row {
+  .richtext-ai-composer-box {
     animation: none;
   }
 }
@@ -695,7 +726,7 @@
 /* `gradient={false}`: a flat dock in the popover colours. */
 .richtext-ai-composer.richtext-ai-composer--plain {
   background: hsl(var(--background));
-  .richtext-ai-composer-row {
+  .richtext-ai-composer-box {
     animation: none;
     background: hsl(var(--popover));
     border-color: hsl(var(--border));

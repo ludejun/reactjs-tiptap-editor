@@ -11,7 +11,7 @@ import type { Editor } from '@tiptap/core';
 export interface AIAutocompleteOptions {
   /** Start with suggestions on. `toggleAIAutocomplete()` flips it at runtime. */
   enabled: boolean;
-  /** Quiet time after the last keystroke before asking, in milliseconds. */
+  /** Quiet time after the last keystroke before asking, in milliseconds. Default 600. */
   delay: number;
   /** The current block needs at least this many characters before asking. */
   minChars: number;
@@ -72,8 +72,8 @@ export const AIAutocomplete = Extension.create<AIAutocompleteOptions>({
   addOptions() {
     return {
       enabled: true,
-      delay: 900,
-      minChars: 24,
+      delay: 600,
+      minChars: 12,
       contextChars: 1500,
       maxTokens: 48,
       prompt:

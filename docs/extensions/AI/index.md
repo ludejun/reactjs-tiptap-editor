@@ -95,7 +95,7 @@ The dock itself takes props (same names in Vue):
 | `accent`             | `#804dff`             | Accent colour; sets the `--ai-accent` variable              |
 | `className`, `style` | —                     | Passed to the root                                          |
 
-For finer control the stylesheet exposes `--ai-accent`, `--ai-accent-2`, `--ai-accent-3` on `.richtext-ai-composer`, and the parts are plain classes: `richtext-ai-composer-chipline`, `-chips`, `-more`, `-menu`, `-row`, `-send`, `-close`, `-status`, `-actions`, `-hint`.
+For finer control the stylesheet exposes `--ai-accent`, `--ai-accent-2`, `--ai-accent-3` on `.richtext-ai-composer`, and the parts are plain classes: `richtext-ai-composer-head` (chips or the Keep/Undo/Retry verdict, plus the close button), `-chipline`, `-chips`, `-more`, `-menu`, `-box` (the prompt), `-input`, `-bar` (target selector and send), `-send`, `-close`, `-foot`, `-hint`.
 
 ### Writing into the document from your own UI
 

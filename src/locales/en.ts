@@ -303,6 +303,7 @@ const locale = {
   'editor.ai.compose.retry': 'Retry',
   'editor.ai.compose.close': 'Close AI Composer',
   'editor.ai.compose.hint': 'Space on an empty line asks AI · Tab accepts a suggestion',
+  'editor.ai.compose.hint.space': 'Space on an empty line asks AI',
   'editor.ai.autocomplete': 'AI Suggestions',
   'editor.ai.autocomplete.on': 'Suggestions on',
   'editor.ai.autocomplete.off': 'Suggestions Off',

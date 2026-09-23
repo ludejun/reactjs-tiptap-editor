@@ -713,7 +713,7 @@ export const RichTextAIComposer = defineComponent({
   },
   setup(props) {
     const editor = useEditorInstance();
-    const { t } = useLocale();
+    const { t, lang } = useLocale();
     const state = useEditorState(
       (current) => ({
         available: aiOptionsOf(current)?.composer !== false && !!aiOptionsOf(current),
@@ -741,6 +741,8 @@ export const RichTextAIComposer = defineComponent({
     const measure = () => {
       if (chipRow.value) visibleChips.value = fitChips(chipRow.value);
     };
+    // Labels change width when the language changes; the row does not.
+    watch(lang, () => void nextTick(measure));
     watch(chipRow, (row) => {
       observer?.disconnect();
       observer = null;
@@ -848,48 +850,88 @@ export const RichTextAIComposer = defineComponent({
           (!action.needsDocument || !current.empty)
       );
       const answer = result.value;
+      const hasAutocomplete = !!editor.value?.extensionManager.extensions.some(
+        (extension) => extension.name === 'aiAutocomplete'
+      );
+      const hintText =
+        typeof props.hint === 'string'
+          ? props.hint
+          : hasAutocomplete
+            ? t('editor.ai.compose.hint')
+            : t('editor.ai.compose.hint.space');
 
-      return h(
-        'div',
-        {
-          class: ['richtext-ai-composer', { 'richtext-ai-composer--plain': !props.gradient }],
-          style: props.accent ? { '--ai-accent': props.accent } : undefined,
-          'data-richtext-portal': '',
-          role: 'region',
-          'aria-label': t('editor.ai.compose.title'),
-          onKeydown: (event: KeyboardEvent) => {
-            if (event.key === 'Escape' || ((event.metaKey || event.ctrlKey) && event.key === 'j')) {
-              event.preventDefault();
-              close();
-            }
+      const chip = (action: AIComposerAction, index: number) => {
+        const Icon = COMPOSER_ICONS[action.icon];
+        const hidden = index >= visibleChips.value;
+        return h(
+          'button',
+          {
+            key: action.key,
+            type: 'button',
+            'data-chip': '',
+            class: hidden ? 'richtext-ai-chip-hidden' : undefined,
+            'aria-hidden': hidden ? 'true' : undefined,
+            tabindex: hidden ? -1 : undefined,
+            title: composerPrompt(action),
+            disabled: !current.editable,
+            onClick: () => void run(composerPrompt(action), action.target),
           },
-        },
-        [
-          chips.length && !answer
+          [Icon ? h(Icon, { size: 14 }) : null, t(action.key)]
+        );
+      };
+
+      // Head: quick actions while idle, progress while writing, the verdict
+      // after an answer — and the close button, always at the end.
+      const head = busy.value
+        ? h('span', { role: 'status', class: 'richtext-ai-composer-writing' }, [
+            h('span', { class: 'richtext-ai-loading-dots', 'aria-hidden': 'true' }, [
+              h('i'),
+              h('i'),
+              h('i'),
+            ]),
+            t('editor.ai.compose.writing'),
+          ])
+        : answer
+          ? h('div', { class: 'richtext-ai-composer-actions' }, [
+              h(
+                'button',
+                {
+                  type: 'button',
+                  class: 'richtext-ai-composer-keep',
+                  onClick: () => {
+                    answer.keep();
+                    result.value = null;
+                    editor.value?.commands.focus();
+                  },
+                },
+                [h(Check, { size: 15 }), ` ${t('editor.ai.compose.keep')}`]
+              ),
+              h(
+                'button',
+                {
+                  type: 'button',
+                  onClick: () => {
+                    answer.discard();
+                    result.value = null;
+                    editor.value?.commands.focus();
+                  },
+                },
+                [h(Undo2, { size: 15 }), ` ${t('editor.ai.compose.undo')}`]
+              ),
+              h(
+                'button',
+                {
+                  type: 'button',
+                  onClick: () => {
+                    if (lastRequest) void run(lastRequest.prompt, lastRequest.target, answer);
+                  },
+                },
+                [h(RotateCcw, { size: 15 }), ` ${t('editor.ai.compose.retry')}`]
+              ),
+            ])
+          : chips.length
             ? h('div', { class: 'richtext-ai-composer-chipline', ref: chipRow }, [
-                h(
-                  'div',
-                  { class: 'richtext-ai-composer-chips', role: 'group' },
-                  chips.map((action, index) => {
-                    const Icon = COMPOSER_ICONS[action.icon];
-                    const hidden = index >= visibleChips.value;
-                    return h(
-                      'button',
-                      {
-                        key: action.key,
-                        type: 'button',
-                        'data-chip': '',
-                        class: hidden ? 'richtext-ai-chip-hidden' : undefined,
-                        'aria-hidden': hidden ? 'true' : undefined,
-                        tabindex: hidden ? -1 : undefined,
-                        title: composerPrompt(action),
-                        disabled: busy.value || !current.editable,
-                        onClick: () => void run(composerPrompt(action), action.target),
-                      },
-                      [Icon ? h(Icon, { size: 14 }) : null, t(action.key)]
-                    );
-                  })
-                ),
+                h('div', { class: 'richtext-ai-composer-chips', role: 'group' }, chips.map(chip)),
                 visibleChips.value < chips.length
                   ? h('div', { class: 'richtext-ai-composer-more', ref: moreMenu }, [
                       h(
@@ -900,7 +942,7 @@ export const RichTextAIComposer = defineComponent({
                           'aria-expanded': moreOpen.value ? 'true' : 'false',
                           'aria-label': t('editor.more'),
                           title: t('editor.more'),
-                          disabled: busy.value || !current.editable,
+                          disabled: !current.editable,
                           onClick: () => {
                             moreOpen.value = !moreOpen.value;
                           },
@@ -933,158 +975,138 @@ export const RichTextAIComposer = defineComponent({
                     ])
                   : null,
               ])
-            : null,
+            : h('span', { class: 'richtext-ai-composer-title' }, [
+                h(Sparkles, { size: 14 }),
+                ` ${t('editor.ai.compose.title')}`,
+              ]);
 
+      return h(
+        'div',
+        {
+          class: ['richtext-ai-composer', { 'richtext-ai-composer--plain': !props.gradient }],
+          style: props.accent ? { '--ai-accent': props.accent } : undefined,
+          'data-richtext-portal': '',
+          role: 'region',
+          'aria-label': t('editor.ai.compose.title'),
+          onKeydown: (event: KeyboardEvent) => {
+            if (event.key === 'Escape' || ((event.metaKey || event.ctrlKey) && event.key === 'j')) {
+              event.preventDefault();
+              close();
+            }
+          },
+        },
+        [
+          h('div', { class: 'richtext-ai-composer-head' }, [
+            head,
+            h(
+              'button',
+              {
+                type: 'button',
+                class: 'richtext-ai-composer-close',
+                'aria-label': t('editor.ai.compose.close'),
+                title: t('editor.ai.compose.close'),
+                onClick: close,
+              },
+              [h(X, { size: 16 })]
+            ),
+          ]),
+
+          // The box: prompt on top, the controls in a bar underneath.
           h(
             'form',
             {
-              class: 'richtext-ai-composer-row',
+              class: 'richtext-ai-composer-box',
               onSubmit: (event: Event) => {
                 event.preventDefault();
                 submit();
               },
             },
             [
-              h(Sparkles, { class: 'richtext-ai-composer-icon', size: 18 }),
-              h('textarea', {
-                ref: input,
-                rows: props.rows,
-                style: { minHeight: `calc(${props.rows} * 1.5em + 12px)` },
-                'aria-label': answer
-                  ? t('editor.ai.compose.refine')
-                  : props.placeholder || t('editor.ai.compose.placeholder'),
-                placeholder: answer
-                  ? t('editor.ai.compose.refine')
-                  : props.placeholder || t('editor.ai.compose.placeholder'),
-                value: prompt.value,
-                disabled: busy.value || !current.editable,
-                onInput: (event: Event) => {
-                  prompt.value = (event.target as HTMLTextAreaElement).value;
-                },
-                onKeydown: (event: KeyboardEvent) => {
-                  if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
-                    event.preventDefault();
-                    submit();
-                  }
-                },
-              }),
-              !answer && props.showTarget
-                ? h(
-                    'select',
-                    {
-                      'aria-label': t('editor.ai.compose.target'),
-                      value: effectiveTarget(),
-                      disabled: busy.value,
-                      onChange: (event: Event) => {
-                        target.value = (event.target as HTMLSelectElement).value as ComposerTarget;
+              h('div', { class: 'richtext-ai-composer-input' }, [
+                h(Sparkles, { class: 'richtext-ai-composer-icon', size: 18 }),
+                h('textarea', {
+                  ref: input,
+                  rows: props.rows,
+                  style: { minHeight: `calc(${props.rows} * 1.5em)` },
+                  'aria-label': answer
+                    ? t('editor.ai.compose.refine')
+                    : props.placeholder || t('editor.ai.compose.placeholder'),
+                  placeholder: answer
+                    ? t('editor.ai.compose.refine')
+                    : props.placeholder || t('editor.ai.compose.placeholder'),
+                  value: prompt.value,
+                  disabled: busy.value || !current.editable,
+                  onInput: (event: Event) => {
+                    prompt.value = (event.target as HTMLTextAreaElement).value;
+                  },
+                  onKeydown: (event: KeyboardEvent) => {
+                    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+                      event.preventDefault();
+                      submit();
+                    }
+                  },
+                }),
+              ]),
+              h('div', { class: 'richtext-ai-composer-bar' }, [
+                !answer && props.showTarget
+                  ? h(
+                      'select',
+                      {
+                        'aria-label': t('editor.ai.compose.target'),
+                        value: effectiveTarget(),
+                        disabled: busy.value,
+                        onChange: (event: Event) => {
+                          target.value = (event.target as HTMLSelectElement)
+                            .value as ComposerTarget;
+                        },
                       },
-                    },
-                    COMPOSER_TARGETS.filter(
-                      (value) => value !== 'selection' || current.hasSelection
-                    ).map((value) =>
-                      h(
-                        'option',
-                        { key: value, value, selected: value === effectiveTarget() },
-                        t(`editor.ai.compose.target.${value}`)
+                      COMPOSER_TARGETS.filter(
+                        (value) => value !== 'selection' || current.hasSelection
+                      ).map((value) =>
+                        h(
+                          'option',
+                          { key: value, value, selected: value === effectiveTarget() },
+                          t(`editor.ai.compose.target.${value}`)
+                        )
                       )
                     )
-                  )
-                : null,
-              busy.value
-                ? h(
-                    'button',
-                    {
-                      type: 'button',
-                      class: 'richtext-ai-composer-send',
-                      'aria-label': t('editor.ai.stop'),
-                      title: t('editor.ai.stop'),
-                      onClick: stop,
-                    },
-                    [h(Square, { size: 14, fill: 'currentColor' })]
-                  )
-                : h(
-                    'button',
-                    {
-                      type: 'submit',
-                      class: 'richtext-ai-composer-send',
-                      'aria-label': t('editor.ai.send'),
-                      title: t('editor.ai.send'),
-                      disabled: !prompt.value.trim() || !current.editable,
-                    },
-                    [h(ArrowUp, { size: 18 })]
-                  ),
-              h(
-                'button',
-                {
-                  type: 'button',
-                  class: 'richtext-ai-composer-close',
-                  'aria-label': t('editor.ai.compose.close'),
-                  title: t('editor.ai.compose.close'),
-                  onClick: close,
-                },
-                [h(X, { size: 16 })]
-              ),
+                  : h('span'),
+                busy.value
+                  ? h(
+                      'button',
+                      {
+                        type: 'button',
+                        class: 'richtext-ai-composer-send',
+                        'aria-label': t('editor.ai.stop'),
+                        title: t('editor.ai.stop'),
+                        onClick: stop,
+                      },
+                      [h(Square, { size: 14, fill: 'currentColor' })]
+                    )
+                  : h(
+                      'button',
+                      {
+                        type: 'submit',
+                        class: 'richtext-ai-composer-send',
+                        'aria-label': t('editor.ai.send'),
+                        title: t('editor.ai.send'),
+                        disabled: !prompt.value.trim() || !current.editable,
+                      },
+                      [h(ArrowUp, { size: 18 })]
+                    ),
+              ]),
             ]
           ),
 
-          h('div', { class: 'richtext-ai-composer-status' }, [
-            busy.value
-              ? h('span', { role: 'status', class: 'richtext-ai-composer-writing' }, [
-                  h('span', { class: 'richtext-ai-loading-dots', 'aria-hidden': 'true' }, [
-                    h('i'),
-                    h('i'),
-                    h('i'),
-                  ]),
-                  t('editor.ai.compose.writing'),
+          error.value
+            ? h('div', { class: 'richtext-ai-composer-foot' }, [
+                h('span', { role: 'alert', class: 'richtext-ai-composer-error' }, error.value),
+              ])
+            : props.hint && !answer && !busy.value
+              ? h('div', { class: 'richtext-ai-composer-foot' }, [
+                  h('span', { class: 'richtext-ai-composer-hint' }, hintText),
                 ])
-              : answer
-                ? h('div', { class: 'richtext-ai-composer-actions' }, [
-                    h(
-                      'button',
-                      {
-                        type: 'button',
-                        class: 'richtext-ai-composer-keep',
-                        onClick: () => {
-                          answer.keep();
-                          result.value = null;
-                          editor.value?.commands.focus();
-                        },
-                      },
-                      [h(Check, { size: 15 }), ` ${t('editor.ai.compose.keep')}`]
-                    ),
-                    h(
-                      'button',
-                      {
-                        type: 'button',
-                        onClick: () => {
-                          answer.discard();
-                          result.value = null;
-                          editor.value?.commands.focus();
-                        },
-                      },
-                      [h(Undo2, { size: 15 }), ` ${t('editor.ai.compose.undo')}`]
-                    ),
-                    h(
-                      'button',
-                      {
-                        type: 'button',
-                        onClick: () => {
-                          if (lastRequest) void run(lastRequest.prompt, lastRequest.target, answer);
-                        },
-                      },
-                      [h(RotateCcw, { size: 15 }), ` ${t('editor.ai.compose.retry')}`]
-                    ),
-                  ])
-                : error.value
-                  ? h('span', { role: 'alert', class: 'richtext-ai-composer-error' }, error.value)
-                  : props.hint
-                    ? h(
-                        'span',
-                        { class: 'richtext-ai-composer-hint' },
-                        typeof props.hint === 'string' ? props.hint : t('editor.ai.compose.hint')
-                      )
-                    : null,
-          ]),
+              : null,
         ]
       );
     };
