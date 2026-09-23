@@ -1,68 +1,53 @@
 <p align="center">
-  <img src="./docs/public/logo.svg" alt="SparkWrite" width="96" />
+  <img src="./docs/public/logo.svg" alt="SparkWrite" width="88" />
 </p>
 
-<h1 align="center">SparkWrite</h1>
+<h1 align="center">ai-sparkwrite-editor</h1>
 
 <p align="center">
   <b>告诉编辑器你要什么，它直接写在页面里。</b><br/>
-  基于 Tiptap 的 AI 优先富文本编辑器 SDK：正文、表格、代码、任务列表、公式、图表都由模型产出，并以真正可编辑的块落进文档。<br/>
-  流式、可撤销、16 种语言。React 与 Vue 两套 UI，共享一个不含框架的内核。
+  基于 Tiptap 的 AI 优先富文本编辑器 SDK，支持 React 与 Vue：正文、表格、代码、任务列表、公式、图表都由模型产出，并以真正可编辑的块落进文档。
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg" alt="npm" /></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/">文档</a> ·
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/">在线 Playground</a> ·
-  <a href="./README.md">English</a>
+  <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img alt="npm" src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg?label=npm&color=804dff" /></a>
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/"><img alt="docs" src="https://img.shields.io/badge/%E6%96%87%E6%A1%A3-%E7%BD%91%E7%AB%99-38bdf8.svg" /></a>
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/"><img alt="playground" src="https://img.shields.io/badge/playground-%E5%9C%A8%E7%BA%BF-f472b6.svg" /></a>
+  <a href="./LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
+  <a href="./README.md"><img alt="English" src="https://img.shields.io/badge/README-English-555.svg" /></a>
 </p>
 
-![截图](./screenshot/screenshot.png)
+![打开 AI 写作台的编辑器](./screenshot/screenshot.png)
 
-## 为什么选它
+## 特性
 
-大多数编辑器把 AI 放在文档旁边的聊天窗里。这里模型在文档*里面*干活：你描述，它写；你选中，它改；你停顿，它把句子补完。任何回答都不是粘贴进来的文本，而是经编辑器自己的 schema 解析——表格就是表格，代码块就是代码块，落地即可继续编辑。
+**AI 在文档里**
 
-**AI 替你做的事**
+- **写作台**——在编辑器底部输入需求，回答流式写进页面，落地成标题、列表、表格、代码块。可保留、撤销、重试或就地追问；整段只占一步撤销。工具栏 ✨、`⌘J` 或 `/ai` 呼出。
+- **整篇文档操作**——续写、总结、生成大纲、拟标题、提取待办、全文纠错、翻译全文，各一键；文档以 Markdown 发给模型，结构不丢。
+- **选区菜单**——润色、缩写、扩写、简化、换语气、解释、翻译、转表格、转列表。全选后同样可用。
+- **灰色续写**——打字停顿后出现下一句的建议，Tab 接受；空行按空格呼出 AI。
+- **一句话出公式和图表**——Katex 与 Mermaid 对话框写出源码并实时渲染。
+- **模型你定**——OpenAI 或 Anthropic 协议、任意代理，或自定义 `generate(request, onChunk)`。回答经编辑器 schema 解析：不是粘贴，也不会带进未知内容。
 
-| 你                       | 编辑器                                                                   |
-| ------------------------ | ------------------------------------------------------------------------ |
-| 在底部写作台输入一句需求 | 流式写进页面，落地成标题、列表、表格、代码；可保留、撤销、重试或就地追问 |
-| 点一个 chip              | 续写、总结、生成大纲、拟标题、提取待办、全文纠错、翻译全文               |
-| 选中文字 → Improve       | 润色、缩写、扩写、简化、换语气、解释、翻译、转表格、转列表               |
-| 空行按空格               | 在光标处呼出 Ask AI                                                      |
-| 打字停顿                 | 灰色续写建议，Tab 接受                                                   |
-| 描述一个公式或流程       | 写出 LaTeX / Mermaid 源码并实时渲染                                      |
+**文档需要的其他一切**
 
-**底层机制**
+- 50+ 扩展：标题、列表、表格、带语言识别的代码块、可裁剪加题注的图片、分割线、分栏、提示块、折叠块、Katex、Mermaid、Excalidraw、视频、iframe、附件、emoji、提及、目录、搜索替换、Word/PDF/Markdown 导入导出。
+- 从 Word、Google Docs、Excel、代码编辑器粘贴保持格式。
+- 16 种语言按需加载，配套中日韩、天城文、孟加拉文字体。
+- 录制并回放一次书写过程。
+- 每个功能一个导入，扩展和控件来自同一子路径；体积克制，引入 `bold` 约 30 KB 库代码和一个图标。
+- 带前缀的 Tailwind 类和少量 CSS 变量，融入你的设计系统。
 
-- **写进文档，而不是聊天框。** 编辑器底部的 AI 写作台（工具栏 ✨、`⌘J`、`/ai`）把回答直接流式写进上方的文档，落地的是真正的块：Markdown 表格就是编辑器的表格，围栏代码就是代码块，`- [ ]` 就是任务列表。写完可保留、撤销、重试或就地追问；整段只占一步撤销。
-- **懂整篇文档。** 续写、总结、生成大纲、拟标题、提取待办、全文纠错、翻译全文——各一键，带着文档上下文。
-- **替你把句子写完。** 停顿后出现灰色续写建议，Tab 接受；空行按空格呼出 AI；选中文字有 Improve：润色、缩写、翻译、转表格、转列表。
-- **生成你打不出来的东西。** Katex 和 Mermaid 对话框接受一句描述（「一元二次方程求根公式」「登录流程」），实时写出源码。
-- **模型你定。** OpenAI 或 Anthropic 协议、任意 baseURL / 代理，或自己的 `generate(request, onChunk)` 传输层。翻译到浏览器语言、追问细化、附带图片和文件。
-- **渲染也归你。** `renderResult` 改答案样式，`components.Panel` 整个面板换掉。
+## 快速接入
 
-**以及文档需要的一切**
+所有 `@tiptap/*` 包保持同一版本（`^3.29`）。
 
-- **可组合。** 自己创建 Tiptap 实例、挑扩展、把 React 控件放到想放的位置，每个功能一个导入。
-- **齐全。** 50+ 扩展：标题、列表、带圆角和「点击外侧退出」的表格、带语言识别的代码块、支持裁剪/题注/上传追踪的图片、带可编辑文字和编号的分割线、分栏、提示块、折叠块、Katex、Mermaid、Excalidraw、视频、iframe、附件、表情、提及、目录、查找替换、Word/PDF/Markdown 导入导出。
-- **粘贴正确。** 网页、Excel、Google Docs、Word 保留格式；Word 假列表变真列表，VS Code 代码变代码块。
-- **16 种语言**，按使用人数排序，按需加载，配套 CJK、天城文、孟加拉文字体。
-- **录制与回放**任意一次书写过程。
-- **React 和 Vue。** 文档逻辑（含 AI 引擎）以不含 React 的 `ai-sparkwrite-editor/core` 发布；`ai-sparkwrite-editor/vue` 提供 Vue 3 的 Provider、工具栏、控件、气泡菜单、对话框、节点视图以及 AI 面板和写作台，共用同一套样式。Playground 可在两者间切换。见 [多框架](./docs/guide/frameworks.md)。
-- **融入你的设计体系。** 带前缀的 Tailwind 类名和几个 CSS 变量。
-
-## 安装
+### React
 
 ```bash
 pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
 ```
-
-所有 `@tiptap/*` 包请保持同一版本（本仓库使用 `^3.29`）。
-
-## 快速开始
 
 ```tsx
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -70,6 +55,7 @@ import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
+import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
 import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
 import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
 import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
@@ -78,7 +64,16 @@ import 'ai-sparkwrite-editor/style.css';
 
 export function Editor() {
   const editor = useEditor({
-    extensions: [Document, Paragraph, Text, Bold, Heading, Table],
+    extensions: [
+      Document,
+      Paragraph,
+      Text,
+      Bold,
+      Heading,
+      Table,
+      AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }), // 密钥留在你的服务端
+      AIAutocomplete,
+    ],
     content: '<p>你好</p>',
     immediatelyRender: false,
   });
@@ -88,56 +83,95 @@ export function Editor() {
   return (
     <RichTextProvider editor={editor}>
       <RichTextToolbar>
-        <RichTextHeading />
+        <RichTextAI />
         <RichTextToolbarDivider />
+        <RichTextHeading />
         <RichTextBold />
         <RichTextTable />
       </RichTextToolbar>
-      <RichTextBubbleText />
       <EditorContent editor={editor} />
+      <RichTextAIComposer />
+      <RichTextBubbleText />
     </RichTextProvider>
   );
 }
 ```
 
-每个功能只需一个导入：扩展和它的控件来自同一个子路径（`ai-sparkwrite-editor/<feature>`），气泡菜单来自 `ai-sparkwrite-editor/bubble/<name>`，语言包来自 `ai-sparkwrite-editor/locales/<code>`。
+### Vue
+
+```bash
+pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
+```
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { Bold, Heading, Table } from 'ai-sparkwrite-editor/core';
+import {
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  RichTextBubbleText,
+  RichTextProvider,
+  RichTextToolbar,
+  RichTextToolbarDivider,
+  RichTextHeading,
+  RichTextBold,
+  RichTextTable,
+} from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const editor = useEditor({
+  extensions: [
+    Document,
+    Paragraph,
+    Text,
+    Bold,
+    Heading,
+    Table,
+    AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+    AIAutocomplete,
+  ],
+  content: '<p>你好</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextToolbar>
+      <RichTextAI />
+      <RichTextToolbarDivider />
+      <RichTextHeading /><RichTextBold /><RichTextTable />
+    </RichTextToolbar>
+    <EditorContent :editor="editor" />
+    <RichTextAIComposer />
+    <RichTextBubbleText />
+  </RichTextProvider>
+</template>
+```
+
+扩展来自不含框架的 `ai-sparkwrite-editor/core`，Vue UI 来自 `ai-sparkwrite-editor/vue`，与 React 控件共用同一份样式。
 
 ## 文档
 
-`docs/` 是一个 VitePress 站点（`pnpm docs:dev`）。建议从这里开始：
-
-- [快速开始](./docs/guide/getting-started.md) —— 安装、最小编辑器、组合界面
-- [功能总览](./docs/guide/features.md) —— 每个扩展、导入路径和主要选项
-- [工具栏](./docs/guide/toolbar.md) 与 [自定义](./docs/guide/customization.md) —— 自定义菜单、自定义节点、保存、回放
-- [气泡菜单](./docs/guide/bubble-menu.md) · [国际化](./docs/guide/internationalization.md)
-- [AI](./docs/extensions/AI/index.md) —— 模型接入、流式输出、Markdown 渲染、自定义面板
-
-## Playground
-
-```bash
-pnpm install
-pnpm build:lib
-pnpm playground
-```
-
-Playground 引用的是构建产物 `lib/`，改了 `src/` 后需要重新 build。没有配置 API key 时，AI 菜单会用演示回答，方便体验完整流程。
+全部在文档站：**[ludejun.github.io/ai-sparkwrite-editor](https://ludejun.github.io/ai-sparkwrite-editor/)**——[快速开始](https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started)、[AI](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/)、[全部功能与导入路径](https://ludejun.github.io/ai-sparkwrite-editor/guide/features)、[多框架](https://ludejun.github.io/ai-sparkwrite-editor/guide/frameworks)、[自定义](https://ludejun.github.io/ai-sparkwrite-editor/guide/customization)、[体积](https://ludejun.github.io/ai-sparkwrite-editor/guide/bundle-size)。先去 **[在线 Playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/)** 试：内置演示模型，不配密钥也能走完所有 AI 流程。
 
 ## 开发
 
 ```bash
-pnpm type-check   # 库类型检查
-pnpm lint         # oxlint
-pnpm build:lib    # 构建库
-pnpm docs:build   # 构建文档站
-pnpm exec esno --test tests/ai-client.test.ts tests/locale-loading.test.ts tests/word-export.test.ts
+pnpm install
+pnpm build:lib      # playground 引用构建产物 lib/
+pnpm playground     # http://localhost:8000，顶部可切换 React ⇄ Vue
+pnpm type-check && pnpm lint
+pnpm docs:dev
 ```
 
-提交规范和如何同步原项目的修复见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+提交规范与如何引入上游修复见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ## 来源
 
-SparkWrite 起源于 hunghg255 及贡献者们的 [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor)，此后经过了大幅重构。感谢他们，也感谢 [Tiptap](https://tiptap.dev) 与 [shadcn/ui](https://ui.shadcn.com/)。
-
-## 许可
-
-[MIT](./LICENSE)
+代码源自 hunghg255 及贡献者的 [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor)，此后经过大幅重构。感谢他们以及 [Tiptap](https://tiptap.dev) 与 [shadcn/ui](https://ui.shadcn.com/)。MIT 许可。

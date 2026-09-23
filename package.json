@@ -1059,7 +1059,8 @@
     "verify-commit": "verify-commit-msg",
     "release": "bumpp -r",
     "measure:bundle": "node scripts/measure-bundle.mjs",
-    "measure:entries": "node scripts/measure-entries.mjs"
+    "measure:entries": "node scripts/measure-entries.mjs",
+    "screenshot": "sh scripts/screenshot.sh"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.1",

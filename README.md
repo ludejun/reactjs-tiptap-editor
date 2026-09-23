@@ -1,68 +1,53 @@
 <p align="center">
-  <img src="./docs/public/logo.svg" alt="SparkWrite" width="96" />
+  <img src="./docs/public/logo.svg" alt="SparkWrite" width="88" />
 </p>
 
-<h1 align="center">SparkWrite</h1>
+<h1 align="center">ai-sparkwrite-editor</h1>
 
 <p align="center">
   <b>Tell the editor what you want. It writes it, right there in the page.</b><br/>
-  An AI-first rich-text editor SDK on Tiptap: prose, tables, code, task lists, formulas and diagrams are produced by the model and land in the document as real, editable blocks.<br/>
-  Streaming, undoable, in 16 languages. React and Vue UIs on one framework-free core.
+  An AI-first rich-text editor SDK on Tiptap for React and Vue: prose, tables, code, task lists, formulas and diagrams are produced by the model and land in the document as real, editable blocks.
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg" alt="npm" /></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/">Docs</a> ·
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/">Live playground</a> ·
-  <a href="./README.zh-CN.md">中文文档</a>
+  <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img alt="npm" src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg?label=npm&color=804dff" /></a>
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/"><img alt="docs" src="https://img.shields.io/badge/docs-website-38bdf8.svg" /></a>
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/"><img alt="playground" src="https://img.shields.io/badge/playground-live-f472b6.svg" /></a>
+  <a href="./LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
+  <a href="./README.zh-CN.md"><img alt="中文" src="https://img.shields.io/badge/%E6%96%87%E6%A1%A3-%E4%B8%AD%E6%96%87-555.svg" /></a>
 </p>
 
-![Screenshot](./screenshot/screenshot.png)
+![The editor with the AI composer open under the document](./screenshot/screenshot.png)
 
-## Why this editor
+## Features
 
-Most editors treat AI as a chat window next to the document. Here the model works _in_ the document: you describe, it writes; you select, it rewrites; you pause, it finishes the sentence. Formatting is never pasted — every answer is parsed through the editor's own schema, so a table is a table and a code block is a code block, ready to keep editing.
+**AI, in the document**
 
-**What the AI does for you**
+- **Composer dock** — type a request under the editor and the answer streams into the page as headings, lists, tables and code blocks. Keep, undo, retry, or refine the same span; one undo step. Toolbar ✨, `⌘J` or `/ai`.
+- **Whole-document actions** — continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate. One click each; the document goes to the model as Markdown, so its structure survives.
+- **Selection menu** — improve, shorten, expand, simplify, change tone, explain, translate, turn into a table or a list. Works after Select All.
+- **Ghost text** — pause while typing and the next words appear in grey; Tab keeps them. Space on an empty line asks AI.
+- **Formulas and diagrams from a sentence** — the Katex and Mermaid dialogs write the source and render it live.
+- **Your model** — OpenAI or Anthropic protocol, any proxy, or your own `generate(request, onChunk)`. Answers are parsed through the editor schema: nothing is pasted, nothing unknown gets in.
 
-| You                                             | The editor                                                                                                                       |
-| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Type a request in the composer under the editor | Streams the answer into the page as headings, lists, tables, code; Keep, Undo, Retry or refine in place                          |
-| Click a chip                                    | Continues writing, summarizes, outlines, suggests a title, extracts action items, fixes grammar or translates the whole document |
-| Select text → Improve                           | Rewrites, shortens, expands, simplifies, changes tone, explains, translates, turns it into a table or a list                     |
-| Press Space on an empty line                    | Opens Ask AI at the caret                                                                                                        |
-| Pause while typing                              | Proposes the next words in grey; Tab accepts                                                                                     |
-| Describe a formula or a flow                    | Writes the LaTeX or Mermaid source and renders it live                                                                           |
+**Everything else a document needs**
 
-**Under the hood**
+- 50+ extensions: headings, lists, tables, code blocks with language detection, images with cropping and captions, dividers, columns, callouts, details, Katex, Mermaid, Excalidraw, video, iframe, attachments, emoji, mentions, table of contents, search & replace, Word/PDF/Markdown import and export.
+- Paste from Word, Google Docs, Excel and code editors keeps its shape.
+- 16 languages, loaded on demand, with matching CJK, Devanagari and Bengali fonts.
+- Record and replay a writing session as timestamped steps.
+- One import per feature; the extension and its control come from the same subpath. Bundles stay small — importing `bold` costs about 30 KB of library code and one icon.
+- Prefixed Tailwind classes and a handful of CSS variables, so it fits your design system.
 
-- **Writes into the document, not a chat box.** A composer dock under the editor (toolbar ✨, `⌘J`, `/ai`) streams the answer straight into the page as real blocks — a markdown table becomes _the editor's_ table, a fenced block a code block, `- [ ]` a task list. Keep, undo, retry or refine in place; one undo step.
-- **Knows the whole document.** Continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — one click each, with the document as context.
-- **Finishes your sentence.** Ghost-text autocomplete after a pause; Tab accepts. Space on an empty line asks AI. Select text for Improve: rewrite, shorten, translate, turn into a table or a list.
-- **Generates what you cannot type.** Katex and Mermaid dialogs take a sentence ("the quadratic formula", "a login flow") and write the source, live.
-- **Your model, your rules.** OpenAI or Anthropic protocol, any base URL or proxy, or your own `generate(request, onChunk)` transport. Translate to the browser language, refine with a follow-up, attach images and files.
-- **Yours to render.** `renderResult` restyles the answer; `components.Panel` replaces the whole dialog.
+## Quick start
 
-**And everything else a document needs**
+Keep every `@tiptap/*` package on one version (`^3.29`).
 
-- **Composable.** You create the Tiptap editor, pick the extensions, and place the React controls where you want them — one import per feature.
-- **Complete.** 50+ extensions: headings, lists, tables with rounded corners and caret exit, code blocks with language detection, images with cropping, captions and upload tracking, dividers with editable captions, columns, callouts, details, Katex, Mermaid, Excalidraw, video, iframe, attachments, emoji, mentions, table of contents, search & replace, Word/PDF/Markdown import and export.
-- **Pastes right.** Web pages, Excel, Google Docs and Word keep their formatting; Word's fake lists become lists and code from VS Code becomes a code block.
-- **16 languages** ordered by speaker population, loadable on demand, with matching CJK, Devanagari and Bengali fonts.
-- **Record and replay** any writing session as timestamped steps.
-- **React and Vue.** The document logic — AI engine included — ships React-free as `ai-sparkwrite-editor/core`; `ai-sparkwrite-editor/vue` adds a Vue 3 provider, toolbar, controls, bubble menus, dialogs, node views and the AI panel and composer on the same stylesheet. The playground switches between the two. See [Frameworks](./docs/guide/frameworks.md).
-- **Fits your design system.** Prefixed Tailwind classes and a handful of CSS variables.
-
-## Install
+### React
 
 ```bash
 pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
 ```
-
-Keep every `@tiptap/*` package on one version (this repository uses `^3.29`).
-
-## Quick start
 
 ```tsx
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -70,6 +55,7 @@ import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
+import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
 import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
 import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
 import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
@@ -78,7 +64,16 @@ import 'ai-sparkwrite-editor/style.css';
 
 export function Editor() {
   const editor = useEditor({
-    extensions: [Document, Paragraph, Text, Bold, Heading, Table],
+    extensions: [
+      Document,
+      Paragraph,
+      Text,
+      Bold,
+      Heading,
+      Table,
+      AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }), // keys stay on your server
+      AIAutocomplete,
+    ],
     content: '<p>Hello</p>',
     immediatelyRender: false,
   });
@@ -88,56 +83,95 @@ export function Editor() {
   return (
     <RichTextProvider editor={editor}>
       <RichTextToolbar>
-        <RichTextHeading />
+        <RichTextAI />
         <RichTextToolbarDivider />
+        <RichTextHeading />
         <RichTextBold />
         <RichTextTable />
       </RichTextToolbar>
-      <RichTextBubbleText />
       <EditorContent editor={editor} />
+      <RichTextAIComposer />
+      <RichTextBubbleText />
     </RichTextProvider>
   );
 }
 ```
 
-Every feature is one import: the extension and its control come from the same subpath (`ai-sparkwrite-editor/<feature>`), bubble menus from `ai-sparkwrite-editor/bubble/<name>`, languages from `ai-sparkwrite-editor/locales/<code>`.
+### Vue
+
+```bash
+pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
+```
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { Bold, Heading, Table } from 'ai-sparkwrite-editor/core';
+import {
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  RichTextBubbleText,
+  RichTextProvider,
+  RichTextToolbar,
+  RichTextToolbarDivider,
+  RichTextHeading,
+  RichTextBold,
+  RichTextTable,
+} from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const editor = useEditor({
+  extensions: [
+    Document,
+    Paragraph,
+    Text,
+    Bold,
+    Heading,
+    Table,
+    AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+    AIAutocomplete,
+  ],
+  content: '<p>Hello</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextToolbar>
+      <RichTextAI />
+      <RichTextToolbarDivider />
+      <RichTextHeading /><RichTextBold /><RichTextTable />
+    </RichTextToolbar>
+    <EditorContent :editor="editor" />
+    <RichTextAIComposer />
+    <RichTextBubbleText />
+  </RichTextProvider>
+</template>
+```
+
+Extensions come from `ai-sparkwrite-editor/core` (framework-free), the Vue UI from `ai-sparkwrite-editor/vue`, both on the same stylesheet as the React controls.
 
 ## Documentation
 
-The `docs/` folder is a VitePress site (`pnpm docs:dev`). Start with:
-
-- [Getting started](./docs/guide/getting-started.md) — install, minimal editor, composing the UI
-- [Features](./docs/guide/features.md) — every extension, its import path and main options
-- [Toolbar](./docs/guide/toolbar.md) and [Customization](./docs/guide/customization.md) — custom menus, custom blocks, saving, replay
-- [Bubble menus](./docs/guide/bubble-menu.md) · [Internationalization](./docs/guide/internationalization.md)
-- [AI](./docs/extensions/AI/index.md) — providers, streaming, markdown rendering, custom panels
-
-## Playground
-
-```bash
-pnpm install
-pnpm build:lib
-pnpm playground
-```
-
-The playground imports the built `lib/`; rebuild after changing `src/`. Without an API key the AI menu answers with a demo so the whole flow can be tried.
+Everything is on the docs site: **[ludejun.github.io/ai-sparkwrite-editor](https://ludejun.github.io/ai-sparkwrite-editor/)** — [getting started](https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started), [AI](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/), [every feature and its import path](https://ludejun.github.io/ai-sparkwrite-editor/guide/features), [frameworks](https://ludejun.github.io/ai-sparkwrite-editor/guide/frameworks), [customization](https://ludejun.github.io/ai-sparkwrite-editor/guide/customization), [bundle size](https://ludejun.github.io/ai-sparkwrite-editor/guide/bundle-size). Try it first in the **[live playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/)**, which answers with a demo model so every AI flow works without a key.
 
 ## Development
 
 ```bash
-pnpm type-check   # library types
-pnpm lint         # oxlint
-pnpm build:lib    # library
-pnpm docs:build   # documentation site
-pnpm exec esno --test tests/ai-client.test.ts tests/locale-loading.test.ts tests/word-export.test.ts
+pnpm install
+pnpm build:lib      # the playground imports the built lib/
+pnpm playground     # http://localhost:8000, React ⇄ Vue switch in the header
+pnpm type-check && pnpm lint
+pnpm docs:dev
 ```
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the commit convention and how fixes from the original project are brought in.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the commit convention and how upstream fixes are brought in.
 
 ## Origin
 
-SparkWrite started as a fork of [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor) by hunghg255 and its contributors, and has since been reworked extensively. Thank you to them and to the [Tiptap](https://tiptap.dev) and [shadcn/ui](https://ui.shadcn.com/) projects.
-
-## License
-
-[MIT](./LICENSE)
+The code base started as a fork of [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor) by hunghg255 and its contributors and has since been reworked extensively. Thank you to them and to the [Tiptap](https://tiptap.dev) and [shadcn/ui](https://ui.shadcn.com/) projects. MIT licensed.

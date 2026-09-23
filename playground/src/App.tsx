@@ -1045,8 +1045,25 @@ const PlaygroundToolbar = ({ editor }: { editor: import('@tiptap/core').Editor |
   );
 };
 
+/**
+ * `?shot=1` renders only the editor with the composer open, for the README
+ * screenshot (`pnpm screenshot`).
+ */
+const SHOT = new URLSearchParams(window.location.search).has('shot');
+
+/** Short enough that the composer is in view on a 1280×800 screenshot. */
+const SHOT_CONTENT = `
+<h1>Quarterly launch plan</h1>
+<p>Ask for a section, a table or a diagram and it lands here as real blocks — try <strong>Continue Writing</strong> below, or select this sentence and pick <strong>Improve</strong>.</p>
+<h2>Milestones</h2>
+<table><tbody><tr><th><p>Week</p></th><th><p>Deliverable</p></th><th><p>Owner</p></th></tr><tr><td><p>1</p></td><td><p>Draft the announcement</p></td><td><p>Mia</p></td></tr><tr><td><p>2</p></td><td><p>Beta with 20 customers</p></td><td><p>Ravi</p></td></tr><tr><td><p>3</p></td><td><p>Docs and pricing page</p></td><td><p>Lena</p></td></tr></tbody></table>
+<h2>Open questions</h2>
+<ul data-type="taskList"><li data-type="taskItem" data-checked="true"><p>Confirm the launch date with sales</p></li><li data-type="taskItem" data-checked="false"><p>Decide whether the free tier includes AI</p></li></ul>
+<p></p>
+`;
+
 function App() {
-  const [content, setContent] = useState(DEFAULT);
+  const [content, setContent] = useState(SHOT ? SHOT_CONTENT : DEFAULT);
   const [theme, setTheme] = useState('light');
   const [framework, setFramework] = useState<Framework>('react');
 
@@ -1075,14 +1092,22 @@ function App() {
   }, [editor]);
 
   return (
-    <div className='mx-auto my-0 flex w-full max-w-screen-lg flex-col gap-5 px-6 py-10'>
-      <Header
-        editor={editor}
-        framework={framework}
-        setFramework={setFramework}
-        setTheme={setTheme}
-        theme={theme}
-      />
+    <div
+      className={
+        SHOT
+          ? 'mx-auto my-0 flex w-full flex-col gap-5 p-4'
+          : 'mx-auto my-0 flex w-full max-w-screen-lg flex-col gap-5 px-6 py-10'
+      }
+    >
+      {SHOT ? null : (
+        <Header
+          editor={editor}
+          framework={framework}
+          setFramework={setFramework}
+          setTheme={setTheme}
+          theme={theme}
+        />
+      )}
 
       {framework === 'vue' ? (
         <VueEditor dark={theme === 'dark'} />
@@ -1095,7 +1120,7 @@ function App() {
               <EditorContent editor={editor} />
 
               {/* AI composer dock: opened by the toolbar AI button, Mod-J or /ai */}
-              <RichTextAIComposer />
+              <RichTextAIComposer defaultOpen={SHOT} />
 
               {/* Bubble */}
               <RichTextBubbleCallout />
@@ -1123,7 +1148,7 @@ function App() {
         </RichTextProvider>
       )}
 
-      {typeof content === 'string' && (
+      {typeof content === 'string' && !SHOT && (
         <details className='rounded-xl border border-solid border-gray-200 bg-white px-4 py-3'>
           <summary className='cursor-pointer text-[13px] font-medium text-gray-600'>
             Output HTML
