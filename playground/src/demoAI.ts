@@ -141,7 +141,11 @@ function mapProse(text: string, fn: (prose: string) => string): string {
   let inCode = false;
   return lines(text)
     .map((line) => {
-      if (line.startsWith('```')) inCode = !inCode;
+      // Both fences stay untouched, or the block never closes.
+      if (line.startsWith('```')) {
+        inCode = !inCode;
+        return line;
+      }
       if (inCode || isMarkup(line)) return line;
       return fn(line);
     })
@@ -297,8 +301,12 @@ function translate(text: string): string {
   let inCode = false;
   return lines(text)
     .map((line) => {
-      if (line.startsWith('```')) inCode = !inCode;
-      if (inCode || !line.trim()) return line;
+      if (line.startsWith('```')) {
+        inCode = !inCode;
+        return line;
+      }
+      // Blocks without a Markdown form are serialised as HTML; leave them be.
+      if (inCode || !line.trim() || /^\s*[<[]/.test(line)) return line;
       const match = /^(\s*(?:[-*+]|\d+[.)]|#{1,6}|>|- \[[ x]\])\s+)?(.*)$/.exec(line);
       const prefix = match?.[1] ?? '';
       let body = match?.[2] ?? line;

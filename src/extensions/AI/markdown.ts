@@ -59,6 +59,18 @@ export function markdownToFragment(editor: Editor, markdown: string): Fragment {
     'text/html'
   ).body;
 
+  // The table of contents serialises to `[TOC]`; a model rewriting the whole
+  // document hands it back as text. Restore the node when the schema has it.
+  if (editor.schema.nodes.tableOfContentsNode) {
+    for (const p of Array.from(body.querySelectorAll('p'))) {
+      if (p.textContent?.trim() === '[TOC]') {
+        const toc = body.ownerDocument.createElement('div');
+        toc.setAttribute('data-type', 'table-of-contents');
+        p.replaceWith(toc);
+      }
+    }
+  }
+
   return ProseMirrorDOMParser.fromSchema(editor.schema).parse(body).content;
 }
 

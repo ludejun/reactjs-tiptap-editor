@@ -100,6 +100,12 @@ export interface AIOptions {
   /** Per-attachment size limit in bytes. */
   maxAttachmentSize: number;
   /**
+   * The composer dock and everything that opens it: the `RichTextAI` toolbar
+   * button, `Mod-J`, the slash entry and the "Open AI composer" menu item.
+   * `false` removes all of them at once. Default `true`.
+   */
+  composer: boolean;
+  /**
    * Pressing Space on an empty line opens Ask AI, the way an empty line in
    * Notion does. Off, Space is just a space. Default `true`.
    */

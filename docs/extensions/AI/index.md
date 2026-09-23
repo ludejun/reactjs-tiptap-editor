@@ -78,6 +78,25 @@ import { AI_COMPOSER_ACTIONS, RichTextAIComposer } from 'ai-sparkwrite-editor/ai
 />;
 ```
 
+### Turning the composer off, or restyling it
+
+`AI.configure({ composer: false })` removes the dock **and every way in**: the `RichTextAI` toolbar button renders nothing, `⌘/Ctrl+J` and `/ai composer` disappear, the Improve menu loses "Open AI Composer", and `toggleAIComposer()` is a no-op. The selection menu, Space-to-ask and autocomplete are unaffected.
+
+The dock itself takes props (same names in Vue):
+
+| Prop                 | Default               | Effect                                                      |
+| -------------------- | --------------------- | ----------------------------------------------------------- |
+| `actions`            | `AI_COMPOSER_ACTIONS` | The chips; `[]` hides the row                               |
+| `showTarget`         | `true`                | The "where the text goes" selector                          |
+| `hint`               | `true`                | Footer line; `false` hides it, a string replaces it         |
+| `placeholder`        | locale string         | Prompt box placeholder                                      |
+| `rows`               | `2`                   | Visible lines of the prompt box                             |
+| `gradient`           | `true`                | Gradient border and background wash; `false` is a flat dock |
+| `accent`             | `#804dff`             | Accent colour; sets the `--ai-accent` variable              |
+| `className`, `style` | —                     | Passed to the root                                          |
+
+For finer control the stylesheet exposes `--ai-accent`, `--ai-accent-2`, `--ai-accent-3` on `.richtext-ai-composer`, and the parts are plain classes: `richtext-ai-composer-chipline`, `-chips`, `-more`, `-menu`, `-row`, `-send`, `-close`, `-status`, `-actions`, `-hint`.
+
 ### Writing into the document from your own UI
 
 The engine behind the dock is exported and framework-free:

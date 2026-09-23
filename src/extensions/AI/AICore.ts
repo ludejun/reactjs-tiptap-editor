@@ -53,6 +53,7 @@ export const AICore = Extension.create<AIOptions>({
       // Empty: "Translate" targets the reader's browser language. Set a list to
       // get a submenu of fixed targets instead.
       translateLanguages: [],
+      composer: true,
       spaceTrigger: true,
       documentContext: 12000,
     };
@@ -99,6 +100,7 @@ export const AICore = Extension.create<AIOptions>({
       toggleAIComposer:
         (open) =>
         ({ state, tr, dispatch }) => {
+          if (!this.options.composer) return false;
           const current = aiPluginKey.getState(state)?.composer ?? false;
           const next = open ?? !current;
           if (next === current) return true;

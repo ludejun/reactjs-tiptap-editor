@@ -454,12 +454,21 @@
     }
   }
 }
+/* One line: the chips clip, the "+N" button beside them never does. */
+.richtext-ai-composer-chipline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
 .richtext-ai-composer-chips {
   position: relative;
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: nowrap;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   overflow: hidden;
 
   /* Measured but not shown: the chips that did not fit on the line. */
@@ -527,7 +536,9 @@
     line-height: 1.5;
     padding: 6px 0;
     outline: none;
-    min-height: 2.9em;
+    /* Two lines by default (the component sets min-height from `rows`);
+       field-sizing lets it grow with the text up to max-height. */
+    min-height: calc(2 * 1.5em + 12px);
     max-height: 160px;
     field-sizing: content;
     &::placeholder {
@@ -672,5 +683,15 @@
     &:hover {
       background: hsl(var(--accent));
     }
+  }
+}
+
+/* `gradient={false}`: a flat dock in the popover colours. */
+.richtext-ai-composer.richtext-ai-composer--plain {
+  background: hsl(var(--background));
+  .richtext-ai-composer-row {
+    animation: none;
+    background: hsl(var(--popover));
+    border-color: hsl(var(--border));
   }
 }

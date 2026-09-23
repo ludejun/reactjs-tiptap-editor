@@ -20,7 +20,8 @@ export function RichTextAI() {
     selector: ({ editor }) => aiPluginKey.getState(editor.state)?.composer ?? false,
   });
 
-  if (!aiOptionsOf(editor)) return null;
+  const options = aiOptionsOf(editor);
+  if (!options || options.composer === false) return null;
 
   return (
     <ActionButton

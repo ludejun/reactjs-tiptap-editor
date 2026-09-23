@@ -296,13 +296,15 @@ export function RichTextAIImprove() {
             {t('editor.ai.menu.ask')}
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            className='richtext-ai-improve-item'
-            onSelect={() => editor.commands.toggleAIComposer(true)}
-          >
-            <PanelBottomOpen size={17} />
-            {t('editor.ai.menu.composer')}
-          </DropdownMenuItem>
+          {aiExtension.options?.composer !== false ? (
+            <DropdownMenuItem
+              className='richtext-ai-improve-item'
+              onSelect={() => editor.commands.toggleAIComposer(true)}
+            >
+              <PanelBottomOpen size={17} />
+              {t('editor.ai.menu.composer')}
+            </DropdownMenuItem>
+          ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

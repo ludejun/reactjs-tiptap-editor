@@ -646,7 +646,7 @@ export const RichTextAI = defineComponent({
     const { t } = useLocale();
     const state = useEditorState(
       (current) => ({
-        available: !!aiOptionsOf(current),
+        available: aiOptionsOf(current)?.composer !== false && !!aiOptionsOf(current),
         open: aiPluginKey.getState(current.state)?.composer ?? false,
         enabled: current.isEditable,
       }),
@@ -694,17 +694,29 @@ const COMPOSER_TARGETS: ComposerTarget[] = ['selection', 'cursor', 'start', 'end
 export const RichTextAIComposer = defineComponent({
   name: 'RichTextAIComposer',
   props: {
-    /** Quick actions shown as chips. Defaults to `AI_COMPOSER_ACTIONS`. */
+    /** Quick actions shown as chips. Defaults to `AI_COMPOSER_ACTIONS`; `[]` hides the row. */
     actions: { type: Array as PropType<AIComposerAction[]>, default: () => AI_COMPOSER_ACTIONS },
     /** Start open. Otherwise the `RichTextAI` button, `Mod-J` or `toggleAIComposer()` opens it. */
     defaultOpen: { type: Boolean, default: false },
+    /** Placeholder of the prompt box before an answer exists. */
+    placeholder: { type: String, default: '' },
+    /** Visible lines of the prompt box. */
+    rows: { type: Number, default: 2 },
+    /** Show the "where the text goes" selector. */
+    showTarget: { type: Boolean, default: true },
+    /** The footer line: `false` hides it, a string replaces it. */
+    hint: { type: [Boolean, String] as PropType<boolean | string>, default: true },
+    /** The gradient border and background wash; `false` gives a flat dock. */
+    gradient: { type: Boolean, default: true },
+    /** Accent colour (any CSS colour). */
+    accent: { type: String, default: '' },
   },
   setup(props) {
     const editor = useEditorInstance();
     const { t } = useLocale();
     const state = useEditorState(
       (current) => ({
-        available: !!aiOptionsOf(current),
+        available: aiOptionsOf(current)?.composer !== false && !!aiOptionsOf(current),
         open: aiPluginKey.getState(current.state)?.composer ?? false,
         hasSelection: !current.state.selection.empty,
         empty: current.state.doc.textContent.trim().length === 0,
@@ -840,7 +852,8 @@ export const RichTextAIComposer = defineComponent({
       return h(
         'div',
         {
-          class: 'richtext-ai-composer',
+          class: ['richtext-ai-composer', { 'richtext-ai-composer--plain': !props.gradient }],
+          style: props.accent ? { '--ai-accent': props.accent } : undefined,
           'data-richtext-portal': '',
           role: 'region',
           'aria-label': t('editor.ai.compose.title'),
@@ -853,26 +866,30 @@ export const RichTextAIComposer = defineComponent({
         },
         [
           chips.length && !answer
-            ? h('div', { class: 'richtext-ai-composer-chips', role: 'group', ref: chipRow }, [
-                ...chips.map((action, index) => {
-                  const Icon = COMPOSER_ICONS[action.icon];
-                  const hidden = index >= visibleChips.value;
-                  return h(
-                    'button',
-                    {
-                      key: action.key,
-                      type: 'button',
-                      'data-chip': '',
-                      class: hidden ? 'richtext-ai-chip-hidden' : undefined,
-                      'aria-hidden': hidden ? 'true' : undefined,
-                      tabindex: hidden ? -1 : undefined,
-                      title: composerPrompt(action),
-                      disabled: busy.value || !current.editable,
-                      onClick: () => void run(composerPrompt(action), action.target),
-                    },
-                    [Icon ? h(Icon, { size: 14 }) : null, t(action.key)]
-                  );
-                }),
+            ? h('div', { class: 'richtext-ai-composer-chipline', ref: chipRow }, [
+                h(
+                  'div',
+                  { class: 'richtext-ai-composer-chips', role: 'group' },
+                  chips.map((action, index) => {
+                    const Icon = COMPOSER_ICONS[action.icon];
+                    const hidden = index >= visibleChips.value;
+                    return h(
+                      'button',
+                      {
+                        key: action.key,
+                        type: 'button',
+                        'data-chip': '',
+                        class: hidden ? 'richtext-ai-chip-hidden' : undefined,
+                        'aria-hidden': hidden ? 'true' : undefined,
+                        tabindex: hidden ? -1 : undefined,
+                        title: composerPrompt(action),
+                        disabled: busy.value || !current.editable,
+                        onClick: () => void run(composerPrompt(action), action.target),
+                      },
+                      [Icon ? h(Icon, { size: 14 }) : null, t(action.key)]
+                    );
+                  })
+                ),
                 visibleChips.value < chips.length
                   ? h('div', { class: 'richtext-ai-composer-more', ref: moreMenu }, [
                       h(
@@ -931,13 +948,14 @@ export const RichTextAIComposer = defineComponent({
               h(Sparkles, { class: 'richtext-ai-composer-icon', size: 18 }),
               h('textarea', {
                 ref: input,
-                rows: 2,
+                rows: props.rows,
+                style: { minHeight: `calc(${props.rows} * 1.5em + 12px)` },
                 'aria-label': answer
                   ? t('editor.ai.compose.refine')
-                  : t('editor.ai.compose.placeholder'),
+                  : props.placeholder || t('editor.ai.compose.placeholder'),
                 placeholder: answer
                   ? t('editor.ai.compose.refine')
-                  : t('editor.ai.compose.placeholder'),
+                  : props.placeholder || t('editor.ai.compose.placeholder'),
                 value: prompt.value,
                 disabled: busy.value || !current.editable,
                 onInput: (event: Event) => {
@@ -950,7 +968,7 @@ export const RichTextAIComposer = defineComponent({
                   }
                 },
               }),
-              !answer
+              !answer && props.showTarget
                 ? h(
                     'select',
                     {
@@ -1059,7 +1077,13 @@ export const RichTextAIComposer = defineComponent({
                   ])
                 : error.value
                   ? h('span', { role: 'alert', class: 'richtext-ai-composer-error' }, error.value)
-                  : h('span', { class: 'richtext-ai-composer-hint' }, t('editor.ai.compose.hint')),
+                  : props.hint
+                    ? h(
+                        'span',
+                        { class: 'richtext-ai-composer-hint' },
+                        typeof props.hint === 'string' ? props.hint : t('editor.ai.compose.hint')
+                      )
+                    : null,
           ]),
         ]
       );
@@ -1286,10 +1310,12 @@ export const RichTextAIImprove = defineComponent({
                   : null,
                 h('div', { class: MENU_SEPARATOR }),
                 item('editor.ai.menu.ask', Sparkles, () => run()),
-                item('editor.ai.menu.composer', PanelBottomOpen, () => {
-                  open.value = false;
-                  editor.value?.commands.toggleAIComposer(true);
-                }),
+                editor.value && aiOptionsOf(editor.value)?.composer === false
+                  ? null
+                  : item('editor.ai.menu.composer', PanelBottomOpen, () => {
+                      open.value = false;
+                      editor.value?.commands.toggleAIComposer(true);
+                    }),
               ]
             )
           : null,

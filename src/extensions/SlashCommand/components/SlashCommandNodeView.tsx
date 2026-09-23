@@ -40,9 +40,11 @@ function SlashCommandNodeView(
 
   const { t } = useLocale();
 
-  const hasAI = props.editor.extensionManager.extensions.some(
+  const aiExtension = props.editor.extensionManager.extensions.find(
     (extension) => extension.name === 'ai'
   );
+  const hasAI = !!aiExtension;
+  const hasComposer = hasAI && aiExtension.options?.composer !== false;
   const groups = hasAI
     ? [
         {
@@ -65,7 +67,7 @@ function SlashCommandNodeView(
               aliases: ['ai', 'continue', 'more', 'xuxie'],
               action: ({ editor, range }: Parameters<Command['action']>[0]) => {
                 editor.chain().deleteRange(range).run();
-                editor.commands.toggleAIComposer(true);
+                if (hasComposer) editor.commands.toggleAIComposer(true);
                 const action = AI_COMPOSER_ACTIONS.find((item) => item.target === 'end');
                 if (action)
                   void writeWithAI(editor, { prompt: composerPrompt(action), target: 'cursor' });
@@ -76,6 +78,7 @@ function SlashCommandNodeView(
               label: t('editor.ai.compose.title'),
               iconName: 'PanelBottomOpen',
               aliases: ['ai', 'composer', 'chat'],
+              shouldBeHidden: () => !hasComposer,
               action: ({ editor, range }: Parameters<Command['action']>[0]) => {
                 editor.chain().deleteRange(range).toggleAIComposer(true).run();
               },

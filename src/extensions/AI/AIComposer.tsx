@@ -27,7 +27,7 @@ import { aiOptionsOf, writeWithAI, type WriteWithAIResult } from './writer';
 
 import type { AIWriteTarget } from './types';
 import type { Range } from '@tiptap/core';
-import type { ComponentType } from 'react';
+import type { ComponentType, CSSProperties } from 'react';
 
 const ICONS: Record<string, ComponentType<{ size?: number }>> = {
   PenLine,
@@ -43,11 +43,24 @@ type Target = 'selection' | 'cursor' | 'start' | 'end' | 'document';
 const TARGETS: Target[] = ['selection', 'cursor', 'start', 'end', 'document'];
 
 export interface RichTextAIComposerProps {
-  /** Quick actions shown as chips. Defaults to `AI_COMPOSER_ACTIONS`. */
+  /** Quick actions shown as chips. Defaults to `AI_COMPOSER_ACTIONS`; `[]` hides the row. */
   actions?: AIComposerAction[];
   /** Start open. Otherwise the `RichTextAI` button, `Mod-J` or `toggleAIComposer()` opens it. */
   defaultOpen?: boolean;
   className?: string;
+  style?: CSSProperties;
+  /** Placeholder of the prompt box before an answer exists. */
+  placeholder?: string;
+  /** Visible lines of the prompt box. Default 2. */
+  rows?: number;
+  /** Show the "where the text goes" selector. Default true. */
+  showTarget?: boolean;
+  /** The footer line: `false` hides it, a string replaces it. Default true. */
+  hint?: boolean | string;
+  /** The gradient border and background wash. `false` gives a flat dock. Default true. */
+  gradient?: boolean;
+  /** Accent colour (any CSS colour); the gradient derives its other stops from it. */
+  accent?: string;
 }
 
 /**
@@ -60,6 +73,13 @@ export function RichTextAIComposer({
   actions = AI_COMPOSER_ACTIONS,
   defaultOpen = false,
   className = '',
+  style,
+  placeholder,
+  rows = 2,
+  showTarget = true,
+  hint = true,
+  gradient = true,
+  accent,
 }: RichTextAIComposerProps) {
   const editor = useEditorInstance();
   const { t } = useLocale();
@@ -96,7 +116,8 @@ export function RichTextAIComposer({
 
   useEffect(() => () => controller.current?.abort(), []);
 
-  const open = !!state?.open && !!aiOptionsOf(editor);
+  const aiOptions = aiOptionsOf(editor);
+  const open = !!state?.open && !!aiOptions && aiOptions.composer !== false;
   const showChips = open && !result;
 
   useLayoutEffect(() => {
@@ -184,7 +205,8 @@ export function RichTextAIComposer({
 
   return (
     <div
-      className={`richtext-ai-composer ${className}`}
+      className={`richtext-ai-composer ${gradient ? '' : 'richtext-ai-composer--plain'} ${className}`}
+      style={accent ? ({ ...style, '--ai-accent': accent } as CSSProperties) : style}
       data-richtext-portal
       role='region'
       aria-label={t('editor.ai.compose.title')}
@@ -198,28 +220,30 @@ export function RichTextAIComposer({
       }}
     >
       {chips.length && !result ? (
-        <div className='richtext-ai-composer-chips' role='group' ref={chipRow}>
-          {chips.map((action, index) => {
-            const Icon = ICONS[action.icon];
-            const hidden = index >= visibleChips;
+        <div className='richtext-ai-composer-chipline' ref={chipRow}>
+          <div className='richtext-ai-composer-chips' role='group'>
+            {chips.map((action, index) => {
+              const Icon = ICONS[action.icon];
+              const hidden = index >= visibleChips;
 
-            return (
-              <button
-                key={action.key}
-                type='button'
-                data-chip=''
-                className={hidden ? 'richtext-ai-chip-hidden' : undefined}
-                aria-hidden={hidden || undefined}
-                tabIndex={hidden ? -1 : undefined}
-                title={composerPrompt(action)}
-                disabled={busy || !state.editable}
-                onClick={() => void run(composerPrompt(action), action.target)}
-              >
-                {Icon ? <Icon size={14} /> : null}
-                {t(action.key)}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={action.key}
+                  type='button'
+                  data-chip=''
+                  className={hidden ? 'richtext-ai-chip-hidden' : undefined}
+                  aria-hidden={hidden || undefined}
+                  tabIndex={hidden ? -1 : undefined}
+                  title={composerPrompt(action)}
+                  disabled={busy || !state.editable}
+                  onClick={() => void run(composerPrompt(action), action.target)}
+                >
+                  {Icon ? <Icon size={14} /> : null}
+                  {t(action.key)}
+                </button>
+              );
+            })}
+          </div>
           {visibleChips < chips.length ? (
             <div className='richtext-ai-composer-more' ref={moreMenu}>
               <button
@@ -272,9 +296,18 @@ export function RichTextAIComposer({
         <Sparkles className='richtext-ai-composer-icon' size={18} />
         <textarea
           ref={input}
-          rows={2}
-          aria-label={result ? t('editor.ai.compose.refine') : t('editor.ai.compose.placeholder')}
-          placeholder={result ? t('editor.ai.compose.refine') : t('editor.ai.compose.placeholder')}
+          rows={rows}
+          style={{ minHeight: `calc(${rows} * 1.5em + 12px)` }}
+          aria-label={
+            result
+              ? t('editor.ai.compose.refine')
+              : (placeholder ?? t('editor.ai.compose.placeholder'))
+          }
+          placeholder={
+            result
+              ? t('editor.ai.compose.refine')
+              : (placeholder ?? t('editor.ai.compose.placeholder'))
+          }
           value={prompt}
           disabled={busy || !state.editable}
           onChange={(event) => setPrompt(event.target.value)}
@@ -285,7 +318,7 @@ export function RichTextAIComposer({
             }
           }}
         />
-        {!result ? (
+        {!result && showTarget ? (
           <select
             aria-label={t('editor.ai.compose.target')}
             value={effectiveTarget}
@@ -378,9 +411,11 @@ export function RichTextAIComposer({
           <span role='alert' className='richtext-ai-composer-error'>
             {error}
           </span>
-        ) : (
-          <span className='richtext-ai-composer-hint'>{t('editor.ai.compose.hint')}</span>
-        )}
+        ) : hint ? (
+          <span className='richtext-ai-composer-hint'>
+            {typeof hint === 'string' ? hint : t('editor.ai.compose.hint')}
+          </span>
+        ) : null}
       </div>
     </div>
   );
