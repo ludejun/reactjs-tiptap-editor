@@ -2,7 +2,7 @@ import { findParentNode } from '@tiptap/core';
 import { Node } from '@tiptap/pm/model';
 import { type EditorState, TextSelection } from '@tiptap/pm/state';
 
-import { ColumnNode, MultipleColumnNode } from '@/extensions/Column';
+import { ColumnNode, MultipleColumnNode } from '@/extensions/Column/Column';
 
 import type { CommandProps, JSONContent } from '@tiptap/core';
 import type { NodeType, Schema, Fragment } from '@tiptap/pm/model';

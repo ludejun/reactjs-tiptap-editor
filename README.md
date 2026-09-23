@@ -43,40 +43,33 @@
 - Paste from Word, Google Docs, Excel and code editors keeps its shape.
 - 16 languages, loaded on demand, with matching CJK, Devanagari and Bengali fonts.
 - Record and replay a writing session as timestamped steps.
-- One import per feature; the extension and its control come from the same subpath. Bundles stay small — importing `bold` costs about 30 KB of library code and one icon.
+- One import per framework, `RichTextKit` for everything at once; bundlers tree-shake the rest, so you only ship the features you reference.
 - Prefixed Tailwind classes and a handful of CSS variables, so it fits your design system.
 
 ## Quick start
 
-Keep every `@tiptap/*` package on one version (`^3.29`).
+One import per framework. `RichTextKit` is the whole editor as one extension; `RichTextKitToolbar` and `RichTextKitMenus` render the toolbar, the AI composer dock, the bubble menus and the slash menu for whatever is registered. Keep every `@tiptap/*` package on one version (`^3.29`).
 
 ### React
 
 ```bash
-pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
+pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm
 ```
 
 ```tsx
 import { EditorContent, useEditor } from '@tiptap/react';
-import { Document } from '@tiptap/extension-document';
-import { Paragraph } from '@tiptap/extension-paragraph';
-import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
-import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 export function Editor() {
   const editor = useEditor({
-    extensions: [
-      Document,
-      Paragraph,
-      Text,
-      Bold,
-      AI.configure({ endpoint: '/api/ai' }), // one URL on your backend; it picks the provider and model
-      AIAutocomplete,
-    ],
+    // One URL on your backend; it picks the provider and model.
+    extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })],
     content: '<p>Hello</p>',
     immediatelyRender: false,
   });
@@ -85,14 +78,9 @@ export function Editor() {
 
   return (
     <RichTextProvider editor={editor}>
-      <RichTextToolbar>
-        <RichTextAI />
-        <RichTextToolbarDivider />
-        <RichTextBold />
-      </RichTextToolbar>
+      <RichTextKitToolbar />
       <EditorContent editor={editor} />
-      <RichTextAIComposer />
-      <RichTextBubbleText />
+      <RichTextKitMenus />
     </RichTextProvider>
   );
 }
@@ -101,59 +89,38 @@ export function Editor() {
 ### Vue
 
 ```bash
-pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
+pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm lucide-vue-next
 ```
 
 ```vue
 <script setup lang="ts">
 import { EditorContent, useEditor } from '@tiptap/vue-3';
-import { Document } from '@tiptap/extension-document';
-import { Paragraph } from '@tiptap/extension-paragraph';
-import { Text } from '@tiptap/extension-text';
-import { Bold } from 'ai-sparkwrite-editor/core';
 import {
-  AI,
-  AIAutocomplete,
-  RichTextAI,
-  RichTextAIComposer,
-  RichTextBubbleText,
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
   RichTextProvider,
-  RichTextToolbar,
-  RichTextToolbarDivider,
-  RichTextBold,
 } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const editor = useEditor({
-  extensions: [
-    Document,
-    Paragraph,
-    Text,
-    Bold,
-    AI.configure({ endpoint: '/api/ai' }), // one URL on your backend; it picks the provider and model
-    AIAutocomplete,
-  ],
+  extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })],
   content: '<p>Hello</p>',
 });
 </script>
 
 <template>
   <RichTextProvider :editor="editor">
-    <RichTextToolbar>
-      <RichTextAI />
-      <RichTextToolbarDivider />
-      <RichTextBold />
-    </RichTextToolbar>
+    <RichTextKitToolbar />
     <EditorContent :editor="editor" />
-    <RichTextAIComposer />
-    <RichTextBubbleText />
+    <RichTextKitMenus />
   </RichTextProvider>
 </template>
 ```
 
-Extensions come from `ai-sparkwrite-editor/core` (framework-free), the Vue UI from `ai-sparkwrite-editor/vue`, both on the same stylesheet as the React controls.
+Shape the kit with one option per feature: `false` leaves it out (button and menus go with it), an object configures it (`image: { upload }`, `codeBlock: { defaultLanguage: 'ts' }`), and features that need a key or a callback switch on when given one (`imageGif: { GIPHY_API_KEY }`, `mention: { suggestion }`, `excalidraw: {}`). Prefer to assemble it yourself? The same import has every extension and control — `Bold` and `RichTextBold`, `Table` and `RichTextTable` — and the [Getting Started](https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started) guide shows both routes.
 
-Your `/api/ai` receives `{ messages, systemPrompt, stream }` and answers `{ text }` or a stream of `data: {"text"}` events — the contract and a ten-line server are in the [AI docs](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/). Every other feature works the same way as `bold`: the extension and its control come from `ai-sparkwrite-editor/<feature>`, listed under [Features](https://ludejun.github.io/ai-sparkwrite-editor/guide/features).
+Your `/api/ai` receives `{ messages, systemPrompt, stream }` and answers `{ text }` or a stream of `data: {"text"}` events — the contract and a ten-line server are in the [AI docs](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/).
 
 ## Documentation
 

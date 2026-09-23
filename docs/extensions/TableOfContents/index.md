@@ -23,9 +23,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Heading } from 'ai-sparkwrite-editor/heading';
-import { TableOfContents, RichTextTableOfContents } from 'ai-sparkwrite-editor/tableofcontents';
+import {
+  RichTextProvider,
+  Heading,
+  TableOfContents,
+  RichTextTableOfContents,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, TableOfContents];
@@ -54,8 +57,12 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Heading } from 'ai-sparkwrite-editor/core';
-import { TableOfContents, RichTextProvider, RichTextTableOfContents } from 'ai-sparkwrite-editor/vue';
+import {
+  Heading,
+  TableOfContents,
+  RichTextProvider,
+  RichTextTableOfContents,
+} from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, TableOfContents];
@@ -97,7 +104,7 @@ editor.chain().focus().insertTableOfContents().run();
 Use the `useTableOfContents` hook to build a sidebar with the same data:
 
 ```tsx
-import { useTableOfContents, scrollToTableOfContentsItem } from 'ai-sparkwrite-editor/tableofcontents';
+import { useTableOfContents, scrollToTableOfContentsItem } from 'ai-sparkwrite-editor';
 
 function Outline({ editor }) {
   const items = useTableOfContents(editor);
@@ -119,7 +126,7 @@ function Outline({ editor }) {
 ## Options
 
 ```ts
-import { getLinearIndexes } from 'ai-sparkwrite-editor/tableofcontents';
+import { getLinearIndexes } from 'ai-sparkwrite-editor';
 
 TableOfContents.configure({
   // node types that count as headings (default: ['heading'])

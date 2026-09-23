@@ -43,41 +43,34 @@
 - 从 Word、Google Docs、Excel、代码编辑器粘贴保持格式。
 - 16 种语言按需加载，配套中日韩、天城文、孟加拉文字体。
 - 录制并回放一次书写过程。
-- 每个功能一个导入，扩展和控件来自同一子路径；体积克制，引入 `bold` 约 30 KB 库代码和一个图标。
+- 每个框架一个入口，`RichTextKit` 一行注册全部功能；打包器按需 tree-shake，只打包你真正用到的功能。
 - 带前缀的 Tailwind 类和少量 CSS 变量，融入你的设计系统。
 
 ## 快速接入
 
-所有 `@tiptap/*` 包保持同一版本（`^3.29`）。
+每个框架只需一个入口。`RichTextKit` 把整个编辑器打包成一个扩展；`RichTextKitToolbar` 和 `RichTextKitMenus` 会按已注册的功能渲染工具栏、AI 写作台、气泡菜单和斜杠菜单。所有 `@tiptap/*` 包保持同一版本（`^3.29`）。
 
 ### React
 
 ```bash
-pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
+pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm
 ```
 
 ```tsx
 import { EditorContent, useEditor } from '@tiptap/react';
-import { Document } from '@tiptap/extension-document';
-import { Paragraph } from '@tiptap/extension-paragraph';
-import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
-import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 export function Editor() {
   const editor = useEditor({
-    extensions: [
-      Document,
-      Paragraph,
-      Text,
-      Bold,
-      AI.configure({ endpoint: '/api/ai' }), // 只配一个服务端地址，用哪家模型由后端决定
-      AIAutocomplete,
-    ],
-    content: '<p>你好</p>',
+    // 只配一个服务端地址，用哪家模型由后端决定。
+    extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })],
+    content: '<p>Hello</p>',
     immediatelyRender: false,
   });
 
@@ -85,14 +78,9 @@ export function Editor() {
 
   return (
     <RichTextProvider editor={editor}>
-      <RichTextToolbar>
-        <RichTextAI />
-        <RichTextToolbarDivider />
-        <RichTextBold />
-      </RichTextToolbar>
+      <RichTextKitToolbar />
       <EditorContent editor={editor} />
-      <RichTextAIComposer />
-      <RichTextBubbleText />
+      <RichTextKitMenus />
     </RichTextProvider>
   );
 }
@@ -101,59 +89,38 @@ export function Editor() {
 ### Vue
 
 ```bash
-pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
+pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm lucide-vue-next
 ```
 
 ```vue
 <script setup lang="ts">
 import { EditorContent, useEditor } from '@tiptap/vue-3';
-import { Document } from '@tiptap/extension-document';
-import { Paragraph } from '@tiptap/extension-paragraph';
-import { Text } from '@tiptap/extension-text';
-import { Bold } from 'ai-sparkwrite-editor/core';
 import {
-  AI,
-  AIAutocomplete,
-  RichTextAI,
-  RichTextAIComposer,
-  RichTextBubbleText,
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
   RichTextProvider,
-  RichTextToolbar,
-  RichTextToolbarDivider,
-  RichTextBold,
 } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const editor = useEditor({
-  extensions: [
-    Document,
-    Paragraph,
-    Text,
-    Bold,
-    AI.configure({ endpoint: '/api/ai' }), // 只配一个服务端地址，用哪家模型由后端决定
-    AIAutocomplete,
-  ],
-  content: '<p>你好</p>',
+  extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })],
+  content: '<p>Hello</p>',
 });
 </script>
 
 <template>
   <RichTextProvider :editor="editor">
-    <RichTextToolbar>
-      <RichTextAI />
-      <RichTextToolbarDivider />
-      <RichTextBold />
-    </RichTextToolbar>
+    <RichTextKitToolbar />
     <EditorContent :editor="editor" />
-    <RichTextAIComposer />
-    <RichTextBubbleText />
+    <RichTextKitMenus />
   </RichTextProvider>
 </template>
 ```
 
-扩展来自不含框架的 `ai-sparkwrite-editor/core`，Vue UI 来自 `ai-sparkwrite-editor/vue`，与 React 控件共用同一份样式。
+Kit 的每个选项对应一个功能：`false` 去掉它（按钮和菜单一并消失），传对象则配置它（`image: { upload }`、`codeBlock: { defaultLanguage: 'ts' }`），需要密钥或回调的功能传入对象后才启用（`imageGif: { GIPHY_API_KEY }`、`mention: { suggestion }`、`excalidraw: {}`）。想自己组装？同一个入口导出全部扩展和控件——`Bold` 与 `RichTextBold`、`Table` 与 `RichTextTable`——[快速开始](https://ludejun.github.io/ai-sparkwrite-editor/zh/guide/getting-started)里两种方式都有示例。
 
-你的 `/api/ai` 收到 `{ messages, systemPrompt, stream }`，返回 `{ text }` 或一串 `data: {"text"}` 事件即可——接口约定和十行的示例服务见 [AI 文档](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/)。其他功能和 `bold` 一样：扩展和控件都来自 `ai-sparkwrite-editor/<feature>`，完整列表见 [Features](https://ludejun.github.io/ai-sparkwrite-editor/guide/features)。
+你的 `/api/ai` 收到 `{ messages, systemPrompt, stream }`，返回 `{ text }` 或一串 `data: {"text"}` 事件即可——接口约定和十行的示例服务见 [AI 文档](https://ludejun.github.io/ai-sparkwrite-editor/zh/extensions/AI/)。
 
 ## 文档
 

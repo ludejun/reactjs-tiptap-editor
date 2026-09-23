@@ -14,8 +14,7 @@ Start with the working editor in [Getting Started](/guide/getting-started). To a
 
 ```tsx
 import { ListItem } from '@tiptap/extension-list';
-import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
-import { BulletList, RichTextBulletList } from 'ai-sparkwrite-editor/bulletlist';
+import { Heading, RichTextHeading, BulletList, RichTextBulletList } from 'ai-sparkwrite-editor';
 ```
 
 Extend the existing `extensions` array with `Heading.configure({ levels: [1, 2, 3] })`, `ListItem`, and `BulletList`. Register each extension only once. Then replace the toolbar JSX with:
@@ -119,7 +118,7 @@ Register `Bold` and render `<CustomBoldButton />` inside `RichTextProvider`. `fo
 A documented `shortcutKeys` option supplies shortcut labels to controls. Changing those labels does not generally register a new key binding. To change behavior, extend the extension's `addKeyboardShortcuts` method:
 
 ```tsx
-import { Bold } from 'ai-sparkwrite-editor/bold';
+import { Bold } from 'ai-sparkwrite-editor';
 
 const CustomBold = Bold.extend({
   addKeyboardShortcuts() {

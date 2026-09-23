@@ -3,7 +3,7 @@ import { Extension } from '@tiptap/core';
 import type { GeneralOptions } from '@/types';
 import type { Editor } from '@tiptap/core';
 
-interface CodeViewOptions extends GeneralOptions<CodeViewOptions> {
+export interface CodeViewOptions extends GeneralOptions<CodeViewOptions> {
   isCodeViewMode?: boolean;
 }
 

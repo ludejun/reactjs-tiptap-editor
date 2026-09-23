@@ -3,7 +3,7 @@ import { Extension } from '@tiptap/core';
 import type { GeneralOptions } from '@/types';
 import type { default as Mammoth } from 'mammoth';
 
-interface ImportWordOptions extends GeneralOptions<ImportWordOptions> {
+export interface ImportWordOptions extends GeneralOptions<ImportWordOptions> {
   /** Function for converting Word files to HTML */
   convert?: (file: File) => Promise<string>;
 

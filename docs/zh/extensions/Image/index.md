@@ -23,9 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Image, RichTextImage } from 'ai-sparkwrite-editor/image';
-import { RichTextBubbleImage } from 'ai-sparkwrite-editor/bubble/media';
+import { RichTextProvider, Image, RichTextImage, RichTextBubbleImage } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Image.configure({ resourceImage: 'link' })];
@@ -281,7 +279,7 @@ HEIF 和 SVG。关于 SVG 的说明：它在 `<img>` 内是惰性的，但可能
 以便在保存时清理这些文件：
 
 ```ts
-import { getImageChanges, markImagesSaved } from 'ai-sparkwrite-editor/image';
+import { getImageChanges, markImagesSaved } from 'ai-sparkwrite-editor';
 
 async function save(editor: Editor) {
   const { current, removed, orphaned } = getImageChanges(editor);

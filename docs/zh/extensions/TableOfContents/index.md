@@ -23,9 +23,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Heading } from 'ai-sparkwrite-editor/heading';
-import { TableOfContents, RichTextTableOfContents } from 'ai-sparkwrite-editor/tableofcontents';
+import {
+  RichTextProvider,
+  Heading,
+  TableOfContents,
+  RichTextTableOfContents,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, TableOfContents];
@@ -54,8 +57,8 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Heading } from 'ai-sparkwrite-editor/core';
 import {
+  Heading,
   TableOfContents,
   RichTextProvider,
   RichTextTableOfContents,
@@ -100,10 +103,7 @@ editor.chain().focus().insertTableOfContents().run();
 使用 `useTableOfContents` 这个 hook，用同一份数据构建侧边栏：
 
 ```tsx
-import {
-  useTableOfContents,
-  scrollToTableOfContentsItem,
-} from 'ai-sparkwrite-editor/tableofcontents';
+import { useTableOfContents, scrollToTableOfContentsItem } from 'ai-sparkwrite-editor';
 
 function Outline({ editor }) {
   const items = useTableOfContents(editor);
@@ -125,7 +125,7 @@ function Outline({ editor }) {
 ## 选项
 
 ```ts
-import { getLinearIndexes } from 'ai-sparkwrite-editor/tableofcontents';
+import { getLinearIndexes } from 'ai-sparkwrite-editor';
 
 TableOfContents.configure({
   // node types that count as headings (default: ['heading'])

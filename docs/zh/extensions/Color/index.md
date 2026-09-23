@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Color, RichTextColor } from 'ai-sparkwrite-editor/color';
+import { RichTextProvider, Color, RichTextColor } from 'ai-sparkwrite-editor';
 import { TextStyle } from '@tiptap/extension-text-style';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -55,8 +54,7 @@ import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { TextStyle } from '@tiptap/extension-text-style';
-import { Color } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider, RichTextColor } from 'ai-sparkwrite-editor/vue';
+import { Color, RichTextProvider, RichTextColor } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, Color];
@@ -86,7 +84,7 @@ const editor = useEditor({
 在你的扩展数组中，用以下配置代替 `Color`：
 
 ```ts
-import { Color } from 'ai-sparkwrite-editor/color';
+import { Color } from 'ai-sparkwrite-editor';
 
 Color.configure({
   colors: ['#dc2626', '#16a34a', '#2563eb', '#262626'],

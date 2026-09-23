@@ -23,10 +23,14 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  RichTextProvider,
+  Bold,
+  RichTextBold,
+  Italic,
+  RichTextItalic,
+  RichTextBubbleText,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic];
@@ -118,7 +122,7 @@ export default function BubbleMenuExample() {
 `RichTextBubbleMenuDragHandle` 提供了一个用于移动文档块的手柄和一个块操作菜单。它不会移动气泡菜单本身。
 
 ```tsx
-import { RichTextBubbleMenuDragHandle } from 'ai-sparkwrite-editor/bubble/drag-handle';
+import { RichTextBubbleMenuDragHandle } from 'ai-sparkwrite-editor';
 
 // Mount inside your existing RichTextProvider.
 <RichTextBubbleMenuDragHandle />;

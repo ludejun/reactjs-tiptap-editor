@@ -23,9 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { SlashCommand, SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
-import { Heading } from 'ai-sparkwrite-editor/heading';
+import { RichTextProvider, SlashCommand, SlashCommandList, Heading } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, SlashCommand];
@@ -63,7 +61,7 @@ export default function SlashCommandExample() {
 在 `SlashCommandList` 上使用 `commandList` 可以替换默认的分组。每个分组都有 `name`、`title` 和 `commands` 数组。命令函数会接收 editor 以及包含斜杠查询内容的 range。
 
 ```tsx
-import { SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
+import { SlashCommandList } from 'ai-sparkwrite-editor';
 
 export function CustomSlashCommands() {
   return (

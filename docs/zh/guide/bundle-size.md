@@ -1,6 +1,6 @@
 # 包体积
 
-每个功能都是自己的一个入口（`ai-sparkwrite-editor/bold`、`/table`、`/image`、`/bubble/table`……），因此宿主应用只需为自己引入的功能付出体积代价。本页列出每个入口的体积开销、所有入口共享的部分，以及维持这一点的两条规则。
+每个功能都是自己的一个分块，主入口 `ai-sparkwrite-editor` 只是把它们转出，因此在会 tree-shake ES 模块的打包器（Vite、Rollup、webpack、esbuild）里，从主入口引入 `Bold` 和从 `ai-sparkwrite-editor/bold` 引入得到的产物字节数完全相同（我们用 Vite 打包对比过，二者一致）。功能子路径（`/bold`、`/table`、`/image`、`/bubble/table`……）仍然保留，供不做 tree-shake 的工具使用。宿主应用只需为自己引用的功能付出体积代价；用 `RichTextKit` 全量注册时，库自身代码约 280 KB（gzip 后），Excalidraw、Mermaid、Katex、Word 导入导出等重型依赖在首次使用时才加载。本页列出每个入口的体积开销、所有入口共享的部分，以及维持这一点的两条规则。
 
 ## 一个功能要花多少体积
 

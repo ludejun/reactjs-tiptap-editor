@@ -23,9 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Katex, RichTextKatex } from 'ai-sparkwrite-editor/katex';
-import { RichTextBubbleKatex } from 'ai-sparkwrite-editor/bubble/katex';
+import { RichTextProvider, Katex, RichTextKatex, RichTextBubbleKatex } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 import 'katex/dist/katex.min.css';
 
@@ -93,7 +91,7 @@ Vue 层暂未提供：`RichTextBubbleKatex`——请在你自己的控件中调�
 使用可选的 `loadKatex` 配置项，在渲染前初始化插件。对于 `\ce{H2O}` 等化学命令，请直接安装 `katex`，并在扩展数组中将 `Katex` 替换为：
 
 ```ts
-import { Katex } from 'ai-sparkwrite-editor/katex';
+import { Katex } from 'ai-sparkwrite-editor';
 import 'katex/dist/katex.min.css';
 
 Katex.configure({

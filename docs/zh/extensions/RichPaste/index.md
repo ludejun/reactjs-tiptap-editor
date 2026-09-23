@@ -28,11 +28,13 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { BulletList } from 'ai-sparkwrite-editor/bulletlist';
-import { CodeBlock } from 'ai-sparkwrite-editor/codeblock';
-import { OrderedList } from 'ai-sparkwrite-editor/orderedlist';
-import { RichPaste } from 'ai-sparkwrite-editor/richpaste';
+import {
+  RichTextProvider,
+  BulletList,
+  CodeBlock,
+  OrderedList,
+  RichPaste,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, BulletList, OrderedList, CodeBlock, RichPaste];
@@ -60,8 +62,13 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { BulletList, OrderedList, RichPaste } from 'ai-sparkwrite-editor/core';
-import { CodeBlock, RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import {
+  BulletList,
+  OrderedList,
+  RichPaste,
+  CodeBlock,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, BulletList, OrderedList, CodeBlock, RichPaste];
@@ -105,7 +112,7 @@ const editor = useEditor({
 根据粘贴内容的文本猜测其语言，并返回代码块能够识别的名称（空字符串表示“未知”）。代码块扩展内置了一个可复用的猜测函数：
 
 ```ts
-import { guessLanguage } from 'ai-sparkwrite-editor/codeblock';
+import { guessLanguage } from 'ai-sparkwrite-editor';
 
 RichPaste.configure({ detectLanguage: guessLanguage });
 ```

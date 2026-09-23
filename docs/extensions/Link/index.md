@@ -23,9 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Link, RichTextLink } from 'ai-sparkwrite-editor/link';
-import { RichTextBubbleLink } from 'ai-sparkwrite-editor/bubble/link';
+import { RichTextProvider, Link, RichTextLink, RichTextBubbleLink } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Link];
@@ -55,8 +53,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Link } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider, RichTextLink, RichTextBubbleLink } from 'ai-sparkwrite-editor/vue';
+import { Link, RichTextProvider, RichTextLink, RichTextBubbleLink } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Link];

@@ -23,9 +23,15 @@ There are five ways in, and they share one extension:
 ## Setup
 
 ```tsx
-import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { SlashCommand, SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  SlashCommand,
+  SlashCommandList,
+  RichTextBubbleText,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [
@@ -58,7 +64,7 @@ const extensions = [
 The presets are data, so you can change them:
 
 ```tsx
-import { AI_COMPOSER_ACTIONS, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
+import { AI_COMPOSER_ACTIONS, RichTextAIComposer } from 'ai-sparkwrite-editor';
 
 <RichTextAIComposer
   actions={[
@@ -97,7 +103,8 @@ For finer control the stylesheet exposes `--ai-accent`, `--ai-accent-2`, `--ai-a
 The engine behind the dock is exported and framework-free:
 
 ```ts
-import { writeWithAI } from 'ai-sparkwrite-editor/ai'; // or 'ai-sparkwrite-editor/core'
+import { writeWithAI } from 'ai-sparkwrite-editor';
+ // or 'ai-sparkwrite-editor/core'
 
 const result = await writeWithAI(editor, {
   prompt: 'Turn the meeting notes into a table of decisions.',

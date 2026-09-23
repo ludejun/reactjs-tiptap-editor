@@ -11,3 +11,5 @@ export * from './Divider';
 export * from './nodeviews';
 export * from './bubble';
 export * from './ai';
+export * from './extensions';
+export * from './kit';

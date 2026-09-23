@@ -23,9 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Image, RichTextImage } from 'ai-sparkwrite-editor/image';
-import { RichTextBubbleImage } from 'ai-sparkwrite-editor/bubble/media';
+import { RichTextProvider, Image, RichTextImage, RichTextBubbleImage } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Image.configure({ resourceImage: 'link' })];
@@ -55,7 +53,12 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Image, RichTextProvider, RichTextImage, RichTextBubbleImage } from 'ai-sparkwrite-editor/vue';
+import {
+  Image,
+  RichTextProvider,
+  RichTextImage,
+  RichTextBubbleImage,
+} from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Image.configure({ resourceImage: 'link' })];
@@ -278,7 +281,7 @@ saves, the server keeps a file nothing refers to. The extension tracks enough
 to clean that up at save time:
 
 ```ts
-import { getImageChanges, markImagesSaved } from 'ai-sparkwrite-editor/image';
+import { getImageChanges, markImagesSaved } from 'ai-sparkwrite-editor';
 
 async function save(editor: Editor) {
   const { current, removed, orphaned } = getImageChanges(editor);

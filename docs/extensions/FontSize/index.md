@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { FontSize, RichTextFontSize } from 'ai-sparkwrite-editor/fontsize';
+import { RichTextProvider, FontSize, RichTextFontSize } from 'ai-sparkwrite-editor';
 import { TextStyle } from '@tiptap/extension-text-style';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -55,8 +54,7 @@ import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { TextStyle } from '@tiptap/extension-text-style';
-import { FontSize } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider, RichTextFontSize } from 'ai-sparkwrite-editor/vue';
+import { FontSize, RichTextProvider, RichTextFontSize } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, FontSize];
@@ -93,7 +91,7 @@ the one control that will not line up, so the compact form matches the shape of
 ## Configuration
 
 ```ts
-import { FontSize } from 'ai-sparkwrite-editor/fontsize';
+import { FontSize } from 'ai-sparkwrite-editor';
 
 FontSize.configure({
   fontSizes: ['Default', '14px', '18px', { name: 'Large', value: '24px' }],

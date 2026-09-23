@@ -23,10 +23,14 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  RichTextProvider,
+  Bold,
+  RichTextBold,
+  Italic,
+  RichTextItalic,
+  RichTextBubbleText,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic];
@@ -120,7 +124,7 @@ Use these public subpaths to make feature dependencies explicit. The existing `/
 `RichTextBubbleMenuDragHandle` provides a handle for moving document blocks and a block action menu. It does not move the bubble menu itself.
 
 ```tsx
-import { RichTextBubbleMenuDragHandle } from 'ai-sparkwrite-editor/bubble/drag-handle';
+import { RichTextBubbleMenuDragHandle } from 'ai-sparkwrite-editor';
 
 // Mount inside your existing RichTextProvider.
 <RichTextBubbleMenuDragHandle />;

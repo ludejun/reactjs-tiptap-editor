@@ -19,9 +19,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Callout, RichTextCallout } from 'ai-sparkwrite-editor/callout';
-import { RichTextBubbleCallout } from 'ai-sparkwrite-editor/bubble/callout';
+import {
+  RichTextProvider,
+  Callout,
+  RichTextCallout,
+  RichTextBubbleCallout,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Callout];

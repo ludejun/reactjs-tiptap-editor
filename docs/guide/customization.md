@@ -15,9 +15,9 @@ import {
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
   registerIcons,
+  RichTextBold,
+  RichTextTable,
 } from 'ai-sparkwrite-editor';
-import { RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { RichTextTable } from 'ai-sparkwrite-editor/table';
 import { Pencil, Save } from 'lucide-react';
 
 // Icons are looked up by name; the built-in controls register theirs, you register yours.

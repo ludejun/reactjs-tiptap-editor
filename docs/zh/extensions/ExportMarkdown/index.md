@@ -23,10 +23,13 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Bold } from 'ai-sparkwrite-editor/bold';
-import { Heading } from 'ai-sparkwrite-editor/heading';
-import { ExportMarkdown, RichTextExportMarkdown } from 'ai-sparkwrite-editor/exportmarkdown';
+import {
+  RichTextProvider,
+  Bold,
+  Heading,
+  ExportMarkdown,
+  RichTextExportMarkdown,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Heading, ExportMarkdown];
@@ -55,8 +58,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Bold, Heading, ExportMarkdown } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import { Bold, Heading, ExportMarkdown, RichTextProvider } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Heading, ExportMarkdown];
@@ -105,7 +107,7 @@ Vue 层暂未提供：`RichTextExportMarkdown`——请在你自己的控件中�
 ## 在代码中使用
 
 ```ts
-import { getMarkdown } from 'ai-sparkwrite-editor/exportmarkdown';
+import { getMarkdown } from 'ai-sparkwrite-editor';
 
 // 下载
 editor.chain().focus().exportToMarkdown({ fileName: 'notes.md' }).run();

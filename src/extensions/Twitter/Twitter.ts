@@ -15,7 +15,7 @@ function isValidTwitterUrl(url: string) {
   return url.match(TWITTER_REGEX);
 }
 
-interface TwitterOptions {
+export interface TwitterOptions {
   /**
    * Controls if the paste handler for tweets should be added.
    * @default true

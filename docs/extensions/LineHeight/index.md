@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { LineHeight, RichTextLineHeight } from 'ai-sparkwrite-editor/lineheight';
+import { RichTextProvider, LineHeight, RichTextLineHeight } from 'ai-sparkwrite-editor';
 import { TextStyle } from '@tiptap/extension-text-style';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -55,8 +54,7 @@ import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { TextStyle } from '@tiptap/extension-text-style';
-import { LineHeight } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider, RichTextLineHeight } from 'ai-sparkwrite-editor/vue';
+import { LineHeight, RichTextProvider, RichTextLineHeight } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, LineHeight];
@@ -85,7 +83,7 @@ Register `TextStyle`. Select text, then choose a value from the dropdown. `Defau
 ## Configuration
 
 ```ts
-import { LineHeight } from 'ai-sparkwrite-editor/lineheight';
+import { LineHeight } from 'ai-sparkwrite-editor';
 
 LineHeight.configure({
   lineHeights: ['Default', '1.5', '2', '2.5'],

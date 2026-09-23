@@ -19,13 +19,16 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
-} from 'ai-sparkwrite-editor';
-import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { Attachment, RichTextAttachment } from 'ai-sparkwrite-editor/attachment';
-import { Blockquote, RichTextBlockquote } from 'ai-sparkwrite-editor/blockquote';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-// Bubble
-import {
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  Attachment,
+  RichTextAttachment,
+  Blockquote,
+  RichTextBlockquote,
+  Bold,
+  RichTextBold,
   RichTextBubbleCallout,
   RichTextBubbleDrawer,
   RichTextBubbleExcalidraw,
@@ -40,65 +43,110 @@ import {
   RichTextBubbleText,
   RichTextBubbleTwitter,
   RichTextBubbleMenuDragHandle,
-} from 'ai-sparkwrite-editor/bubble';
-import { BulletList, RichTextBulletList } from 'ai-sparkwrite-editor/bulletlist';
-import { Callout, RichTextCallout } from 'ai-sparkwrite-editor/callout';
-import { Clear, RichTextClear } from 'ai-sparkwrite-editor/clear';
-import { Code, RichTextCode } from 'ai-sparkwrite-editor/code';
-import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'ai-sparkwrite-editor/codeblock';
-import { CodeView, RichTextCodeView } from 'ai-sparkwrite-editor/codeview';
-import { Color, RichTextColor } from 'ai-sparkwrite-editor/color';
-import {
+  BulletList,
+  RichTextBulletList,
+  Callout,
+  RichTextCallout,
+  Clear,
+  RichTextClear,
+  Code,
+  RichTextCode,
+  CodeBlock,
+  RichTextCodeBlock,
+  guessLanguage,
+  CodeView,
+  RichTextCodeView,
+  Color,
+  RichTextColor,
   Column,
   ColumnNode,
   MultipleColumnNode,
   RichTextColumn,
-} from 'ai-sparkwrite-editor/column';
-import { Details, RichTextDetails } from 'ai-sparkwrite-editor/details';
-import { Divider, RichTextDivider } from 'ai-sparkwrite-editor/divider';
-import { Drawer, RichTextDrawer } from 'ai-sparkwrite-editor/drawer';
-import { Emoji, RichTextEmoji } from 'ai-sparkwrite-editor/emoji';
-import { Excalidraw, RichTextExcalidraw } from 'ai-sparkwrite-editor/excalidraw';
-import { ExportMarkdown, RichTextExportMarkdown } from 'ai-sparkwrite-editor/exportmarkdown';
-import { ExportPdf, RichTextExportPdf } from 'ai-sparkwrite-editor/exportpdf';
-import { ExportWord, RichTextExportWord } from 'ai-sparkwrite-editor/exportword';
-import { FontFamily, RichTextFontFamily } from 'ai-sparkwrite-editor/fontfamily';
-import { FontSize, RichTextFontSize } from 'ai-sparkwrite-editor/fontsize';
-import { FormatPainter, RichTextFormatPainter } from 'ai-sparkwrite-editor/formatpainter';
-import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
-import { Highlight, RichTextHighlight } from 'ai-sparkwrite-editor/highlight';
+  Details,
+  RichTextDetails,
+  Divider,
+  RichTextDivider,
+  Drawer,
+  RichTextDrawer,
+  Emoji,
+  RichTextEmoji,
+  Excalidraw,
+  RichTextExcalidraw,
+  ExportMarkdown,
+  RichTextExportMarkdown,
+  ExportPdf,
+  RichTextExportPdf,
+  ExportWord,
+  RichTextExportWord,
+  FontFamily,
+  RichTextFontFamily,
+  FontSize,
+  RichTextFontSize,
+  FormatPainter,
+  RichTextFormatPainter,
+  Heading,
+  RichTextHeading,
+  Highlight,
+  RichTextHighlight,
+  History,
+  RichTextUndo,
+  RichTextRedo,
+  Iframe,
+  RichTextIframe,
+  Image,
+  RichTextImage,
+  ImageGif,
+  RichTextImageGif,
+  ImportWord,
+  RichTextImportWord,
+  Indent,
+  Italic,
+  RichTextItalic,
+  Katex,
+  RichTextKatex,
+  LineHeight,
+  RichTextLineHeight,
+  Link,
+  RichTextLink,
+  MarkdownPaste,
+  Mention,
+  Mermaid,
+  RichTextMermaid,
+  MoreMark,
+  OrderedList,
+  RichTextOrderedList,
+  Recorder,
+  getRecording,
+  replayRecording,
+  RichPaste,
+  SearchAndReplace,
+  RichTextSearchAndReplace,
+  ShortMessage,
+  SlashCommand,
+  SlashCommandList,
+  Strike,
+  RichTextStrike,
+  Table,
+  RichTextTable,
+  TableOfContents,
+  RichTextTableOfContents,
+  TaskList,
+  RichTextTaskList,
+  TextAlign,
+  RichTextAlign,
+  TextDirection,
+  RichTextTextDirection,
+  TextUnderline,
+  RichTextUnderline,
+  Twitter,
+  RichTextTwitter,
+  Video,
+  RichTextVideo,
+} from 'ai-sparkwrite-editor';
+// Bubble
 // build extensions
-import { History, RichTextUndo, RichTextRedo } from 'ai-sparkwrite-editor/history';
-import { Iframe, RichTextIframe } from 'ai-sparkwrite-editor/iframe';
-import { Image, RichTextImage } from 'ai-sparkwrite-editor/image';
-import { ImageGif, RichTextImageGif } from 'ai-sparkwrite-editor/imagegif';
-import { ImportWord, RichTextImportWord } from 'ai-sparkwrite-editor/importword';
-import { Indent } from 'ai-sparkwrite-editor/indent';
-import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
-import { Katex, RichTextKatex } from 'ai-sparkwrite-editor/katex';
-import { LineHeight, RichTextLineHeight } from 'ai-sparkwrite-editor/lineheight';
-import { Link, RichTextLink } from 'ai-sparkwrite-editor/link';
 import { localeActions, useLocale } from 'ai-sparkwrite-editor/locale-bundle';
-import { MarkdownPaste } from 'ai-sparkwrite-editor/markdownpaste';
-import { Mention } from 'ai-sparkwrite-editor/mention';
-import { Mermaid, RichTextMermaid } from 'ai-sparkwrite-editor/mermaid';
-import { MoreMark } from 'ai-sparkwrite-editor/moremark';
-import { OrderedList, RichTextOrderedList } from 'ai-sparkwrite-editor/orderedlist';
-import { Recorder, getRecording, replayRecording } from 'ai-sparkwrite-editor/recorder';
-import { RichPaste } from 'ai-sparkwrite-editor/richpaste';
-import { SearchAndReplace, RichTextSearchAndReplace } from 'ai-sparkwrite-editor/searchandreplace';
-import { ShortMessage } from 'ai-sparkwrite-editor/shortmessage';
-import { SlashCommand, SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
-import { Strike, RichTextStrike } from 'ai-sparkwrite-editor/strike';
-import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
-import { TableOfContents, RichTextTableOfContents } from 'ai-sparkwrite-editor/tableofcontents';
-import { TaskList, RichTextTaskList } from 'ai-sparkwrite-editor/tasklist';
-import { TextAlign, RichTextAlign } from 'ai-sparkwrite-editor/textalign';
-import { TextDirection, RichTextTextDirection } from 'ai-sparkwrite-editor/textdirection';
-import { TextUnderline, RichTextUnderline } from 'ai-sparkwrite-editor/textunderline';
 import { themeActions, useTheme } from 'ai-sparkwrite-editor/theme';
-import { Twitter, RichTextTwitter } from 'ai-sparkwrite-editor/twitter';
-import { Video, RichTextVideo } from 'ai-sparkwrite-editor/video';
 // const hocuspocusProvider = new HocuspocusProvider({
 //   url: 'ws://0.0.0.0:8080',
 //   name: 'github.com/hunghg255',
@@ -113,6 +161,7 @@ import 'easydrawer/styles.css';
 import '@excalidraw/excalidraw/index.css';
 
 import { demoAIGenerate } from './demoAI';
+import { KitEditor } from './KitEditor';
 import { VueEditor } from './VueEditor';
 
 // This is only an example, all supported languages are already loaded above
@@ -633,17 +682,22 @@ const RecordingControls = ({ editor }: { editor: import('@tiptap/core').Editor |
 };
 
 type Framework = 'react' | 'vue';
+type Setup = 'assembled' | 'kit';
 
 const Header = ({
   editor,
   framework,
   setFramework,
+  setup,
+  setSetup,
   theme,
   setTheme,
 }: {
   editor: import('@tiptap/core').Editor | null;
   framework: Framework;
   setFramework: (framework: Framework) => void;
+  setup: Setup;
+  setSetup: (setup: Setup) => void;
   theme: string;
   setTheme: (theme: string) => void;
 }) => {
@@ -682,6 +736,17 @@ const Header = ({
               { value: 'vue', label: 'Vue' },
             ]}
             onChange={setFramework}
+          />
+        </Field>
+
+        <Field label='Setup'>
+          <Segmented
+            value={setup}
+            options={[
+              { value: 'assembled', label: 'Assembled' },
+              { value: 'kit', label: 'RichTextKit' },
+            ]}
+            onChange={setSetup}
           />
         </Field>
 
@@ -1070,6 +1135,7 @@ function App() {
   const [content, setContent] = useState(SHOT ? SHOT_CONTENT : DEFAULT);
   const [theme, setTheme] = useState('light');
   const [framework, setFramework] = useState<Framework>('react');
+  const [setup, setSetup] = useState<Setup>('assembled');
 
   const onValueChange = useCallback(
     debounce((value: any) => {
@@ -1108,13 +1174,17 @@ function App() {
           editor={editor}
           framework={framework}
           setFramework={setFramework}
+          setup={setup}
+          setSetup={setSetup}
           setTheme={setTheme}
           theme={theme}
         />
       )}
 
       {framework === 'vue' ? (
-        <VueEditor dark={theme === 'dark'} />
+        <VueEditor dark={theme === 'dark'} kit={setup === 'kit'} />
+      ) : setup === 'kit' ? (
+        <KitEditor dark={theme === 'dark'} content={DEFAULT} />
       ) : (
         <RichTextProvider editor={editor} dark={theme === 'dark'}>
           <div className='overflow-hidden rounded-[0.5rem] bg-background shadow outline outline-1'>

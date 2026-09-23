@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { TextUnderline, RichTextUnderline } from 'ai-sparkwrite-editor/textunderline';
+import { RichTextProvider, TextUnderline, RichTextUnderline } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextUnderline];
@@ -53,8 +52,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { TextUnderline } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider, RichTextUnderline } from 'ai-sparkwrite-editor/vue';
+import { TextUnderline, RichTextProvider, RichTextUnderline } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextUnderline];

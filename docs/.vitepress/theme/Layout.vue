@@ -21,8 +21,8 @@ const en = {
   shotAlt: 'The editor with the AI composer open under the document',
   core: 'One core, two UIs',
   coreText1: 'Extensions, the AI engine and every block live in a framework-free core.',
-  coreText2: 'adds the React control,',
-  coreText3: 'the Vue one, on the same stylesheet.',
+  coreText2: 'is the React import,',
+  coreText3: 'the Vue one — same features, same stylesheet.',
 };
 
 const zh = {
@@ -40,8 +40,8 @@ const zh = {
   shotAlt: '编辑器下方打开了 AI 写作台',
   core: '一个核心，两套 UI',
   coreText1: '扩展、AI 引擎和每个块都在框架无关的核心里。',
-  coreText2: '提供 React 控件，',
-  coreText3: '提供 Vue 控件，共用同一份样式。',
+  coreText2: '是 React 的入口，',
+  coreText3: '是 Vue 的入口——同样的功能，同一份样式。',
 };
 
 const t = computed(() => (lang.value.startsWith('zh') ? zh : en));
@@ -79,30 +79,32 @@ const t = computed(() => (lang.value.startsWith('zh') ? zh : en));
         <h2>{{ t.core }}</h2>
         <p>
           {{ t.coreText1 }}
-          <code>ai-sparkwrite-editor/&lt;feature&gt;</code> {{ t.coreText2 }}
-          <code>ai-sparkwrite-editor/vue</code> {{ t.coreText3 }}
+          <code>ai-sparkwrite-editor</code> {{ t.coreText2 }} <code>ai-sparkwrite-editor/vue</code>
+          {{ t.coreText3 }}
         </p>
         <div class="sw-frameworks">
           <div>
             <h3>React</h3>
-            <pre><code>import { AI, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
+            <pre><code>import { RichTextKit, RichTextKitToolbar, RichTextKitMenus } from 'ai-sparkwrite-editor';
+
+useEditor({ extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })] });
 
 &lt;RichTextProvider editor={editor}&gt;
-  &lt;RichTextToolbar&gt;&lt;RichTextAI /&gt;&lt;RichTextBold /&gt;&lt;/RichTextToolbar&gt;
+  &lt;RichTextKitToolbar /&gt;
   &lt;EditorContent editor={editor} /&gt;
-  &lt;RichTextAIComposer /&gt;
+  &lt;RichTextKitMenus /&gt;
 &lt;/RichTextProvider&gt;</code></pre>
           </div>
           <div>
             <h3>Vue</h3>
-            <pre><code>import { Bold } from 'ai-sparkwrite-editor/core';
-import { AI, RichTextAI, RichTextAIComposer, RichTextBold } from 'ai-sparkwrite-editor/vue';
+            <pre><code>import { RichTextKit, RichTextKitToolbar, RichTextKitMenus } from 'ai-sparkwrite-editor/vue';
+
+useEditor({ extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })] });
 
 &lt;RichTextProvider :editor="editor"&gt;
-  &lt;RichTextToolbar&gt;&lt;RichTextAI /&gt;&lt;RichTextBold /&gt;&lt;/RichTextToolbar&gt;
+  &lt;RichTextKitToolbar /&gt;
   &lt;EditorContent :editor="editor" /&gt;
-  &lt;RichTextAIComposer /&gt;
+  &lt;RichTextKitMenus /&gt;
 &lt;/RichTextProvider&gt;</code></pre>
           </div>
         </div>

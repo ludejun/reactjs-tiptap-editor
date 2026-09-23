@@ -14,8 +14,7 @@ next:
 
 ```tsx
 import { ListItem } from '@tiptap/extension-list';
-import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
-import { BulletList, RichTextBulletList } from 'ai-sparkwrite-editor/bulletlist';
+import { Heading, RichTextHeading, BulletList, RichTextBulletList } from 'ai-sparkwrite-editor';
 ```
 
 在已有的 `extensions` 数组中追加 `Heading.configure({ levels: [1, 2, 3] })`、`ListItem` 和 `BulletList`。每个扩展只注册一次。然后把工具栏 JSX 替换为：
@@ -102,7 +101,7 @@ export function CustomBoldButton() {
 一个文档化的 `shortcutKeys` 选项为控件提供快捷键标签。更改这些标签通常不会注册新的按键绑定。要更改实际行为，请扩展该扩展的 `addKeyboardShortcuts` 方法：
 
 ```tsx
-import { Bold } from 'ai-sparkwrite-editor/bold';
+import { Bold } from 'ai-sparkwrite-editor';
 
 const CustomBold = Bold.extend({
   addKeyboardShortcuts() {

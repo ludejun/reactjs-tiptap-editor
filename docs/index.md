@@ -30,7 +30,7 @@ features:
   - title: Your model, your rules
     details: One URL on your backend receives the conversation as JSON and answers with text or a stream; which provider and model reply is your business. Answers are parsed through the editor schema, so nothing is pasted and nothing unknown gets in.
   - title: Composable, React or Vue
-    details: Create the Tiptap editor, pick extensions, place the controls. Each feature ships from one subpath; the AI engine and every block live in a framework-free core shared by both UIs.
+    details: One import per framework, or the whole editor as one `RichTextKit` with a ready-made toolbar and menus. The AI engine and every block live in a framework-free core shared by both UIs.
   - title: Everything a document needs
     details: Tables, dividers, code with language detection, images with cropping and upload tracking, columns, callouts, Katex, Mermaid, Excalidraw, Word/PDF/Markdown import and export.
   - title: Pastes and languages handled

@@ -23,9 +23,15 @@ next:
 ## 安装与注册
 
 ```tsx
-import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { SlashCommand, SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  SlashCommand,
+  SlashCommandList,
+  RichTextBubbleText,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [
@@ -58,7 +64,7 @@ const extensions = [
 预设本身是数据，因此可以修改它们：
 
 ```tsx
-import { AI_COMPOSER_ACTIONS, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
+import { AI_COMPOSER_ACTIONS, RichTextAIComposer } from 'ai-sparkwrite-editor';
 
 <RichTextAIComposer
   actions={[
@@ -97,7 +103,8 @@ import { AI_COMPOSER_ACTIONS, RichTextAIComposer } from 'ai-sparkwrite-editor/ai
 写作台背后的引擎是独立导出的，且与框架无关：
 
 ```ts
-import { writeWithAI } from 'ai-sparkwrite-editor/ai'; // 或 'ai-sparkwrite-editor/core'
+import { writeWithAI } from 'ai-sparkwrite-editor';
+ // 或 'ai-sparkwrite-editor/core'
 
 const result = await writeWithAI(editor, {
   prompt: 'Turn the meeting notes into a table of decisions.',

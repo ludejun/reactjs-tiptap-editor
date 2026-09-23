@@ -1,20 +1,20 @@
 # Bundle size
 
-Every feature is its own entry (`ai-sparkwrite-editor/bold`, `/table`, `/image`, `/bubble/table`…), so a host pays for the features it imports. This page lists what an entry costs, what every entry shares, and the two rules that keep it that way.
+Every feature is its own chunk and the main entry `ai-sparkwrite-editor` only re-exports them, so in a bundler that tree-shakes ES modules (Vite, Rollup, webpack, esbuild) importing `Bold` from the main entry produces byte-for-byte the same output as importing it from `ai-sparkwrite-editor/bold` (checked with a Vite build of both). The per-feature subpaths (`/bold`, `/table`, `/image`, `/bubble/table`…) remain for tools that do not tree-shake. A host pays for the features it references; registering everything through `RichTextKit` costs about 280 KB of library code gzipped, with Excalidraw, Mermaid, Katex and the Word import/export libraries loaded on first use. This page lists what an entry costs, what every entry shares, and the two rules that keep it that way.
 
 ## What a feature costs
 
 Bytes of the library's own JavaScript (minified, before gzip) reached from one entry, measured over the chunk graph in `lib/` with `pnpm measure:entries`. React, Tiptap, Radix and `lucide-react` are peer/runtime dependencies and are not counted; the locale table (`en`, 14 KB) is, since every control reads its tooltip from it.
 
-| Entry | Before | After | Lucide icons before → after |
-|---|---|---|---|
-| `ai-sparkwrite-editor/bold` | 88 KB, 16 chunks | **30 KB**, 17 chunks | 87 → 1 |
-| `/heading` | 98 KB, 18 chunks | **39 KB**, 19 chunks | 90 → 3 |
-| `/table` | 97 KB, 18 chunks | **39 KB**, 19 chunks | 87 → 1 |
-| `/image` | 135 KB, 27 chunks | **77 KB**, 29 chunks | 88 → 6 |
-| `/ai` | 227 KB, 28 chunks | **169 KB**, 29 chunks | 95 → 15 |
-| root (provider + toolbar) | 175 KB, 33 chunks | **124 KB**, 36 chunks | 88 → 6 |
-| `/bubble` (every bubble) | 512 KB, 95 chunks | **465 KB**, 106 chunks | 109 → 92 |
+| Entry                       | Before            | After                  | Lucide icons before → after |
+| --------------------------- | ----------------- | ---------------------- | --------------------------- |
+| `ai-sparkwrite-editor/bold` | 88 KB, 16 chunks  | **30 KB**, 17 chunks   | 87 → 1                      |
+| `/heading`                  | 98 KB, 18 chunks  | **39 KB**, 19 chunks   | 90 → 3                      |
+| `/table`                    | 97 KB, 18 chunks  | **39 KB**, 19 chunks   | 87 → 1                      |
+| `/image`                    | 135 KB, 27 chunks | **77 KB**, 29 chunks   | 88 → 6                      |
+| `/ai`                       | 227 KB, 28 chunks | **169 KB**, 29 chunks  | 95 → 15                     |
+| root (provider + toolbar)   | 175 KB, 33 chunks | **124 KB**, 36 chunks  | 88 → 6                      |
+| `/bubble` (every bubble)    | 512 KB, 95 chunks | **465 KB**, 106 chunks | 109 → 92                    |
 
 `core`/`vue` are not listed: their size is dominated by concurrent work on the framework-free layer, not by anything on this page.
 
@@ -52,13 +52,13 @@ So importing `ai-sparkwrite-editor/table` brings the Table icon and nothing else
 Two consequences for a host:
 
 - A name of your own has to be registered before it renders — `registerIcons({ Save })` at module scope. See [Customization → Icons](/guide/customization#icons).
-- A component that renders another feature's buttons by name must import that feature's controls, or register the names itself. The bubble menus do this: `RichTextBubbleTable` registers the row/column icons it lists, so it works with the Table *extension* alone.
+- A component that renders another feature's buttons by name must import that feature's controls, or register the names itself. The bubble menus do this: `RichTextBubbleTable` registers the row/column icons it lists, so it works with the Table _extension_ alone.
 
 `tests/icon-registry.test.mjs` walks the source module graph from every public entry and fails if an icon name is used in a graph that never registers it.
 
 ## Tree-shaking notes
 
-- `package.json` declares `sideEffects` for CSS and the locale bundle only. Everything else is side-effect free *as a module*, so a bundler may skip an entry file whose exports you do not use. `registerIcons` calls live in the component modules whose exports you render, so they survive as long as the control does.
+- `package.json` declares `sideEffects` for CSS and the locale bundle only. Everything else is side-effect free _as a module_, so a bundler may skip an entry file whose exports you do not use. `registerIcons` calls live in the component modules whose exports you render, so they survive as long as the control does.
 - Heavy runtime dependencies (`katex`, `mermaid`, `@excalidraw/excalidraw`, `docx`, `mammoth`, `react-image-crop`…) are externals: they load through your bundler, once, and only for entries that use them.
 - `react-tweet` stays bundled on purpose: its ESM imports CSS modules, which only a bundler can resolve. As an external it would make the `twitter` entries fail outside one (SSR, tests). It lives in the Twitter node view's chunk; rolldown also parks its module-interop helper there, so an entry whose code needs that helper (`ai`, `core` at the time of writing) imports the chunk without using the tweet embed — a chunking artefact, not a dependency.
 - The root entry (`ai-sparkwrite-editor`) exports the provider and toolbar building blocks only; features come from their own entries, so importing the root does not pull every feature.

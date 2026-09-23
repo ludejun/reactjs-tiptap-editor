@@ -1,6 +1,6 @@
 # Features
 
-Every feature is one import: the extension and its control come from the same subpath. Register the extension in `useEditor`, place the control inside `RichTextProvider`. Options are passed with `.configure({ ... })`; every extension also accepts the shared `toolbar`, `divider`, `spacer` and `shortcutKeys` options.
+Everything comes from one import — `ai-sparkwrite-editor` (React) or `ai-sparkwrite-editor/vue` (Vue) — or all at once through `RichTextKit`. Register the extension in `useEditor`, place the control inside `RichTextProvider`. The `Import` column lists the per-feature subpath, an equivalent for bundlers that do not tree-shake. Options are passed with `.configure({ ... })`; every extension also accepts the shared `toolbar`, `divider`, `spacer` and `shortcutKeys` options.
 
 ## Core
 

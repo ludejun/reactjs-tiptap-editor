@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { ImportWord, RichTextImportWord } from 'ai-sparkwrite-editor/importword';
+import { RichTextProvider, ImportWord, RichTextImportWord } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, ImportWord];
@@ -53,8 +52,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { ImportWord } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import { ImportWord, RichTextProvider } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, ImportWord];
@@ -94,7 +92,7 @@ Click the toolbar button and choose a `.docx` file. Import replaces the current 
 For example, replace `ImportWord` in your array with:
 
 ```ts
-import { ImportWord } from 'ai-sparkwrite-editor/importword';
+import { ImportWord } from 'ai-sparkwrite-editor';
 
 ImportWord.configure({
   limit: 5 * 1024 * 1024,

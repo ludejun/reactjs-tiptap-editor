@@ -4,16 +4,16 @@ The editor is Tiptap underneath, and Tiptap is framework-agnostic: the same exte
 
 The package is therefore split in two layers:
 
-| Layer | Import                                                                                    | Depends on React | Contents                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ----- | ----------------------------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core  | `ai-sparkwrite-editor/core`                                                               | No               | Every extension without its node view (marks, headings, lists, tables, links, alignment, indent, font, colour, divider, code block, callout, details, video, iframe, images and GIFs, Katex, Mermaid, attachment, table of contents…; columns, Excalidraw, drawer, Twitter and the suggestion popups — mention, short message, emoji, slash commands — stay in the React layer), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
-| React | `ai-sparkwrite-editor`, `ai-sparkwrite-editor/<feature>`, `ai-sparkwrite-editor/bubble/*` | Yes              | Everything above plus controls, bubble menus, dialogs and node views                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Layer | Import                                                                            | Depends on React | Contents                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ----- | --------------------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core  | `ai-sparkwrite-editor/core`                                                       | No               | Every extension without its node view (marks, headings, lists, tables, links, alignment, indent, font, colour, divider, code block, callout, details, video, iframe, images and GIFs, Katex, Mermaid, attachment, table of contents…; columns, Excalidraw, drawer, Twitter and the suggestion popups — mention, short message, emoji, slash commands — stay in the React layer), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
+| React | `ai-sparkwrite-editor` (everything; `/<feature>` and `/bubble/*` subpaths remain) | Yes              | Everything above plus controls, bubble menus, dialogs and node views                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 A build check (`tests/core-headless.test.mjs`) walks the chunk graph of the core bundle and fails if anything reachable from it imports `react`, `@tiptap/react`, Radix or lucide.
 
 ## Vue
 
-Two imports: `ai-sparkwrite-editor/core` for the extensions and `ai-sparkwrite-editor/vue` for the UI. The Vue layer ships a provider, composables, toolbar primitives, ready-made controls for the core extensions, and Vue node views for the blocks (divider, code block, callout, image, GIF, iframe, Katex, Mermaid, attachment, table of contents). It depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`, and shares the stylesheet with the React controls, so both toolbars look the same.
+One import: `ai-sparkwrite-editor/vue` carries the extensions (the framework-free ones re-exported from `core`, plus the blocks with a Vue node view), the UI and `RichTextKit`. The Vue layer ships a provider, composables, toolbar primitives, ready-made controls for the core extensions, and Vue node views for the blocks (divider, code block, callout, image, GIF, iframe, Katex, Mermaid, attachment, table of contents). It depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`, and shares the stylesheet with the React controls, so both toolbars look the same.
 
 ```bash
 pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
@@ -34,11 +34,11 @@ import {
   TextAlign,
   RichPaste,
   localeActions,
-} from 'ai-sparkwrite-editor/core';
-import {
-  Divider, // core divider + Vue node view
-  CodeBlock, // core code block + Vue node view; same for Image, Callout, Katex…
-  RichTextProvider,
+  Divider,
+  // core divider + Vue node view   CodeBlock,
+  // core code block + Vue node view; same for Image,
+  Callout,
+  Katex…   RichTextProvider,
   RichTextToolbar,
   RichTextToolbarDivider,
   RichTextHeading,

@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Mention } from 'ai-sparkwrite-editor/mention';
+import { RichTextProvider, Mention } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const users = [
@@ -77,7 +76,7 @@ export default function MentionExample() {
 使用 `suggestions` 可以为人员和标签分别提供不同的数据源。用下面的配置替换单一的 `suggestion` 配置：
 
 ```ts
-import { Mention } from 'ai-sparkwrite-editor/mention';
+import { Mention } from 'ai-sparkwrite-editor';
 
 const people = [{ id: 'user-1', label: 'Alex' }];
 const tags = [{ id: 'tag-1', label: 'Documentation' }];

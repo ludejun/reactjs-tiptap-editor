@@ -29,8 +29,6 @@ import {
   TextAlign,
   TextUnderline,
   Video,
-} from 'ai-sparkwrite-editor/core';
-import {
   AI,
   AIAutocomplete,
   Attachment,

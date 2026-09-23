@@ -8,7 +8,7 @@ next:
 
 # 快速开始
 
-`ai-sparkwrite-editor` 是 Tiptap 扩展加上现成的控件。你创建编辑器实例、选择功能，再组合出界面。同一套扩展服务于两个框架：React 从 `ai-sparkwrite-editor/<feature>` 引入每个功能，Vue 从 `ai-sparkwrite-editor/core` 引入扩展、从 `ai-sparkwrite-editor/vue` 引入 UI。
+`ai-sparkwrite-editor` 是 Tiptap 扩展加上现成的控件，**每个框架只有一个入口**：React 用 `ai-sparkwrite-editor`，Vue 用 `ai-sparkwrite-editor/vue`。最快的起步方式是 Kit——`RichTextKit` 注册全部功能，`RichTextKitToolbar` 和 `RichTextKitMenus` 渲染界面——也可以从同一个入口逐个挑选功能。会 tree-shake ES 模块的打包器只会打进你引用到的东西，所以单一入口不多花一个字节（见[包体积](/zh/guide/bundle-size)）。
 
 请将所有 `@tiptap/*` 包保持在同一个兼容版本上。本仓库使用 `^3.29.2`；`@tiptap/vue-3` 必须与 `@tiptap/core` 版本完全一致。
 
@@ -36,9 +36,48 @@ yarn add ai-sparkwrite-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/e
 
 :::
 
-像 `ai-sparkwrite-editor/bold` 这样的功能子路径属于同一个包的一部分，不需要单独安装。当示例引入了另一个 `@tiptap/*` 包时，也要一并安装它。
+只有自己组装扩展时（见第 3 节）才需要 `@tiptap/extension-*` 这些包；Kit 自带。
 
-### 2. 渲染一个可用的编辑器
+### 2. 十行代码，完整编辑器
+
+`RichTextKit` 把所有功能装进一个扩展，类似 Tiptap 的 StarterKit；`RichTextKitToolbar` 和 `RichTextKitMenus` 会按已注册的功能渲染工具栏、AI 写作台、气泡菜单、拖拽手柄和斜杠菜单。
+
+```tsx
+'use client';
+
+import { EditorContent, useEditor } from '@tiptap/react';
+import {
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor';
+import 'ai-sparkwrite-editor/style.css';
+
+export default function Editor() {
+  const editor = useEditor({
+    extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })],
+    content: '<p>Hello</p>',
+    immediatelyRender: false,
+  });
+
+  if (!editor) return null;
+
+  return (
+    <RichTextProvider editor={editor}>
+      <RichTextKitToolbar />
+      <EditorContent editor={editor} />
+      <RichTextKitMenus />
+    </RichTextProvider>
+  );
+}
+```
+
+`RichTextKit.configure({ … })` 的每个键对应一个功能：`false` 去掉它（按钮和菜单一并消失），传对象则配置它——`image: { upload }`、`codeBlock: { defaultLanguage: 'ts' }`、`ai: { endpoint }`。需要密钥或回调的功能默认不启用，传入对象后才出现：`imageGif: { GIPHY_API_KEY }`、`mention: { suggestion }`、`emoji: {}`、`excalidraw: {}`、`drawer: {}`、`twitter: {}`、`shortMessage: { messages }`、`recorder: {}`、`placeholder: { placeholder: '开始写…' }`、`horizontalRule: {}`。`<RichTextKitToolbar more={false}>` 去掉“更多工具”面板，其子元素会作为额外控件放入工具栏；`<RichTextKitMenus composer={false} dragHandle={false} />` 可精简浮动界面。
+
+### 3. 或者自己挑选功能
+
+同一个入口导出全部扩展和控件；注册你想要的扩展，再摆放对应的控件：
 
 ```tsx
 'use client';
@@ -47,12 +86,23 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
-import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
-import { History, RichTextUndo, RichTextRedo } from 'ai-sparkwrite-editor/history';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  RichTextProvider,
+  RichTextToolbar,
+  RichTextToolbarDivider,
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  Bold,
+  RichTextBold,
+  Italic,
+  RichTextItalic,
+  History,
+  RichTextUndo,
+  RichTextRedo,
+  RichTextBubbleText,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [
@@ -94,7 +144,7 @@ export default function TextEditor() {
 }
 ```
 
-样式表提供了控件样式和内容样式；消费方应用不需要 Tailwind。如果不需要 AI 相关部分，去掉即可——每个功能都是可选的。
+样式表提供了控件样式和内容样式；消费方应用不需要 Tailwind。如果不需要 AI 相关部分，去掉即可——每个功能都是可选的。功能子路径（`ai-sparkwrite-editor/bold`、`/ai`、`/bubble/text`……）依然保留，供不做 tree-shake 的打包器使用。
 
 ### Next.js 与服务端渲染
 
@@ -116,9 +166,39 @@ npm install ai-sparkwrite-editor @tiptap/vue-3@3.29.2 @tiptap/pm@^3.29.2 @tiptap
 
 :::
 
-`ai-sparkwrite-editor/vue` 只依赖 `vue`、`@tiptap/vue-3` 和 `lucide-vue-next`；不会加载任何 React 相关内容。
+`ai-sparkwrite-editor/vue` 只依赖 `vue`、`@tiptap/vue-3` 和 `lucide-vue-next`；不会加载任何 React 相关内容。它同时导出扩展（框架无关的扩展加上带 Vue 节点视图的块），所以 Vue 应用只需这一个入口。
 
-### 2. 渲染一个可用的编辑器
+### 2. 十行代码，完整编辑器
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import {
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const editor = useEditor({
+  extensions: [RichTextKit.configure({ ai: { endpoint: '/api/ai' } })],
+  content: '<p>Hello</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextKitToolbar />
+    <EditorContent :editor="editor" />
+    <RichTextKitMenus />
+  </RichTextProvider>
+</template>
+```
+
+Vue 版 Kit 的选项与 React 版相同，只是不含仅 React 可用的功能（Excalidraw、手绘、emoji、提及、Twitter 嵌入、斜杠菜单）；`column` 和 `imageGif` 需要显式开启。
+
+### 3. 或者自己挑选功能
 
 ```vue
 <script setup lang="ts">
@@ -126,8 +206,10 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Bold, History, Italic } from 'ai-sparkwrite-editor/core';
 import {
+  Bold,
+  History,
+  Italic,
   AI,
   AIAutocomplete,
   RichTextAI,
@@ -172,19 +254,21 @@ const editor = useEditor({
 </template>
 ```
 
-带交互节点视图的块扩展（`CodeBlock`、`Image`、`Katex`、`Divider` 等）也来自 `ai-sparkwrite-editor/vue`，这样才能挂上 Vue 的节点视图；其余都来自 `core`。完整列表见[框架支持](/zh/guide/frameworks)。默认只内置英文，使用 `localeActions.setMessage` 注册其他语言（见[国际化](/zh/guide/internationalization)）。
+扩展、节点视图和控件全部来自 `ai-sparkwrite-editor/vue`；框架无关的 `ai-sparkwrite-editor/core` 入口保留给无头或非 Vue 的场景。完整列表见[框架支持](/zh/guide/frameworks)。默认只内置英文，使用 `localeActions.setMessage` 注册其他语言（见[国际化](/zh/guide/internationalization)）。
 
 ## 各组成部分
 
-| 组成部分                                   | 职责                                                      |
-| ------------------------------------------ | --------------------------------------------------------- |
-| `useEditor`                                | 创建 Tiptap 实例，配置内容、扩展和回调。                  |
-| `Document`、`Paragraph`、`Text`            | 定义最小文档结构。各自只需注册一次。                      |
-| `Bold`、`Image`、`AI` 等                   | 向 `extensions` 添加节点、标记、命令或行为。              |
-| `RichTextProvider`                         | 让编辑器可供控件使用，并承载样式表所依赖的根类名。        |
-| `RichTextBold`、`RichTextAI` 等            | 对应已注册扩展的控件。需要按钮时自行放入工具栏。          |
-| `RichTextAIComposer`、`RichTextBubbleText` | 编辑器下方的写作台和选区菜单。放在 `EditorContent` 之后。 |
-| `EditorContent`                            | 渲染可编辑的文档，不附带工具栏。                          |
+| 组成部分                                   | 职责                                                                              |
+| ------------------------------------------ | --------------------------------------------------------------------------------- |
+| `useEditor`                                | 创建 Tiptap 实例，配置内容、扩展和回调。                                          |
+| `RichTextKit`                              | 所有功能合成的一个扩展；用 `.configure({ bold: false, ai: { endpoint } })` 取舍。 |
+| `RichTextKitToolbar`、`RichTextKitMenus`   | 按已注册的功能渲染工具栏和浮动界面。                                              |
+| `Document`、`Paragraph`、`Text`            | 定义最小文档结构。各自只需注册一次。                                              |
+| `Bold`、`Image`、`AI` 等                   | 向 `extensions` 添加节点、标记、命令或行为。                                      |
+| `RichTextProvider`                         | 让编辑器可供控件使用，并承载样式表所依赖的根类名。                                |
+| `RichTextBold`、`RichTextAI` 等            | 对应已注册扩展的控件。需要按钮时自行放入工具栏。                                  |
+| `RichTextAIComposer`、`RichTextBubbleText` | 编辑器下方的写作台和选区菜单。放在 `EditorContent` 之后。                         |
+| `EditorContent`                            | 渲染可编辑的文档，不附带工具栏。                                                  |
 
 每个功能都要同时注册扩展**并**渲染其控件（如果你想要一个按钮的话）。只引入控件而不注册扩展不会启用该功能；扩展也可以在没有按钮的情况下通过命令驱动。避免同时注册一个库扩展和同名的 Tiptap 扩展——如果你使用了 `StarterKit`，请先在其中禁用重叠的功能。
 
@@ -222,4 +306,4 @@ const editor = useEditor({
 
 ## 接下来看什么
 
-[AI](/zh/extensions/AI/) 了解写作台、自动补全和提供方 · [工具栏](/zh/guide/toolbar) 和[气泡菜单](/zh/guide/bubble-menu)用于组合界面 · [功能一览](/zh/guide/features) 查看每个扩展及其引入路径 · [框架支持](/zh/guide/frameworks) 了解核心/React/Vue 的划分 · [国际化](/zh/guide/internationalization) · [自定义主题](/zh/guide/custom-theme) · [包体积](/zh/guide/bundle-size)。
+[AI](/zh/extensions/AI/) 了解写作台、自动补全和提供方 · [工具栏](/zh/guide/toolbar) 和[气泡菜单](/zh/guide/bubble-menu)用于组合界面 · [功能一览](/zh/guide/features) 查看每个扩展及其选项 · [框架支持](/zh/guide/frameworks) 了解核心/React/Vue 的划分 · [国际化](/zh/guide/internationalization) · [自定义主题](/zh/guide/custom-theme) · [包体积](/zh/guide/bundle-size)。

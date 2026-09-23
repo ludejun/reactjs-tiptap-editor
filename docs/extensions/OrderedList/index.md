@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { OrderedList, RichTextOrderedList } from 'ai-sparkwrite-editor/orderedlist';
+import { RichTextProvider, OrderedList, RichTextOrderedList } from 'ai-sparkwrite-editor';
 import { ListItem } from '@tiptap/extension-list';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -55,8 +54,7 @@ import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { ListItem } from '@tiptap/extension-list';
-import { OrderedList } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider, RichTextOrderedList } from 'ai-sparkwrite-editor/vue';
+import { OrderedList, RichTextProvider, RichTextOrderedList } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, ListItem, OrderedList];

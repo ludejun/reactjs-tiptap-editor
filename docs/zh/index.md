@@ -30,7 +30,7 @@ features:
   - title: 你的模型，你的规则
     details: 你后端的一个接口地址接收 JSON 形式的对话内容，并以文本或流的形式作答；由哪个提供方、哪个模型来回答由你决定。回答会经过编辑器 schema 解析，因此不会直接粘贴，也不会混入未知内容。
   - title: 可组合，支持 React 或 Vue
-    details: 创建 Tiptap 编辑器、挑选扩展、摆放控件。每个功能都从一个子路径引入；AI 引擎与所有块共享同一个框架无关的核心，供两套 UI 使用。
+    details: 每个框架一个入口，或用 `RichTextKit` 一次拿到整个编辑器与现成的工具栏和菜单。AI 引擎与所有块共享同一个框架无关的核心，供两套 UI 使用。
   - title: 文档所需的一切
     details: 表格、分割线、带语言检测的代码块、支持裁剪与上传跟踪的图片、分栏、标注框、Katex、Mermaid、Excalidraw，以及 Word/PDF/Markdown 的导入导出。
   - title: 妥善处理粘贴与多语言

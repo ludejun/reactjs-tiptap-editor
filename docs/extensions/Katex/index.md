@@ -23,9 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Katex, RichTextKatex } from 'ai-sparkwrite-editor/katex';
-import { RichTextBubbleKatex } from 'ai-sparkwrite-editor/bubble/katex';
+import { RichTextProvider, Katex, RichTextKatex, RichTextBubbleKatex } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 import 'katex/dist/katex.min.css';
 
@@ -93,7 +91,7 @@ The renderer loads when a formula node view mounts or a formula dialog opens. Un
 Use the optional `loadKatex` configuration to initialize plugins before rendering. For chemistry commands such as `\ce{H2O}`, install `katex` directly and replace `Katex` in the extension array with:
 
 ```ts
-import { Katex } from 'ai-sparkwrite-editor/katex';
+import { Katex } from 'ai-sparkwrite-editor';
 import 'katex/dist/katex.min.css';
 
 Katex.configure({

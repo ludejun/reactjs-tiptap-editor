@@ -1,6 +1,6 @@
 # 功能一览
 
-每个功能都是一次引入：扩展及其控件来自同一个子路径。在 `useEditor` 中注册扩展，在 `RichTextProvider` 内放置控件。选项通过 `.configure({ ... })` 传入；每个扩展也都支持共享的 `toolbar`、`divider`、`spacer` 和 `shortcutKeys` 选项。
+一切都来自一个入口——`ai-sparkwrite-editor`（React）或 `ai-sparkwrite-editor/vue`（Vue）——或者用 `RichTextKit` 一次注册全部。在 `useEditor` 中注册扩展，在 `RichTextProvider` 内放置控件。“引入”一列列出的是每个功能的子路径，供不做 tree-shake 的打包器使用，效果等价。选项通过 `.configure({ ... })` 传入；每个扩展也都支持共享的 `toolbar`、`divider`、`spacer` 和 `shortcutKeys` 选项。
 
 ## 核心
 

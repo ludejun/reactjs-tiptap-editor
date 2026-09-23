@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Recorder, getRecording, replayRecording } from 'ai-sparkwrite-editor/recorder';
+import { RichTextProvider, Recorder, getRecording, replayRecording } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Recorder.configure({ autoStart: true })];
@@ -57,8 +56,12 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Recorder, getRecording, replayRecording } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import {
+  Recorder,
+  getRecording,
+  replayRecording,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Recorder.configure({ autoStart: true })];

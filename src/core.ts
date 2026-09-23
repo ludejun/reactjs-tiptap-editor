@@ -43,6 +43,7 @@ export type {
   DividerVariantOption,
 } from '@/extensions/Divider/Divider';
 export { Details, DetailsContent, DetailsSummary } from '@/extensions/Details/Details';
+export { Column, ColumnNode, MultipleColumnNode } from '@/extensions/Column/Column';
 export type { DetailsOptions } from '@/extensions/Details/Details';
 export {
   CodeBlockCore as CodeBlock,

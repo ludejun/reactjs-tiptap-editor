@@ -57,7 +57,9 @@ const editorHookModules = new Set(
   ['src/hooks/useAttributes.tsx'].map((file) => normalizePath(path.resolve(rootDir, file)))
 );
 const editorUtilsModules = new Set(
-  ['src/utils/json.ts'].map((file) => normalizePath(path.resolve(rootDir, file)))
+  ['src/utils/json.ts', 'src/utils/utils.ts'].map((file) =>
+    normalizePath(path.resolve(rootDir, file))
+  )
 );
 
 export default defineConfig(({ mode }) => {

@@ -4,16 +4,16 @@
 
 因此这个包被拆分为两层：
 
-| 层级  | 引入                                                                                      | 依赖 React | 内容                                                                                                                                                                                                                                                                                                                                          |
-| ----- | ----------------------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 核心  | `ai-sparkwrite-editor/core`                                                               | 否         | 除节点视图外的每个扩展（标记、标题、列表、表格、链接、对齐、缩进、字体、颜色、分割线、代码块、标注框、可折叠块、视频、iframe、图片与 GIF、Katex、Mermaid、附件、目录……；分栏、Excalidraw、手绘、Twitter 以及建议弹层——提及、短消息、emoji、斜杠命令——仍留在 React 层）、粘贴规则、搜索替换、录制器、AI 传输层与 markdown 渲染、图片管理、翻译 |
-| React | `ai-sparkwrite-editor`、`ai-sparkwrite-editor/<feature>`、`ai-sparkwrite-editor/bubble/*` | 是         | 以上全部内容，再加上控件、气泡菜单、对话框和节点视图                                                                                                                                                                                                                                                                                          |
+| 层级  | 引入                                                                       | 依赖 React | 内容                                                                                                                                                                                                                                                                                                                                          |
+| ----- | -------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 核心  | `ai-sparkwrite-editor/core`                                                | 否         | 除节点视图外的每个扩展（标记、标题、列表、表格、链接、对齐、缩进、字体、颜色、分割线、代码块、标注框、可折叠块、视频、iframe、图片与 GIF、Katex、Mermaid、附件、目录……；分栏、Excalidraw、手绘、Twitter 以及建议弹层——提及、短消息、emoji、斜杠命令——仍留在 React 层）、粘贴规则、搜索替换、录制器、AI 传输层与 markdown 渲染、图片管理、翻译 |
+| React | `ai-sparkwrite-editor`（全部；`/<feature>` 与 `/bubble/*` 子路径仍然保留） | 是         | 以上全部内容，再加上控件、气泡菜单、对话框和节点视图                                                                                                                                                                                                                                                                                          |
 
 一项构建检查（`tests/core-headless.test.mjs`）会遍历核心构建包的依赖图，只要有任何可达模块引入了 `react`、`@tiptap/react`、Radix 或 lucide，检查就会失败。
 
 ## Vue
 
-两次引入：`ai-sparkwrite-editor/core` 提供扩展，`ai-sparkwrite-editor/vue` 提供 UI。Vue 层提供 provider、组合式函数、工具栏原语、核心扩展的现成控件，以及各个块的 Vue 节点视图（分割线、代码块、标注框、图片、GIF、iframe、Katex、Mermaid、附件、目录）。它只依赖 `vue`、`@tiptap/vue-3` 和 `lucide-vue-next`，并与 React 控件共享同一份样式表，因此两边的工具栏外观一致。
+一次引入：`ai-sparkwrite-editor/vue` 同时提供扩展（从 `core` 转出的框架无关扩展，加上带 Vue 节点视图的块）、UI 和 `RichTextKit`。Vue 层提供 provider、组合式函数、工具栏原语、核心扩展的现成控件，以及各个块的 Vue 节点视图（分割线、代码块、标注框、图片、GIF、iframe、Katex、Mermaid、附件、目录）。它只依赖 `vue`、`@tiptap/vue-3` 和 `lucide-vue-next`，并与 React 控件共享同一份样式表，因此两边的工具栏外观一致。
 
 ```bash
 pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
@@ -34,11 +34,11 @@ import {
   TextAlign,
   RichPaste,
   localeActions,
-} from 'ai-sparkwrite-editor/core';
-import {
-  Divider, // core divider + Vue node view
-  CodeBlock, // core code block + Vue node view; same for Image, Callout, Katex…
-  RichTextProvider,
+  Divider,
+  // core divider + Vue node view   CodeBlock,
+  // core code block + Vue node view; same for Image,
+  Callout,
+  Katex…   RichTextProvider,
   RichTextToolbar,
   RichTextToolbarDivider,
   RichTextHeading,

@@ -23,8 +23,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { ExportPdf, RichTextExportPdf } from 'ai-sparkwrite-editor/exportpdf';
+import { RichTextProvider, ExportPdf, RichTextExportPdf } from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, ExportPdf];
@@ -53,8 +52,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { ExportPdf } from 'ai-sparkwrite-editor/core';
-import { RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import { ExportPdf, RichTextProvider } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, ExportPdf];
@@ -175,7 +173,7 @@ type PageMargin =
 Example usage:
 
 ```ts
-import { ExportPdf } from 'ai-sparkwrite-editor/exportpdf';
+import { ExportPdf } from 'ai-sparkwrite-editor';
 
 ExportPdf.configure({
   paperSize: 'A4',
