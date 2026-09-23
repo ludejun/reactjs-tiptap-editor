@@ -56,6 +56,7 @@ For Anthropic set `protocol: 'anthropic'` and omit `baseURL` (defaults to `https
 
 - **Chips** run the document-level presets: Continue writing, Summarize, Outline, Suggest a title, Action items (a task list of every decision and open question), Fix grammar everywhere, Translate document. Each knows where its answer goes (end, top, caret, or the whole document).
 - **The prompt** takes anything; a target selector chooses _Replace selection_ / _At cursor_ / _Top_ / _End_ / _Whole document_.
+- **The chips stay on one line.** Whatever does not fit sits behind a `+N` button. Hovering a chip shows the exact prompt it sends; the prompts are the `prompt` fields of `AI_COMPOSER_ACTIONS`.
 - **While the answer streams** the span it is filling is tinted and follows edits made elsewhere; Stop keeps what has arrived.
 - **Afterwards**: Keep, Undo (puts the original back), Retry, or type a follow-up — the same span is rewritten with the conversation so far. The finished answer is a single undo step.
 
@@ -94,7 +95,7 @@ result.keep(); // or result.discard() to put the original back
 // result.messages is the conversation; pass it as `history` to refine.
 ```
 
-Document-level targets (`cursor`, `start`, `end`) send the document as Markdown context, trimmed to `documentContext` characters (default 12 000; `0` sends none). `selection` and `document` send the affected text itself.
+Document-level targets (`cursor`, `start`, `end`) send the document as Markdown context, trimmed to `documentContext` characters (default 12 000; `0` sends none). `selection` and `document` send the affected text itself — as Markdown when it spans more than one block, so structure survives a rewrite.
 
 ## Ghost-text autocomplete
 
@@ -136,26 +137,27 @@ AI.configure({
 
 ## Options
 
-| Option                                         | Default                  | Purpose                                                                         |
-| ---------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------- |
-| `protocol`                                     | `'openai'`               | OpenAI Chat Completions or Anthropic Messages                                   |
-| `apiKey`                                       | `''`                     | Key or async key getter; omit for an authenticated proxy                        |
-| `model`                                        | `''`                     | Model ID for the built-in transport                                             |
-| `baseURL`                                      | provider `/v1` root      | API root, not a complete endpoint                                               |
-| `maxTokens`                                    | `2048`                   | Maximum generated tokens                                                        |
-| `headers`                                      | `{}`                     | Extra or overridden request headers                                             |
-| `systemPrompt`                                 | writing-assistant prompt | Asks for the user's language and Markdown-only output                           |
-| `generate`                                     | `null`                   | Custom transport `(request, onChunk?) => Promise<string>`                       |
-| `stream`                                       | `true`                   | Ask for server-sent events                                                      |
-| `spaceTrigger`                                 | `true`                   | Space on an empty line opens Ask AI                                             |
-| `documentContext`                              | `12000`                  | Characters of the document sent with document-level prompts                     |
-| `translateLanguages`                           | `[]`                     | Fixed Translate targets; empty means the browser language                       |
-| `enableImageInput`                             | `true`                   | Attach images (the model has to accept them)                                    |
-| `enableFileInput`                              | `true`                   | Attach text files, inlined into the prompt                                      |
-| `imageMimes`, `fileMimes`, `maxAttachmentSize` | see source               | Accepted attachment types and size (4 MB)                                       |
-| `renderResult`                                 | —                        | React: replace how the panel shows the answer (`{ markdown, html, streaming }`) |
-| `components.Panel`                             | —                        | React: replace the whole panel                                                  |
-| `mountPanel`                                   | React/Vue renderer       | Framework hook: `(mount, props) => unmount`; the core entry ships it as `null`  |
+| Option                                         | Default                      | Purpose                                                                                                                                                                                                       |
+| ---------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `protocol`                                     | `'openai'`                   | OpenAI Chat Completions or Anthropic Messages                                                                                                                                                                 |
+| `apiKey`                                       | `''`                         | Key or async key getter; omit for an authenticated proxy                                                                                                                                                      |
+| `model`                                        | `''`                         | Model ID for the built-in transport                                                                                                                                                                           |
+| `baseURL`                                      | provider `/v1` root          | API root, not a complete endpoint                                                                                                                                                                             |
+| `maxTokens`                                    | `2048`                       | Maximum generated tokens                                                                                                                                                                                      |
+| `headers`                                      | `{}`                         | Extra or overridden request headers                                                                                                                                                                           |
+| `systemPrompt`                                 | writing-assistant prompt     | Asks for the user's language and Markdown-only output                                                                                                                                                         |
+| `generate`                                     | `null`                       | Custom transport `(request, onChunk?) => Promise<string>`                                                                                                                                                     |
+| `stream`                                       | `true`                       | Ask for server-sent events                                                                                                                                                                                    |
+| `spaceTrigger`                                 | `true`                       | Space on an empty line opens Ask AI                                                                                                                                                                           |
+| `documentContext`                              | `12000`                      | Characters of the document sent with document-level prompts                                                                                                                                                   |
+| `serializeDocument`                            | the editor's Markdown export | `(editor, range) => string`: how a span is turned into text for the model. Multi-block spans and the whole document go as Markdown so tables, lists and code keep their shape; override to redact or reformat |
+| `translateLanguages`                           | `[]`                         | Fixed Translate targets; empty means the browser language                                                                                                                                                     |
+| `enableImageInput`                             | `true`                       | Attach images (the model has to accept them)                                                                                                                                                                  |
+| `enableFileInput`                              | `true`                       | Attach text files, inlined into the prompt                                                                                                                                                                    |
+| `imageMimes`, `fileMimes`, `maxAttachmentSize` | see source                   | Accepted attachment types and size (4 MB)                                                                                                                                                                     |
+| `renderResult`                                 | —                            | React: replace how the panel shows the answer (`{ markdown, html, streaming }`)                                                                                                                               |
+| `components.Panel`                             | —                            | React: replace the whole panel                                                                                                                                                                                |
+| `mountPanel`                                   | React/Vue renderer           | Framework hook: `(mount, props) => unmount`; the core entry ships it as `null`                                                                                                                                |
 
 Only the selected text (or the document context you allow), your prompt and successful turns are sent. Document edits during a panel session — including collaborative ones — close the session and abort its request. Closing, stopping or destroying the editor aborts requests.
 

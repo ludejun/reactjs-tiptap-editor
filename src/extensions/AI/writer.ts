@@ -1,5 +1,7 @@
 import { TextSelection, type Transaction } from '@tiptap/pm/state';
 
+import { createMarkdown } from '@/extensions/ExportMarkdown/createMarkdown';
+
 import { generateAIText } from './client';
 import { markdownToSlice } from './markdown';
 import { aiPluginKey, type AIAction } from './state';
@@ -72,26 +74,38 @@ export function resolveWriteTarget(editor: Editor, target: AIWriteTarget): Range
 }
 
 /**
- * The document as text for the model, trimmed to `limit` characters from the
- * end (a "continue writing" needs what comes last). Uses `serializeDocument`
- * from the AI options when set, else `editor.getMarkdown()` when the host
- * registered Tiptap's Markdown extension, else plain text. Not a dynamic
- * import: one would drag a bundler interop chunk into the core entry.
+ * A span of the document as Markdown, so headings, lists, tables and code
+ * reach the model as structure rather than flattened text. Text inside a
+ * single block stays plain text (no escaping noise for a sentence). Uses
+ * `serializeDocument` from the AI options when set, else the editor's own
+ * Markdown export. Not a dynamic import: one would drag a bundler interop
+ * chunk into the core entry.
+ */
+export async function rangeMarkdown(editor: Editor, range: Range): Promise<string> {
+  const { doc } = editor.state;
+  const from = Math.max(0, Math.min(range.from, doc.content.size));
+  const to = Math.max(from, Math.min(range.to, doc.content.size));
+  if (from === to) return '';
+  const plain = doc.textBetween(from, to, '\n');
+  const $from = doc.resolve(from);
+  if ($from.parent.isTextblock && $from.sameParent(doc.resolve(to))) return plain;
+  const serialize = aiOptionsOf(editor)?.serializeDocument;
+  try {
+    if (serialize) return await serialize(editor, { from, to });
+    const content = doc.type.create(null, doc.slice(from, to).content).toJSON();
+    return createMarkdown(editor, { content }).trim() || plain;
+  } catch {
+    return plain;
+  }
+}
+
+/**
+ * The document as Markdown for the model, trimmed to `limit` characters from
+ * the end (a "continue writing" needs what comes last).
  */
 export async function documentContext(editor: Editor, limit: number): Promise<string> {
   if (limit <= 0) return '';
-  const serialize = aiOptionsOf(editor)?.serializeDocument;
-  const withMarkdown = editor as Editor & { getMarkdown?: () => string };
-  let text: string;
-  try {
-    text = serialize
-      ? await serialize(editor)
-      : typeof withMarkdown.getMarkdown === 'function'
-        ? withMarkdown.getMarkdown()
-        : editor.getText({ blockSeparator: '\n\n' });
-  } catch {
-    text = editor.getText({ blockSeparator: '\n\n' });
-  }
+  const text = await rangeMarkdown(editor, { from: 0, to: editor.state.doc.content.size });
   if (text.length <= limit) return text;
   return `…${text.slice(-limit)}`;
 }
@@ -127,7 +141,7 @@ export async function writeWithAI(
   const target = options.target ?? 'selection';
   const range = resolveWriteTarget(editor, target);
   const original = editor.state.doc.slice(range.from, range.to);
-  const selectedText = editor.state.doc.textBetween(range.from, range.to, '\n');
+  const selectedText = await rangeMarkdown(editor, range);
   const wantsContext =
     options.includeDocument ?? (target === 'cursor' || target === 'start' || target === 'end');
   const context = wantsContext ? await documentContext(editor, aiOptions.documentContext) : '';

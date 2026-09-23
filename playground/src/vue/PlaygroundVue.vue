@@ -87,68 +87,15 @@ import {
   RichTextUndo,
   RichTextVideo,
   TableOfContents,
-  type AIRequest,
 } from 'ai-sparkwrite-editor/vue';
+
+import { demoAIGenerate } from '../demoAI';
 
 defineProps<{ dark: boolean }>();
 
 /** Fake upload: the file as a blob URL after a short delay. */
 function demoUpload(file: File): Promise<string> {
   return new Promise((resolve) => setTimeout(() => resolve(URL.createObjectURL(file)), 300));
-}
-
-/**
- * Answers itself so the AI flow — streaming, markdown rendering, Apply, the
- * composer writing into the document, ghost text — can be tried without a
- * key. `window.__aiGenerate` overrides it (used by the browser checks).
- */
-async function demoAIGenerate(
-  request: AIRequest,
-  onChunk?: (text: string) => void
-): Promise<string> {
-  const override = (window as unknown as { __aiGenerate?: typeof demoAIGenerate }).__aiGenerate;
-
-  if (override) {
-    return override(request, onChunk);
-  }
-
-  const last = request.messages[request.messages.length - 1]?.content ?? '';
-
-  // Ghost-text autocomplete asks for a short continuation, not a document.
-  if (last.startsWith('Text before the caret:')) {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    return ' and this is a suggested continuation.';
-  }
-
-  const selected = /Selected text:\n([\s\S]*?)(?:\n\n|$)/.exec(last)?.[1]?.trim();
-  const answer = /translate/i.test(last)
-    ? `${selected ?? 'Nothing selected'} *(translated — demo)*`
-    : [
-        '## Summary *(demo answer)*',
-        '',
-        selected ? `You selected **${selected.slice(0, 60)}**.` : 'No text was selected.',
-        '',
-        '| Step | What happens |',
-        '| --- | --- |',
-        '| 1 | Text streams in from the provider |',
-        '| 2 | Markdown is rendered through the editor schema |',
-        '| 3 | Apply inserts real nodes |',
-        '',
-        '```ts',
-        "editor.commands.applyAI('## Summary…');",
-        '```',
-        '',
-        '- [x] streaming',
-        '- [ ] your API key (configure `model` and `apiKey` to use a real model)',
-      ].join('\n');
-
-  for (const piece of answer.match(/[\s\S]{1,8}/g) ?? []) {
-    request.signal.throwIfAborted();
-    await new Promise((resolve) => setTimeout(resolve, 12));
-    onChunk?.(piece);
-  }
-
-  return answer;
 }
 
 const editor = useEditor({
@@ -200,6 +147,7 @@ const editor = useEditor({
     '<table><tbody><tr><th>Layer</th><th>Entry</th></tr><tr><td>Core</td><td>ai-sparkwrite-editor/core</td></tr><tr><td>Vue</td><td>ai-sparkwrite-editor/vue</td></tr></tbody></table>',
     '<div data-type="divider" data-variant="text" data-label="Chapter 1"><hr><span class="divider__label">Chapter 1</span><hr></div>',
     '<p>Type below. Pressing Space on an empty line asks AI; a pause at the end of a sentence suggests a continuation (Tab accepts).</p>',
+    '<p>try Fix grammar: teh editor recieves your text and  fixes it, i promise</p>',
     '<p></p>',
   ].join(''),
 });

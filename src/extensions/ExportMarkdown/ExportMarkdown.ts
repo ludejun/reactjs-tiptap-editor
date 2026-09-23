@@ -2,7 +2,8 @@ import { Extension } from '@tiptap/core';
 
 import { downloadFromBlob } from '@/utils/download';
 
-import type { CreateMarkdownOptions } from './createMarkdown';
+import { createMarkdown, type CreateMarkdownOptions } from './createMarkdown';
+
 import type { ButtonViewParams, GeneralOptions } from '@/types';
 import type { Editor } from '@tiptap/core';
 
@@ -29,12 +30,12 @@ export interface ExportMarkdownOptions extends GeneralOptions<ExportMarkdownOpti
 }
 
 /**
- * Serialize the editor document to a markdown string. The serializer is
- * loaded on demand so it does not weigh on the initial bundle.
+ * Serialize the editor document to a markdown string. Async for backwards
+ * compatibility; the serializer is imported statically because the AI writer
+ * needs it too, and a dynamic import here made the bundler park an interop
+ * helper in a React chunk that the framework-free core then depended on.
  */
 export async function getMarkdown(editor: Editor, options: CreateMarkdownOptions = {}) {
-  const { createMarkdown } = await import('./createMarkdown');
-
   return createMarkdown(editor, options);
 }
 

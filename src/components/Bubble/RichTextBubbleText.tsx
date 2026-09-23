@@ -1,8 +1,8 @@
-import { AllSelection, TextSelection } from '@tiptap/pm/state';
+import { AllSelection, PluginKey, TextSelection } from '@tiptap/pm/state';
 import { useEditorState } from '@tiptap/react';
 import { BubbleMenu } from '@tiptap/react/menus';
 import { Check } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ActionButton } from '@/components';
 import { IconComponent } from '@/components/icons';
@@ -150,9 +150,23 @@ function DefaultButtonBubble() {
   );
 }
 
+/** Shared with the AI extension so opening a session can hide the bubble. */
+const BUBBLE_TEXT_KEY = new PluginKey('RichTextBubbleText');
+
 export function RichTextBubbleText({ buttonBubble }: RichTextBubbleTextProps) {
   const editor = useEditorInstance();
   const editable = useEditableEditor();
+  const aiOpen = useEditorState({
+    editor,
+    selector: ({ editor }) => !!aiPluginKey.getState(editor.state)?.session,
+  });
+
+  // Opening the AI panel changes neither the selection nor the document, so
+  // the bubble plugin would not re-run `shouldShow`; hide it explicitly.
+  useEffect(() => {
+    if (aiOpen && !editor.isDestroyed)
+      editor.view.dispatch(editor.state.tr.setMeta(BUBBLE_TEXT_KEY, 'hide'));
+  }, [aiOpen, editor]);
 
   const shouldShow = ({ editor }: { editor: Editor }) => {
     if (aiPluginKey.getState(editor.state)?.session) return false;
@@ -181,7 +195,7 @@ export function RichTextBubbleText({ buttonBubble }: RichTextBubbleTextProps) {
     <BubbleMenu
       editor={editor}
       options={{ placement: 'bottom', offset: 8, flip: true }}
-      pluginKey={'RichTextBubbleText'}
+      pluginKey={BUBBLE_TEXT_KEY}
       shouldShow={shouldShow}
     >
       {buttonBubble ? (

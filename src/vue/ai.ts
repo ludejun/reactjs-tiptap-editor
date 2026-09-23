@@ -27,6 +27,7 @@ import {
   Volume2,
   WandSparkles,
   X,
+  ChevronDown,
 } from 'lucide-vue-next';
 import {
   computed,
@@ -50,6 +51,7 @@ import {
   AI_COMPOSER_ACTIONS,
   browserLanguage,
   composerPrompt,
+  fitChips,
   type AIComposerAction,
 } from '@/extensions/AI/composer';
 import { markdownToPreviewHTML } from '@/extensions/AI/markdown';
@@ -96,6 +98,7 @@ export {
   aiOptionsOf,
   resolveWriteTarget,
   documentContext,
+  rangeMarkdown,
 } from '@/extensions/AI/writer';
 export type { WriteWithAIOptions, WriteWithAIResult } from '@/extensions/AI/writer';
 export { AI_COMPOSER_ACTIONS, composerPrompt, browserLanguage } from '@/extensions/AI/composer';
@@ -717,6 +720,34 @@ export const RichTextAIComposer = defineComponent({
     const input = ref<HTMLTextAreaElement | null>(null);
     let controller: AbortController | null = null;
     let lastRequest: { prompt: string; target: AIWriteTarget } | null = null;
+    // The chips stay on one line; the ones that do not fit go behind a "more" button.
+    const chipRow = ref<HTMLElement | null>(null);
+    const visibleChips = ref(Infinity);
+    const moreOpen = ref(false);
+    const moreMenu = ref<HTMLElement | null>(null);
+    let observer: ResizeObserver | null = null;
+    const measure = () => {
+      if (chipRow.value) visibleChips.value = fitChips(chipRow.value);
+    };
+    watch(chipRow, (row) => {
+      observer?.disconnect();
+      observer = null;
+      if (!row) return;
+      measure();
+      observer = new ResizeObserver(measure);
+      observer.observe(row);
+    });
+    const onDocumentPointerDown = (event: PointerEvent) => {
+      if (!moreMenu.value?.contains(event.target as Node)) moreOpen.value = false;
+    };
+    watch(moreOpen, (open) => {
+      if (open) document.addEventListener('pointerdown', onDocumentPointerDown, true);
+      else document.removeEventListener('pointerdown', onDocumentPointerDown, true);
+    });
+    onBeforeUnmount(() => {
+      observer?.disconnect();
+      document.removeEventListener('pointerdown', onDocumentPointerDown, true);
+    });
 
     watch(
       editor,
@@ -772,11 +803,16 @@ export const RichTextAIComposer = defineComponent({
       }
     }
 
+    // "Replace selection" only exists while something is selected; without a
+    // selection the same choice means "at the caret".
+    const effectiveTarget = (): ComposerTarget =>
+      target.value === 'selection' && !state.value.hasSelection ? 'cursor' : target.value;
+
     function submit() {
       const instruction = prompt.value.trim();
       if (!instruction) return;
       if (result.value) void run(instruction, result.value, result.value);
-      else void run(instruction, target.value);
+      else void run(instruction, effectiveTarget());
     }
 
     function stop() {
@@ -809,7 +845,7 @@ export const RichTextAIComposer = defineComponent({
           role: 'region',
           'aria-label': t('editor.ai.compose.title'),
           onKeydown: (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
+            if (event.key === 'Escape' || ((event.metaKey || event.ctrlKey) && event.key === 'j')) {
               event.preventDefault();
               close();
             }
@@ -817,23 +853,69 @@ export const RichTextAIComposer = defineComponent({
         },
         [
           chips.length && !answer
-            ? h(
-                'div',
-                { class: 'richtext-ai-composer-chips', role: 'group' },
-                chips.map((action) => {
+            ? h('div', { class: 'richtext-ai-composer-chips', role: 'group', ref: chipRow }, [
+                ...chips.map((action, index) => {
                   const Icon = COMPOSER_ICONS[action.icon];
+                  const hidden = index >= visibleChips.value;
                   return h(
                     'button',
                     {
                       key: action.key,
                       type: 'button',
+                      'data-chip': '',
+                      class: hidden ? 'richtext-ai-chip-hidden' : undefined,
+                      'aria-hidden': hidden ? 'true' : undefined,
+                      tabindex: hidden ? -1 : undefined,
+                      title: composerPrompt(action),
                       disabled: busy.value || !current.editable,
                       onClick: () => void run(composerPrompt(action), action.target),
                     },
                     [Icon ? h(Icon, { size: 14 }) : null, t(action.key)]
                   );
-                })
-              )
+                }),
+                visibleChips.value < chips.length
+                  ? h('div', { class: 'richtext-ai-composer-more', ref: moreMenu }, [
+                      h(
+                        'button',
+                        {
+                          type: 'button',
+                          'aria-haspopup': 'menu',
+                          'aria-expanded': moreOpen.value ? 'true' : 'false',
+                          'aria-label': t('editor.more'),
+                          title: t('editor.more'),
+                          disabled: busy.value || !current.editable,
+                          onClick: () => {
+                            moreOpen.value = !moreOpen.value;
+                          },
+                        },
+                        [`+${chips.length - visibleChips.value}`, h(ChevronDown, { size: 13 })]
+                      ),
+                      moreOpen.value
+                        ? h(
+                            'div',
+                            { class: 'richtext-ai-composer-menu', role: 'menu' },
+                            chips.slice(visibleChips.value).map((action) => {
+                              const Icon = COMPOSER_ICONS[action.icon];
+                              return h(
+                                'button',
+                                {
+                                  key: action.key,
+                                  type: 'button',
+                                  role: 'menuitem',
+                                  title: composerPrompt(action),
+                                  onClick: () => {
+                                    moreOpen.value = false;
+                                    void run(composerPrompt(action), action.target);
+                                  },
+                                },
+                                [Icon ? h(Icon, { size: 14 }) : null, t(action.key)]
+                              );
+                            })
+                          )
+                        : null,
+                    ])
+                  : null,
+              ])
             : null,
 
           h(
@@ -849,7 +931,7 @@ export const RichTextAIComposer = defineComponent({
               h(Sparkles, { class: 'richtext-ai-composer-icon', size: 18 }),
               h('textarea', {
                 ref: input,
-                rows: 1,
+                rows: 2,
                 'aria-label': answer
                   ? t('editor.ai.compose.refine')
                   : t('editor.ai.compose.placeholder'),
@@ -873,19 +955,19 @@ export const RichTextAIComposer = defineComponent({
                     'select',
                     {
                       'aria-label': t('editor.ai.compose.target'),
-                      value: target.value,
+                      value: effectiveTarget(),
                       disabled: busy.value,
                       onChange: (event: Event) => {
                         target.value = (event.target as HTMLSelectElement).value as ComposerTarget;
                       },
                     },
-                    COMPOSER_TARGETS.map((value) =>
+                    COMPOSER_TARGETS.filter(
+                      (value) => value !== 'selection' || current.hasSelection
+                    ).map((value) =>
                       h(
                         'option',
-                        { key: value, value, selected: value === target.value },
-                        value === 'selection' && !current.hasSelection
-                          ? t('editor.ai.compose.target.cursor')
-                          : t(`editor.ai.compose.target.${value}`)
+                        { key: value, value, selected: value === effectiveTarget() },
+                        t(`editor.ai.compose.target.${value}`)
                       )
                     )
                   )

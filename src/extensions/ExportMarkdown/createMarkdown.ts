@@ -124,6 +124,8 @@ function withMarkdownSpecs(editor: Editor): AnyExtension[] {
 
 export interface CreateMarkdownOptions {
   indentation?: { style?: 'space' | 'tab'; size?: number };
+  /** What to serialize; defaults to the whole document. */
+  content?: JSONContent;
 }
 
 export function createMarkdown(editor: Editor, options: CreateMarkdownOptions = {}) {
@@ -132,5 +134,5 @@ export function createMarkdown(editor: Editor, options: CreateMarkdownOptions = 
     indentation: options.indentation,
   });
 
-  return manager.serialize(editor.getJSON());
+  return manager.serialize(options.content ?? editor.getJSON());
 }

@@ -111,13 +111,13 @@ export interface AIOptions {
    */
   documentContext: number;
   /**
-   * How the document is turned into text for document-level prompts. Default:
-   * `editor.getMarkdown()` when Tiptap's Markdown extension is registered,
-   * plain text otherwise. Pass `getMarkdown` from
-   * `ai-sparkwrite-editor/exportmarkdown` to send the editor's own Markdown
-   * (headings, tables, code) without registering that extension.
+   * How a span of the document is turned into text for the model. The
+   * default serializes it with the editor's own Markdown export, so headings,
+   * lists, tables and code blocks keep their structure. Override to send a
+   * different format or to redact content; `range` covers the whole document
+   * for document-level actions.
    */
-  serializeDocument?: (editor: Editor) => string | Promise<string>;
+  serializeDocument?: (editor: Editor, range: Range) => string | Promise<string>;
 }
 
 export interface AIResultContext {

@@ -21,6 +21,8 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 ### AI
 
 - **Composer dock** (`RichTextAIComposer` + the `RichTextAI` toolbar button, `⌘/Ctrl+J`, `/ai`): a prompt bar under the editor whose answers stream straight into the document as real blocks. Presets for the whole document — continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — plus a target selector (selection, caret, top, end, whole document). Keep, undo, retry or refine in place; the answer is one undo step.
+- Multi-block selections and the whole document reach the model as **Markdown** (the editor's own export), so "fix grammar everywhere" or "translate document" keep every heading, table and code block. `serializeDocument` overrides the serializer.
+- The playground's stand-in model transforms the real text — fixes the page's typos, tabulates the selection, outlines the headings — so every AI entry can be tried without a key.
 - **`writeWithAI(editor, { prompt, target })`**, the framework-free engine behind the dock: streams Markdown into a tracked span that follows other edits, and returns `keep()`/`discard()` and the conversation for follow-ups.
 - **Ghost-text autocomplete** (`AIAutocomplete`): after a pause at the end of a block the next words appear in grey; Tab accepts.
 - **Space on an empty line** opens Ask AI (`spaceTrigger`).

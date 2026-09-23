@@ -102,3 +102,28 @@ export function composerPrompt(action: AIComposerAction, language?: string): str
   const target = language ?? browserLanguage()?.name ?? 'English';
   return action.prompt.replace('{language}', target);
 }
+
+/**
+ * How many chips of a single-line chip row fit. Every chip stays in the DOM
+ * (hidden ones are `visibility: hidden; position: absolute`) so they can be
+ * measured; when not all fit, `reserve` pixels are kept for the "more"
+ * button that lists the rest.
+ */
+export function fitChips(container: HTMLElement, reserve = 48): number {
+  const width = container.clientWidth;
+  const items = Array.from(container.querySelectorAll<HTMLElement>('[data-chip]'));
+  if (!width || !items.length) return items.length;
+  const gap = parseFloat(getComputedStyle(container).columnGap) || 6;
+  const widths = items.map((item) => item.offsetWidth);
+  const total = widths.reduce((sum, w, i) => sum + w + (i ? gap : 0), 0);
+  if (total <= width) return items.length;
+  let used = 0;
+  let count = 0;
+  for (const w of widths) {
+    const next = used + w + (count ? gap : 0);
+    if (next > width - reserve) break;
+    used = next;
+    count++;
+  }
+  return Math.max(count, 1);
+}

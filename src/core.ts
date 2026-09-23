@@ -138,6 +138,7 @@ export {
   aiOptionsOf,
   resolveWriteTarget,
   documentContext,
+  rangeMarkdown,
 } from '@/extensions/AI/writer';
 export type { WriteWithAIOptions, WriteWithAIResult } from '@/extensions/AI/writer';
 export { AIAutocomplete, aiAutocompleteKey } from '@/extensions/AI/Autocomplete';

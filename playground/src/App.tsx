@@ -111,6 +111,7 @@ import 'katex/dist/katex.min.css';
 import 'easydrawer/styles.css';
 import '@excalidraw/excalidraw/index.css';
 
+import { demoAIGenerate } from './demoAI';
 import { VueEditor } from './VueEditor';
 
 // This is only an example, all supported languages are already loaded above
@@ -198,85 +199,6 @@ const BaseKit = [
     placeholder: "Press '/' for commands",
   }),
 ];
-
-/**
- * Canned answers for the playground: streams markdown in small pieces, the way
- * a provider would, so the panel's live rendering can be seen without an API
- * key. `window.__aiGenerate` overrides it (used by the browser checks).
- */
-async function demoAIGenerate(
-  request: import('ai-sparkwrite-editor/ai').AIRequest,
-  onChunk?: (text: string) => void
-): Promise<string> {
-  const override = (window as unknown as { __aiGenerate?: typeof demoAIGenerate }).__aiGenerate;
-
-  if (override) {
-    return override(request, onChunk);
-  }
-
-  const message = request.messages[request.messages.length - 1]?.content ?? '';
-  const selected = /Selected text:\n([\s\S]*?)(?:\n\n|$)/.exec(message)?.[1]?.trim();
-  // The instruction is the last paragraph; the rest is selection/document context.
-  const last = message.trim().split('\n\n').pop() ?? '';
-
-  // Ghost-text autocomplete asks for a few words, not a document.
-  if (/complete text inside an editor/i.test(request.systemPrompt)) {
-    await new Promise((resolve) => setTimeout(resolve, 150));
-    return ' — and this grey continuation came from the AI; press Tab to keep it.';
-  }
-
-  const answer = /translate/i.test(last)
-    ? selected
-      ? `${selected} *(translated — demo)*`
-      : '# 演示译文\n\n这是整篇文档翻译后的样子 *(demo)*。'
-    : /continue writing/i.test(last)
-      ? 'The next paragraph arrives while you watch: the composer streams straight into the document, so headings, lists and tables take shape as real blocks instead of a preview.\n\nWhen it stops you can keep it, undo it, or ask for a change — the same span is rewritten in place.'
-      : /summary/i.test(last)
-        ? '## Summary\n\n- Streams Markdown from the model into real editor nodes\n- Works on the selection, at the caret, or on the whole document\n- One undo step, Keep/Undo/Retry after it finishes'
-        : /outline/i.test(last)
-          ? '- Text\n  - Formatting bubble\n- Lists\n- Code\n- Tables\n- Everything else'
-          : /title for the document/i.test(last)
-            ? '# SparkWrite: writing with the model in the page'
-            : /task list/i.test(last)
-              ? '## Action items\n\n- [ ] Try the composer under the editor\n- [ ] Press Space on an empty line\n- [x] Read this list'
-              : /Correct spelling, grammar and punctuation in the whole document/i.test(last)
-                ? (/Document:\n([\s\S]*)\n\n/.exec(last)?.[1] ?? '') +
-                  '\n\n*(every typo fixed — demo)*'
-                : /Markdown table/i.test(last)
-                  ? '| Item | Detail |\n| --- | --- |\n| Selection | ' +
-                    (selected?.slice(0, 40) ?? '') +
-                    ' |\n| Rows | 2 |'
-                  : /bullet list/i.test(last)
-                    ? '- ' + (selected ?? 'first point') + '\n- second point\n- third point'
-                    : [
-                        '## Summary *(demo answer)*',
-                        '',
-                        selected
-                          ? `You selected **${selected.slice(0, 60)}**.`
-                          : 'No text was selected.',
-                        '',
-                        '| Step | What happens |',
-                        '| --- | --- |',
-                        '| 1 | Text streams in from the provider |',
-                        '| 2 | Markdown is rendered through the editor schema |',
-                        '| 3 | Apply inserts real nodes |',
-                        '',
-                        '```ts',
-                        "editor.commands.applyAI('## Summary…');",
-                        '```',
-                        '',
-                        '- [x] streaming',
-                        '- [ ] your API key (set `VITE_AI_MODEL` to use a real model)',
-                      ].join('\n');
-
-  for (const piece of answer.match(/[\s\S]{1,8}/g) ?? []) {
-    request.signal.throwIfAborted();
-    await new Promise((resolve) => setTimeout(resolve, 12));
-    onChunk?.(piece);
-  }
-
-  return answer;
-}
 
 const extensions = [
   ...BaseKit,
@@ -497,6 +419,7 @@ export function slugify(post: Post): string {
 <table><tbody><tr><th><p>Feature</p></th><th><p>Shortcut</p></th></tr><tr><td><p>Bold</p></td><td><p>Mod+B</p></td></tr><tr><td><p>Code block</p></td><td><p>Mod+Alt+C</p></td></tr></tbody></table>
 <h2>Everything else</h2>
 <p>Type <code>/</code> on an empty line to insert images, diagrams, callouts and more.</p>
+<p>try the AI button below: teh editor recieves your text and  fixes it, i promise</p>
 <details class="details" open=""><summary class="details-summary">A collapsible section</summary><div class="details-content" data-type="detailsContent"><p>Hidden until you open it.</p></div></details>
 <blockquote class="blockquote"><p>Drag the handle on the left of any block to move it.</p></blockquote>
 <p></p>

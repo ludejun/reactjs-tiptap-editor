@@ -3,7 +3,8 @@ import { AllSelection, Plugin } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
 
 import { markdownToSlice } from './markdown';
-import { aiPluginKey, type AIAction, type AIState } from './state';
+import { aiPluginKey, type AIAction, type AISession, type AIState } from './state';
+import { rangeMarkdown } from './writer';
 
 import type { AIOptions, AIPanelComponentProps } from './types';
 
@@ -232,11 +233,22 @@ export const AICore = Extension.create<AIOptions>({
             current = next;
             destroy();
             if (!next || !mount || !options.mountPanel) return;
+            const target = mount;
+            const session = next;
+            // Multi-block selections go to the model as Markdown, so a table
+            // or a list keeps its shape; the panel mounts once that is ready.
+            void rangeMarkdown(editor, session).then((selectedText) => {
+              if (current !== session || editor.isDestroyed) return;
+              mountPanel(target, session, selectedText);
+            });
+          }
+          function mountPanel(target: HTMLElement, session: AISession, selectedText: string) {
+            if (!options.mountPanel) return;
             const props: AIPanelComponentProps = {
               editor,
               options,
-              initialPrompt: next.prompt,
-              selectedText: view.state.doc.textBetween(next.from, next.to, '\n'),
+              initialPrompt: session.prompt,
+              selectedText,
               close: () => {
                 editor.commands.closeAI();
                 editor.commands.focus();
@@ -245,7 +257,7 @@ export const AICore = Extension.create<AIOptions>({
                 if (editor.commands.applyAI(markdown)) editor.commands.focus();
               },
             };
-            unmount = options.mountPanel(mount, props);
+            unmount = options.mountPanel(target, props);
           }
           return { update, destroy };
         },

@@ -2,6 +2,7 @@ import { useEditorState } from '@tiptap/react';
 import {
   ArrowUp,
   Check,
+  ChevronDown,
   Heading1,
   Languages,
   ListOrdered,
@@ -15,12 +16,12 @@ import {
   Undo2,
   X,
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 
-import { AI_COMPOSER_ACTIONS, composerPrompt, type AIComposerAction } from './composer';
+import { AI_COMPOSER_ACTIONS, composerPrompt, fitChips, type AIComposerAction } from './composer';
 import { aiPluginKey } from './state';
 import { aiOptionsOf, writeWithAI, type WriteWithAIResult } from './writer';
 
@@ -79,6 +80,11 @@ export function RichTextAIComposer({
   const controller = useRef<AbortController | null>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const lastRequest = useRef<{ prompt: string; target: AIWriteTarget } | null>(null);
+  // The chips stay on one line; the ones that do not fit go behind a "more" button.
+  const chipRow = useRef<HTMLDivElement>(null);
+  const [visibleChips, setVisibleChips] = useState(Infinity);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (defaultOpen) editor.commands.toggleAIComposer(true);
@@ -90,7 +96,29 @@ export function RichTextAIComposer({
 
   useEffect(() => () => controller.current?.abort(), []);
 
-  if (!state?.open || !aiOptionsOf(editor)) return null;
+  const open = !!state?.open && !!aiOptionsOf(editor);
+  const showChips = open && !result;
+
+  useLayoutEffect(() => {
+    const row = chipRow.current;
+    if (!showChips || !row) return;
+    const measure = () => setVisibleChips(fitChips(row));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(row);
+    return () => observer.disconnect();
+  }, [showChips, actions, state?.hasSelection, state?.empty]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!moreMenu.current?.contains(event.target as Node)) setMoreOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown, true);
+    return () => document.removeEventListener('pointerdown', onPointerDown, true);
+  }, [moreOpen]);
+
+  if (!open) return null;
 
   async function run(instruction: string, where: AIWriteTarget, refineFrom?: WriteWithAIResult) {
     if (busy || !instruction.trim()) return;
@@ -126,11 +154,15 @@ export function RichTextAIComposer({
     }
   }
 
+  // "Replace selection" only exists while something is selected; without a
+  // selection the same choice means "at the caret".
+  const effectiveTarget: Target = target === 'selection' && !state.hasSelection ? 'cursor' : target;
+
   function submit() {
     const instruction = prompt.trim();
     if (!instruction) return;
     if (result) void run(instruction, result, result);
-    else void run(instruction, target);
+    else void run(instruction, effectiveTarget);
   }
 
   function stop() {
@@ -166,14 +198,20 @@ export function RichTextAIComposer({
       }}
     >
       {chips.length && !result ? (
-        <div className='richtext-ai-composer-chips' role='group'>
-          {chips.map((action) => {
+        <div className='richtext-ai-composer-chips' role='group' ref={chipRow}>
+          {chips.map((action, index) => {
             const Icon = ICONS[action.icon];
+            const hidden = index >= visibleChips;
 
             return (
               <button
                 key={action.key}
                 type='button'
+                data-chip=''
+                className={hidden ? 'richtext-ai-chip-hidden' : undefined}
+                aria-hidden={hidden || undefined}
+                tabIndex={hidden ? -1 : undefined}
+                title={composerPrompt(action)}
                 disabled={busy || !state.editable}
                 onClick={() => void run(composerPrompt(action), action.target)}
               >
@@ -182,6 +220,45 @@ export function RichTextAIComposer({
               </button>
             );
           })}
+          {visibleChips < chips.length ? (
+            <div className='richtext-ai-composer-more' ref={moreMenu}>
+              <button
+                type='button'
+                aria-haspopup='menu'
+                aria-expanded={moreOpen}
+                aria-label={t('editor.more')}
+                title={t('editor.more')}
+                disabled={busy || !state.editable}
+                onClick={() => setMoreOpen((value) => !value)}
+              >
+                +{chips.length - visibleChips}
+                <ChevronDown size={13} />
+              </button>
+              {moreOpen ? (
+                <div className='richtext-ai-composer-menu' role='menu'>
+                  {chips.slice(visibleChips).map((action) => {
+                    const Icon = ICONS[action.icon];
+
+                    return (
+                      <button
+                        key={action.key}
+                        type='button'
+                        role='menuitem'
+                        title={composerPrompt(action)}
+                        onClick={() => {
+                          setMoreOpen(false);
+                          void run(composerPrompt(action), action.target);
+                        }}
+                      >
+                        {Icon ? <Icon size={14} /> : null}
+                        {t(action.key)}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       ) : null}
 
@@ -195,7 +272,7 @@ export function RichTextAIComposer({
         <Sparkles className='richtext-ai-composer-icon' size={18} />
         <textarea
           ref={input}
-          rows={1}
+          rows={2}
           aria-label={result ? t('editor.ai.compose.refine') : t('editor.ai.compose.placeholder')}
           placeholder={result ? t('editor.ai.compose.refine') : t('editor.ai.compose.placeholder')}
           value={prompt}
@@ -211,7 +288,7 @@ export function RichTextAIComposer({
         {!result ? (
           <select
             aria-label={t('editor.ai.compose.target')}
-            value={target}
+            value={effectiveTarget}
             disabled={busy}
             onChange={(event) => setTarget(event.target.value as Target)}
           >

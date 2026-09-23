@@ -414,12 +414,22 @@
 /* The composer dock under the editor. */
 .richtext-ai-composer {
   --ai-accent: #804dff;
+  --ai-accent-2: #38bdf8;
+  --ai-accent-3: #f472b6;
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 10px 12px 8px;
   border-top: 1px solid hsl(var(--border));
-  background: hsl(var(--background));
+  /* A faint wash of the accent colours over the page background. */
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--ai-accent) 9%, transparent),
+      transparent 45%,
+      color-mix(in srgb, var(--ai-accent-2) 8%, transparent)
+    ),
+    hsl(var(--background));
   color: hsl(var(--foreground));
   font-size: 13px;
   line-height: 1.4;
@@ -445,9 +455,23 @@
   }
 }
 .richtext-ai-composer-chips {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 6px;
+  overflow: hidden;
+
+  /* Measured but not shown: the chips that did not fit on the line. */
+  .richtext-ai-chip-hidden {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  button {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
 
   button {
     padding: 4px 10px;
@@ -470,9 +494,27 @@
   align-items: center;
   gap: 8px;
   padding: 6px 8px 6px 12px;
-  border: 1px solid var(--ai-accent);
   border-radius: 14px;
-  background: hsl(var(--popover));
+  /* A gradient border: the popover colour fills the padding box, the gradient
+     the border box, and the gradient slides slowly. */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(hsl(var(--popover)), hsl(var(--popover))) padding-box,
+    linear-gradient(
+        120deg,
+        var(--ai-accent),
+        var(--ai-accent-2),
+        var(--ai-accent-3),
+        var(--ai-accent)
+      )
+      border-box;
+  background-size:
+    100% 100%,
+    300% 100%;
+  animation: richtext-ai-border 9s linear infinite;
+  &:focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ai-accent) 18%, transparent);
+  }
 
   textarea {
     flex: 1;
@@ -485,7 +527,8 @@
     line-height: 1.5;
     padding: 6px 0;
     outline: none;
-    max-height: 140px;
+    min-height: 2.9em;
+    max-height: 160px;
     field-sizing: content;
     &::placeholder {
       color: hsl(var(--muted-foreground));
@@ -571,4 +614,63 @@
 .richtext-ai-trigger {
   color: #804dff !important;
   gap: 6px;
+}
+
+@keyframes richtext-ai-border {
+  to {
+    background-position:
+      0 0,
+      300% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .richtext-ai-composer-row {
+    animation: none;
+  }
+}
+
+/* The "+N" button and the menu of chips that did not fit. */
+.richtext-ai-composer .richtext-ai-composer-more {
+  position: relative;
+  flex-shrink: 0;
+  > button {
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    &:hover:not(:disabled) {
+      border-color: var(--ai-accent);
+      color: hsl(var(--foreground));
+    }
+  }
+}
+.richtext-ai-composer .richtext-ai-composer-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 14rem;
+  padding: 4px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  background: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  box-shadow: 0 10px 30px #0002;
+  button {
+    justify-content: flex-start;
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 13px;
+    svg {
+      color: var(--ai-accent);
+    }
+    &:hover {
+      background: hsl(var(--accent));
+    }
+  }
 }

@@ -24,7 +24,13 @@ export {
 export { aiPluginKey } from './state';
 export type { AIState, AISession, AIWriting } from './state';
 export { AICore, DEFAULT_AI_SYSTEM_PROMPT } from './AICore';
-export { writeWithAI, aiOptionsOf, resolveWriteTarget, documentContext } from './writer';
+export {
+  writeWithAI,
+  aiOptionsOf,
+  resolveWriteTarget,
+  documentContext,
+  rangeMarkdown,
+} from './writer';
 export type { WriteWithAIOptions, WriteWithAIResult } from './writer';
 export { AI_COMPOSER_ACTIONS, composerPrompt, browserLanguage } from './composer';
 export type { AIComposerAction } from './composer';
