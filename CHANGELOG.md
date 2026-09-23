@@ -71,6 +71,7 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 
 ### Documentation
 
+- A RichTextKit guide page (every option, the toolbar and the menus) in both languages; `pnpm check:docs` type-checks every import the docs show against the built entries.
 - The docs site has an English and a Simplified Chinese locale (language menu in the header), a new theme, React and Vue tabs on every extension page, and the favicon, logo and social image of the new brand.
 
 ### Build

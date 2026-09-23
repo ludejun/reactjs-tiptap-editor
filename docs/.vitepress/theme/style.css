@@ -213,6 +213,10 @@
 .vp-doc .header-anchor {
   color: var(--vp-c-brand-2);
 }
+/* VitePress positions the anchor for its own 24px heading padding; ours is 8px. */
+.vp-doc h2 .header-anchor {
+  top: 8px;
+}
 .vp-doc div[class*='language-'] {
   border-radius: 12px;
 }

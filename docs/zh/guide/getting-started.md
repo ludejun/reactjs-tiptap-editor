@@ -2,8 +2,8 @@
 description: 安装 ai-sparkwrite-editor，在 React 或 Vue 中渲染出一个可用的编辑器
 
 next:
-  text: 工具栏
-  link: /zh/guide/toolbar.md
+  text: RichTextKit
+  link: /zh/guide/kit.md
 ---
 
 # 快速开始
@@ -40,7 +40,7 @@ yarn add ai-sparkwrite-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/e
 
 ### 2. 十行代码，完整编辑器
 
-`RichTextKit` 把所有功能装进一个扩展，类似 Tiptap 的 StarterKit；`RichTextKitToolbar` 和 `RichTextKitMenus` 会按已注册的功能渲染工具栏、AI 写作台、气泡菜单、拖拽手柄和斜杠菜单。
+`RichTextKit` 把所有功能装进一个扩展，类似 Tiptap 的 StarterKit（全部选项见[专门一页](/zh/guide/kit)）；`RichTextKitToolbar` 和 `RichTextKitMenus` 会按已注册的功能渲染工具栏、AI 写作台、气泡菜单、拖拽手柄和斜杠菜单。
 
 ```tsx
 'use client';

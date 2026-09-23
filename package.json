@@ -1060,7 +1060,8 @@
     "release": "bumpp -r",
     "measure:bundle": "node scripts/measure-bundle.mjs",
     "measure:entries": "node scripts/measure-entries.mjs",
-    "screenshot": "sh scripts/screenshot.sh"
+    "screenshot": "sh scripts/screenshot.sh",
+    "check:docs": "node scripts/check-doc-imports.mjs"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.1",

@@ -118,7 +118,7 @@ const editor = useEditor({
 </template>
 ```
 
-Shape the kit with one option per feature: `false` leaves it out (button and menus go with it), an object configures it (`image: { upload }`, `codeBlock: { defaultLanguage: 'ts' }`), and features that need a key or a callback switch on when given one (`imageGif: { GIPHY_API_KEY }`, `mention: { suggestion }`, `excalidraw: {}`). Prefer to assemble it yourself? The same import has every extension and control — `Bold` and `RichTextBold`, `Table` and `RichTextTable` — and the [Getting Started](https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started) guide shows both routes.
+Shape the kit with one option per feature: `false` leaves it out (button and menus go with it), an object configures it (`image: { upload }`, `codeBlock: { defaultLanguage: 'ts' }`), and features that need a key or a callback switch on when given one (`imageGif: { GIPHY_API_KEY }`, `mention: { suggestion }`, `excalidraw: {}`). Prefer to assemble it yourself? The same import has every extension and control — `Bold` and `RichTextBold`, `Table` and `RichTextTable` — and [Getting Started](https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started) shows both routes; every kit option is on the [RichTextKit page](https://ludejun.github.io/ai-sparkwrite-editor/guide/kit).
 
 Your `/api/ai` receives `{ messages, systemPrompt, stream }` and answers `{ text }` or a stream of `data: {"text"}` events — the contract and a ten-line server are in the [AI docs](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/).
 

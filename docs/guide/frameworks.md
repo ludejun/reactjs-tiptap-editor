@@ -34,11 +34,9 @@ import {
   TextAlign,
   RichPaste,
   localeActions,
-  Divider,
-  // core divider + Vue node view   CodeBlock,
-  // core code block + Vue node view; same for Image,
-  Callout,
-  Katex…   RichTextProvider,
+  Divider, // core divider + Vue node view
+  CodeBlock, // core code block + Vue node view; same for Image, Callout, Katex…
+  RichTextProvider,
   RichTextToolbar,
   RichTextToolbarDivider,
   RichTextHeading,

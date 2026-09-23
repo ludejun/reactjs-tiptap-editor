@@ -84,6 +84,10 @@ export function getLocaleConfig(lang: string) {
           link: `${urlPrefix}/guide/getting-started`,
         },
         {
+          text: 'RichTextKit',
+          link: `${urlPrefix}/guide/kit`,
+        },
+        {
           text: t('Toolbar'),
           link: `${urlPrefix}/guide/toolbar`,
         },

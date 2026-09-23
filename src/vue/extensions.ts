@@ -113,3 +113,6 @@ export type {
   RecordingEntry,
   RecorderOptions,
 } from '@/core';
+
+// Locale control for apps that register more languages; `useLocale` lives in the Vue context.
+export { localeActions, translate } from '@/locales/store';

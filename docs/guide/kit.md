@@ -1,0 +1,129 @@
+---
+description: RichTextKit — the whole editor as one extension, with a ready-made toolbar and menus
+
+next:
+  text: Toolbar
+  link: /guide/toolbar.md
+---
+
+# RichTextKit
+
+`RichTextKit` is every feature of the editor as **one Tiptap extension**, the way `StarterKit` bundles Tiptap's basics. `RichTextKitToolbar` renders a complete toolbar and `RichTextKitMenus` the floating UI — the AI composer dock, the text bubble with the Improve menu, the table, link, media and block bubbles, the drag handle and the slash menu — for whatever the kit registered. Three imports, one working editor; switch a feature off and its button and menus go with it.
+
+::: code-group
+
+```tsx [React]
+'use client';
+
+import { EditorContent, useEditor } from '@tiptap/react';
+import {
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor';
+import 'ai-sparkwrite-editor/style.css';
+
+export default function Editor() {
+  const editor = useEditor({
+    extensions: [
+      RichTextKit.configure({
+        ai: { endpoint: '/api/ai' }, // one URL on your backend
+        image: { upload: (file) => uploadToYourStorage(file) },
+        placeholder: { placeholder: 'Type / for blocks, Space on an empty line for AI…' },
+        twitter: false,
+      }),
+    ],
+    immediatelyRender: false,
+  });
+
+  if (!editor) return null;
+
+  return (
+    <RichTextProvider editor={editor}>
+      <RichTextKitToolbar />
+      <EditorContent editor={editor} />
+      <RichTextKitMenus />
+    </RichTextProvider>
+  );
+}
+```
+
+```vue [Vue]
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import {
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const editor = useEditor({
+  extensions: [
+    RichTextKit.configure({
+      ai: { endpoint: '/api/ai' },
+      image: { upload: (file) => uploadToYourStorage(file) },
+      placeholder: { placeholder: 'Type something, or press Space on an empty line for AI…' },
+    }),
+  ],
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextKitToolbar />
+    <EditorContent :editor="editor" />
+    <RichTextKitMenus />
+  </RichTextProvider>
+</template>
+```
+
+:::
+
+The kit is a convenience, not a lock-in: the same import exports every extension and control separately, and the `RichTextKit*` components work with an editor you assembled yourself — they only look at which extensions are registered. Because each feature keeps its own chunk, a kit with features switched off is not bigger than the same features imported one by one (see [Bundle size](/guide/bundle-size)).
+
+## Options
+
+One key per feature. Three values:
+
+- **omitted** — the default: included, except for the opt-in features below;
+- **`false`** — left out, together with its toolbar button and menus;
+- **an object** — included and passed to that extension's `.configure()`; the object type is the extension's own options (`ai: { endpoint }`, `codeBlock: { defaultLanguage: 'ts' }`, `heading: { levels: [1, 2, 3] }`). For an opt-in feature the object switches it on — `{}` is enough when it needs nothing.
+
+| Group            | Keys (default on)                                                                                                                                                                                                             | Opt-in keys (`{ … }` switches on)                                                                                                                                           |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Document         | `document`, `paragraph`, `text`, `hardBreak`, `dropcursor`, `gapcursor`, `history`                                                                                                                                            | `placeholder` (`{ placeholder: '…' }`)                                                                                                                                      |
+| Text style       | `bold`, `italic`, `underline`, `strike`, `code`, `moreMark` (super/subscript), `color`, `highlight`, `fontFamily`, `fontSize`, `lineHeight`, `textAlign`, `textDirection`, `indent`, `clear`, `formatPainter` (React), `link` | —                                                                                                                                                                           |
+| Blocks           | `heading`, `bulletList`, `orderedList`, `taskList`, `blockquote`, `table`, `divider`, `details`, `codeBlock`, `callout`, `tableOfContents`, `column` (React; opt-in in Vue)                                                   | `horizontalRule` (the divider replaces it)                                                                                                                                  |
+| Media and embeds | `image`, `video`, `iframe`, `attachment`, `katex`, `mermaid`                                                                                                                                                                  | `imageGif` (`{ GIPHY_API_KEY }`), `emoji`, `excalidraw`, `drawer`, `twitter`, `mention` (`{ suggestion }`), `shortMessage` (`{ messages }`) — React only, except `imageGif` |
+| Behaviour        | `slashCommand` (React), `searchAndReplace`, `richPaste`, `markdownPaste`, `exportMarkdown`, `exportWord`, `importWord`, `exportPdf`, `codeView`                                                                               | `recorder`                                                                                                                                                                  |
+| AI               | `ai` ([options](/extensions/AI/#options); set `endpoint`), `aiAutocomplete`                                                                                                                                                   | —                                                                                                                                                                           |
+
+Lists bring `ListItem` along, `column` widens the document schema to `(block|columns)+`, and every extension is registered once even when two keys share a companion. `RichTextKitOptions` is exported for typing a config you keep elsewhere.
+
+## The toolbar
+
+`<RichTextKitToolbar />` lays out: AI · undo, redo · heading, font family · bold, italic, underline, strike, colour, highlight, clear · bullet, ordered and task lists, alignment · link, image, table, code block · a **More tools** panel with the rest (font size, line height, super/subscript, indent, format painter; blockquote, inline code, divider, columns, callout, details, table of contents, emoji, video, GIF, attachment, iframe, Katex, Excalidraw, Mermaid, drawer, Twitter; import Word, export PDF / Word / Markdown; search & replace, text direction, source view). Every control appears only when its extension is registered.
+
+| Prop        | Default | Purpose                                                                           |
+| ----------- | ------- | --------------------------------------------------------------------------------- |
+| `more`      | `true`  | The "More tools" panel                                                            |
+| `children`  | —       | Extra controls, placed after the built-in groups (React); the default slot in Vue |
+| `className` | —       | React: extra classes on the toolbar                                               |
+
+For a different order or a hand-picked set, compose your own from the controls — see [Toolbar](/guide/toolbar).
+
+## The menus
+
+`<RichTextKitMenus />` mounts, for the registered extensions: `RichTextAIComposer`, `RichTextBubbleText` (with the Improve menu), the table, link, image, video, GIF, callout, iframe, Katex, Mermaid, Excalidraw, drawer and Twitter bubbles, `RichTextBubbleMenuDragHandle` and `SlashCommandList` (React). In Vue: the composer and the text, table, link and image bubbles.
+
+| Prop         | Default | Purpose                                                                                               |
+| ------------ | ------- | ----------------------------------------------------------------------------------------------------- |
+| `composer`   | `true`  | The AI composer dock; `false` hides it, an object passes its props (`{ defaultOpen: true, rows: 3 }`) |
+| `dragHandle` | `true`  | The block drag handle (React)                                                                         |
+
+## Playground
+
+The [playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/) has a **Setup** switch: _Assembled_ is the editor composed control by control, _RichTextKit_ the same editor from the kit — in React and in Vue.

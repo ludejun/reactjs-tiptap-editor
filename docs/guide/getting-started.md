@@ -2,8 +2,8 @@
 description: Install ai-sparkwrite-editor and render a working editor in React or Vue
 
 next:
-  text: Toolbar
-  link: /guide/toolbar.md
+  text: RichTextKit
+  link: /guide/kit.md
 ---
 
 # Getting Started
@@ -40,7 +40,7 @@ The `@tiptap/extension-*` packages are only needed when you assemble the extensi
 
 ### 2. The whole editor in ten lines
 
-`RichTextKit` is every feature as one extension, like Tiptap's StarterKit; `RichTextKitToolbar` and `RichTextKitMenus` render a toolbar, the AI composer dock, the bubble menus, the drag handle and the slash menu for whatever is registered.
+`RichTextKit` is every feature as one extension, like Tiptap's StarterKit (every option on its [own page](/guide/kit)); `RichTextKitToolbar` and `RichTextKitMenus` render a toolbar, the AI composer dock, the bubble menus, the drag handle and the slash menu for whatever is registered.
 
 ```tsx
 'use client';

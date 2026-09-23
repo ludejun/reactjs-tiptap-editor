@@ -118,7 +118,7 @@ const editor = useEditor({
 </template>
 ```
 
-Kit 的每个选项对应一个功能：`false` 去掉它（按钮和菜单一并消失），传对象则配置它（`image: { upload }`、`codeBlock: { defaultLanguage: 'ts' }`），需要密钥或回调的功能传入对象后才启用（`imageGif: { GIPHY_API_KEY }`、`mention: { suggestion }`、`excalidraw: {}`）。想自己组装？同一个入口导出全部扩展和控件——`Bold` 与 `RichTextBold`、`Table` 与 `RichTextTable`——[快速开始](https://ludejun.github.io/ai-sparkwrite-editor/zh/guide/getting-started)里两种方式都有示例。
+Kit 的每个选项对应一个功能：`false` 去掉它（按钮和菜单一并消失），传对象则配置它（`image: { upload }`、`codeBlock: { defaultLanguage: 'ts' }`），需要密钥或回调的功能传入对象后才启用（`imageGif: { GIPHY_API_KEY }`、`mention: { suggestion }`、`excalidraw: {}`）。想自己组装？同一个入口导出全部扩展和控件——`Bold` 与 `RichTextBold`、`Table` 与 `RichTextTable`——[快速开始](https://ludejun.github.io/ai-sparkwrite-editor/zh/guide/getting-started)里两种方式都有示例，Kit 的全部选项见 [RichTextKit 页面](https://ludejun.github.io/ai-sparkwrite-editor/zh/guide/kit)。
 
 你的 `/api/ai` 收到 `{ messages, systemPrompt, stream }`，返回 `{ text }` 或一串 `data: {"text"}` 事件即可——接口约定和十行的示例服务见 [AI 文档](https://ludejun.github.io/ai-sparkwrite-editor/zh/extensions/AI/)。
 
