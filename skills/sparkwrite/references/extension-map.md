@@ -18,8 +18,8 @@ Snapshot: repository 1.0.46 / Tiptap 3. Public paths come from `package.json` ex
 
 ## Main Extension Imports
 
-| Feature           | Extension import                         | Toolbar/component import                                                                  |
-| ----------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Feature           | Extension import              | Toolbar/component import                                                                  |
+| ----------------- | ----------------------------- | ----------------------------------------------------------------------------------------- |
 | Attachment        | `sparkwrite/attachment`       | `Attachment`, `RichTextAttachment`                                                        |
 | Blockquote        | `sparkwrite/blockquote`       | `Blockquote`, `RichTextBlockquote`                                                        |
 | Bold              | `sparkwrite/bold`             | `Bold`, `RichTextBold`                                                                    |
@@ -86,8 +86,8 @@ For AI endpoint/protocol options, inspect `src/extensions/AI/types.ts` or instal
 
 ## Non-Extension Imports
 
-| Purpose           | Import                                                                     |
-| ----------------- | -------------------------------------------------------------------------- |
+| Purpose           | Import                                                          |
+| ----------------- | --------------------------------------------------------------- |
 | Provider          | `import { RichTextProvider } from 'sparkwrite';`                |
 | Styles            | `import 'sparkwrite/style.css';`                                |
 | Bubble components | `import { RichTextBubbleText } from 'sparkwrite/bubble/text';`  |
@@ -115,20 +115,20 @@ The compatibility barrel `sparkwrite/bubble` exports the following. Prefer the s
 - `RichTextAIImprove`
 
 | Subpath (after `sparkwrite/`) | Named exports                                                          |
-| ---------------------------------------- | ---------------------------------------------------------------------- |
-| `bubble/text`                            | `RichTextBubbleText`                                                   |
-| `bubble/link`                            | `RichTextBubbleLink`                                                   |
-| `bubble/media`                           | `RichTextBubbleImage`, `RichTextBubbleVideo`, `RichTextBubbleImageGif` |
-| `bubble/table`                           | `RichTextBubbleTable`                                                  |
-| `bubble/iframe`                          | `RichTextBubbleIframe`                                                 |
-| `bubble/drawer`                          | `RichTextBubbleDrawer`                                                 |
-| `bubble/excalidraw`                      | `RichTextBubbleExcalidraw`                                             |
-| `bubble/mermaid`                         | `RichTextBubbleMermaid`                                                |
-| `bubble/twitter`                         | `RichTextBubbleTwitter`                                                |
-| `bubble/callout`                         | `RichTextBubbleCallout`                                                |
-| `bubble/katex`                           | `RichTextBubbleKatex`                                                  |
-| `bubble/drag-handle`                     | `RichTextBubbleMenuDragHandle`                                         |
-| `bubble/ai`                              | `RichTextAIImprove`                                                    |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| `bubble/text`                 | `RichTextBubbleText`                                                   |
+| `bubble/link`                 | `RichTextBubbleLink`                                                   |
+| `bubble/media`                | `RichTextBubbleImage`, `RichTextBubbleVideo`, `RichTextBubbleImageGif` |
+| `bubble/table`                | `RichTextBubbleTable`                                                  |
+| `bubble/iframe`               | `RichTextBubbleIframe`                                                 |
+| `bubble/drawer`               | `RichTextBubbleDrawer`                                                 |
+| `bubble/excalidraw`           | `RichTextBubbleExcalidraw`                                             |
+| `bubble/mermaid`              | `RichTextBubbleMermaid`                                                |
+| `bubble/twitter`              | `RichTextBubbleTwitter`                                                |
+| `bubble/callout`              | `RichTextBubbleCallout`                                                |
+| `bubble/katex`                | `RichTextBubbleKatex`                                                  |
+| `bubble/drag-handle`          | `RichTextBubbleMenuDragHandle`                                         |
+| `bubble/ai`                   | `RichTextAIImprove`                                                    |
 
 ## Feature-Specific Package/CSS Notes
 

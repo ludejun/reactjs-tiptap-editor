@@ -22,7 +22,7 @@
 
 **AI is a first-class feature, not a plugin bolted on.**
 
-- **Streams into the document.** Select text or type `/ai`; the answer streams in and is rendered through the editor's own schema, so a markdown table becomes *the editor's* table, a fenced block a real code block, `- [ ]` a task list. Apply inserts nodes, not pasted text.
+- **Streams into the document.** Select text or type `/ai`; the answer streams in and is rendered through the editor's own schema, so a markdown table becomes _the editor's_ table, a fenced block a real code block, `- [ ]` a task list. Apply inserts nodes, not pasted text.
 - **Generates what you cannot type.** Katex and Mermaid dialogs take a sentence ("the quadratic formula", "a login flow") and write the source, live.
 - **Your model, your rules.** OpenAI or Anthropic protocol, any base URL or proxy, or your own `generate(request, onChunk)` transport. Translate to the browser language, refine with a follow-up, attach images and files.
 - **Yours to render.** `renderResult` restyles the answer; `components.Panel` replaces the whole dialog.

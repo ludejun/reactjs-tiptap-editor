@@ -189,7 +189,7 @@ Keep the editor in a client component (`'use client'`) and use `immediatelyRende
 | Toolbar button is missing                     | Register its matching extension and render the button under `RichTextProvider`.   |
 | Unknown node or missing command               | Check required companion extensions on the feature's page.                        |
 | Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.            |
-| UI has no styling                             | Import `sparkwrite/style.css` and any feature-specific stylesheet.                   |
+| UI has no styling                             | Import `sparkwrite/style.css` and any feature-specific stylesheet.                |
 | Content does not change after fetching        | Use `setContent` after loading; `content` initializes the document.               |
 | A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList`; a placeholder is only text. |
 | Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                         |

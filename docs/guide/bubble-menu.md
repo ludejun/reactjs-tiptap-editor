@@ -96,22 +96,22 @@ Two blocks deliberately have no bubble menu:
 Use these public subpaths to make feature dependencies explicit. The existing `/bubble` entry remains supported. Import only the components you mount.
 
 | Component                      | Subpath after `sparkwrite` |
-| ------------------------------ | ----------------------- |
-| `RichTextBubbleText`           | `/bubble/text`          |
-| `RichTextBubbleMenuDragHandle` | `/bubble/drag-handle`   |
-| `RichTextAIImprove`            | `/bubble/ai`            |
-| `RichTextBubbleCallout`        | `/bubble/callout`       |
-| `RichTextBubbleDrawer`         | `/bubble/drawer`        |
-| `RichTextBubbleExcalidraw`     | `/bubble/excalidraw`    |
-| `RichTextBubbleIframe`         | `/bubble/iframe`        |
-| `RichTextBubbleKatex`          | `/bubble/katex`         |
-| `RichTextBubbleLink`           | `/bubble/link`          |
-| `RichTextBubbleMermaid`        | `/bubble/mermaid`       |
-| `RichTextBubbleTable`          | `/bubble/table`         |
-| `RichTextBubbleTwitter`        | `/bubble/twitter`       |
-| `RichTextBubbleImage`          | `/bubble/media`         |
-| `RichTextBubbleVideo`          | `/bubble/media`         |
-| `RichTextBubbleImageGif`       | `/bubble/media`         |
+| ------------------------------ | -------------------------- |
+| `RichTextBubbleText`           | `/bubble/text`             |
+| `RichTextBubbleMenuDragHandle` | `/bubble/drag-handle`      |
+| `RichTextAIImprove`            | `/bubble/ai`               |
+| `RichTextBubbleCallout`        | `/bubble/callout`          |
+| `RichTextBubbleDrawer`         | `/bubble/drawer`           |
+| `RichTextBubbleExcalidraw`     | `/bubble/excalidraw`       |
+| `RichTextBubbleIframe`         | `/bubble/iframe`           |
+| `RichTextBubbleKatex`          | `/bubble/katex`            |
+| `RichTextBubbleLink`           | `/bubble/link`             |
+| `RichTextBubbleMermaid`        | `/bubble/mermaid`          |
+| `RichTextBubbleTable`          | `/bubble/table`            |
+| `RichTextBubbleTwitter`        | `/bubble/twitter`          |
+| `RichTextBubbleImage`          | `/bubble/media`            |
+| `RichTextBubbleVideo`          | `/bubble/media`            |
+| `RichTextBubbleImageGif`       | `/bubble/media`            |
 
 `/bubble/media` exports the Image, Video, and ImageGif menus together. `RichTextAIImprove` is an AI control; see [AI](/extensions/AI/). The text bubble does not require KaTeX or Yjs. The drag handle still brings collaboration-related dependencies through Tiptap, even in an editor without collaboration.
 
