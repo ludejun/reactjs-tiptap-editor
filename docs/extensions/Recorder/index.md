@@ -16,7 +16,7 @@ Start with the packages in [Getting Started](/guide/getting-started). The extens
 
 ::: code-group
 
-```tsx
+```tsx [React]
 'use client';
 
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -49,9 +49,9 @@ export default function RecorderExample() {
     </RichTextProvider>
   );
 }
-``` [React]
+```
 
-```vue
+```vue [Vue]
 <script setup lang="ts">
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
@@ -83,7 +83,7 @@ const editor = useEditor({
     <EditorContent :editor="editor" />
   </RichTextProvider>
 </template>
-``` [Vue]
+```
 
 :::
 

@@ -16,7 +16,7 @@ Start with the packages in [Getting Started](/guide/getting-started). The comple
 
 ::: code-group
 
-```tsx
+```tsx [React]
 'use client';
 
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -47,7 +47,7 @@ export default function TwitterExample() {
     </RichTextProvider>
   );
 }
-``` [React]
+```
 
 :::
 
