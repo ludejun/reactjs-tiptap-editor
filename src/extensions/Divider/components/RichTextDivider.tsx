@@ -7,7 +7,7 @@ import {
   IconComponent,
 } from '@/components';
 import { variantLabel } from '@/extensions/Divider/components/NodeViewDivider';
-import { Divider } from '@/extensions/Divider/Divider';
+import { DividerCore as Divider } from '@/extensions/Divider/Divider';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useLocale } from '@/locales';

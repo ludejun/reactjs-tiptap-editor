@@ -17,9 +17,6 @@ export type {
 } from '@tiptap/extension-table-of-contents';
 export { getHierarchicalIndexes, getLinearIndexes } from '@tiptap/extension-table-of-contents';
 
-export * from './components/RichTextTableOfContents';
-export * from './components/useTableOfContents';
-
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     tableOfContentsNode: {

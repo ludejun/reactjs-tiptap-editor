@@ -8,8 +8,6 @@ import type { ButtonViewParams } from '@/types';
 
 export type { KatexLoader } from './katex-loader';
 
-export * from '@/extensions/Katex/components/RichTextKatex';
-
 export interface IKatexAttrs {
   text?: string;
   macros?: string;

@@ -4,8 +4,6 @@ import { IndentProps, createIndentCommand } from '@/utils/indent';
 
 import type { GeneralOptions } from '@/types';
 
-export * from './components/RichTextIndent';
-
 export interface IndentOptions extends GeneralOptions<IndentOptions> {
   types: string[];
   minIndent: number;

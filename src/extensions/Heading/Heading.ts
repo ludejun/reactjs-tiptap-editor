@@ -7,8 +7,6 @@ import type { GeneralOptions } from '@/types';
 import type { HeadingOptions as TiptapHeadingOptions } from '@tiptap/extension-heading';
 import type {} from '@tiptap/extension-paragraph';
 
-export * from '@/extensions/Heading/components/RichTextHeading';
-
 export interface HeadingOptions extends TiptapHeadingOptions, GeneralOptions<HeadingOptions> {}
 
 export const Heading = /* @__PURE__ */ TiptapHeading.extend<HeadingOptions>({

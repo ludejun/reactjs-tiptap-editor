@@ -25,8 +25,6 @@ function getDatasetAttribute(attribute: string) {
   };
 }
 
-export * from './components/RichTextCallout';
-
 export const Callout = /* @__PURE__ */ Node.create<CalloutOptions>({
   name: 'callout',
   group: 'block',

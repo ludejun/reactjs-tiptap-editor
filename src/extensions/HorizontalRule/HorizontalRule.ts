@@ -5,7 +5,6 @@ import { ActionButton } from '@/components';
 
 import type { GeneralOptions } from '@/types';
 import type { HorizontalRuleOptions as TiptapHorizontalRuleOptions } from '@tiptap/extension-horizontal-rule';
-export * from './components/RichTextHorizontalRule';
 
 export interface HorizontalRuleOptions
   extends TiptapHorizontalRuleOptions, GeneralOptions<HorizontalRuleOptions> {}

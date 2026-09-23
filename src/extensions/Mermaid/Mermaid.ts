@@ -23,8 +23,6 @@ declare module '@tiptap/core' {
   }
 }
 
-export * from '@/extensions/Mermaid/components/RichTextMermaid';
-
 export interface MermaidOptions extends TiptapImageOptions, GeneralOptions<MermaidOptions> {
   /** Function for uploading files */
   upload?: (file: File) => Promise<string>;

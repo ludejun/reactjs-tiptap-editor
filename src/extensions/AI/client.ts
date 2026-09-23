@@ -1,4 +1,4 @@
-import { translate } from '@/locales';
+import { translate } from '@/locales/store';
 
 import type { AIAttachment, AIMessage, AIOptions, AIRequest } from './types';
 

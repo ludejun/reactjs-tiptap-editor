@@ -5,8 +5,6 @@ import { ReactNodeViewRenderer } from '@tiptap/react';
 import IframeNodeView from '@/extensions/Iframe/components/IframeNodeView';
 import { getDatasetAttribute } from '@/utils/dom-dataset';
 
-export * from './components/RichTextIframe';
-
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     iframe: {

@@ -5,8 +5,6 @@ import { ensureNameValueOptions } from '@/utils/utils';
 
 import type { GeneralOptions, NameValueOption } from '@/types';
 
-export * from './components/RichTextFontSize';
-
 /**
  * Represents the interface for font size options, extending GeneralOptions.
  */

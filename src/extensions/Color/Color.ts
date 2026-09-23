@@ -5,8 +5,6 @@ import {
 
 import type { GeneralOptions } from '@/types';
 
-export * from './components/RichTextColor';
-
 export interface ColorOptions extends TiptapColorOptions, GeneralOptions<ColorOptions> {
   /**
    * An array of color options to display in the color picker

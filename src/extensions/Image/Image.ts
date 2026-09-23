@@ -11,8 +11,6 @@ import ImageView, {
 import type { ImageLifecycleStorage } from '@/extensions/Image/imageLifecycle';
 import type { ButtonViewParams, GeneralOptions, JSONContent } from '@/types';
 
-export * from '@/extensions/Image/components/RichTextImage';
-
 export const IMAGE_BLOCK_NAME = 'imageBlock';
 
 export interface SetImageAttrsOptions {

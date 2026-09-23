@@ -9,8 +9,6 @@ import { ensureNameValueOptions } from '@/utils/utils';
 import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions, NameValueOption } from '@/types';
 
-export * from './components/RichTextFontFamily';
-
 export interface FontFamilyOptions
   extends TiptapFontFamilyOptions, GeneralOptions<FontFamilyOptions> {
   /**

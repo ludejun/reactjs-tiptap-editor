@@ -28,8 +28,6 @@ export interface ExportMarkdownOptions extends GeneralOptions<ExportMarkdownOpti
   indentation?: CreateMarkdownOptions['indentation'];
 }
 
-export * from './components/RichTextExportMarkdown';
-
 /**
  * Serialize the editor document to a markdown string. The serializer is
  * loaded on demand so it does not weigh on the initial bundle.

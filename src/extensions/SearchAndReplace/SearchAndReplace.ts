@@ -5,8 +5,6 @@ import { Decoration, DecorationSet } from '@tiptap/pm/view';
 
 import type { ButtonViewParams } from '@/types';
 
-export * from '@/extensions/SearchAndReplace/components/RichTextSearchAndReplace';
-
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     search: {

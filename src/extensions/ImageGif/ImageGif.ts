@@ -7,8 +7,6 @@ import ImageGifView from '@/extensions/ImageGif/components/ImageGifView';
 import type { ButtonViewParams } from '@/types';
 import type { ImageOptions } from '@tiptap/extension-image';
 
-export * from '@/extensions/ImageGif/components/RichTextImageGif';
-
 export interface SetImageAttrsOptions {
   src?: string;
   /** The alternative text for the image. */

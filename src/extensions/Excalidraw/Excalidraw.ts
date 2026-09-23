@@ -5,8 +5,6 @@ import { ReactNodeViewRenderer } from '@tiptap/react';
 import NodeViewExcalidraw from '@/extensions/Excalidraw/components/NodeViewExcalidraw/NodeViewExcalidraw';
 import { getDatasetAttribute, nodeAttrsToDataset } from '@/utils/dom-dataset';
 
-export * from '@/extensions/Excalidraw/components/RichTextExcalidraw';
-
 const DEFAULT_MIND_DATA = { elements: [] };
 
 export interface IExcalidrawAttrs {

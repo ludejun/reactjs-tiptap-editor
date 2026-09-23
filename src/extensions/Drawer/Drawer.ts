@@ -11,8 +11,6 @@ import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';
 import type { CommandProps } from '@tiptap/core';
 
-export * from '@/extensions/Drawer/components/RichTextDrawer';
-
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     drawer: {

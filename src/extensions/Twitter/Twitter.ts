@@ -4,7 +4,6 @@ import { ReactNodeViewRenderer } from '@tiptap/react';
 import NodeViewTweet from '@/extensions/Twitter/components/NodeViewTweet';
 
 import type { ButtonViewParams } from '@/types';
-export * from '@/extensions/Twitter/components/RichTextTwitter';
 
 // Both hosts: links copied before the rename still say twitter.com.
 const TWITTER_REGEX_GLOBAL =

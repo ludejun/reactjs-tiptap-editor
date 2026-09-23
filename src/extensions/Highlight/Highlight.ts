@@ -3,8 +3,6 @@ import { Highlight as TiptapHighlight } from '@tiptap/extension-highlight';
 import type { GeneralOptions } from '@/types';
 import type { HighlightOptions as TiptapHighlightOptions } from '@tiptap/extension-highlight';
 
-export * from './components/RichTextHighlight';
-
 export interface HighlightOptions extends TiptapHighlightOptions, GeneralOptions<HighlightOptions> {
   /**
    * The default color to use initially

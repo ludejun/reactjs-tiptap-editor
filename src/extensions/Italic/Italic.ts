@@ -3,8 +3,6 @@ import { Italic as TiptapItalic } from '@tiptap/extension-italic';
 import type { GeneralOptions } from '@/types';
 import type { ItalicOptions as TiptapItalicOptions } from '@tiptap/extension-italic';
 
-export * from './components/RichTextItalic';
-
 export interface ItalicOptions extends TiptapItalicOptions, GeneralOptions<ItalicOptions> {}
 
 export const Italic = /* @__PURE__ */ TiptapItalic.extend<ItalicOptions>({

@@ -40,5 +40,3 @@ export const History = /* @__PURE__ */ UndoRedo.extend<HistoryOptions>({
     };
   },
 });
-
-export * from './components/RichTextHistory';

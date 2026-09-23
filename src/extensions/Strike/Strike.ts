@@ -4,8 +4,6 @@ import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';
 import type { StrikeOptions as TiptapStrikeOptions } from '@tiptap/extension-strike';
 
-export * from './components/RichTextStrike';
-
 export interface StrikeOptions extends TiptapStrikeOptions, GeneralOptions<StrikeOptions> {}
 
 export const Strike = /* @__PURE__ */ TiptapStrike.extend<StrikeOptions>({

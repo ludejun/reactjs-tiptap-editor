@@ -7,8 +7,6 @@ import {
 
 import type { GeneralOptions } from '@/types';
 
-export * from './components/RichTextBulletList';
-
 export interface BulletListOptions
   extends TiptapBulletListOptions, GeneralOptions<BulletListOptions> {}
 

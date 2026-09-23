@@ -1,9 +1,5 @@
 import { Extension } from '@tiptap/core';
 
-export * from '@/extensions/TextDirection/components/RichTextTextDirection';
-
-export * from '@/extensions/TextDirection/components/RichTextTextDirection';
-
 const TextDirection = /* @__PURE__ */ Extension.create({
   name: 'richTextTextDirection',
   addOptions() {

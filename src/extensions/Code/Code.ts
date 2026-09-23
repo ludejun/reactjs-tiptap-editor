@@ -3,8 +3,6 @@ import { Code as TiptapCode } from '@tiptap/extension-code';
 import type { GeneralOptions } from '@/types';
 import type { CodeOptions as TiptapCodeOptions } from '@tiptap/extension-code';
 
-export * from './components/RichTextCode';
-
 export interface CodeOptions extends TiptapCodeOptions, GeneralOptions<CodeOptions> {}
 
 export const Code = /* @__PURE__ */ TiptapCode.extend<CodeOptions>({

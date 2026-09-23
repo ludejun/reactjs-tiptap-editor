@@ -4,8 +4,6 @@ import { Link as TiptapLink } from '@tiptap/extension-link';
 import type { GeneralOptions } from '@/types';
 import type { LinkOptions as TiptapLinkOptions } from '@tiptap/extension-link';
 
-export * from '@/extensions/Link/components/RichTextLink';
-
 export interface LinkOptions extends TiptapLinkOptions, GeneralOptions<LinkOptions> {}
 
 export const Link = /* @__PURE__ */ TiptapLink.extend<LinkOptions>({

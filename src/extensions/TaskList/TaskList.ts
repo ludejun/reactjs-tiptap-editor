@@ -12,8 +12,6 @@ import {
 
 import type { GeneralOptions } from '@/types';
 
-export * from './components/RichTextTaskList';
-
 /**
  * Represents the interface for task list options, extending TiptapTaskListOptions and GeneralOptions.
  */

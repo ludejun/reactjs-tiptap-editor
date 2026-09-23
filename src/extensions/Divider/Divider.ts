@@ -1,13 +1,8 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-
-import { NodeViewDivider } from '@/extensions/Divider/components/NodeViewDivider';
 
 import type { ButtonViewParams, GeneralOptions } from '@/types';
 import type { DOMOutputSpec, TagParseRule } from '@tiptap/pm/model';
-
-export * from '@/extensions/Divider/components/RichTextDivider';
 
 /** Built-in looks. Hosts can add their own with `variants` and CSS. */
 export const DIVIDER_VARIANTS = [
@@ -70,7 +65,12 @@ declare module '@tiptap/core' {
 
 const NUMBERED = 'number';
 
-export const Divider = /* @__PURE__ */ Node.create<DividerOptions>({
+/**
+ * The divider without a node view: renders through `renderHTML`, so it works
+ * with any Tiptap binding (Vue, plain ProseMirror). The React package extends
+ * it with an interactive node view as `Divider`.
+ */
+export const DividerCore = /* @__PURE__ */ Node.create<DividerOptions>({
   name: 'divider',
   group: 'block',
   atom: true,
@@ -250,9 +250,5 @@ export const Divider = /* @__PURE__ */ Node.create<DividerOptions>({
         },
       }),
     ];
-  },
-
-  addNodeView() {
-    return ReactNodeViewRenderer(NodeViewDivider);
   },
 });

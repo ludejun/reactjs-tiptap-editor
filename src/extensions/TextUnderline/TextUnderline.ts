@@ -4,8 +4,6 @@ import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';
 import type { UnderlineOptions as TiptapUnderlineOptions } from '@tiptap/extension-underline';
 
-export * from './components/RichTextUnderline';
-
 export interface UnderlineOptions
   extends TiptapUnderlineOptions, GeneralOptions<UnderlineOptions> {}
 

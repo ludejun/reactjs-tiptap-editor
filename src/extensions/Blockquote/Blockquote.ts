@@ -4,8 +4,6 @@ import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';
 import type { BlockquoteOptions as TiptapBlockquoteOptions } from '@tiptap/extension-blockquote';
 
-export * from './components/RichTextBlockquote';
-
 export interface BlockquoteOptions
   extends TiptapBlockquoteOptions, GeneralOptions<BlockquoteOptions> {}
 

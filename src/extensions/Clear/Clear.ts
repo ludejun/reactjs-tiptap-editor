@@ -4,8 +4,6 @@ import type { GeneralOptions } from '@/types';
 
 export interface ClearOptions extends GeneralOptions<ClearOptions> {}
 
-export * from './components/RichTextClear';
-
 export const Clear = /* @__PURE__ */ Node.create<ClearOptions>({
   name: 'clear',
   //@ts-expect-error

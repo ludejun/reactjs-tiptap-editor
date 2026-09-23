@@ -21,8 +21,6 @@ declare module '@tiptap/core' {
   }
 }
 
-export * from './components/RichTextColumn';
-
 export const Column = Extension.create<ColumnOptions>({
   name: 'richtextColumnExtension',
   addOptions() {

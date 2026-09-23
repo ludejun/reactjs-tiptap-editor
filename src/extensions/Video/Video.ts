@@ -6,8 +6,6 @@ import { getCssUnitWithDefault } from '@/utils/utils';
 import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions, VideoAlignment } from '@/types';
 
-export * from '@/extensions/Video/components/RichTextVideo';
-
 export interface VideoUploadProgress {
   /** Number of bytes uploaded so far */
   loaded: number;

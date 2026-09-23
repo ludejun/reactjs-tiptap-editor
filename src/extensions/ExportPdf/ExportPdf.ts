@@ -23,8 +23,6 @@ export interface ExportPdfOptions extends GeneralOptions<ExportPdfOptions> {
   };
 }
 
-export * from './components/RichTextExportPdf';
-
 export const ExportPdf = /* @__PURE__ */ Extension.create<ExportPdfOptions>({
   name: 'exportPdf',
   //@ts-expect-error

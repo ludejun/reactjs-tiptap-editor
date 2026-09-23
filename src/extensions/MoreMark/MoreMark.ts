@@ -8,8 +8,6 @@ import type { Extensions } from '@tiptap/core';
 import type { SubscriptExtensionOptions as TiptapSubscriptOptions } from '@tiptap/extension-subscript';
 import type { SuperscriptExtensionOptions as TiptapSuperscriptOptions } from '@tiptap/extension-superscript';
 
-export * from './components/RichTextMoreMark';
-
 export interface MoreMarkOptions extends GeneralOptions<MoreMarkOptions> {
   /**
    * // options for Subscript Extension

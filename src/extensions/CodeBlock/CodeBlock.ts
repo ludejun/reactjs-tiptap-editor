@@ -1,7 +1,6 @@
 import { ReactNodeViewRenderer } from '@tiptap/react';
 
 import type { ButtonViewParams } from '@/types';
-export * from '@/extensions/CodeBlock/components/RichTextCodeBlock';
 export { guessLanguage } from '@/extensions/CodeBlock/detect-language';
 import { NodeViewCodeBlock } from '@/extensions/CodeBlock/components/NodeViewCodeBlock';
 import { guessLanguage } from '@/extensions/CodeBlock/detect-language';

@@ -5,8 +5,6 @@ import { renderNodeViewClosure } from '@/utils/renderNodeView';
 
 import EmojiNodeView from './components/EmojiList/EmojiNodeView';
 
-export * from '@/extensions/Emoji/components/RichTextEmoji';
-
 export const EXTENSION_PRIORITY_HIGHEST = 200;
 
 export const Emoji = /* @__PURE__ */ Extension.create<EmojiOptions>({

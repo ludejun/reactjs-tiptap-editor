@@ -14,8 +14,6 @@ declare module '@tiptap/core' {
 }
 type ExportWordOptions = GeneralOptions<ExportWordOptions>;
 
-export * from './components/RichTextExportWord';
-
 export const ExportWord = /* @__PURE__ */ Extension.create<ExportWordOptions>({
   name: 'exportWord',
 

@@ -8,8 +8,6 @@ import { DEFAULT_LINE_HEIGHT_LIST } from '@/constants';
 import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';
 
-export * from './components/RichTextLightHeight';
-
 export interface LineHeightOptions extends GeneralOptions<TiptapLineHeightOptions> {
   lineHeights: string[];
 }

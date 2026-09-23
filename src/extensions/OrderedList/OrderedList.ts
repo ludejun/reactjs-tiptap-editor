@@ -7,8 +7,6 @@ import {
 
 import type { GeneralOptions } from '@/types';
 
-export * from './components/RichTextOrderedList';
-
 export interface OrderedListOptions
   extends TiptapOrderedListOptions, GeneralOptions<OrderedListOptions> {}
 

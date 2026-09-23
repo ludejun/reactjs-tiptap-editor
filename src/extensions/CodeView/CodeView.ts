@@ -7,8 +7,6 @@ interface CodeViewOptions extends GeneralOptions<CodeViewOptions> {
   isCodeViewMode?: boolean;
 }
 
-export * from './components/RichTextCodeView';
-
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     codeView: {

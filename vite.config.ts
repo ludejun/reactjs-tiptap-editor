@@ -1,3 +1,4 @@
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 import react from '@vitejs/plugin-react';
@@ -56,30 +57,32 @@ const editorUtilsModules = new Set(
 export default defineConfig(({ mode }) => {
   const isDev = mode !== 'production';
 
-  const entry = [
-    path.resolve(rootDir, 'src/index.ts'),
-    path.resolve(rootDir, 'src/locale-bundle.ts'),
-    path.resolve(rootDir, 'src/locale.ts'),
-    ...globbySync('src/locales/*.ts', { cwd: rootDir, ignore: ['**/index.ts'] })
-      .sort()
-      .map((file) => path.resolve(rootDir, file)),
-    path.resolve(rootDir, 'src/bubble.ts'),
-    path.resolve(rootDir, 'src/theme/theme.ts'),
+  const entryFiles = [
+    'src/index.ts',
+    'src/core.ts',
+    'src/locale-bundle.ts',
+    'src/locale.ts',
+    ...globbySync('src/locales/*.ts', { cwd: rootDir, ignore: ['**/index.ts'] }).sort(),
+    'src/bubble.ts',
+    'src/theme/theme.ts',
+    ...globbySync('src/components/Bubble/RichText*.tsx', { cwd: rootDir }).sort(),
   ];
 
-  const extensionEntries = globbySync('src/extensions/*/*.ts', {
-    cwd: rootDir,
-    ignore: ['**/index.ts', '**/*.spec.ts', '**/*.test.ts'],
-  })
-    .filter((file) => path.basename(file, '.ts') === path.basename(path.dirname(file)))
-    .sort();
-
-  entry.push(...extensionEntries.map((file) => path.resolve(rootDir, file)));
-  entry.push(
-    ...globbySync('src/components/Bubble/RichText*.tsx', { cwd: rootDir })
-      .sort()
-      .map((file) => path.resolve(rootDir, file))
+  const entry: Record<string, string> = Object.fromEntries(
+    entryFiles.map((file) => [path.basename(file, path.extname(file)), path.resolve(rootDir, file)])
   );
+
+  // One entry per extension folder, built from its index.ts (extension +
+  // React controls) and named after the folder. The extension module itself
+  // (`<Name>/<Name>.ts`) stays free of component re-exports so `core.ts` can
+  // share it without dragging React in.
+  for (const file of globbySync('src/extensions/*/index.ts', { cwd: rootDir }).sort()) {
+    const dir = path.basename(path.dirname(file));
+
+    if (fs.existsSync(path.resolve(rootDir, `src/extensions/${dir}/${dir}.ts`))) {
+      entry[dir] = path.resolve(rootDir, file);
+    }
+  }
 
   return {
     plugins: [react(), dts()],

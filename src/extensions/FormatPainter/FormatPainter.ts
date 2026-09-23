@@ -1,13 +1,11 @@
 import { Extension } from '@tiptap/core';
-import type { Mark, MarkType } from '@tiptap/pm/model';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
-import type { EditorState, Transaction } from '@tiptap/pm/state';
 
 import { ActionButton } from '@/components';
 
 import type { GeneralOptions } from '@/types';
-
-export * from './components/RichTextFormatPainter';
+import type { Mark, MarkType } from '@tiptap/pm/model';
+import type { EditorState, Transaction } from '@tiptap/pm/state';
 
 export type FormatPainterOptions = GeneralOptions<unknown>;
 
@@ -65,9 +63,9 @@ function applyMarksToSelection(tr: Transaction, state: EditorState, marks: Mark[
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     painter: {
-      setPainter: () => ReturnType
-      unsetPainter: () => ReturnType
-    }
+      setPainter: () => ReturnType;
+      unsetPainter: () => ReturnType;
+    };
   }
 }
 
@@ -161,7 +159,9 @@ export const FormatPainter = /* @__PURE__ */ Extension.create<FormatPainterOptio
 
                 const { state } = view;
                 const { selection } = state;
-                const tr = selection.empty ? state.tr : applyMarksToSelection(state.tr, state, marks);
+                const tr = selection.empty
+                  ? state.tr
+                  : applyMarksToSelection(state.tr, state, marks);
 
                 view.dispatch(tr.setMeta(formatPainterPluginKey, { type: 'end' }));
               };

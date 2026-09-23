@@ -13,8 +13,6 @@ import type {
   DetailsSummaryOptions,
 } from '@tiptap/extension-details';
 
-export * from './components/RichTextDetails';
-
 export interface DetailsOptions extends TiptapDetailsOptions, GeneralOptions<DetailsOptions> {
   /**
    * Options forwarded to the nested `detailsSummary` node.

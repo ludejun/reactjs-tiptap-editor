@@ -103,8 +103,6 @@ export interface TableOptions extends GeneralOptions<TableOptions> {
   tableCellBackground: Partial<TableCellBackgroundOptions>;
 }
 
-export * from '@/extensions/Table/components/RichTextTable';
-
 export const Table = /* @__PURE__ */ TiptapTable.extend<TableOptions>({
   //@ts-expect-error
   addOptions() {
