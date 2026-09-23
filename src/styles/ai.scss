@@ -588,20 +588,36 @@
   justify-content: space-between;
   gap: 8px;
 
-  select {
-    border: 0;
+  /* The target pill: the label and chevron are what you see; the native
+     <select> lies invisibly on top so the dropdown and keyboard still work. */
+  .richtext-ai-composer-target {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px 4px 10px;
+    border-radius: 999px;
     background: hsl(var(--muted));
     color: hsl(var(--foreground));
-    font: inherit;
     font-size: 12px;
-    border-radius: 999px;
-    padding: 4px 10px;
-    outline: none;
-    max-width: 12rem;
-    cursor: pointer;
-    &:focus-visible {
-      outline: 2px solid var(--ai-accent);
-      outline-offset: 1px;
+    line-height: 1.4;
+    white-space: nowrap;
+    svg {
+      color: hsl(var(--muted-foreground));
+    }
+    &:hover {
+      background: hsl(var(--accent));
+    }
+    &:focus-within {
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--ai-accent) 45%, transparent);
+    }
+    select {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
+      font: inherit;
     }
   }
 }

@@ -67,5 +67,7 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 
 ### Build
 
+- GitHub Pages workflow (`pages.yml`) publishes the docs at `/ai-sparkwrite-editor/` and the live playground at `/ai-sparkwrite-editor/playground/` on every push to `main`; the upstream surge preview workflows are gone.
+
 - Named imports from `@tiptap/*` packages so the CommonJS bundles load.
 - Package renamed to `ai-sparkwrite-editor`; subpaths keep their shape (`ai-sparkwrite-editor/table`, `ai-sparkwrite-editor/bubble/text`, `ai-sparkwrite-editor/locales/es`, plus `ai-sparkwrite-editor/core` and `ai-sparkwrite-editor/vue`). The root CSS class is `.sparkwrite`.

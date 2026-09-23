@@ -5,14 +5,16 @@
 <h1 align="center">SparkWrite</h1>
 
 <p align="center">
-  <b>The rich-text editor that writes with you.</b><br/>
-  An AI-first editor SDK on Tiptap: streaming answers become real headings, tables and code blocks; formulas and diagrams are generated from a sentence.<br/>
-  Toolbar, bubble menus, slash commands, 16 languages, session replay. React UI today, framework-agnostic core.
+  <b>Tell the editor what you want. It writes it, right there in the page.</b><br/>
+  An AI-first rich-text editor SDK on Tiptap: prose, tables, code, task lists, formulas and diagrams are produced by the model and land in the document as real, editable blocks.<br/>
+  Streaming, undoable, in 16 languages. React and Vue UIs on one framework-free core.
 </p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/">Docs</a> ·
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/">Live playground</a> ·
   <a href="./README.zh-CN.md">中文文档</a>
 </p>
 
@@ -20,7 +22,20 @@
 
 ## Why this editor
 
-**AI is a first-class feature, not a plugin bolted on.**
+Most editors treat AI as a chat window next to the document. Here the model works _in_ the document: you describe, it writes; you select, it rewrites; you pause, it finishes the sentence. Formatting is never pasted — every answer is parsed through the editor's own schema, so a table is a table and a code block is a code block, ready to keep editing.
+
+**What the AI does for you**
+
+| You                                             | The editor                                                                                                                       |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Type a request in the composer under the editor | Streams the answer into the page as headings, lists, tables, code; Keep, Undo, Retry or refine in place                          |
+| Click a chip                                    | Continues writing, summarizes, outlines, suggests a title, extracts action items, fixes grammar or translates the whole document |
+| Select text → Improve                           | Rewrites, shortens, expands, simplifies, changes tone, explains, translates, turns it into a table or a list                     |
+| Press Space on an empty line                    | Opens Ask AI at the caret                                                                                                        |
+| Pause while typing                              | Proposes the next words in grey; Tab accepts                                                                                     |
+| Describe a formula or a flow                    | Writes the LaTeX or Mermaid source and renders it live                                                                           |
+
+**Under the hood**
 
 - **Writes into the document, not a chat box.** A composer dock under the editor (toolbar ✨, `⌘J`, `/ai`) streams the answer straight into the page as real blocks — a markdown table becomes _the editor's_ table, a fenced block a code block, `- [ ]` a task list. Keep, undo, retry or refine in place; one undo step.
 - **Knows the whole document.** Continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — one click each, with the document as context.

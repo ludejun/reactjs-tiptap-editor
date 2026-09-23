@@ -8,6 +8,8 @@ import { transformHead } from './transformHead';
 const docsLink = 'https://ludejun.github.io/ai-sparkwrite-editor';
 
 export default defineConfig({
+  // Served from GitHub Pages under the repository name; local dev stays at `/`.
+  base: process.env.DOCS_BASE ?? '/',
   lang: 'en-US',
   ignoreDeadLinks: true,
   locales: {

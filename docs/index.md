@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: SparkWrite
-  text: The rich-text editor that writes with you
-  tagline: AI-first editor SDK on Tiptap — streaming answers become real tables and code blocks, formulas and diagrams from a sentence. Toolbar, bubble menus, slash commands, 16 languages, replay. React UI, framework-agnostic core.
+  text: Tell it what you want. It writes it in the page.
+  tagline: An AI-first editor SDK on Tiptap. Prose, tables, code, task lists, formulas and diagrams are produced by the model and land in the document as real, editable blocks — streaming, undoable, in 16 languages. React and Vue on one framework-free core.
   image:
     src: /logo.svg
     alt: SparkWrite
@@ -19,12 +19,18 @@ hero:
       text: GitHub
       link: https://github.com/ludejun/ai-sparkwrite-editor
 features:
-  - title: AI that writes real content
-    details: Streaming answers rendered through the editor schema — tables, code blocks and lists arrive as nodes, not pasted text. OpenAI, Anthropic, a proxy, or your own transport.
+  - title: A composer that writes into the document
+    details: Type a request under the editor and watch it stream into the page as headings, lists, tables and code. Keep, undo, retry, or refine the same span. One undo step.
+  - title: The whole document, one click
+    details: Continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — with the document as context and its structure preserved.
+  - title: Rewrite what you select, finish what you type
+    details: Improve, shorten, translate, turn into a table or a list from the selection menu; Space on an empty line asks AI; ghost text completes your sentence, Tab keeps it.
   - title: Formulas and diagrams from a sentence
-    details: The Katex and Mermaid dialogs generate their source from a description, live, and render as you watch.
-  - title: Composable, one import per feature
-    details: Create the Tiptap editor, pick extensions, place the React controls. Each feature ships its extension and its control from one subpath; the core is framework-agnostic.
+    details: Describe a formula or a flow; the Katex and Mermaid dialogs write the source and render it live.
+  - title: Your model, your rules
+    details: OpenAI or Anthropic protocol, any proxy, or your own transport. Answers are parsed through the editor schema, so nothing is pasted and nothing unknown gets in.
+  - title: Composable, React or Vue
+    details: Create the Tiptap editor, pick extensions, place the controls. Each feature ships from one subpath; the AI engine and every block live in a framework-free core shared by both UIs.
   - title: Everything a document needs
     details: Tables, dividers, code with language detection, images with cropping and upload tracking, columns, callouts, Katex, Mermaid, Excalidraw, Word/PDF/Markdown import and export.
   - title: Pastes and languages handled

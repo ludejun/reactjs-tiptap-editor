@@ -398,7 +398,9 @@ const extensions = [
 
 const DEFAULT = `
 <h1>ai-sparkwrite-editor</h1>
-<p>A rich text editor built on Tiptap. Everything below is live — edit it, or start from scratch.</p>
+<p>An editor where the AI does the writing: ask, and headings, tables, code, formulas and diagrams land in the page as real blocks. Everything below is live — edit it, or start from scratch.</p>
+<h2>Let AI do it</h2>
+<ul><li><p>Click <strong>AI</strong> in the toolbar (or press ⌘J) and type what you want; it streams straight into the document.</p></li><li><p>Select text and pick <strong>Improve</strong>: rewrite, shorten, translate, turn into a table.</p></li><li><p>Press <strong>Space</strong> on an empty line to ask; pause while typing for a grey continuation, <strong>Tab</strong> keeps it.</p></li><li><p>Formula and diagram dialogs take a sentence and write the source.</p></li></ul>
 <div class="table-of-contents" data-type="table-of-contents"></div>
 <h2>Text</h2>
 <p>Select any text to bring up the formatting bubble. You can make it <strong>bold</strong>, <em>italic</em>, <s>struck through</s>, <code>inline code</code>, or a <a class="link" href="https://tiptap.dev" target="_blank" rel="noopener noreferrer">link</a>.</p>

@@ -60,7 +60,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: t('Playground'),
-      link: 'https://github.com/ludejun/ai-sparkwrite-editor/tree/main/playground',
+      link: 'https://ludejun.github.io/ai-sparkwrite-editor/playground/',
     },
     {
       text: t('Skills'),

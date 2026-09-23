@@ -5,14 +5,16 @@
 <h1 align="center">SparkWrite</h1>
 
 <p align="center">
-  <b>会和你一起写的富文本编辑器。</b><br/>
-  AI 优先的编辑器 SDK，基于 Tiptap：流式回答直接变成真正的标题、表格和代码块；一句话生成公式和图表。<br/>
-  工具栏、气泡菜单、斜杠命令、16 种语言、会话回放。React UI，框架无关的内核。
+  <b>告诉编辑器你要什么，它直接写在页面里。</b><br/>
+  基于 Tiptap 的 AI 优先富文本编辑器 SDK：正文、表格、代码、任务列表、公式、图表都由模型产出，并以真正可编辑的块落进文档。<br/>
+  流式、可撤销、16 种语言。React 与 Vue 两套 UI，共享一个不含框架的内核。
 </p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/">文档</a> ·
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/">在线 Playground</a> ·
   <a href="./README.md">English</a>
 </p>
 
@@ -20,7 +22,20 @@
 
 ## 为什么选它
 
-**AI 是一等功能，不是外挂插件。**
+大多数编辑器把 AI 放在文档旁边的聊天窗里。这里模型在文档*里面*干活：你描述，它写；你选中，它改；你停顿，它把句子补完。任何回答都不是粘贴进来的文本，而是经编辑器自己的 schema 解析——表格就是表格，代码块就是代码块，落地即可继续编辑。
+
+**AI 替你做的事**
+
+| 你                       | 编辑器                                                                   |
+| ------------------------ | ------------------------------------------------------------------------ |
+| 在底部写作台输入一句需求 | 流式写进页面，落地成标题、列表、表格、代码；可保留、撤销、重试或就地追问 |
+| 点一个 chip              | 续写、总结、生成大纲、拟标题、提取待办、全文纠错、翻译全文               |
+| 选中文字 → Improve       | 润色、缩写、扩写、简化、换语气、解释、翻译、转表格、转列表               |
+| 空行按空格               | 在光标处呼出 Ask AI                                                      |
+| 打字停顿                 | 灰色续写建议，Tab 接受                                                   |
+| 描述一个公式或流程       | 写出 LaTeX / Mermaid 源码并实时渲染                                      |
+
+**底层机制**
 
 - **写进文档，而不是聊天框。** 编辑器底部的 AI 写作台（工具栏 ✨、`⌘J`、`/ai`）把回答直接流式写进上方的文档，落地的是真正的块：Markdown 表格就是编辑器的表格，围栏代码就是代码块，`- [ ]` 就是任务列表。写完可保留、撤销、重试或就地追问；整段只占一步撤销。
 - **懂整篇文档。** 续写、总结、生成大纲、拟标题、提取待办、全文纠错、翻译全文——各一键，带着文档上下文。

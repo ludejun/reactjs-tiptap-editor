@@ -1049,27 +1049,33 @@ export const RichTextAIComposer = defineComponent({
               ]),
               h('div', { class: 'richtext-ai-composer-bar' }, [
                 !answer && props.showTarget
-                  ? h(
-                      'select',
-                      {
-                        'aria-label': t('editor.ai.compose.target'),
-                        value: effectiveTarget(),
-                        disabled: busy.value,
-                        onChange: (event: Event) => {
-                          target.value = (event.target as HTMLSelectElement)
-                            .value as ComposerTarget;
+                  ? // A pill that fits its label: the native <select> sits invisibly on
+                    // top for the dropdown and keyboard, the label and chevron below it.
+                    h('span', { class: 'richtext-ai-composer-target' }, [
+                      h('span', t(`editor.ai.compose.target.${effectiveTarget()}`)),
+                      h(ChevronDown, { size: 13, 'aria-hidden': 'true' }),
+                      h(
+                        'select',
+                        {
+                          'aria-label': t('editor.ai.compose.target'),
+                          value: effectiveTarget(),
+                          disabled: busy.value,
+                          onChange: (event: Event) => {
+                            target.value = (event.target as HTMLSelectElement)
+                              .value as ComposerTarget;
+                          },
                         },
-                      },
-                      COMPOSER_TARGETS.filter(
-                        (value) => value !== 'selection' || current.hasSelection
-                      ).map((value) =>
-                        h(
-                          'option',
-                          { key: value, value, selected: value === effectiveTarget() },
-                          t(`editor.ai.compose.target.${value}`)
+                        COMPOSER_TARGETS.filter(
+                          (value) => value !== 'selection' || current.hasSelection
+                        ).map((value) =>
+                          h(
+                            'option',
+                            { key: value, value, selected: value === effectiveTarget() },
+                            t(`editor.ai.compose.target.${value}`)
+                          )
                         )
-                      )
-                    )
+                      ),
+                    ])
                   : h('span'),
                 busy.value
                   ? h(

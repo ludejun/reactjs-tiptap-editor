@@ -392,20 +392,26 @@ export function RichTextAIComposer({
         </div>
         <div className='richtext-ai-composer-bar'>
           {!result && showTarget ? (
-            <select
-              aria-label={t('editor.ai.compose.target')}
-              value={effectiveTarget}
-              disabled={busy}
-              onChange={(event) => setTarget(event.target.value as Target)}
-            >
-              {TARGETS.filter((value) => value !== 'selection' || state.hasSelection).map(
-                (value) => (
-                  <option key={value} value={value}>
-                    {t(`editor.ai.compose.target.${value}`)}
-                  </option>
-                )
-              )}
-            </select>
+            // A pill that fits its label: the native <select> sits invisibly on
+            // top for the dropdown and keyboard, the label and chevron below it.
+            <span className='richtext-ai-composer-target'>
+              <span>{t(`editor.ai.compose.target.${effectiveTarget}`)}</span>
+              <ChevronDown size={13} aria-hidden='true' />
+              <select
+                aria-label={t('editor.ai.compose.target')}
+                value={effectiveTarget}
+                disabled={busy}
+                onChange={(event) => setTarget(event.target.value as Target)}
+              >
+                {TARGETS.filter((value) => value !== 'selection' || state.hasSelection).map(
+                  (value) => (
+                    <option key={value} value={value}>
+                      {t(`editor.ai.compose.target.${value}`)}
+                    </option>
+                  )
+                )}
+              </select>
+            </span>
           ) : (
             <span />
           )}
