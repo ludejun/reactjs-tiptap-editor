@@ -11,10 +11,17 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img alt="npm" src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg?label=npm&color=804dff" /></a>
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/"><img alt="docs" src="https://img.shields.io/badge/docs-website-38bdf8.svg" /></a>
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/"><img alt="playground" src="https://img.shields.io/badge/playground-live-f472b6.svg" /></a>
   <a href="./LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
-  <a href="./README.zh-CN.md"><img alt="中文" src="https://img.shields.io/badge/%E6%96%87%E6%A1%A3-%E4%B8%AD%E6%96%87-555.svg" /></a>
+</p>
+
+<p align="center">
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/"><b>📘 Documentation</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/"><b>🎮 Live Playground</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started"><b>🚀 Getting Started</b></a>
+  &nbsp;·&nbsp;
+  <a href="./README.zh-CN.md"><b>🇨🇳 中文文档</b></a>
 </p>
 
 ![The editor with the AI composer open under the document](./screenshot/screenshot.png)

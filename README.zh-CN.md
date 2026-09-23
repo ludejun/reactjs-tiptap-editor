@@ -11,10 +11,17 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img alt="npm" src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg?label=npm&color=804dff" /></a>
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/"><img alt="docs" src="https://img.shields.io/badge/%E6%96%87%E6%A1%A3-%E7%BD%91%E7%AB%99-38bdf8.svg" /></a>
-  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/"><img alt="playground" src="https://img.shields.io/badge/playground-%E5%9C%A8%E7%BA%BF-f472b6.svg" /></a>
   <a href="./LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
-  <a href="./README.md"><img alt="English" src="https://img.shields.io/badge/README-English-555.svg" /></a>
+</p>
+
+<p align="center">
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/"><b>📘 文档网站</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/playground/"><b>🎮 在线 Playground</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started"><b>🚀 快速开始</b></a>
+  &nbsp;·&nbsp;
+  <a href="./README.md"><b>🇬🇧 English</b></a>
 </p>
 
 ![打开 AI 写作台的编辑器](./screenshot/screenshot.png)
