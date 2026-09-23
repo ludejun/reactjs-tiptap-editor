@@ -12,7 +12,9 @@ Insert mathematical expressions written in TeX syntax.
 
 ## Setup
 
-Start with the packages in [Getting Started](/guide/getting-started). This complete example registers the feature and renders its UI. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+Start with the packages in [Getting Started](/guide/getting-started). The complete example below registers the feature and renders its UI — pick the React or the Vue tab. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+
+::: code-group
 
 ```tsx
 'use client';
@@ -46,7 +48,39 @@ export default function KatexExample() {
     </RichTextProvider>
   );
 }
-```
+``` [React]
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { Katex, RichTextProvider, RichTextKatex } from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+import 'katex/dist/katex.min.css';
+
+const extensions = [Document, Paragraph, Text, Katex];
+
+const editor = useEditor({
+  extensions,
+  content: '<p>Try this feature here.</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextKatex />
+    <EditorContent :editor="editor" />
+  </RichTextProvider>
+</template>
+``` [Vue]
+
+:::
+
+::: tip Vue
+Not in the Vue layer yet: `RichTextBubbleKatex` — run the corresponding command from your own control, or see [Frameworks](/guide/frameworks).
+:::
 
 ## How to use
 

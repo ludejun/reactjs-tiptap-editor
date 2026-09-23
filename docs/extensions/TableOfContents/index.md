@@ -12,7 +12,9 @@ Track the headings of the document and insert a live table of contents block.
 
 ## Setup
 
-Start with the packages in [Getting Started](/guide/getting-started). This complete example registers the feature and renders its UI. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+Start with the packages in [Getting Started](/guide/getting-started). The complete example below registers the feature and renders its UI — pick the React or the Vue tab. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+
+::: code-group
 
 ```tsx
 'use client';
@@ -44,7 +46,36 @@ export default function TableOfContentsExample() {
     </RichTextProvider>
   );
 }
-```
+``` [React]
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { Heading } from 'ai-sparkwrite-editor/core';
+import { TableOfContents, RichTextProvider, RichTextTableOfContents } from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const extensions = [Document, Paragraph, Text, Heading, TableOfContents];
+
+const editor = useEditor({
+  extensions,
+  content: '<h1>Title</h1><p>Try this feature here.</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextTableOfContents />
+    <EditorContent :editor="editor" />
+  </RichTextProvider>
+</template>
+``` [Vue]
+
+:::
+
 
 ## How to use
 

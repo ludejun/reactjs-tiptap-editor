@@ -12,7 +12,9 @@ Choose the font family used by selected text.
 
 ## Setup
 
-Start with the packages in [Getting Started](/guide/getting-started). Install `@tiptap/extension-text-style` at the same version as your other Tiptap packages. This complete example registers the feature and renders its UI. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+Start with the packages in [Getting Started](/guide/getting-started). Install `@tiptap/extension-text-style` at the same version as your other Tiptap packages. The complete example below registers the feature and renders its UI — pick the React or the Vue tab. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+
+::: code-group
 
 ```tsx
 'use client';
@@ -44,7 +46,39 @@ export default function FontFamilyExample() {
     </RichTextProvider>
   );
 }
-```
+``` [React]
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { TextStyle } from '@tiptap/extension-text-style';
+import { FontFamily } from 'ai-sparkwrite-editor/core';
+import { RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const extensions = [Document, Paragraph, Text, TextStyle, FontFamily];
+
+const editor = useEditor({
+  extensions,
+  content: '<p>Try this feature here.</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <EditorContent :editor="editor" />
+  </RichTextProvider>
+</template>
+``` [Vue]
+
+:::
+
+::: tip Vue
+Not in the Vue layer yet: `RichTextFontFamily` — run the corresponding command from your own control, or see [Frameworks](/guide/frameworks).
+:::
 
 ## How to use
 

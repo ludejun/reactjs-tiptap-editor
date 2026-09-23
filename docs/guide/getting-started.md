@@ -10,8 +10,6 @@ next:
 
 `ai-sparkwrite-editor` is Tiptap extensions plus ready-made controls. You create the editor instance, choose its features, and compose the interface. The same extensions serve both frameworks: React imports each feature from `ai-sparkwrite-editor/<feature>`, Vue imports the extensions from `ai-sparkwrite-editor/core` and the UI from `ai-sparkwrite-editor/vue`.
 
-Working with an AI coding agent? [Install the editor skill](/skills) for package-specific setup, feature recipes, and debugging guidance.
-
 Keep every `@tiptap/*` package on one compatible version. This repository uses `^3.29.2`; `@tiptap/vue-3` has to match `@tiptap/core` exactly.
 
 ## React

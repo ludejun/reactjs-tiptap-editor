@@ -1,187 +1,222 @@
-/**
- * Customize default theme styling by overriding CSS variables:
- * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
+/*
+ * ai-sparkwrite-editor docs — a fresh skin over the VitePress default theme.
+ * Brand: the editor's own accent (#804dff) with the sky/pink stops the AI
+ * composer uses, on a calm off-white / near-black ground.
  */
 
-/**
- * Colors
- *
- * Each colors have exact same color scale system with 3 levels of solid
- * colors with different brightness, and 1 soft color.
- *
- * - `XXX-1`: The most solid color used mainly for colored text. It must
- *   satisfy the contrast ratio against when used on top of `XXX-soft`.
- *
- * - `XXX-2`: The color used mainly for hover state of the button.
- *
- * - `XXX-3`: The color for solid background, such as bg color of the button.
- *   It must satisfy the contrast ratio with pure white (#ffffff) text on
- *   top of it.
- *
- * - `XXX-soft`: The color used for subtle background such as custom container
- *   or badges. It must satisfy the contrast ratio when putting `XXX-1` colors
- *   on top of it.
- *
- *   The soft color must be semi transparent alpha channel. This is crucial
- *   because it allows adding multiple "soft" colors on top of each other
- *   to create a accent, such as when having inline code block inside
- *   custom containers.
- *
- * - `default`: The color used purely for subtle indication without any
- *   special meanings attched to it such as bg color for menu hover state.
- *
- * - `brand`: Used for primary brand colors, such as link text, button with
- *   brand theme, etc.
- *
- * - `tip`: Used to indicate useful information. The default theme uses the
- *   brand color for this by default.
- *
- * - `warning`: Used to indicate warning to the users. Used in custom
- *   container, badges, etc.
- *
- * - `danger`: Used to show error, or dangerous message to the users. Used
- *   in custom container, badges, etc.
- * -------------------------------------------------------------------------- */
-
-/**
- * Colors
- * -------------------------------------------------------------------------- */
-
 :root {
-  --vp-c-brand: #ae3ec9;
-  --vp-c-brand-light: #da77f2;
-  --vp-c-brand-lighter: #e599f7;
-  --vp-c-brand-lightest: #f3d9fa;
-  --vp-c-brand-dark: #9c36b5;
-  --vp-c-brand-darker: #862e9c;
-  --vp-c-brand-dimm: rgba(145, 71, 150, 0.08);
+  --sw-accent: #804dff;
+  --sw-accent-2: #38bdf8;
+  --sw-accent-3: #f472b6;
 
-  --vp-local-search-highlight-bg: var(--vp-c-brand-light);
-  --vp-local-search-highlight-text: var(--vp-c-bg);
-}
+  --vp-c-brand-1: #6d3df0;
+  --vp-c-brand-2: #804dff;
+  --vp-c-brand-3: #9a73ff;
+  --vp-c-brand-soft: rgba(128, 77, 255, 0.12);
 
-/**
- * Component: Button
- * -------------------------------------------------------------------------- */
+  --vp-c-tip-1: var(--vp-c-brand-1);
+  --vp-c-tip-2: var(--vp-c-brand-2);
+  --vp-c-tip-3: var(--vp-c-brand-3);
+  --vp-c-tip-soft: var(--vp-c-brand-soft);
 
-:root {
-  --vp-button-brand-border: var(--vp-c-brand-light);
-  --vp-button-brand-bg: var(--vp-c-brand);
-  --vp-button-brand-hover-border: var(--vp-c-brand-light);
-  --vp-button-brand-hover-bg: var(--vp-c-brand-light);
-  --vp-button-brand-active-border: var(--vp-c-brand-light);
-  --vp-button-brand-active-bg: var(--vp-button-brand-bg);
-  --vp-button-brand-text: #eee;
-}
+  --vp-c-bg: #fbfbfd;
+  --vp-c-bg-alt: #f4f4f8;
+  --vp-c-bg-soft: #f4f4f8;
 
-/**
- * Component: Home
- * -------------------------------------------------------------------------- */
+  --vp-font-family-base:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-:root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(30deg, #be4bdb 0%, #7950f2 80%);
+  --vp-home-hero-name-background: linear-gradient(
+    120deg,
+    var(--sw-accent),
+    var(--sw-accent-2) 55%,
+    var(--sw-accent-3)
+  );
+  --vp-home-hero-image-background-image: radial-gradient(
+    closest-side,
+    rgba(128, 77, 255, 0.35),
+    rgba(56, 189, 248, 0.18) 60%,
+    transparent
+  );
+  --vp-home-hero-image-filter: blur(56px);
 
-  --vp-home-hero-image-background-image: linear-gradient(-45deg, #cc5de845 50%, #845ef745 50%);
-  --vp-home-hero-image-filter: blur(40px);
-}
+  --vp-button-brand-bg: var(--sw-accent);
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-hover-bg: #7040eb;
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-active-bg: #6236d6;
+  --vp-button-brand-text: #fff;
 
-@media (min-width: 640px) {
-  :root {
-    --vp-home-hero-image-filter: blur(56px);
-  }
-}
-
-@media (min-width: 960px) {
-  :root {
-    --vp-home-hero-image-filter: blur(72px);
-  }
-}
-
-/**
- * Component: Custom Block
- * -------------------------------------------------------------------------- */
-
-:root {
-  --vp-custom-block-tip-border: var(--vp-c-brand);
-  --vp-custom-block-tip-text: var(--vp-c-brand-darker);
-  --vp-custom-block-tip-bg: var(--vp-c-brand-dimm);
+  --vp-local-search-highlight-bg: var(--vp-c-brand-soft);
+  --vp-local-search-highlight-text: var(--vp-c-brand-1);
 }
 
 .dark {
-  --vp-custom-block-tip-border: var(--vp-c-brand);
-  --vp-custom-block-tip-text: var(--vp-c-brand-lightest);
-  --vp-custom-block-tip-bg: var(--vp-c-brand-dimm);
+  --vp-c-brand-1: #b092ff;
+  --vp-c-brand-2: #9a73ff;
+  --vp-c-brand-3: #804dff;
+  --vp-c-brand-soft: rgba(128, 77, 255, 0.2);
+  --vp-c-bg: #0d0d12;
+  --vp-c-bg-alt: #13131a;
+  --vp-c-bg-soft: #17171f;
+  --vp-c-bg-elv: #17171f;
+  --vp-home-hero-image-background-image: radial-gradient(
+    closest-side,
+    rgba(128, 77, 255, 0.45),
+    rgba(56, 189, 248, 0.2) 60%,
+    transparent
+  );
 }
 
-/**
- * VitePress: Custom fix
- * -------------------------------------------------------------------------- */
-
-/*
-  Use lighter colors for links in dark mode for a11y.
-  Also specify some classes twice to have higher specificity
-  over scoped class data attribute.
-*/
-.dark .vp-doc a,
-.dark .vp-doc a > code,
-.dark .VPNavBarMenuLink.VPNavBarMenuLink:hover,
-.dark .VPNavBarMenuLink.VPNavBarMenuLink.active,
-.dark .link.link:hover,
-.dark .link.link.active,
-.dark .edit-link-button.edit-link-button,
-.dark .pager-link .title {
-  color: var(--vp-c-brand-lighter);
-}
-
-.dark .vp-doc a:hover,
-.dark .vp-doc a > code:hover {
-  color: var(--vp-c-brand-lightest);
-  opacity: 1;
-}
-
-/* Transition by color instead of opacity */
-.dark .vp-doc .custom-block a {
-  transition: color 0.25s;
-}
-
-.VPLocalSearchBox .result {
-  --vp-c-bg-search-result: var(--vp-c-bg);
-  background: var(--vp-c-bg-search-result) !important;
-  padding: 4px !important;
-  border: 1px solid var(--vp-c-divider) !important;
-}
-.VPLocalSearchBox .result.selected {
-  --vp-c-bg-search-result: var(--vp-c-bg-soft) !important;
-}
-.VPLocalSearchBox .result .excerpt-gradient-top {
-  background: linear-gradient(var(--vp-c-bg-search-result), transparent) !important;
-}
-.VPLocalSearchBox .result .excerpt-gradient-bottom {
-  background: linear-gradient(transparent, var(--vp-c-bg-search-result)) !important;
-}
-.VPLocalSearchBox .title-icon {
-  display: none;
-}
-.VPLocalSearchBox .excerpt-wrapper {
-  margin-top: 4px;
-}
-
-.VPHomeHero .VPImage {
-  border-radius: 16px;
-}
-
-.changeLog {
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--vp-c-bg-soft);
-}
-
-.vp-doc h2 {
-  margin: 48px 0 16px;
-  border-top: 1px solid var(--vp-c-divider);
-  padding-top: 24px;
+/* Hero: the tagline is the headline. */
+.VPHero .name {
+  font-size: 44px;
+  line-height: 1.15;
   letter-spacing: -0.02em;
-  line-height: 32px;
-  font-size: 24px;
+}
+.VPHero .text {
+  font-size: 34px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.VPHero .tagline {
+  max-width: 560px;
+}
+@media (min-width: 960px) {
+  .VPHero .name {
+    font-size: 52px;
+  }
+  .VPHero .text {
+    font-size: 40px;
+  }
+}
+
+/* Feature cards: a gradient hairline that lifts on hover. */
+.VPFeature {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--vp-c-bg-soft), var(--vp-c-bg-soft)) padding-box,
+    linear-gradient(
+        135deg,
+        rgba(128, 77, 255, 0.35),
+        rgba(56, 189, 248, 0.2),
+        rgba(244, 114, 182, 0.25)
+      )
+      border-box;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.VPFeature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(128, 77, 255, 0.12);
+}
+.VPFeature .title {
+  font-size: 15px;
+}
+
+/* Home sections added by the layout. */
+.sw-section {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 48px 24px 24px;
+}
+.sw-section h2 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.sw-section > p {
+  margin: 0 0 24px;
+  color: var(--vp-c-text-2);
+}
+.sw-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.sw-step {
+  padding: 20px 20px 18px;
+  border-radius: 14px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+}
+.sw-step b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: var(--sw-accent);
+  color: #fff;
+  font-size: 13px;
+}
+.sw-step h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.sw-step p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--vp-c-text-2);
+}
+.sw-shot {
+  margin: 28px auto 0;
+  border-radius: 16px;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 30px 80px rgba(128, 77, 255, 0.14);
+  overflow: hidden;
+}
+.sw-shot img {
+  display: block;
+  width: 100%;
+}
+.sw-frameworks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.sw-frameworks h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vp-c-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.sw-frameworks pre {
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--vp-code-block-bg);
+  font-family: var(--vp-font-family-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  color: var(--vp-c-text-1);
+}
+
+/* Docs pages. */
+.vp-doc h2 {
+  border-top: none;
+  padding-top: 8px;
+  margin-top: 40px;
+}
+.vp-doc .header-anchor {
+  color: var(--vp-c-brand-2);
+}
+.vp-doc div[class*='language-'] {
+  border-radius: 12px;
+}
+.VPNavBarTitle .title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }

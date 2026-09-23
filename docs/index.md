@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: SparkWrite
+  name: ai-sparkwrite-editor
   text: Tell it what you want. It writes it in the page.
   tagline: An AI-first editor SDK on Tiptap. Prose, tables, code, task lists, formulas and diagrams are produced by the model and land in the document as real, editable blocks — streaming, undoable, in 16 languages. React and Vue on one framework-free core.
   image:
     src: /logo.svg
-    alt: SparkWrite
+    alt: ai-sparkwrite-editor
   actions:
     - theme: brand
       text: Get Started

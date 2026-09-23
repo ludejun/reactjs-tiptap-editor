@@ -8,7 +8,9 @@ Insert linked or uploaded videos into the document.
 
 ## Setup
 
-Start with the packages in [Getting Started](/guide/getting-started). This complete example registers the feature and renders its UI. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+Start with the packages in [Getting Started](/guide/getting-started). The complete example below registers the feature and renders its UI — pick the React or the Vue tab. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+
+::: code-group
 
 ```tsx
 'use client';
@@ -93,7 +95,91 @@ export default function VideoExample() {
     </RichTextProvider>
   );
 }
-```
+``` [React]
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { Video } from 'ai-sparkwrite-editor/core';
+import { RichTextProvider, RichTextVideo } from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+function uploadVideo(
+  file: File,
+  onProgress?: (progress: { loaded: number; total: number }) => void
+) {
+  return new Promise<string>((resolve, reject) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const request = new XMLHttpRequest();
+    request.open('POST', '/api/videos');
+    request.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        onProgress?.({ loaded: event.loaded, total: event.total });
+      }
+    });
+    request.addEventListener('load', () => {
+      if (request.status < 200 || request.status >= 300) {
+        reject(new Error('Video upload failed'));
+        return;
+      }
+
+      try {
+        const data = JSON.parse(request.responseText);
+        if (typeof data.url !== 'string' || !data.url) {
+          throw new Error('Upload response must contain a video URL');
+        }
+        resolve(data.url);
+      } catch (error) {
+        reject(error);
+      }
+    });
+    request.addEventListener('error', () => reject(new Error('Video upload failed')));
+    request.send(formData);
+  });
+}
+
+const extensions = [
+  Document,
+  Paragraph,
+  Text,
+  Video.configure({
+    resourceVideo: 'both',
+    acceptMimes: ['video/mp4', 'video/webm'],
+    maxSize: 100 * 1024 * 1024,
+    multiple: true,
+    uploadConcurrency: 3,
+    showUploadProgress: true,
+    upload: (file, { onProgress } = {}) => uploadVideo(file, onProgress),
+    onError: ({ message, file }) => {
+      console.error(message, file?.name);
+    },
+  }),
+];
+
+const editor = useEditor({
+  extensions,
+  content: '<p>Try this feature here.</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextVideo />
+    <EditorContent :editor="editor" />
+  </RichTextProvider>
+</template>
+``` [Vue]
+
+:::
+
+::: tip Vue
+Not in the Vue layer yet: `RichTextBubbleVideo` — run the corresponding command from your own control, or see [Frameworks](/guide/frameworks).
+:::
 
 ## How to use
 

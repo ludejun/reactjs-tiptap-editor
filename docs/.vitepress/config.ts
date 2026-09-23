@@ -1,6 +1,4 @@
 import { defineConfig } from 'vitepress';
-import llmstxt from 'vitepress-plugin-llms';
-import { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms';
 
 import { getLocaleConfig } from './locale';
 import { transformHead } from './transformHead';
@@ -14,9 +12,6 @@ export default defineConfig({
   ignoreDeadLinks: true,
   locales: {
     root: getLocaleConfig('en'),
-  },
-  vite: {
-    plugins: [llmstxt()],
   },
   themeConfig: {
     search: {
@@ -49,9 +44,7 @@ export default defineConfig({
   },
   transformHead,
   markdown: {
-    config(md) {
-      md.use(copyOrDownloadAsMarkdownButtons);
-    },
+    config(md) {},
   },
   // markdown: {
   //   codeTransformers: [

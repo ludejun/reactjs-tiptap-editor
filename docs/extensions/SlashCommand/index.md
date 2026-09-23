@@ -12,7 +12,9 @@ Open an insertion menu by typing `/` in the document.
 
 ## Setup
 
-Start with the packages in [Getting Started](/guide/getting-started). This complete example registers the feature and renders its UI. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+Start with the packages in [Getting Started](/guide/getting-started). The complete example below registers the feature and renders its UI — pick the React or the Vue tab. In an existing editor, merge the imports and extension entries into your setup, and place the controls inside your existing `RichTextProvider`.
+
+::: code-group
 
 ```tsx
 'use client';
@@ -44,7 +46,13 @@ export default function SlashCommandExample() {
     </RichTextProvider>
   );
 }
-```
+``` [React]
+
+:::
+
+::: warning React only
+This feature's interactive UI depends on React libraries; the Vue layer does not include it yet. See [Frameworks](/guide/frameworks) for what the Vue entry covers.
+:::
 
 ## How to use
 

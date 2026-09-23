@@ -14,6 +14,8 @@ Records every edit as timestamped ProseMirror steps, so a writing session can be
 
 Start with the packages in [Getting Started](/guide/getting-started). The extension has no toolbar control; you decide when to record and when to replay.
 
+::: code-group
+
 ```tsx
 'use client';
 
@@ -47,7 +49,44 @@ export default function RecorderExample() {
     </RichTextProvider>
   );
 }
-```
+``` [React]
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { Recorder, getRecording, replayRecording } from 'ai-sparkwrite-editor/core';
+import { RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const extensions = [Document, Paragraph, Text, Recorder.configure({ autoStart: true })];
+
+const editor = useEditor({
+  extensions,
+  content: '<p>Type here.</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <button onClick={() => editor.commands.stopRecording()}>Stop</button>
+    <button
+    onClick={() => {
+    const recording = getRecording(editor);
+    if (recording) void replayRecording(editor, recording, { speed: 4 });
+    }}
+    >
+    Replay ×4
+    </button>
+    <EditorContent :editor="editor" />
+  </RichTextProvider>
+</template>
+``` [Vue]
+
+:::
+
 
 ## How it works
 

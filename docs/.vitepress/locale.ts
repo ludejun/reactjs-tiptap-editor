@@ -24,7 +24,7 @@ export function getLocaleConfig(lang: string) {
   const t = createTranslate(lang);
 
   const urlPrefix = lang && lang !== 'en' ? `/${lang}` : '';
-  const title = t('SparkWrite');
+  const title = 'ai-sparkwrite-editor';
   const description = t(
     'AI-first rich-text editor SDK on Tiptap: streaming AI writing as real document nodes, formulas and diagrams from a sentence, 16 languages, session replay. React UI, framework-agnostic core.'
   );
@@ -63,25 +63,12 @@ export function getLocaleConfig(lang: string) {
       link: 'https://ludejun.github.io/ai-sparkwrite-editor/playground/',
     },
     {
-      text: t('Skills'),
-      link: `${urlPrefix}/skills`,
-      activeMatch: '/skills',
-    },
-    {
-      text: 'llmstxt',
-      link: 'https://ludejun.github.io/ai-sparkwrite-editor/llms-full.txt',
-    },
-    {
       text: `v${version}`,
       items: VERSIONS,
     },
   ];
 
   const sidebar: DefaultTheme.SidebarItem[] = [
-    {
-      text: t('Skills'),
-      link: `${urlPrefix}/skills`,
-    },
     {
       text: t('Guide'),
       items: [
@@ -212,7 +199,7 @@ export function getLocaleConfig(lang: string) {
     ],
     footer: {
       message: t('Made with ❤️'),
-      copyright: 'MIT License © 2024-PRESENT <a href="https://github.com/hunghg255">hunghg255</a>',
+      copyright: 'MIT License © 2026-PRESENT <a href="https://github.com/ludejun">ludejun</a>',
     },
     editLink: {
       pattern: `${githubLink}/edit/main/docs/:path`,

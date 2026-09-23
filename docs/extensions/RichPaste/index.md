@@ -19,6 +19,8 @@ Pasting from a web page, Excel, Google Docs or Word already keeps headings, bold
 
 Start with the packages in [Getting Started](/guide/getting-started). This complete example registers the feature. It has no toolbar control; add it next to `CodeBlock`, `BulletList` and `OrderedList` so there is something to paste into.
 
+::: code-group
+
 ```tsx
 'use client';
 
@@ -50,7 +52,35 @@ export default function RichPasteExample() {
     </RichTextProvider>
   );
 }
-```
+``` [React]
+
+```vue
+<script setup lang="ts">
+import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { BulletList, OrderedList, RichPaste } from 'ai-sparkwrite-editor/core';
+import { CodeBlock, RichTextProvider } from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
+
+const extensions = [Document, Paragraph, Text, BulletList, OrderedList, CodeBlock, RichPaste];
+
+const editor = useEditor({
+  extensions,
+  content: '<p>Paste a Word list or a snippet from VS Code here.</p>',
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <EditorContent :editor="editor" />
+  </RichTextProvider>
+</template>
+``` [Vue]
+
+:::
+
 
 ## Options
 

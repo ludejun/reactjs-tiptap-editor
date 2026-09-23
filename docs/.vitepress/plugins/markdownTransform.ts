@@ -43,8 +43,8 @@ export function MarkdownTransform(): Plugin {
   };
 }
 
-const GITHUB_BLOB_URL = 'https://github.com/ludejun/ai-sparkwrite-editor/blob/master/src/extensions';
-const GITHUB_BLOB_DOCS_URL = 'https://github.com/ludejun/ai-sparkwrite-editor/blob/master/docs/extensions';
+const GITHUB_BLOB_URL = 'https://github.com/ludejun/ai-sparkwrite-editor/blob/main/src/extensions';
+const GITHUB_BLOB_DOCS_URL = 'https://github.com/ludejun/ai-sparkwrite-editor/blob/main/docs/extensions';
 
 export async function getFunctionMarkdown(pkg: string, name: string) {
   const URL =

@@ -176,3 +176,11 @@ export {
 // Text and fonts
 export { localeActions, translate, en, getLocaleState, subscribeLocale } from '@/locales/store';
 export { DEFAULT_FONT_FAMILY_LIST, SCRIPT_FONT_FAMILY_LIST } from '@/constants';
+
+// Import/export and source view (controls are React; the extensions and
+// their commands work anywhere)
+export { ExportMarkdown, getMarkdown } from '@/extensions/ExportMarkdown/ExportMarkdown';
+export { ExportPdf } from '@/extensions/ExportPdf/ExportPdf';
+export { ExportWord } from '@/extensions/ExportWord/ExportWord';
+export { ImportWord } from '@/extensions/ImportWord/ImportWord';
+export { CodeView } from '@/extensions/CodeView/CodeView';
