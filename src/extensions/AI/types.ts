@@ -55,11 +55,22 @@ export interface AIPanelComponentProps {
 export type AIWriteTarget = 'selection' | 'cursor' | 'start' | 'end' | 'document' | Range;
 
 export interface AIOptions {
+  /**
+   * Your own backend URL — the recommended setup. The editor POSTs JSON
+   * `{ messages, systemPrompt, stream, maxTokens }` and reads either a JSON
+   * `{ text }` answer or a `text/event-stream` whose `data:` events carry
+   * `{ text }` deltas (`[DONE]` ends it). OpenAI and Anthropic responses or
+   * streams piped through unchanged are understood too. Which provider and
+   * model answer is the server's business; `protocol`, `model` and `apiKey`
+   * are not needed. Default `''`.
+   */
+  endpoint: string;
+  /** Provider protocol for direct calls without `endpoint`. */
   protocol: AIProtocol;
   apiKey: string | (() => string | Promise<string>);
   /** API root including /v1. A same-origin proxy can omit apiKey. */
   baseURL: string;
-  /** Required when using the built-in transport. */
+  /** Model ID for direct calls without `endpoint`. */
   model: string;
   maxTokens: number;
   headers: Record<string, string>;

@@ -1,7 +1,7 @@
 import { Sparkles, Square } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { generateAIText } from '@/extensions/AI/client';
+import { generateAIText, hasAITransport } from '@/extensions/AI/client';
 import { useLocale } from '@/locales';
 
 import type { AIOptions } from '@/extensions/AI/types';
@@ -12,7 +12,7 @@ export function usableAIOptions(editor: Editor | null | undefined): AIOptions | 
   const extension = editor?.extensionManager.extensions.find((item) => item.name === 'ai');
   const options = extension?.options as AIOptions | undefined;
 
-  if (!options || (!options.generate && !options.model)) {
+  if (!options || !hasAITransport(options)) {
     return null;
   }
 

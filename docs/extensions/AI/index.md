@@ -30,12 +30,7 @@ import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [
   // Document, Paragraph, Text, History, …
-  AI.configure({
-    protocol: 'openai', // 'openai' | 'anthropic'
-    apiKey: 'your-api-key', // or () => string | Promise<string>
-    model: 'your-model-id',
-    baseURL: 'https://api.openai.com/v1', // optional root including /v1
-  }),
+  AI.configure({ endpoint: '/api/ai' }), // your backend; which provider and model answer is its business
   AIAutocomplete, // optional: ghost-text suggestions
   SlashCommand,
 ];
@@ -48,7 +43,7 @@ const extensions = [
 //   <SlashCommandList />
 ```
 
-For Anthropic set `protocol: 'anthropic'` and omit `baseURL` (defaults to `https://api.anthropic.com/v1`). The transport speaks [Anthropic Messages](https://platform.claude.com/docs/en/api/messages/create) or [OpenAI Chat Completions](https://developers.openai.com/api/reference/resources/chat) and asks for server-sent events.
+`endpoint` is all the frontend needs: the editor POSTs the conversation as JSON to that URL and reads the answer back, streamed or not — see [Your endpoint](#your-endpoint) for the contract. No protocol, model or key is configured in the browser. A direct call to OpenAI or Anthropic and a fully custom `generate` remain available for experiments and special transports.
 
 ## The composer dock
 
@@ -128,9 +123,62 @@ The panel opens in the document flow under the selection, streams the answer wit
 
 Presets are plain prompts; a custom `buttonBubble` can place `RichTextAIImprove` (from `ai-sparkwrite-editor/bubble/ai`) anywhere.
 
-## Production: keep keys on your server
+## Your endpoint
 
-A key passed to a browser extension is visible to the browser. Either configure `baseURL: '/api/ai'` with no key (your backend speaks the selected protocol), or supply a transport:
+The frontend never knows which provider or model answers. For every request it sends:
+
+```http
+POST /api/ai
+Content-Type: application/json
+
+{
+  "messages": [{ "role": "user", "content": "Summarize:\n\n…", "attachments": [] }],
+  "systemPrompt": "You are a writing assistant…",
+  "stream": true,
+  "maxTokens": 2048
+}
+```
+
+`messages` is the conversation so far (`user` / `assistant` turns; text files the user attached are already inlined into `content`, images travel on `attachments` as data URLs). `stream` is `true` whenever the UI can render deltas as they arrive.
+
+Answer with either:
+
+- **JSON** — `{ "text": "…markdown…" }` (`content` or `markdown` are accepted too), or
+- **Server-sent events** (`Content-Type: text/event-stream`) — one `data: {"text":"…"}` event per delta, `data: [DONE]` at the end.
+
+A plain-text body, or an OpenAI Chat Completions / Anthropic Messages response or stream piped through unchanged, is read as well. So the simplest server is a proxy that adds the key and forwards the provider's stream:
+
+```ts
+// Node / Express with the OpenAI SDK — any provider or agent framework works the same way.
+app.post('/api/ai', async (req, res) => {
+  const { messages, systemPrompt, stream, maxTokens } = req.body;
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    max_completion_tokens: maxTokens,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      ...messages.map(({ role, content }) => ({ role, content })),
+    ],
+    stream,
+  });
+  if (!stream) return res.json({ text: completion.choices[0].message.content });
+  res.setHeader('Content-Type', 'text/event-stream');
+  for await (const chunk of completion) {
+    const text = chunk.choices[0]?.delta?.content;
+    if (text) res.write(`data: ${JSON.stringify({ text })}\n\n`);
+  }
+  res.write('data: [DONE]\n\n');
+  res.end();
+});
+```
+
+`headers` adds request headers (a CSRF token, a tenant id); cookies travel with same-origin requests as usual. A failed request is shown as a generic message with the status code — the response body is never displayed, so a proxy cannot leak credentials through it. `stream: false` on the extension always asks for a JSON answer.
+
+## Direct provider calls and custom transports
+
+Without `endpoint` the extension speaks [OpenAI Chat Completions](https://developers.openai.com/api/reference/resources/chat) or [Anthropic Messages](https://platform.claude.com/docs/en/api/messages/create) itself: `protocol`, `model`, optional `baseURL` (API root including `/v1`) and `apiKey` (a string or an async getter). A key in a browser bundle is visible to the browser, so keep this for local experiments or a same-origin proxy that injects the key (`baseURL: '/api/openai'`, no `apiKey`).
+
+`generate(request, onChunk)` replaces the transport entirely — for an SDK client, a WebSocket, or an agent framework:
 
 ```tsx
 AI.configure({
@@ -152,21 +200,22 @@ AI.configure({
 });
 ```
 
-`generate` replaces the built-in transport, needs no model or key in the frontend, and receives attachments on `message.attachments`. Error messages you throw are shown in the UI; the built-in transport never shows raw provider errors.
+`generate` receives attachments on `message.attachments`; call `onChunk` with each piece of text to stream and resolve with the full text. Error messages you throw are shown in the UI.
 
 ## Options
 
 | Option                                         | Default                      | Purpose                                                                                                                                                                                                       |
 | ---------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `protocol`                                     | `'openai'`                   | OpenAI Chat Completions or Anthropic Messages                                                                                                                                                                 |
-| `apiKey`                                       | `''`                         | Key or async key getter; omit for an authenticated proxy                                                                                                                                                      |
-| `model`                                        | `''`                         | Model ID for the built-in transport                                                                                                                                                                           |
-| `baseURL`                                      | provider `/v1` root          | API root, not a complete endpoint                                                                                                                                                                             |
+| `endpoint`                                     | `''`                         | **The recommended setup.** Your backend URL: receives `{ messages, systemPrompt, stream, maxTokens }` as JSON, answers `{ text }` or a `text/event-stream` of `{ text }` deltas                               |
+| `generate`                                     | `null`                       | Custom transport `(request, onChunk?) => Promise<string>`; replaces `endpoint` and the provider calls                                                                                                         |
+| `protocol`                                     | `'openai'`                   | Direct provider calls only: OpenAI Chat Completions or Anthropic Messages                                                                                                                                     |
+| `model`                                        | `''`                         | Direct provider calls only: model ID                                                                                                                                                                          |
+| `apiKey`                                       | `''`                         | Direct provider calls only: key or async key getter                                                                                                                                                           |
+| `baseURL`                                      | provider `/v1` root          | Direct provider calls only: API root including `/v1`                                                                                                                                                          |
 | `maxTokens`                                    | `2048`                       | Maximum generated tokens                                                                                                                                                                                      |
 | `headers`                                      | `{}`                         | Extra or overridden request headers                                                                                                                                                                           |
 | `systemPrompt`                                 | writing-assistant prompt     | Asks for the user's language and Markdown-only output                                                                                                                                                         |
-| `generate`                                     | `null`                       | Custom transport `(request, onChunk?) => Promise<string>`                                                                                                                                                     |
-| `stream`                                       | `true`                       | Ask for server-sent events                                                                                                                                                                                    |
+| `stream`                                       | `true`                       | Ask for server-sent events; `false` waits for a JSON answer                                                                                                                                                   |
 | `spaceTrigger`                                 | `true`                       | Space on an empty line opens Ask AI                                                                                                                                                                           |
 | `documentContext`                              | `12000`                      | Characters of the document sent with document-level prompts                                                                                                                                                   |
 | `serializeDocument`                            | the editor's Markdown export | `(editor, range) => string`: how a span is turned into text for the model. Multi-block spans and the whole document go as Markdown so tables, lists and code keep their shape; override to redact or reformat |
@@ -182,7 +231,7 @@ Only the selected text (or the document context you allow), your prompt and succ
 
 ## Streaming and rich answers
 
-With the built-in transport the provider is asked for server-sent events (OpenAI `stream: true`, Anthropic `content_block_delta`) and each delta is shown as it arrives; `stream: false` waits for the whole answer. The answer is Markdown rendered **through the editor's own schema**: the preview is the exact HTML the editor would save, with the document's styles, and Apply inserts real nodes. A single-paragraph answer merges into the paragraph being edited; anything with block structure replaces whole blocks. Unknown tags, scripts and attributes are dropped on the way in.
+With `endpoint` the deltas are the `data: {"text"}` events your server sends; with direct provider calls the provider is asked for server-sent events (OpenAI `stream: true`, Anthropic `content_block_delta`). Each delta is shown as it arrives; `stream: false` waits for the whole answer. The answer is Markdown rendered **through the editor's own schema**: the preview is the exact HTML the editor would save, with the document's styles, and Apply inserts real nodes. A single-paragraph answer merges into the paragraph being edited; anything with block structure replaces whole blocks. Unknown tags, scripts and attributes are dropped on the way in.
 
 ## Custom rendering (React)
 

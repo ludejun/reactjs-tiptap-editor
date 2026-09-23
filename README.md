@@ -35,7 +35,7 @@
 - **Selection menu** — improve, shorten, expand, simplify, change tone, explain, translate, turn into a table or a list. Works after Select All.
 - **Ghost text** — pause while typing and the next words appear in grey; Tab keeps them. Space on an empty line asks AI.
 - **Formulas and diagrams from a sentence** — the Katex and Mermaid dialogs write the source and render it live.
-- **Your model** — OpenAI or Anthropic protocol, any proxy, or your own `generate(request, onChunk)`. Answers are parsed through the editor schema: nothing is pasted, nothing unknown gets in.
+- **Your backend, your model** — the frontend configures one `endpoint`. It receives the conversation as JSON and answers with text or a stream; which provider and model reply is your business. Direct OpenAI/Anthropic calls and a custom `generate` remain available. Answers are parsed through the editor schema: nothing is pasted, nothing unknown gets in.
 
 **Everything else a document needs**
 
@@ -64,8 +64,6 @@ import { Text } from '@tiptap/extension-text';
 import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
 import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
 import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
-import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
 import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -76,9 +74,7 @@ export function Editor() {
       Paragraph,
       Text,
       Bold,
-      Heading,
-      Table,
-      AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }), // keys stay on your server
+      AI.configure({ endpoint: '/api/ai' }), // one URL on your backend; it picks the provider and model
       AIAutocomplete,
     ],
     content: '<p>Hello</p>',
@@ -92,9 +88,7 @@ export function Editor() {
       <RichTextToolbar>
         <RichTextAI />
         <RichTextToolbarDivider />
-        <RichTextHeading />
         <RichTextBold />
-        <RichTextTable />
       </RichTextToolbar>
       <EditorContent editor={editor} />
       <RichTextAIComposer />
@@ -116,7 +110,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Bold, Heading, Table } from 'ai-sparkwrite-editor/core';
+import { Bold } from 'ai-sparkwrite-editor/core';
 import {
   AI,
   AIAutocomplete,
@@ -126,9 +120,7 @@ import {
   RichTextProvider,
   RichTextToolbar,
   RichTextToolbarDivider,
-  RichTextHeading,
   RichTextBold,
-  RichTextTable,
 } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -138,9 +130,7 @@ const editor = useEditor({
     Paragraph,
     Text,
     Bold,
-    Heading,
-    Table,
-    AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+    AI.configure({ endpoint: '/api/ai' }), // one URL on your backend; it picks the provider and model
     AIAutocomplete,
   ],
   content: '<p>Hello</p>',
@@ -152,7 +142,7 @@ const editor = useEditor({
     <RichTextToolbar>
       <RichTextAI />
       <RichTextToolbarDivider />
-      <RichTextHeading /><RichTextBold /><RichTextTable />
+      <RichTextBold />
     </RichTextToolbar>
     <EditorContent :editor="editor" />
     <RichTextAIComposer />
@@ -162,6 +152,8 @@ const editor = useEditor({
 ```
 
 Extensions come from `ai-sparkwrite-editor/core` (framework-free), the Vue UI from `ai-sparkwrite-editor/vue`, both on the same stylesheet as the React controls.
+
+Your `/api/ai` receives `{ messages, systemPrompt, stream }` and answers `{ text }` or a stream of `data: {"text"}` events — the contract and a ten-line server are in the [AI docs](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/). Every other feature works the same way as `bold`: the extension and its control come from `ai-sparkwrite-editor/<feature>`, listed under [Features](https://ludejun.github.io/ai-sparkwrite-editor/guide/features).
 
 ## Documentation
 

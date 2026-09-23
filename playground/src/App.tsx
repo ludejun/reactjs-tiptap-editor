@@ -353,13 +353,16 @@ const extensions = [
     // ]
   }),
   AI.configure({
+    // The simplest real setup: one URL on your backend (docs → AI → Your endpoint).
+    endpoint: import.meta.env.VITE_AI_ENDPOINT || '',
     protocol: import.meta.env.VITE_AI_PROTOCOL === 'anthropic' ? 'anthropic' : 'openai',
     apiKey: import.meta.env.VITE_AI_API_KEY || '',
     model: import.meta.env.VITE_AI_MODEL || '',
     baseURL: import.meta.env.VITE_AI_BASE_URL || '',
-    // Without a model the playground answers itself, so the AI flow — streaming,
-    // markdown rendering, Apply — can be tried without a key.
-    generate: import.meta.env.VITE_AI_MODEL ? null : demoAIGenerate,
+    // Without an endpoint or a model the playground answers itself, so the AI
+    // flow — streaming, markdown rendering, Apply — can be tried without a key.
+    generate:
+      import.meta.env.VITE_AI_ENDPOINT || import.meta.env.VITE_AI_MODEL ? null : demoAIGenerate,
   }),
   AIAutocomplete,
   SlashCommand,

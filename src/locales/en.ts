@@ -251,10 +251,10 @@ const locale = {
   'editor.ai.attach.image': 'Add Image',
   'editor.ai.attach.file': 'Add File',
   'editor.ai.attach.remove': 'Remove {name}',
-  'editor.ai.error.noModel': 'Configure an AI model before sending a request.',
+  'editor.ai.error.noModel': 'Configure an AI endpoint or model before sending a request.',
   'editor.ai.error.protocol': 'Unsupported AI protocol. Use openai or anthropic.',
   'editor.ai.error.request':
-    'AI request failed ({status}). Check your model, credentials, and API endpoint.',
+    'AI request failed ({status}). Check your endpoint, model and credentials.',
   'editor.ai.error.empty': 'AI returned no text. Try another prompt.',
   'editor.ai.error.generic': 'Unable to generate text. Please try again.',
   'editor.ai.error.fileTooBig': '{name} is larger than {size}.',

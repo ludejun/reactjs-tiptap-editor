@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { generateAIText } from '../src/extensions/AI/client';
+import { generateAIText, hasAITransport } from '../src/extensions/AI/client';
 
 import type { AIOptions, AIRequest } from '../src/extensions/AI/types';
 
 const options: AIOptions = {
+  endpoint: '',
   protocol: 'openai',
   apiKey: 'test-key',
   baseURL: '',
@@ -78,7 +79,7 @@ test('proxy, async keys, failures, empty responses, and cancellation', async () 
     await assert.rejects(generateAIText(options, request()), /no text/);
     await assert.rejects(
       generateAIText({ ...options, model: '' }, request()),
-      /Configure an AI model/
+      /Configure an AI endpoint or model/
     );
     const controller = new AbortController();
     controller.abort();
@@ -135,6 +136,96 @@ test('server-sent events stream deltas and resolve with the full text', async ()
       return Response.json({ choices: [{ message: { content: 'plain' } }] });
     };
     assert.equal(await generateAIText(options, request()), 'plain');
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+
+test('an endpoint receives the conversation as JSON and answers with { text } or a stream', async () => {
+  const original = globalThis.fetch;
+  try {
+    const endpoint = { ...options, endpoint: '/api/ai', model: '', headers: { 'X-Team': 'docs' } };
+    assert.ok(hasAITransport(endpoint));
+    assert.ok(!hasAITransport({ ...options, model: '' }));
+
+    // JSON answer; the request carries messages, systemPrompt, stream and maxTokens.
+    globalThis.fetch = async (url, init) => {
+      assert.equal(url, '/api/ai');
+      const headers = init!.headers as Record<string, string>;
+      assert.equal(headers['X-Team'], 'docs');
+      assert.equal(headers.Authorization, undefined);
+      const body = JSON.parse(init!.body as string);
+      assert.equal(body.model, undefined);
+      assert.equal(body.systemPrompt, 'Write text');
+      assert.equal(body.stream, false);
+      assert.equal(body.maxTokens, 128);
+      assert.deepEqual(body.messages, [{ role: 'user', content: 'Hello', attachments: [] }]);
+      return Response.json({ text: 'From my server' });
+    };
+    assert.equal(await generateAIText(endpoint, request()), 'From my server');
+
+    // Plain text and provider-shaped answers work too.
+    globalThis.fetch = async () => new Response('plain answer');
+    assert.equal(await generateAIText(endpoint, request()), 'plain answer');
+    globalThis.fetch = async () => Response.json({ choices: [{ message: { content: 'openai' } }] });
+    assert.equal(await generateAIText(endpoint, request()), 'openai');
+    globalThis.fetch = async () => Response.json({ ok: true });
+    await assert.rejects(generateAIText(endpoint, request()), /no text/);
+    globalThis.fetch = async () => new Response('leaked-secret', { status: 500 });
+    await assert.rejects(generateAIText(endpoint, request()), /AI request failed \(500\)/);
+
+    // Streaming: { text } events, raw strings and OpenAI chunks all count as deltas.
+    globalThis.fetch = async (_url, init) => {
+      assert.equal(JSON.parse(init!.body as string).stream, true);
+      const encoder = new TextEncoder();
+      const events = [
+        'data: {"text":"Hel"}\n\n',
+        'data: lo\n\n',
+        'data: {"choices":[{"delta":{"content":"!"}}]}\n\n',
+        'data: [DONE]\n\n',
+      ];
+      const body = new ReadableStream({
+        start(controller) {
+          for (const event of events) controller.enqueue(encoder.encode(event));
+          controller.close();
+        },
+      });
+      return new Response(body, { headers: { 'content-type': 'text/event-stream' } });
+    };
+    const chunks: string[] = [];
+    assert.equal(
+      await generateAIText(endpoint, request(), (chunk) => chunks.push(chunk)),
+      'Hello!'
+    );
+    assert.deepEqual(chunks, ['Hel', 'lo', '!']);
+
+    // File attachments are inlined into the content; images travel on `attachments`.
+    globalThis.fetch = async (_url, init) => {
+      const body = JSON.parse(init!.body as string);
+      assert.match(body.messages[0].content, /--- notes.txt ---\nsome notes/);
+      assert.equal(body.messages[0].attachments.length, 1);
+      assert.equal(body.messages[0].attachments[0].kind, 'image');
+      return Response.json({ text: 'ok' });
+    };
+    const req = request();
+    req.messages[0].attachments = [
+      {
+        id: '1',
+        name: 'notes.txt',
+        mediaType: 'text/plain',
+        dataUrl: 'data:,',
+        kind: 'file',
+        text: 'some notes',
+      },
+      {
+        id: '2',
+        name: 'a.png',
+        mediaType: 'image/png',
+        dataUrl: 'data:image/png;base64,AAAA',
+        kind: 'image',
+      },
+    ];
+    assert.equal(await generateAIText(endpoint, req), 'ok');
   } finally {
     globalThis.fetch = original;
   }

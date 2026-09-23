@@ -35,6 +35,7 @@ export const AICore = Extension.create<AIOptions>({
   name: 'ai',
   addOptions() {
     return {
+      endpoint: '',
       protocol: 'openai',
       apiKey: '',
       baseURL: '',

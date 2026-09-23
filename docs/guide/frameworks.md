@@ -148,11 +148,7 @@ The framework-free pieces are re-exported so one import covers a Vue app: `AICor
 import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/vue';
 
 const editor = useEditor({
-  extensions: [
-    ,
-    /* … */ AI.configure({ model: 'gpt-4o-mini', apiKey: () => fetchKey() }),
-    AIAutocomplete,
-  ],
+  extensions: [, /* … */ AI.configure({ endpoint: '/api/ai' }), AIAutocomplete],
 });
 </script>
 

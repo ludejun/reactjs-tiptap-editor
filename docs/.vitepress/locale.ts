@@ -34,9 +34,11 @@ export function getLocaleConfig(lang: string) {
     ['meta', { property: 'og:description', content: description }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:url', content: docsLink }],
+    ['meta', { property: 'og:image', content: `${docsLink}/og.png` }],
+    ['meta', { property: 'twitter:image', content: `${docsLink}/og.png` }],
     ['meta', { property: 'twitter:card', content: 'summary_large_image' }],
     ['link', { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' }],
-    ['meta', { name: 'theme-color', content: '#914796' }],
+    ['meta', { name: 'theme-color', content: '#7c3aed' }],
     [
       'link',
       {
@@ -187,7 +189,7 @@ export function getLocaleConfig(lang: string) {
   ];
 
   const themeConfig: DefaultTheme.Config = {
-    logo: '/logo.png',
+    logo: '/logo.svg',
     nav,
     sidebar,
     socialLinks: [

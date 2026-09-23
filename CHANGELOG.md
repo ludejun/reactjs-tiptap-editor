@@ -25,6 +25,7 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 - The playground's stand-in model transforms the real text — fixes the page's typos, tabulates the selection, outlines the headings — so every AI entry can be tried without a key.
 - `composer: false` on the AI extension removes the dock together with its toolbar button, shortcut, slash entry and menu item; the dock takes `actions`, `showTarget`, `hint`, `placeholder`, `rows`, `gradient`, `accent` props. Chips sit on one line with a `+N` menu for the rest; hovering shows the prompt.
 - English tooltip and menu labels use Title Case throughout ("AI Composer", "Fix Grammar Everywhere").
+- **`endpoint`** — the frontend configures one URL on your backend and nothing else. The editor POSTs `{ messages, systemPrompt, stream, maxTokens }` as JSON and reads `{ text }` or a `text/event-stream` of `{ text }` deltas; OpenAI/Anthropic responses piped through unchanged are understood too. `protocol` / `model` / `apiKey` stay for direct provider calls, `generate` for custom transports.
 - **`writeWithAI(editor, { prompt, target })`**, the framework-free engine behind the dock: streams Markdown into a tracked span that follows other edits, and returns `keep()`/`discard()` and the conversation for follow-ups.
 - **Ghost-text autocomplete** (`AIAutocomplete`): after a pause at the end of a block the next words appear in grey; Tab accepts.
 - **Space on an empty line** opens Ask AI (`spaceTrigger`).

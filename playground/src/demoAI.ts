@@ -6,7 +6,7 @@ import type { AIRequest } from 'ai-sparkwrite-editor/ai';
  * plausible transformation of the *actual* text, streamed in small pieces,
  * so every AI entry point can be tried end to end without a key:
  * rewrites really rewrite, "fix grammar" really fixes the typos in the page,
- * "turn into table" really tabulates the selection. Set `VITE_AI_MODEL` (and
+ * "turn into table" really tabulates the selection. Set `VITE_AI_ENDPOINT` or `VITE_AI_MODEL` (and
  * a key) to talk to a real model instead. `window.__aiGenerate` overrides it.
  */
 export async function demoAIGenerate(
@@ -111,7 +111,7 @@ function compose(message: string, history: AIRequest['messages']): string {
     '```',
     '',
     '- [x] streaming',
-    '- [ ] your API key (set `VITE_AI_MODEL` to use a real model)',
+    '- [ ] your backend (set `VITE_AI_ENDPOINT` to use a real model)',
   ].join('\n');
 }
 

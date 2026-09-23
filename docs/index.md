@@ -28,7 +28,7 @@ features:
   - title: Formulas and diagrams from a sentence
     details: Describe a formula or a flow; the Katex and Mermaid dialogs write the source and render it live.
   - title: Your model, your rules
-    details: OpenAI or Anthropic protocol, any proxy, or your own transport. Answers are parsed through the editor schema, so nothing is pasted and nothing unknown gets in.
+    details: One URL on your backend receives the conversation as JSON and answers with text or a stream; which provider and model reply is your business. Answers are parsed through the editor schema, so nothing is pasted and nothing unknown gets in.
   - title: Composable, React or Vue
     details: Create the Tiptap editor, pick extensions, place the controls. Each feature ships from one subpath; the AI engine and every block live in a framework-free core shared by both UIs.
   - title: Everything a document needs

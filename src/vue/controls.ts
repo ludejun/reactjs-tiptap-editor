@@ -53,7 +53,7 @@ import {
 } from 'vue';
 
 import { COLORS_LIST, DEFAULT_FONT_SIZE_LIST, DEFAULT_LINE_HEIGHT_LIST } from '@/constants';
-import { generateAIText } from '@/extensions/AI/client';
+import { generateAIText, hasAITransport } from '@/extensions/AI/client';
 import { aiOptionsOf } from '@/extensions/AI/writer';
 import { DIVIDER_VARIANTS } from '@/extensions/Divider/Divider';
 import { getServiceSrc } from '@/extensions/Iframe/utils';
@@ -101,7 +101,7 @@ function hasCommand(editor: Editor, name: string): boolean {
 /** The AI extension's options when it is registered and can answer, else null. */
 export function usableAIOptions(editor: Editor | null | undefined): AIOptions | null {
   const options = editor ? aiOptionsOf(editor) : null;
-  return options && (options.generate || options.model) ? options : null;
+  return options && hasAITransport(options) ? options : null;
 }
 
 function formatSize(bytes: number): string {

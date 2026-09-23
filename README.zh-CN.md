@@ -35,7 +35,7 @@
 - **选区菜单**——润色、缩写、扩写、简化、换语气、解释、翻译、转表格、转列表。全选后同样可用。
 - **灰色续写**——打字停顿后出现下一句的建议，Tab 接受；空行按空格呼出 AI。
 - **一句话出公式和图表**——Katex 与 Mermaid 对话框写出源码并实时渲染。
-- **模型你定**——OpenAI 或 Anthropic 协议、任意代理，或自定义 `generate(request, onChunk)`。回答经编辑器 schema 解析：不是粘贴，也不会带进未知内容。
+- **接口即模型**——前端只配一个 `endpoint`：对话以 JSON 发到你的服务端，返回文本或 SSE 流即可，用哪家模型由后端决定；也可直连 OpenAI/Anthropic 或自定义 `generate`。回答经编辑器 schema 解析：不是粘贴，也不会带进未知内容。
 
 **文档需要的其他一切**
 
@@ -64,8 +64,6 @@ import { Text } from '@tiptap/extension-text';
 import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
 import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
 import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
-import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
-import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
 import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -76,9 +74,7 @@ export function Editor() {
       Paragraph,
       Text,
       Bold,
-      Heading,
-      Table,
-      AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }), // 密钥留在你的服务端
+      AI.configure({ endpoint: '/api/ai' }), // 只配一个服务端地址，用哪家模型由后端决定
       AIAutocomplete,
     ],
     content: '<p>你好</p>',
@@ -92,9 +88,7 @@ export function Editor() {
       <RichTextToolbar>
         <RichTextAI />
         <RichTextToolbarDivider />
-        <RichTextHeading />
         <RichTextBold />
-        <RichTextTable />
       </RichTextToolbar>
       <EditorContent editor={editor} />
       <RichTextAIComposer />
@@ -116,7 +110,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Bold, Heading, Table } from 'ai-sparkwrite-editor/core';
+import { Bold } from 'ai-sparkwrite-editor/core';
 import {
   AI,
   AIAutocomplete,
@@ -126,9 +120,7 @@ import {
   RichTextProvider,
   RichTextToolbar,
   RichTextToolbarDivider,
-  RichTextHeading,
   RichTextBold,
-  RichTextTable,
 } from 'ai-sparkwrite-editor/vue';
 import 'ai-sparkwrite-editor/style.css';
 
@@ -138,9 +130,7 @@ const editor = useEditor({
     Paragraph,
     Text,
     Bold,
-    Heading,
-    Table,
-    AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+    AI.configure({ endpoint: '/api/ai' }), // 只配一个服务端地址，用哪家模型由后端决定
     AIAutocomplete,
   ],
   content: '<p>你好</p>',
@@ -152,7 +142,7 @@ const editor = useEditor({
     <RichTextToolbar>
       <RichTextAI />
       <RichTextToolbarDivider />
-      <RichTextHeading /><RichTextBold /><RichTextTable />
+      <RichTextBold />
     </RichTextToolbar>
     <EditorContent :editor="editor" />
     <RichTextAIComposer />
@@ -162,6 +152,8 @@ const editor = useEditor({
 ```
 
 扩展来自不含框架的 `ai-sparkwrite-editor/core`，Vue UI 来自 `ai-sparkwrite-editor/vue`，与 React 控件共用同一份样式。
+
+你的 `/api/ai` 收到 `{ messages, systemPrompt, stream }`，返回 `{ text }` 或一串 `data: {"text"}` 事件即可——接口约定和十行的示例服务见 [AI 文档](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/)。其他功能和 `bold` 一样：扩展和控件都来自 `ai-sparkwrite-editor/<feature>`，完整列表见 [Features](https://ludejun.github.io/ai-sparkwrite-editor/guide/features)。
 
 ## 文档
 

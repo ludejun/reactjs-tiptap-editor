@@ -62,8 +62,8 @@ const extensions = [
   History,
   Bold,
   Italic,
-  // Keys stay on your server: point baseURL at a proxy, or pass `generate`.
-  AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+  // One URL on your backend; which provider and model answer is its business.
+  AI.configure({ endpoint: '/api/ai' }),
   AIAutocomplete,
 ];
 
@@ -151,7 +151,7 @@ const editor = useEditor({
     History,
     Bold,
     Italic,
-    AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }),
+    AI.configure({ endpoint: '/api/ai' }), // one URL on your backend
     AIAutocomplete,
   ],
   content: '<p>Select some text, or press the AI button.</p>',
@@ -208,17 +208,17 @@ Read-only: `editable: false` in `useEditor`, or `editor.setEditable(false)` late
 
 ## Troubleshooting
 
-| Symptom                                       | What to check                                                                                        |
-| --------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| A control is missing                          | Register its extension and render the control under `RichTextProvider`.                              |
-| Unknown node or missing command               | Check the feature's page for companion extensions (lists need `ListItem`, colours need `TextStyle`). |
-| Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.                               |
-| UI has no styling                             | Import `ai-sparkwrite-editor/style.css` and any feature-specific stylesheet.                         |
-| Two copies of `@tiptap/core`                  | Pin `@tiptap/vue-3` (and every `@tiptap/*`) to the same version; a mismatch breaks the schema.       |
-| Content does not change after fetching        | Use `setContent` after loading; `content` only initialises the document.                             |
-| A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList` (React); a placeholder is only text.            |
-| The AI button does nothing                    | Register the `AI` extension; without a model or `generate` the panel shows a configuration error.    |
-| Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                                            |
+| Symptom                                       | What to check                                                                                                              |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| A control is missing                          | Register its extension and render the control under `RichTextProvider`.                                                    |
+| Unknown node or missing command               | Check the feature's page for companion extensions (lists need `ListItem`, colours need `TextStyle`).                       |
+| Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.                                                     |
+| UI has no styling                             | Import `ai-sparkwrite-editor/style.css` and any feature-specific stylesheet.                                               |
+| Two copies of `@tiptap/core`                  | Pin `@tiptap/vue-3` (and every `@tiptap/*`) to the same version; a mismatch breaks the schema.                             |
+| Content does not change after fetching        | Use `setContent` after loading; `content` only initialises the document.                                                   |
+| A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList` (React); a placeholder is only text.                                  |
+| The AI button does nothing                    | Register the `AI` extension with an `endpoint` (or a model / `generate`); otherwise the panel shows a configuration error. |
+| Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                                                                  |
 
 ## Where next
 
