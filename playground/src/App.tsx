@@ -24,11 +24,11 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
-} from 'sparkwrite';
-import { AI } from 'sparkwrite/ai';
-import { Attachment, RichTextAttachment } from 'sparkwrite/attachment';
-import { Blockquote, RichTextBlockquote } from 'sparkwrite/blockquote';
-import { Bold, RichTextBold } from 'sparkwrite/bold';
+} from 'ai-sparkwrite-editor';
+import { AI } from 'ai-sparkwrite-editor/ai';
+import { Attachment, RichTextAttachment } from 'ai-sparkwrite-editor/attachment';
+import { Blockquote, RichTextBlockquote } from 'ai-sparkwrite-editor/blockquote';
+import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
 // Bubble
 import {
   RichTextBubbleCallout,
@@ -45,62 +45,62 @@ import {
   RichTextBubbleText,
   RichTextBubbleTwitter,
   RichTextBubbleMenuDragHandle,
-} from 'sparkwrite/bubble';
-import { BulletList, RichTextBulletList } from 'sparkwrite/bulletlist';
-import { Callout, RichTextCallout } from 'sparkwrite/callout';
-import { Clear, RichTextClear } from 'sparkwrite/clear';
-import { Code, RichTextCode } from 'sparkwrite/code';
-import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'sparkwrite/codeblock';
-import { CodeView, RichTextCodeView } from 'sparkwrite/codeview';
-import { Color, RichTextColor } from 'sparkwrite/color';
-import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'sparkwrite/column';
-import { Details, RichTextDetails } from 'sparkwrite/details';
-import { Divider, RichTextDivider } from 'sparkwrite/divider';
-import { Drawer, RichTextDrawer } from 'sparkwrite/drawer';
-import { Emoji, RichTextEmoji } from 'sparkwrite/emoji';
-import { Excalidraw, RichTextExcalidraw } from 'sparkwrite/excalidraw';
-import { ExportMarkdown, RichTextExportMarkdown } from 'sparkwrite/exportmarkdown';
-import { ExportPdf, RichTextExportPdf } from 'sparkwrite/exportpdf';
-import { ExportWord, RichTextExportWord } from 'sparkwrite/exportword';
-import { FontFamily, RichTextFontFamily } from 'sparkwrite/fontfamily';
-import { FontSize, RichTextFontSize } from 'sparkwrite/fontsize';
-import { FormatPainter, RichTextFormatPainter } from 'sparkwrite/formatpainter';
-import { Heading, RichTextHeading } from 'sparkwrite/heading';
-import { Highlight, RichTextHighlight } from 'sparkwrite/highlight';
+} from 'ai-sparkwrite-editor/bubble';
+import { BulletList, RichTextBulletList } from 'ai-sparkwrite-editor/bulletlist';
+import { Callout, RichTextCallout } from 'ai-sparkwrite-editor/callout';
+import { Clear, RichTextClear } from 'ai-sparkwrite-editor/clear';
+import { Code, RichTextCode } from 'ai-sparkwrite-editor/code';
+import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'ai-sparkwrite-editor/codeblock';
+import { CodeView, RichTextCodeView } from 'ai-sparkwrite-editor/codeview';
+import { Color, RichTextColor } from 'ai-sparkwrite-editor/color';
+import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'ai-sparkwrite-editor/column';
+import { Details, RichTextDetails } from 'ai-sparkwrite-editor/details';
+import { Divider, RichTextDivider } from 'ai-sparkwrite-editor/divider';
+import { Drawer, RichTextDrawer } from 'ai-sparkwrite-editor/drawer';
+import { Emoji, RichTextEmoji } from 'ai-sparkwrite-editor/emoji';
+import { Excalidraw, RichTextExcalidraw } from 'ai-sparkwrite-editor/excalidraw';
+import { ExportMarkdown, RichTextExportMarkdown } from 'ai-sparkwrite-editor/exportmarkdown';
+import { ExportPdf, RichTextExportPdf } from 'ai-sparkwrite-editor/exportpdf';
+import { ExportWord, RichTextExportWord } from 'ai-sparkwrite-editor/exportword';
+import { FontFamily, RichTextFontFamily } from 'ai-sparkwrite-editor/fontfamily';
+import { FontSize, RichTextFontSize } from 'ai-sparkwrite-editor/fontsize';
+import { FormatPainter, RichTextFormatPainter } from 'ai-sparkwrite-editor/formatpainter';
+import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
+import { Highlight, RichTextHighlight } from 'ai-sparkwrite-editor/highlight';
 // build extensions
-import { History, RichTextUndo, RichTextRedo } from 'sparkwrite/history';
-import { Iframe, RichTextIframe } from 'sparkwrite/iframe';
-import { Image, RichTextImage } from 'sparkwrite/image';
-import { ImageGif, RichTextImageGif } from 'sparkwrite/imagegif';
-import { ImportWord, RichTextImportWord } from 'sparkwrite/importword';
-import { Indent } from 'sparkwrite/indent';
-import { Italic, RichTextItalic } from 'sparkwrite/italic';
-import { Katex, RichTextKatex } from 'sparkwrite/katex';
-import { LineHeight, RichTextLineHeight } from 'sparkwrite/lineheight';
-import { Link, RichTextLink } from 'sparkwrite/link';
-import { localeActions, useLocale } from 'sparkwrite/locale-bundle';
-import { MarkdownPaste } from 'sparkwrite/markdownpaste';
-import { Mention } from 'sparkwrite/mention';
-import { Mermaid, RichTextMermaid } from 'sparkwrite/mermaid';
-import { MoreMark } from 'sparkwrite/moremark';
-import { OrderedList, RichTextOrderedList } from 'sparkwrite/orderedlist';
-import { Recorder, getRecording, replayRecording } from 'sparkwrite/recorder';
-import { RichPaste } from 'sparkwrite/richpaste';
-import { SearchAndReplace, RichTextSearchAndReplace } from 'sparkwrite/searchandreplace';
-import { ShortMessage } from 'sparkwrite/shortmessage';
-import { SlashCommand, SlashCommandList } from 'sparkwrite/slashcommand';
-import { Strike, RichTextStrike } from 'sparkwrite/strike';
-import { Table, RichTextTable } from 'sparkwrite/table';
-import { TableOfContents, RichTextTableOfContents } from 'sparkwrite/tableofcontents';
-import { TaskList, RichTextTaskList } from 'sparkwrite/tasklist';
-import { TextAlign, RichTextAlign } from 'sparkwrite/textalign';
-import { TextDirection, RichTextTextDirection } from 'sparkwrite/textdirection';
-import { TextUnderline, RichTextUnderline } from 'sparkwrite/textunderline';
-import { themeActions, useTheme } from 'sparkwrite/theme';
-import { Twitter, RichTextTwitter } from 'sparkwrite/twitter';
-import { Video, RichTextVideo } from 'sparkwrite/video';
+import { History, RichTextUndo, RichTextRedo } from 'ai-sparkwrite-editor/history';
+import { Iframe, RichTextIframe } from 'ai-sparkwrite-editor/iframe';
+import { Image, RichTextImage } from 'ai-sparkwrite-editor/image';
+import { ImageGif, RichTextImageGif } from 'ai-sparkwrite-editor/imagegif';
+import { ImportWord, RichTextImportWord } from 'ai-sparkwrite-editor/importword';
+import { Indent } from 'ai-sparkwrite-editor/indent';
+import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
+import { Katex, RichTextKatex } from 'ai-sparkwrite-editor/katex';
+import { LineHeight, RichTextLineHeight } from 'ai-sparkwrite-editor/lineheight';
+import { Link, RichTextLink } from 'ai-sparkwrite-editor/link';
+import { localeActions, useLocale } from 'ai-sparkwrite-editor/locale-bundle';
+import { MarkdownPaste } from 'ai-sparkwrite-editor/markdownpaste';
+import { Mention } from 'ai-sparkwrite-editor/mention';
+import { Mermaid, RichTextMermaid } from 'ai-sparkwrite-editor/mermaid';
+import { MoreMark } from 'ai-sparkwrite-editor/moremark';
+import { OrderedList, RichTextOrderedList } from 'ai-sparkwrite-editor/orderedlist';
+import { Recorder, getRecording, replayRecording } from 'ai-sparkwrite-editor/recorder';
+import { RichPaste } from 'ai-sparkwrite-editor/richpaste';
+import { SearchAndReplace, RichTextSearchAndReplace } from 'ai-sparkwrite-editor/searchandreplace';
+import { ShortMessage } from 'ai-sparkwrite-editor/shortmessage';
+import { SlashCommand, SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
+import { Strike, RichTextStrike } from 'ai-sparkwrite-editor/strike';
+import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
+import { TableOfContents, RichTextTableOfContents } from 'ai-sparkwrite-editor/tableofcontents';
+import { TaskList, RichTextTaskList } from 'ai-sparkwrite-editor/tasklist';
+import { TextAlign, RichTextAlign } from 'ai-sparkwrite-editor/textalign';
+import { TextDirection, RichTextTextDirection } from 'ai-sparkwrite-editor/textdirection';
+import { TextUnderline, RichTextUnderline } from 'ai-sparkwrite-editor/textunderline';
+import { themeActions, useTheme } from 'ai-sparkwrite-editor/theme';
+import { Twitter, RichTextTwitter } from 'ai-sparkwrite-editor/twitter';
+import { Video, RichTextVideo } from 'ai-sparkwrite-editor/video';
 
-import 'sparkwrite/style.css';
+import 'ai-sparkwrite-editor/style.css';
 // const ydoc = new Y.Doc()
 import 'katex/dist/katex.min.css';
 import 'easydrawer/styles.css';
@@ -198,7 +198,7 @@ const BaseKit = [
  * key. `window.__aiGenerate` overrides it (used by the browser checks).
  */
 async function demoAIGenerate(
-  request: import('sparkwrite/ai').AIRequest,
+  request: import('ai-sparkwrite-editor/ai').AIRequest,
   onChunk?: (text: string) => void
 ): Promise<string> {
   const override = (window as unknown as { __aiGenerate?: typeof demoAIGenerate }).__aiGenerate;
@@ -434,7 +434,7 @@ const extensions = [
 ];
 
 const DEFAULT = `
-<h1>sparkwrite</h1>
+<h1>SparkWrite</h1>
 <p>A rich text editor built on Tiptap. Everything below is live — edit it, or start from scratch.</p>
 <div class="table-of-contents" data-type="table-of-contents"></div>
 <h2>Text</h2>

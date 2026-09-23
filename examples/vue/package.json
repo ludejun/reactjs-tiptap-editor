@@ -1,5 +1,5 @@
 {
-  "name": "sparkwrite-vue-example",
+  "name": "ai-sparkwrite-editor-vue-example",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -14,7 +14,7 @@
     "@tiptap/pm": "^3.29.2",
     "@tiptap/vue-3": "3.29.2",
     "lucide-vue-next": "^1.0.0",
-    "sparkwrite": "workspace:*",
+    "ai-sparkwrite-editor": "workspace:*",
     "vue": "^3.4.37"
   },
   "devDependencies": {

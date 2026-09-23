@@ -6,17 +6,17 @@ The package is therefore split in two layers:
 
 | Layer | Import                                                      | Depends on React | Contents                                                                                                                                                                                                                                                                                                                          |
 | ----- | ----------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core  | `sparkwrite/core`                                           | No               | Extensions without node views (marks, headings, lists, tables, links, alignment, indent, font, colour, divider…; columns and the suggestion popups — mention, short message — stay in the React layer for now), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
-| React | `sparkwrite`, `sparkwrite/<feature>`, `sparkwrite/bubble/*` | Yes              | Everything above plus controls, bubble menus, dialogs and node views                                                                                                                                                                                                                                                              |
+| Core  | `ai-sparkwrite-editor/core`                                           | No               | Extensions without node views (marks, headings, lists, tables, links, alignment, indent, font, colour, divider…; columns and the suggestion popups — mention, short message — stay in the React layer for now), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
+| React | `ai-sparkwrite-editor`, `ai-sparkwrite-editor/<feature>`, `ai-sparkwrite-editor/bubble/*` | Yes              | Everything above plus controls, bubble menus, dialogs and node views                                                                                                                                                                                                                                                              |
 
 A build check (`tests/core-headless.test.mjs`) walks the chunk graph of the core bundle and fails if anything reachable from it imports `react`, `@tiptap/react`, Radix or lucide.
 
 ## Vue
 
-Two imports: `sparkwrite/core` for the extensions and `sparkwrite/vue` for the UI. The Vue layer ships a provider, composables, toolbar primitives, ready-made controls for the core extensions, and Vue node views (the divider today). It depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`, and shares the stylesheet with the React controls, so both toolbars look the same.
+Two imports: `ai-sparkwrite-editor/core` for the extensions and `ai-sparkwrite-editor/vue` for the UI. The Vue layer ships a provider, composables, toolbar primitives, ready-made controls for the core extensions, and Vue node views (the divider today). It depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`, and shares the stylesheet with the React controls, so both toolbars look the same.
 
 ```bash
-pnpm add sparkwrite @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
+pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
 ```
 
 ```vue
@@ -34,7 +34,7 @@ import {
   TextAlign,
   RichPaste,
   localeActions,
-} from 'sparkwrite/core';
+} from 'ai-sparkwrite-editor/core';
 import {
   Divider, // core divider + Vue node view
   RichTextProvider,
@@ -46,10 +46,10 @@ import {
   RichTextTable,
   RichTextTextAlign,
   RichTextDivider,
-} from 'sparkwrite/vue';
-import 'sparkwrite/style.css';
+} from 'ai-sparkwrite-editor/vue';
+import 'ai-sparkwrite-editor/style.css';
 
-import zhCN from 'sparkwrite/locales/zh-cn';
+import zhCN from 'ai-sparkwrite-editor/locales/zh-cn';
 
 localeActions.setMessage('zh_CN', zhCN); // only English is bundled
 localeActions.setLang('zh_CN');
@@ -86,7 +86,7 @@ const editor = useEditor({
 </template>
 ```
 
-`RichTextProvider` renders the root element with the `sparkwrite` class and hands the editor to every control below it. The example under `examples/vue` in the repository is this page with every control on it (`pnpm --dir examples/vue dev`).
+`RichTextProvider` renders the root element with the `ai-sparkwrite-editor` class and hands the editor to every control below it. The example under `examples/vue` in the repository is this page with every control on it (`pnpm --dir examples/vue dev`).
 
 ### What the Vue layer contains
 
@@ -107,7 +107,7 @@ Bubble menus, the AI panel, dialogs (link, image upload, Katex, Mermaid) and the
 
 ```ts
 import { Editor } from '@tiptap/core';
-import { Bold, Heading, Table, RichPaste } from 'sparkwrite/core';
+import { Bold, Heading, Table, RichPaste } from 'ai-sparkwrite-editor/core';
 
 const editor = new Editor({
   element: document.querySelector('#editor')!,

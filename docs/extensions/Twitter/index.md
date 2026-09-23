@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Twitter, RichTextTwitter } from 'sparkwrite/twitter';
-import { RichTextBubbleTwitter } from 'sparkwrite/bubble/twitter';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Twitter, RichTextTwitter } from 'ai-sparkwrite-editor/twitter';
+import { RichTextBubbleTwitter } from 'ai-sparkwrite-editor/bubble/twitter';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Twitter];
 

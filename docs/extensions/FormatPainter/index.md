@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { FormatPainter, RichTextFormatPainter } from 'sparkwrite/formatpainter';
-import { Bold, RichTextBold } from 'sparkwrite/bold';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { FormatPainter, RichTextFormatPainter } from 'ai-sparkwrite-editor/formatpainter';
+import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, FormatPainter];
 

@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { ExportPdf, RichTextExportPdf } from 'sparkwrite/exportpdf';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { ExportPdf, RichTextExportPdf } from 'ai-sparkwrite-editor/exportpdf';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, ExportPdf];
 
@@ -142,7 +142,7 @@ type PageMargin =
 Example usage:
 
 ```ts
-import { ExportPdf } from 'sparkwrite/exportpdf';
+import { ExportPdf } from 'ai-sparkwrite-editor/exportpdf';
 
 ExportPdf.configure({
   paperSize: 'A4',

@@ -41,7 +41,7 @@ Read only relevant sections. Feature recipes extend the quickstart; they are not
 - Preserve accepted inputs, result/error semantics, commands, and saved document compatibility when replacing callbacks or extending extensions.
 - Give controls only the capabilities they use; do not require unrelated services or no-op callbacks for unavailable features.
 - Share one `useEditor` instance between `RichTextProvider` and `EditorContent`. Guard the initial null editor before rendering the provider. Put context-dependent controls inside it.
-- Import `sparkwrite/style.css` at the appropriate style boundary, plus selected feature CSS.
+- Import `ai-sparkwrite-editor/style.css` at the appropriate style boundary, plus selected feature CSS.
 - Register commands and nodes required by visible controls. Check supporting schema nodes and extensions bundled by a feature before adding duplicates. If using StarterKit, disable overlaps or deliberately reuse existing equivalents.
 - Keep static extensions outside the component and follow the app's lifecycle for dynamic callbacks. Avoid recreating the editor on each keystroke.
 - Distinguish initial content from external document replacement. Save through `onUpdate`; changing the `content` option does not make the editor controlled.

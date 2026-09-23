@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { SearchAndReplace, RichTextSearchAndReplace } from 'sparkwrite/searchandreplace';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { SearchAndReplace, RichTextSearchAndReplace } from 'ai-sparkwrite-editor/searchandreplace';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, SearchAndReplace];
 

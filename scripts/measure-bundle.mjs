@@ -112,8 +112,8 @@ if (lib.includes('locale.js')) {
           },
           load(id) {
             if (id !== '\0virtual:locale-audit') return;
-            return `import { localeActions, useLocale } from 'sparkwrite/${full ? 'locale-bundle' : 'locale'}';
-            ${full ? '' : "import vi from 'sparkwrite/locales/vi'; localeActions.setMessage('vi', vi);"}
+            return `import { localeActions, useLocale } from 'ai-sparkwrite-editor/${full ? 'locale-bundle' : 'locale'}';
+            ${full ? '' : "import vi from 'ai-sparkwrite-editor/locales/vi'; localeActions.setMessage('vi', vi);"}
             localeActions.setLang('vi'); window.localeAudit = { localeActions, useLocale };`;
           },
         },

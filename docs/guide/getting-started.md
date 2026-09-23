@@ -1,5 +1,5 @@
 ---
-description: How to install sparkwrite
+description: How to install ai-sparkwrite-editor
 
 next:
   text: Toolbar
@@ -8,7 +8,7 @@ next:
 
 # Getting Started
 
-`sparkwrite` combines Tiptap extensions with ready-made React controls. You create the editor instance, choose its features, and compose the interface.
+`ai-sparkwrite-editor` combines Tiptap extensions with ready-made React controls. You create the editor instance, choose its features, and compose the interface.
 
 This guide describes the **1.x composable API** used in this repository. If your app uses `RichTextEditor` or `BaseKit`, start with the [migration guide](/guide/how-to-migrate).
 
@@ -23,24 +23,24 @@ Install the editor and the packages imported by the minimal example:
 ::: code-group
 
 ```sh [pnpm]
-pnpm add sparkwrite @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+pnpm add ai-sparkwrite-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [npm]
-npm install sparkwrite @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+npm install ai-sparkwrite-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [bun]
-bun add sparkwrite @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+bun add ai-sparkwrite-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [yarn]
-yarn add sparkwrite @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+yarn add ai-sparkwrite-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 :::
 
-When another example imports an additional `@tiptap/*` package, add that package to your application too. Extension subpaths such as `sparkwrite/bold` are included in the editor package; they are not separate packages to install.
+When another example imports an additional `@tiptap/*` package, add that package to your application too. Extension subpaths such as `ai-sparkwrite-editor/bold` are included in the editor package; they are not separate packages to install.
 
 ## 2. Render a working editor
 
@@ -53,11 +53,11 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Bold, RichTextBold } from 'sparkwrite/bold';
-import { Italic, RichTextItalic } from 'sparkwrite/italic';
-import { History, RichTextUndo, RichTextRedo } from 'sparkwrite/history';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
+import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
+import { History, RichTextUndo, RichTextRedo } from 'ai-sparkwrite-editor/history';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic, History];
 
@@ -189,7 +189,7 @@ Keep the editor in a client component (`'use client'`) and use `immediatelyRende
 | Toolbar button is missing                     | Register its matching extension and render the button under `RichTextProvider`.   |
 | Unknown node or missing command               | Check required companion extensions on the feature's page.                        |
 | Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.            |
-| UI has no styling                             | Import `sparkwrite/style.css` and any feature-specific stylesheet.                |
+| UI has no styling                             | Import `ai-sparkwrite-editor/style.css` and any feature-specific stylesheet.                |
 | Content does not change after fetching        | Use `setContent` after loading; `content` initializes the document.               |
 | A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList`; a placeholder is only text. |
 | Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                         |

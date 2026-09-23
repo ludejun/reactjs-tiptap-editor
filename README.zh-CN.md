@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/sparkwrite"><img src="https://img.shields.io/npm/v/sparkwrite.svg" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
   <a href="./README.md">English</a>
 </p>
@@ -34,13 +34,13 @@
 - **粘贴正确。** 网页、Excel、Google Docs、Word 保留格式；Word 假列表变真列表，VS Code 代码变代码块。
 - **16 种语言**，按使用人数排序，按需加载，配套 CJK、天城文、孟加拉文字体。
 - **录制与回放**任意一次书写过程。
-- **React 和 Vue。** 文档逻辑以不含 React 的 `sparkwrite/core` 发布；`sparkwrite/vue` 提供 Vue 3 的 Provider、工具栏、控件和节点视图，共用同一套样式。见 [多框架](./docs/guide/frameworks.md)。
+- **React 和 Vue。** 文档逻辑以不含 React 的 `ai-sparkwrite-editor/core` 发布；`ai-sparkwrite-editor/vue` 提供 Vue 3 的 Provider、工具栏、控件和节点视图，共用同一套样式。见 [多框架](./docs/guide/frameworks.md)。
 - **融入你的设计体系。** 带前缀的 Tailwind 类名和几个 CSS 变量。
 
 ## 安装
 
 ```bash
-pnpm add sparkwrite @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
+pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
 ```
 
 所有 `@tiptap/*` 包请保持同一版本（本仓库使用 `^3.29`）。
@@ -52,12 +52,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'sparkwrite';
-import { Bold, RichTextBold } from 'sparkwrite/bold';
-import { Heading, RichTextHeading } from 'sparkwrite/heading';
-import { Table, RichTextTable } from 'sparkwrite/table';
-import { RichTextBubbleText } from 'sparkwrite/bubble/text';
-import 'sparkwrite/style.css';
+import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
+import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
+import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
+import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
+import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import 'ai-sparkwrite-editor/style.css';
 
 export function Editor() {
   const editor = useEditor({
@@ -83,7 +83,7 @@ export function Editor() {
 }
 ```
 
-每个功能只需一个导入：扩展和它的控件来自同一个子路径（`sparkwrite/<feature>`），气泡菜单来自 `sparkwrite/bubble/<name>`，语言包来自 `sparkwrite/locales/<code>`。
+每个功能只需一个导入：扩展和它的控件来自同一个子路径（`ai-sparkwrite-editor/<feature>`），气泡菜单来自 `ai-sparkwrite-editor/bubble/<name>`，语言包来自 `ai-sparkwrite-editor/locales/<code>`。
 
 ## 文档
 

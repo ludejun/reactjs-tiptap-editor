@@ -2,7 +2,7 @@
  * Framework-agnostic entry: everything here is Tiptap/ProseMirror only — no
  * React, no DOM components — so it works with `@tiptap/vue-3`, `@tiptap/core`
  * in a vanilla page, or any other binding. Controls and node views live in
- * the per-feature subpaths (`sparkwrite/<feature>`), which are React.
+ * the per-feature subpaths (`ai-sparkwrite-editor/<feature>`), which are React.
  *
  * A build check (`tests/core-headless.test.mjs`) fails if anything reachable
  * from this file imports react.

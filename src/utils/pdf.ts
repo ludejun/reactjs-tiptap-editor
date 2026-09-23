@@ -2,7 +2,7 @@ import { type ExportPdfOptions } from '@/extensions/ExportPdf';
 
 import type { Editor } from '@tiptap/core';
 
-const CDN_STYLESHEET = 'https://cdn.jsdelivr.net/npm/sparkwrite@latest/lib/style.css';
+const CDN_STYLESHEET = 'https://cdn.jsdelivr.net/npm/ai-sparkwrite-editor@latest/lib/style.css';
 
 /**
  * Minimal layout rules that must hold even if no external stylesheet loads
@@ -31,7 +31,7 @@ const FALLBACK_PRINT_STYLES = `
 
 /**
  * Collect the stylesheets already loaded by the host page (the app imports
- * `sparkwrite/style.css`), so the print document uses the exact
+ * `ai-sparkwrite-editor/style.css`), so the print document uses the exact
  * same CSS version without depending on the network.
  */
 function collectHostStyles(): string {

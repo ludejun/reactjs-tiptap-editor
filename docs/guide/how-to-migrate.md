@@ -40,12 +40,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Bold, RichTextBold } from 'sparkwrite/bold';
-import { Italic, RichTextItalic } from 'sparkwrite/italic';
-import { History, RichTextUndo, RichTextRedo } from 'sparkwrite/history';
-import { RichTextBubbleText } from 'sparkwrite/bubble/text';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
+import { Italic, RichTextItalic } from 'ai-sparkwrite-editor/italic';
+import { History, RichTextUndo, RichTextRedo } from 'ai-sparkwrite-editor/history';
+import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic, History];
 
@@ -152,9 +152,9 @@ See [Toolbar](/guide/toolbar) and [Bubble Menu](/guide/bubble-menu) for componen
 Use actions during client initialization or in preference-change handlers:
 
 ```ts
-import { themeActions } from 'sparkwrite/theme';
-import { localeActions } from 'sparkwrite/locale';
-import vi from 'sparkwrite/locales/vi';
+import { themeActions } from 'ai-sparkwrite-editor/theme';
+import { localeActions } from 'ai-sparkwrite-editor/locale';
+import vi from 'ai-sparkwrite-editor/locales/vi';
 
 themeActions.setTheme('dark');
 localeActions.setMessage('vi', vi);

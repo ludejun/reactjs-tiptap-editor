@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Mention } from 'sparkwrite/mention';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Mention } from 'ai-sparkwrite-editor/mention';
+import 'ai-sparkwrite-editor/style.css';
 
 const users = [
   { id: '1', label: 'Alex' },
@@ -69,7 +69,7 @@ Type `@` followed by a name to filter suggestions. Return objects with stable `i
 Use `suggestions` to provide separate sources for people and tags. Replace the single `suggestion` configuration with this setup:
 
 ```ts
-import { Mention } from 'sparkwrite/mention';
+import { Mention } from 'ai-sparkwrite-editor/mention';
 
 const people = [{ id: 'user-1', label: 'Alex' }];
 const tags = [{ id: 'tag-1', label: 'Documentation' }];

@@ -22,9 +22,9 @@ import {
   TextAlign,
   TextUnderline,
   localeActions,
-} from 'sparkwrite/core';
-import es from 'sparkwrite/locales/es';
-import zhCN from 'sparkwrite/locales/zh-cn';
+} from 'ai-sparkwrite-editor/core';
+import es from 'ai-sparkwrite-editor/locales/es';
+import zhCN from 'ai-sparkwrite-editor/locales/zh-cn';
 import {
   Divider,
   RichTextBlockquote,
@@ -50,10 +50,10 @@ import {
   RichTextToolbarMoreRow,
   RichTextUnderline,
   RichTextUndo,
-} from 'sparkwrite/vue';
+} from 'ai-sparkwrite-editor/vue';
 import { ref, watch } from 'vue';
 
-import 'sparkwrite/style.css';
+import 'ai-sparkwrite-editor/style.css';
 
 // Only English is bundled; register the languages you offer.
 localeActions.setMessage('zh_CN', zhCN);

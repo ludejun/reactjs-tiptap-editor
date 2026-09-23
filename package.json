@@ -1,5 +1,5 @@
 {
-  "name": "sparkwrite",
+  "name": "ai-sparkwrite-editor",
   "version": "0.1.0",
   "description": "AI-first rich-text editor SDK on Tiptap: streaming AI writing that lands as real document nodes, AI-generated formulas and diagrams, plus toolbar, bubble menus, tables, code, images, 16 languages and session replay. React UI today, framework-agnostic core.",
   "keywords": [
@@ -18,15 +18,15 @@
     "tiptap",
     "wysiwyg"
   ],
-  "homepage": "https://github.com/ludejun/sparkwrite#readme",
+  "homepage": "https://github.com/ludejun/ai-sparkwrite-editor#readme",
   "bugs": {
-    "url": "https://github.com/ludejun/sparkwrite/issues"
+    "url": "https://github.com/ludejun/ai-sparkwrite-editor/issues"
   },
   "license": "MIT",
   "author": "ludejun",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ludejun/sparkwrite.git"
+    "url": "git+https://github.com/ludejun/ai-sparkwrite-editor.git"
   },
   "files": [
     "lib",

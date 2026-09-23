@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { BulletList, RichTextBulletList } from 'sparkwrite/bulletlist';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { BulletList, RichTextBulletList } from 'ai-sparkwrite-editor/bulletlist';
 import { ListItem } from '@tiptap/extension-list';
-import 'sparkwrite/style.css';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, ListItem, BulletList];
 

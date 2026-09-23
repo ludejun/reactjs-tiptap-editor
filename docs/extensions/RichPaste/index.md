@@ -26,12 +26,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { BulletList } from 'sparkwrite/bulletlist';
-import { CodeBlock } from 'sparkwrite/codeblock';
-import { OrderedList } from 'sparkwrite/orderedlist';
-import { RichPaste } from 'sparkwrite/richpaste';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { BulletList } from 'ai-sparkwrite-editor/bulletlist';
+import { CodeBlock } from 'ai-sparkwrite-editor/codeblock';
+import { OrderedList } from 'ai-sparkwrite-editor/orderedlist';
+import { RichPaste } from 'ai-sparkwrite-editor/richpaste';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, BulletList, OrderedList, CodeBlock, RichPaste];
 
@@ -76,7 +76,7 @@ Default: none
 Guesses the language of a pasted block from its text and returns a name the code block understands (an empty string means "unknown"). The code block extension ships a guesser you can reuse:
 
 ```ts
-import { guessLanguage } from 'sparkwrite/codeblock';
+import { guessLanguage } from 'ai-sparkwrite-editor/codeblock';
 
 RichPaste.configure({ detectLanguage: guessLanguage });
 ```

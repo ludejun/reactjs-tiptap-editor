@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/sparkwrite"><img src="https://img.shields.io/npm/v/sparkwrite.svg" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/ai-sparkwrite-editor"><img src="https://img.shields.io/npm/v/ai-sparkwrite-editor.svg" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
   <a href="./README.zh-CN.md">中文文档</a>
 </p>
@@ -34,13 +34,13 @@
 - **Pastes right.** Web pages, Excel, Google Docs and Word keep their formatting; Word's fake lists become lists and code from VS Code becomes a code block.
 - **16 languages** ordered by speaker population, loadable on demand, with matching CJK, Devanagari and Bengali fonts.
 - **Record and replay** any writing session as timestamped steps.
-- **React and Vue.** The document logic ships React-free as `sparkwrite/core`; `sparkwrite/vue` adds a Vue 3 provider, toolbar, controls and node views on the same stylesheet. See [Frameworks](./docs/guide/frameworks.md).
+- **React and Vue.** The document logic ships React-free as `ai-sparkwrite-editor/core`; `ai-sparkwrite-editor/vue` adds a Vue 3 provider, toolbar, controls and node views on the same stylesheet. See [Frameworks](./docs/guide/frameworks.md).
 - **Fits your design system.** Prefixed Tailwind classes and a handful of CSS variables.
 
 ## Install
 
 ```bash
-pnpm add sparkwrite @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
+pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
 ```
 
 Keep every `@tiptap/*` package on one version (this repository uses `^3.29`).
@@ -52,12 +52,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'sparkwrite';
-import { Bold, RichTextBold } from 'sparkwrite/bold';
-import { Heading, RichTextHeading } from 'sparkwrite/heading';
-import { Table, RichTextTable } from 'sparkwrite/table';
-import { RichTextBubbleText } from 'sparkwrite/bubble/text';
-import 'sparkwrite/style.css';
+import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-sparkwrite-editor';
+import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
+import { Heading, RichTextHeading } from 'ai-sparkwrite-editor/heading';
+import { Table, RichTextTable } from 'ai-sparkwrite-editor/table';
+import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import 'ai-sparkwrite-editor/style.css';
 
 export function Editor() {
   const editor = useEditor({
@@ -83,7 +83,7 @@ export function Editor() {
 }
 ```
 
-Every feature is one import: the extension and its control come from the same subpath (`sparkwrite/<feature>`), bubble menus from `sparkwrite/bubble/<name>`, languages from `sparkwrite/locales/<code>`.
+Every feature is one import: the extension and its control come from the same subpath (`ai-sparkwrite-editor/<feature>`), bubble menus from `ai-sparkwrite-editor/bubble/<name>`, languages from `ai-sparkwrite-editor/locales/<code>`.
 
 ## Documentation
 

@@ -47,7 +47,7 @@ export const RichTextProvider = defineComponent({
     );
     provide(EDITOR_KEY, editor);
 
-    return () => h('div', { class: ['sparkwrite', props.dark ? 'dark' : null] }, slots.default?.());
+    return () => h('div', { class: ['ai-sparkwrite-editor', props.dark ? 'dark' : null] }, slots.default?.());
   },
 });
 

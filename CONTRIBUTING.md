@@ -30,10 +30,10 @@ Format only the files you touched: `pnpm exec oxfmt <files>`.
 
 ## Layout
 
-- `src/extensions/<Name>/` — one feature: the Tiptap extension (`<Name>.ts`), its React controls (`components/`), and an `index.ts`. Each folder is a package subpath (`sparkwrite/<name>`) declared in `package.json` under `exports` and `typesVersions`.
+- `src/extensions/<Name>/` — one feature: the Tiptap extension (`<Name>.ts`), its React controls (`components/`), and an `index.ts`. Each folder is a package subpath (`ai-sparkwrite-editor/<name>`) declared in `package.json` under `exports` and `typesVersions`.
 - `src/components/` — shared UI (buttons, menus, toolbar primitives, bubble menus).
 - `src/locales/` — one file per language, 260+ keys each; every key must exist in every file.
-- `src/styles/` — SCSS, compiled into `sparkwrite/style.css`. Tailwind classes carry the `richtext-` prefix.
+- `src/styles/` — SCSS, compiled into `ai-sparkwrite-editor/style.css`. Tailwind classes carry the `richtext-` prefix.
 - `docs/` — VitePress. Every extension has `docs/extensions/<Name>/index.md` and an entry in `docs/.vitepress/locale.ts`.
 - `playground/` — the demo app.
 
@@ -66,4 +66,4 @@ When a fix touches files SparkWrite has rewritten, read the upstream diff and re
 git show upstream/main~3 -- src/extensions/Table/Table.ts
 ```
 
-Package subpaths were renamed (`reactjs-tiptap-editor/...` → `sparkwrite/...`) and the root CSS class is `.sparkwrite`; cherry-picked docs or tests need those adjusted. Record the upstream commit in your message (`-x` does this) so the provenance stays visible.
+Package subpaths were renamed (`reactjs-tiptap-editor/...` → `ai-sparkwrite-editor/...`) and the root CSS class is `.sparkwrite`; cherry-picked docs or tests need those adjusted. Record the upstream commit in your message (`-x` does this) so the provenance stays visible.

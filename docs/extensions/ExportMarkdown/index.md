@@ -21,11 +21,11 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Bold } from 'sparkwrite/bold';
-import { Heading } from 'sparkwrite/heading';
-import { ExportMarkdown, RichTextExportMarkdown } from 'sparkwrite/exportmarkdown';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Bold } from 'ai-sparkwrite-editor/bold';
+import { Heading } from 'ai-sparkwrite-editor/heading';
+import { ExportMarkdown, RichTextExportMarkdown } from 'ai-sparkwrite-editor/exportmarkdown';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Heading, ExportMarkdown];
 
@@ -72,7 +72,7 @@ Text styles such as color, font size, font family, alignment and line height are
 ## Use from code
 
 ```ts
-import { getMarkdown } from 'sparkwrite/exportmarkdown';
+import { getMarkdown } from 'ai-sparkwrite-editor/exportmarkdown';
 
 // download
 editor.chain().focus().exportToMarkdown({ fileName: 'notes.md' }).run();

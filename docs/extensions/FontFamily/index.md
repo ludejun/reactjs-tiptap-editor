@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { FontFamily, RichTextFontFamily } from 'sparkwrite/fontfamily';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { FontFamily, RichTextFontFamily } from 'ai-sparkwrite-editor/fontfamily';
 import { TextStyle } from '@tiptap/extension-text-style';
-import 'sparkwrite/style.css';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, FontFamily];
 
@@ -94,7 +94,7 @@ face on every platform, so only an explicit choice needs these entries.
 ## Configuration
 
 ```ts
-import { FontFamily } from 'sparkwrite/fontfamily';
+import { FontFamily } from 'ai-sparkwrite-editor/fontfamily';
 
 FontFamily.configure({
   fontFamilyList: ['Arial', 'Georgia', { name: 'Monospace', value: 'monospace' }],

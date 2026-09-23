@@ -14,9 +14,9 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
-} from 'sparkwrite';
-import { RichTextBold } from 'sparkwrite/bold';
-import { RichTextTable } from 'sparkwrite/table';
+} from 'ai-sparkwrite-editor';
+import { RichTextBold } from 'ai-sparkwrite-editor/bold';
+import { RichTextTable } from 'ai-sparkwrite-editor/table';
 
 <RichTextToolbar>
   <RichTextBold />

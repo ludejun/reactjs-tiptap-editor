@@ -17,10 +17,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Video, RichTextVideo } from 'sparkwrite/video';
-import { RichTextBubbleVideo } from 'sparkwrite/bubble/media';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Video, RichTextVideo } from 'ai-sparkwrite-editor/video';
+import { RichTextBubbleVideo } from 'ai-sparkwrite-editor/bubble/media';
+import 'ai-sparkwrite-editor/style.css';
 
 function uploadVideo(
   file: File,

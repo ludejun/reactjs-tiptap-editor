@@ -1,17 +1,17 @@
 ---
-description: Download and install the sparkwrite skill for your AI coding agent.
+description: Download and install the ai-sparkwrite-editor skill for your AI coding agent.
 ---
 
 # Skills
 
-Give your AI coding agent package-specific guidance for building with `sparkwrite`. The skill covers editor setup, extension imports, toolbars, bubble menus, uploads, themes, localization, and debugging.
+Give your AI coding agent package-specific guidance for building with `ai-sparkwrite-editor`. The skill covers editor setup, extension imports, toolbars, bubble menus, uploads, themes, localization, and debugging.
 
 ## Install with one command
 
 Run this command from your project directory. Use the copy button in the code block to copy it:
 
 ```sh
-npx skills add ludejun/sparkwrite --skill sparkwrite
+npx skills add ludejun/ai-sparkwrite-editor --skill ai-sparkwrite-editor
 ```
 
 The installer lets you choose your coding agent and installation scope. Keep the project scope to use the skill in the current project, or add `--global` to make it available across projects. See the [Skills CLI documentation](https://github.com/vercel-labs/skills#install-a-skill) for supported agents and options.
@@ -20,12 +20,12 @@ The skill provides instructions to your coding agent. Install the editor's runti
 
 ## Download manually
 
-[Download repository ZIP](https://github.com/ludejun/sparkwrite/archive/refs/heads/main.zip) · [Browse the skill files](https://github.com/ludejun/sparkwrite/tree/main/skills/sparkwrite)
+[Download repository ZIP](https://github.com/ludejun/ai-sparkwrite-editor/archive/refs/heads/main.zip) · [Browse the skill files](https://github.com/ludejun/ai-sparkwrite-editor/tree/main/skills/ai-sparkwrite-editor)
 
-Extract the ZIP and copy the `skills/sparkwrite` folder into your agent's supported skills directory. Keep the entire folder, including `references/`; downloading only `SKILL.md` leaves out the examples and API reference.
+Extract the ZIP and copy the `skills/ai-sparkwrite-editor` folder into your agent's supported skills directory. Keep the entire folder, including `references/`; downloading only `SKILL.md` leaves out the examples and API reference.
 
 ```text
-sparkwrite/
+ai-sparkwrite-editor/
 ├── SKILL.md
 └── references/
     ├── quickstart.md
@@ -39,7 +39,7 @@ sparkwrite/
 After installation, ask your agent to use the skill with a concrete task, for example:
 
 ```text
-Use the sparkwrite skill to add an editor with bold, italic,
+Use the ai-sparkwrite-editor skill to add an editor with bold, italic,
 headings, and image upload to this React app. Follow the existing
 project structure and use our upload API.
 ```

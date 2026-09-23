@@ -35,7 +35,7 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 
 ### Internationalization
 
-- 16 bundled languages ordered by speaker population: zh-CN, hi, es, fr, bn, pt-BR, ru, id, de, ja, tr, vi, ko, it, hu, fi, plus English. Load them on demand from `sparkwrite/locales/<code>`.
+- 16 bundled languages ordered by speaker population: zh-CN, hi, es, fr, bn, pt-BR, ru, id, de, ja, tr, vi, ko, it, hu, fi, plus English. Load them on demand from `ai-sparkwrite-editor/locales/<code>`.
 
 ### Recording
 
@@ -43,12 +43,12 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 
 ### Frameworks
 
-- `sparkwrite/core`: the framework-agnostic layer (extensions without node views, paste rules, recorder, AI transport and markdown rendering, image bookkeeping, translations). A build check fails if React becomes reachable from it.
-- `sparkwrite/vue`: Vue 3 provider, composables, toolbar primitives, controls for the core extensions, and a Vue node view for the divider, on the same stylesheet as the React controls. `examples/vue` shows every control.
+- `ai-sparkwrite-editor/core`: the framework-agnostic layer (extensions without node views, paste rules, recorder, AI transport and markdown rendering, image bookkeeping, translations). A build check fails if React becomes reachable from it.
+- `ai-sparkwrite-editor/vue`: Vue 3 provider, composables, toolbar primitives, controls for the core extensions, and a Vue node view for the divider, on the same stylesheet as the React controls. `examples/vue` shows every control.
 - Translations moved to a dependency-free store; `useLocale` (React) subscribes with `useSyncExternalStore`.
 - The AI panel's tone selector was removed.
 
 ### Build
 
 - Named imports from `@tiptap/*` packages so the CommonJS bundles load.
-- Package renamed to `sparkwrite`; subpaths keep their shape (`sparkwrite/table`, `sparkwrite/bubble/text`, `sparkwrite/locales/es`, plus `sparkwrite/core` and `sparkwrite/vue`). The root CSS class is `.sparkwrite`.
+- Package renamed to `ai-sparkwrite-editor`; subpaths keep their shape (`ai-sparkwrite-editor/table`, `ai-sparkwrite-editor/bubble/text`, `ai-sparkwrite-editor/locales/es`, plus `ai-sparkwrite-editor/core` and `ai-sparkwrite-editor/vue`). The root CSS class is `.sparkwrite`.

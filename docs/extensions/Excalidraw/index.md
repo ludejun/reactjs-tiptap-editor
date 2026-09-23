@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Excalidraw, RichTextExcalidraw } from 'sparkwrite/excalidraw';
-import { RichTextBubbleExcalidraw } from 'sparkwrite/bubble/excalidraw';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Excalidraw, RichTextExcalidraw } from 'ai-sparkwrite-editor/excalidraw';
+import { RichTextBubbleExcalidraw } from 'ai-sparkwrite-editor/bubble/excalidraw';
+import 'ai-sparkwrite-editor/style.css';
 import '@excalidraw/excalidraw/index.css';
 
 const extensions = [Document, Paragraph, Text, Excalidraw];

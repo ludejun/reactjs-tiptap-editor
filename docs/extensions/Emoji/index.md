@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Emoji, RichTextEmoji } from 'sparkwrite/emoji';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Emoji, RichTextEmoji } from 'ai-sparkwrite-editor/emoji';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Emoji];
 
@@ -49,7 +49,7 @@ export default function EmojiExample() {
 
 Open the toolbar picker and choose an emoji. The extension supplies its emoji data and suggestion UI; no upload endpoint or separate toolbar provider is needed.
 
-- Copy Emoji List here: https://github.com/ludejun/sparkwrite-demo/blob/master/src/components/Editor/emojis.ts
+- Copy Emoji List here: https://github.com/ludejun/ai-sparkwrite-editor-demo/blob/master/src/components/Editor/emojis.ts
 
 ## Loading behavior
 

@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { Mermaid, RichTextMermaid } from 'sparkwrite/mermaid';
-import { RichTextBubbleMermaid } from 'sparkwrite/bubble/mermaid';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { Mermaid, RichTextMermaid } from 'ai-sparkwrite-editor/mermaid';
+import { RichTextBubbleMermaid } from 'ai-sparkwrite-editor/bubble/mermaid';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Mermaid];
 

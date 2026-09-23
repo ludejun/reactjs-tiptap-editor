@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'sparkwrite';
-import { SlashCommand, SlashCommandList } from 'sparkwrite/slashcommand';
-import { Heading } from 'sparkwrite/heading';
-import 'sparkwrite/style.css';
+import { RichTextProvider } from 'ai-sparkwrite-editor';
+import { SlashCommand, SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
+import { Heading } from 'ai-sparkwrite-editor/heading';
+import 'ai-sparkwrite-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, SlashCommand];
 
@@ -55,7 +55,7 @@ Register `SlashCommand` and mount `SlashCommandList` inside the provider. The co
 Use `commandList` on `SlashCommandList` to replace the default groups. Each group has a `name`, `title`, and `commands` array. A command receives the editor and the range containing the slash query.
 
 ```tsx
-import { SlashCommandList } from 'sparkwrite/slashcommand';
+import { SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
 
 export function CustomSlashCommands() {
   return (

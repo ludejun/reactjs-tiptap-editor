@@ -5,7 +5,7 @@ import { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms';
 import { getLocaleConfig } from './locale';
 import { transformHead } from './transformHead';
 
-const docsLink = 'https://ludejun.github.io/sparkwrite';
+const docsLink = 'https://ludejun.github.io/ai-sparkwrite-editor';
 
 export default defineConfig({
   lang: 'en-US',

@@ -415,12 +415,12 @@ importers:
       '@tiptap/vue-3':
         specifier: 3.29.2
         version: 3.29.2(@floating-ui/dom@1.8.0)(@tiptap/core@3.29.2)(@tiptap/pm@3.29.2)(vue@3.5.30)
+      ai-sparkwrite-editor:
+        specifier: workspace:*
+        version: link:../..
       lucide-vue-next:
         specifier: ^1.0.0
         version: 1.0.0(vue@3.5.30)
-      sparkwrite:
-        specifier: workspace:*
-        version: link:../..
       vue:
         specifier: ^3.4.37
         version: 3.5.30(typescript@5.9.3)
@@ -440,15 +440,15 @@ importers:
 
   playground:
     dependencies:
+      ai-sparkwrite-editor:
+        specifier: workspace:*
+        version: link:..
       react:
         specifier: ^19.1.0
         version: 19.2.4
       react-dom:
         specifier: ^19.1.0
         version: 19.2.4(react@19.2.4)
-      sparkwrite:
-        specifier: workspace:*
-        version: link:..
     devDependencies:
       '@types/node':
         specifier: ^22.14.0

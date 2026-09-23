@@ -17,7 +17,7 @@ hero:
       link: /guide/features
     - theme: alt
       text: GitHub
-      link: https://github.com/ludejun/sparkwrite
+      link: https://github.com/ludejun/ai-sparkwrite-editor
 features:
   - title: AI that writes real content
     details: Streaming answers rendered through the editor schema — tables, code blocks and lists arrive as nodes, not pasted text. OpenAI, Anthropic, a proxy, or your own transport.
