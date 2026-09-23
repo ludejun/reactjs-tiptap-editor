@@ -31,6 +31,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
       // H1-H3 cover almost every document; Paragraph and H4-H6 only appear
       // once searched.
       hiddenUntilSearched: level === 'Paragraph' || level > 3,
+      shortcut: level === 'Paragraph' ? undefined : '#'.repeat(level),
       label:
         level === 'Paragraph'
           ? t('editor.paragraph.tooltip')
@@ -73,6 +74,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   //bulletlist
   format.commands.push({
     name: 'bulletList',
+    shortcut: '-',
     label: t('editor.bulletlist.tooltip'),
     aliases: ['ul', 'yxlb'],
     iconName: 'List',
@@ -85,6 +87,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   //orderedlist
   format.commands.push({
     name: 'orderedlist',
+    shortcut: '1.',
     label: t('editor.orderedlist.tooltip'),
     aliases: ['ol', 'yxlb'],
     iconName: 'ListOrdered',
@@ -97,6 +100,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   // tasklist
   format.commands.push({
     name: 'taskList',
+    shortcut: '[ ]',
     label: t('editor.tasklist.tooltip'),
     iconName: 'ListTodo',
     description: 'Task list with todo items',
@@ -110,6 +114,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   // blockquote
   format.commands.push({
     name: 'blockquote',
+    shortcut: '>',
     label: t('editor.blockquote.tooltip'),
     description: '插入引入格式',
     aliases: ['yr'],
@@ -142,6 +147,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   // codeblock
   insert.commands.push({
     name: 'codeBlock',
+    shortcut: '```',
     label: t('editor.codeblock.tooltip'),
     iconName: 'Code2',
     description: 'Code block with syntax highlighting',
@@ -170,6 +176,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   // divider (replaces horizontalRule when registered)
   insert.commands.push({
     name: 'divider',
+    shortcut: '---',
     label: t('editor.divider.tooltip'),
     iconName: 'SeparatorHorizontal',
     description: 'Insert a divider',
@@ -183,6 +190,7 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   //horizontalrule
   insert.commands.push({
     name: 'horizontalRule',
+    shortcut: '---',
     label: t('editor.horizontalrule.tooltip'),
     iconName: 'Minus',
     description: 'Insert a horizontal divider',
@@ -253,7 +261,12 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
   return groups;
 }
 
-export function useFilterCommandList(commandList: CommandList[], query: string, editor?: Editor) {
+export function useFilterCommandList(
+  commandList: CommandList[],
+  query: string,
+  editor?: Editor,
+  showHidden = false
+) {
   const withFilteredCommands = commandList.map((group) => ({
     ...group,
     commands: group.commands.filter((item) => {
@@ -264,7 +277,7 @@ export function useFilterCommandList(commandList: CommandList[], query: string, 
       const labelNormalized = item.label.toLowerCase().trim();
       const queryNormalized = query.toLowerCase().trim();
 
-      if (item.hiddenUntilSearched && !queryNormalized) {
+      if (item.hiddenUntilSearched && !queryNormalized && !showHidden) {
         return false;
       }
 

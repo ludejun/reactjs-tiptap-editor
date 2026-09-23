@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'In die Zwischenablage kopieren',
   'editor.slash': "Drücke '/' für Befehle",
   'editor.slash.empty': 'Kein Ergebnis',
-  'editor.slash.searchMore': 'Tippen, um mehr zu finden',
+  'editor.slash.showMore': 'Alle Blöcke anzeigen…',
   'editor.shortMessage.empty': 'Kein Ergebnis',
   'editor.slash.format': 'Formatierung',
   'editor.slash.insert': 'Einfügen',

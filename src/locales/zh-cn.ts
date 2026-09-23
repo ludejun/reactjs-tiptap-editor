@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': '复制到剪贴板',
   'editor.slash': "按 '/' 使用命令",
   'editor.slash.empty': '无结果',
-  'editor.slash.searchMore': '输入关键字搜索更多',
+  'editor.slash.showMore': '显示全部…',
   'editor.shortMessage.empty': '无结果',
   'editor.slash.format': '格式',
   'editor.slash.insert': '插入',

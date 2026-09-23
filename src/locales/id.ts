@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'Salin ke papan klip',
   'editor.slash': "Tekan '/' untuk perintah",
   'editor.slash.empty': 'Tidak ada hasil',
-  'editor.slash.searchMore': 'Ketik untuk mencari lebih banyak',
+  'editor.slash.showMore': 'Tampilkan semua blok…',
   'editor.shortMessage.empty': 'Tidak ada hasil',
   'editor.slash.format': 'Format',
   'editor.slash.insert': 'Sisipkan',

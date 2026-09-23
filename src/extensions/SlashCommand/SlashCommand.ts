@@ -8,7 +8,6 @@ import { renderNodeViewClosure } from '@/utils/renderNodeView';
 import type { Command } from './types';
 import type { Editor, Range } from '@tiptap/core';
 
-export * from './components/SlashCommandList';
 export * from './renderCommandListDefault';
 
 export const SlashCommand = /* @__PURE__ */ Extension.create({

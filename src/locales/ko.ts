@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': '클립보드에 복사',
   'editor.slash': "'/' 를 눌러 명령어 보기",
   'editor.slash.empty': '결과 없음',
-  'editor.slash.searchMore': '입력하여 더 검색',
+  'editor.slash.showMore': '모든 블록 보기…',
   'editor.shortMessage.empty': '결과 없음',
   'editor.slash.format': '서식',
   'editor.slash.insert': '삽입',

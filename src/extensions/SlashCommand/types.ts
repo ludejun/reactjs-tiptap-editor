@@ -21,5 +21,10 @@ export interface Command {
    * fold — deep headings, say — without making them unreachable.
    */
   hiddenUntilSearched?: boolean;
+  /**
+   * Markdown that produces the same block when typed at the start of a line
+   * (`#` for a heading, `-` for a list). Shown as a hint next to the entry.
+   */
+  shortcut?: string;
   isActive?: (editor: Editor) => boolean;
 }

@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'Copiar al portapapeles',
   'editor.slash': "Pulsa '/' para ver los comandos",
   'editor.slash.empty': 'Sin resultados',
-  'editor.slash.searchMore': 'Escribe para buscar más',
+  'editor.slash.showMore': 'Mostrar todos los bloques…',
   'editor.shortMessage.empty': 'Sin resultados',
   'editor.slash.format': 'Formato',
   'editor.slash.insert': 'Insertar',

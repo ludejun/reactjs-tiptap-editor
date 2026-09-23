@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'Copia negli appunti',
   'editor.slash': "Premi '/' per i comandi",
   'editor.slash.empty': 'Nessun risultato',
-  'editor.slash.searchMore': 'Digita per cercare altro',
+  'editor.slash.showMore': 'Mostra tutti i blocchi…',
   'editor.shortMessage.empty': 'Nessun risultato',
   'editor.slash.format': 'Formato',
   'editor.slash.insert': 'Inserisci',

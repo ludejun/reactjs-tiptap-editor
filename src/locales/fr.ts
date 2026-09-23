@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'Copier dans le presse-papiers',
   'editor.slash': "Appuyez sur '/' pour les commandes",
   'editor.slash.empty': 'Aucun résultat',
-  'editor.slash.searchMore': 'Tapez pour rechercher plus',
+  'editor.slash.showMore': 'Afficher tous les blocs…',
   'editor.shortMessage.empty': 'Aucun résultat',
   'editor.slash.format': 'Mise en forme',
   'editor.slash.insert': 'Insérer',

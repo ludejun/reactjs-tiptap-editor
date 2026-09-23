@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'Копировать в буфер обмена',
   'editor.slash': "Нажмите '/' для команд",
   'editor.slash.empty': 'Ничего не найдено',
-  'editor.slash.searchMore': 'Введите текст, чтобы найти больше',
+  'editor.slash.showMore': 'Показать все блоки…',
   'editor.shortMessage.empty': 'Ничего не найдено',
   'editor.slash.format': 'Форматирование',
   'editor.slash.insert': 'Вставка',

@@ -52,7 +52,8 @@ function SlashCommandNodeView(
         ...commandList,
       ]
     : commandList;
-  const commandQuery = useFilterCommandList(groups, props.query, props.editor);
+  const [showAll, setShowAll] = useState(false);
+  const commandQuery = useFilterCommandList(groups, props.query, props.editor, showAll);
   const hasHiddenCommands = groups.some((group) =>
     group.commands.some((command) => command.hiddenUntilSearched)
   );
@@ -219,6 +220,12 @@ function SlashCommandNodeView(
                       )}
 
                       {command.label}
+
+                      {command.shortcut ? (
+                        <kbd className='richtext-ml-auto richtext-rounded richtext-border richtext-border-solid richtext-border-border richtext-bg-muted richtext-px-1 richtext-font-mono richtext-text-[10px] richtext-leading-4 richtext-text-muted-foreground'>
+                          {command.shortcut}
+                        </kbd>
+                      ) : null}
                     </button>
                   );
                 })}
@@ -228,10 +235,15 @@ function SlashCommandNodeView(
 
           {/* Rarely used blocks stay out of the default list. Say so, or they
               look missing. */}
-          {!props.query && hasHiddenCommands ? (
-            <div className='richtext-mx-1 richtext-mt-1 richtext-border-0 richtext-border-t richtext-border-solid richtext-border-border richtext-px-1 richtext-pb-0.5 richtext-pt-1.5 richtext-text-[11px] richtext-text-muted-foreground'>
-              {t('editor.slash.searchMore')}
-            </div>
+          {!props.query && !showAll && hasHiddenCommands ? (
+            <button
+              className='richtext-mx-1 richtext-mt-1 richtext-flex richtext-w-auto richtext-items-center richtext-gap-1 richtext-border-0 richtext-border-t richtext-border-solid richtext-border-border !richtext-bg-transparent richtext-px-1 richtext-pb-1 richtext-pt-1.5 richtext-text-left richtext-text-[11px] richtext-text-muted-foreground hover:richtext-text-foreground'
+              type='button'
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => setShowAll(true)}
+            >
+              {t('editor.slash.showMore')}
+            </button>
           ) : null}
         </div>
       ) : (

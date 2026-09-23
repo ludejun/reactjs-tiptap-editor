@@ -1,66 +1,25 @@
-import { useCallback } from 'react';
-import { createSignal, getSignal, useSetSignal, useSignalValue } from 'reactjs-signal';
+import { useCallback, useSyncExternalStore } from 'react';
 
-import { DEFAULT_LANG_VALUE } from '@/constants';
+import { formatMessage, getLocaleState, localeActions, subscribeLocale } from './store';
 
-import en from './en';
+import type { MessageKeysType } from './store';
 
-const LANG = {
-  currentLang: DEFAULT_LANG_VALUE,
-  message: {
-    en,
-  },
-};
+export * from './store';
 
-// // Define message key types based on the 'en' locale
-type MessageKeysType = keyof typeof en | (string & {});
-type LanguageType = keyof typeof LANG.message | (string & {});
-
-// Proxy for reactive language state
-interface LangState {
-  currentLang: LanguageType;
-  message: Record<string, Partial<Record<MessageKeysType, string>>>;
-}
-
-const langSignal = createSignal<LangState>({
-  currentLang: LANG.currentLang,
-  message: LANG.message,
-});
-
-// setLang: (newLang: LanguageType) => {
-//   set(() => ({
-//     currentLang: newLang,
-//   }));
-// },
-// setMessage: (lang: LanguageType, messages: Partial<Record<keyof typeof en, string>>) => {
-//   set((state) => ({
-//     message: {
-//       ...state.message,
-//       [lang]: {
-//         ...state.message[lang as keyof typeof LANG.message],
-//         ...messages,
-//       },
-//     },
-//   }));
-// }
+/** Current language and a `t()` that re-renders the component on change. */
 function useLocale() {
-  const currentLang = useSignalValue(langSignal).currentLang;
-  const message = useSignalValue(langSignal).message;
-  const setLang = useSetSignal(langSignal);
+  const { currentLang, message } = useSyncExternalStore(
+    subscribeLocale,
+    getLocaleState,
+    getLocaleState
+  );
 
   const t = useCallback(
     (path: MessageKeysType, params?: Record<string, string | number>): string => {
       try {
-        const messageObj = message[currentLang] || {};
-        let template = messageObj[path] || message.en?.[path] || path;
+        const template = message[currentLang]?.[path] || message.en?.[path] || path;
 
-        if (params) {
-          Object.entries(params).forEach(([key, value]) => {
-            template = template.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
-          });
-        }
-
-        return template;
+        return formatMessage(template, params);
       } catch {
         return path;
       }
@@ -68,59 +27,7 @@ function useLocale() {
     [message, currentLang]
   );
 
-  return {
-    setLang,
-    lang: currentLang,
-    t,
-  };
+  return { setLang: localeActions.setLang, lang: currentLang, t };
 }
 
-/**
- * Translate outside React.
- *
- * `useLocale` is a hook, so modules like the AI transport cannot use it; this
- * reads the same signal directly.
- */
-function translate(path: MessageKeysType, params?: Record<string, string | number>): string {
-  try {
-    const { currentLang, message } = langSignal();
-    let template = message[currentLang]?.[path] || message.en?.[path] || path;
-
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        template = template.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
-      });
-    }
-
-    return template;
-  } catch {
-    return path;
-  }
-}
-
-const localeActions = {
-  setLang: (lang: LanguageType | (string & {})) => {
-    getSignal(langSignal).setValue((prev) => ({
-      ...prev,
-      currentLang: lang,
-    }));
-  },
-  setMessage: (
-    lang: LanguageType | (string & {}),
-    messages: Partial<Record<keyof typeof LANG.message.en, string>>
-  ) => {
-    getSignal(langSignal).setValue((prev) => ({
-      ...prev,
-      message: {
-        ...prev.message,
-        [lang]: {
-          ...prev.message[lang as keyof typeof LANG.message],
-          ...messages,
-        },
-      },
-    }));
-  },
-};
-
-export { localeActions, translate, useLocale };
-export { en };
+export { useLocale };

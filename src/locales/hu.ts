@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'Másolás vágólapra',
   'editor.slash': "Nyomja meg a '/' gombot a parancsokhoz",
   'editor.slash.empty': 'Nincs találat',
-  'editor.slash.searchMore': 'Írjon be a további kereséshez',
+  'editor.slash.showMore': 'Minden blokk megjelenítése…',
   'editor.shortMessage.empty': 'Nincs találat',
   'editor.slash.format': 'Formátum',
   'editor.slash.insert': 'Beszúrás',

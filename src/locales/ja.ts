@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'クリップボードにコピー',
   'editor.slash': '「/」でコマンドを表示',
   'editor.slash.empty': '該当なし',
-  'editor.slash.searchMore': '入力してさらに検索',
+  'editor.slash.showMore': 'すべてのブロックを表示…',
   'editor.shortMessage.empty': '該当なし',
   'editor.slash.format': '書式',
   'editor.slash.insert': '挿入',

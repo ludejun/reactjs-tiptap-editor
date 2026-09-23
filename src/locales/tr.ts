@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'Panoya kopyala',
   'editor.slash': "Komutlar için '/' tuşuna basın",
   'editor.slash.empty': 'Sonuç yok',
-  'editor.slash.searchMore': 'Daha fazlası için yazın',
+  'editor.slash.showMore': 'Tüm blokları göster…',
   'editor.shortMessage.empty': 'Sonuç yok',
   'editor.slash.format': 'Biçim',
   'editor.slash.insert': 'Ekle',

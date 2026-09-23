@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'CopyToClipboard',
   'editor.slash': "Nhấn '/' để biết lệnh",
   'editor.slash.empty': 'Không có kết quả',
-  'editor.slash.searchMore': 'Nhập để tìm thêm',
+  'editor.slash.showMore': 'Hiện tất cả khối…',
   'editor.shortMessage.empty': 'Không có kết quả',
   'editor.slash.format': 'Định dạng',
   'editor.slash.insert': 'Chèn',

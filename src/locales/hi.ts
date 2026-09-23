@@ -19,7 +19,7 @@ const locale = {
   'editor.copyToClipboard': 'क्लिपबोर्ड पर कॉपी करें',
   'editor.slash': "कमांड के लिए '/' दबाएँ",
   'editor.slash.empty': 'कोई परिणाम नहीं',
-  'editor.slash.searchMore': 'और खोजने के लिए टाइप करें',
+  'editor.slash.showMore': 'सभी ब्लॉक दिखाएँ…',
   'editor.shortMessage.empty': 'कोई परिणाम नहीं',
   'editor.slash.format': 'फ़ॉर्मैट',
   'editor.slash.insert': 'जोड़ें',
