@@ -157,7 +157,9 @@ export function RichTextAIComposer({
       role='region'
       aria-label={t('editor.ai.compose.title')}
       onKeyDown={(event) => {
-        if (event.key === 'Escape') {
+        // Escape and the toolbar shortcut both close the dock from inside it,
+        // where the editor's own keymap cannot see them.
+        if (event.key === 'Escape' || ((event.metaKey || event.ctrlKey) && event.key === 'j')) {
           event.preventDefault();
           close();
         }
@@ -213,11 +215,9 @@ export function RichTextAIComposer({
             disabled={busy}
             onChange={(event) => setTarget(event.target.value as Target)}
           >
-            {TARGETS.map((value) => (
+            {TARGETS.filter((value) => value !== 'selection' || state.hasSelection).map((value) => (
               <option key={value} value={value}>
-                {value === 'selection' && !state.hasSelection
-                  ? t('editor.ai.compose.target.cursor')
-                  : t(`editor.ai.compose.target.${value}`)}
+                {t(`editor.ai.compose.target.${value}`)}
               </option>
             ))}
           </select>

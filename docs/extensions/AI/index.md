@@ -12,13 +12,13 @@ The model writes **into the document**, not into a chat window. Answers stream i
 
 There are five ways in, and they share one extension:
 
-| Entry point                                   | What happens                                                                                                                  |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **Select text → Improve**                     | The selection menu rewrites, shortens, translates, explains, turns the text into a table or a list; preview, then Apply.       |
-| **Space on an empty line**                    | Opens Ask AI at the caret (Notion's gesture). `spaceTrigger: false` turns it off.                                             |
-| **`/ai`, `/continue`**                        | Slash entries: Ask AI, Continue writing, open the composer.                                                                    |
-| **The AI toolbar button, `⌘/Ctrl+J`**         | Opens the **composer dock** under the editor: type what you want, the answer streams into the page above. Keep, undo, refine. |
-| **Ghost text while typing** (`AIAutocomplete`) | After a pause at the end of a block the next few words appear in grey; Tab keeps them, Escape or typing dismisses.           |
+| Entry point                                    | What happens                                                                                                                  |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **Select text → Improve**                      | The selection menu rewrites, shortens, translates, explains, turns the text into a table or a list; preview, then Apply.      |
+| **Space on an empty line**                     | Opens Ask AI at the caret (Notion's gesture). `spaceTrigger: false` turns it off.                                             |
+| **`/ai`, `/continue`**                         | Slash entries: Ask AI, Continue writing, open the composer.                                                                   |
+| **The AI toolbar button, `⌘/Ctrl+J`**          | Opens the **composer dock** under the editor: type what you want, the answer streams into the page above. Keep, undo, refine. |
+| **Ghost text while typing** (`AIAutocomplete`) | After a pause at the end of a block the next few words appear in grey; Tab keeps them, Escape or typing dismisses.            |
 
 ## Setup
 
@@ -136,26 +136,26 @@ AI.configure({
 
 ## Options
 
-| Option              | Default                     | Purpose                                                                          |
-| ------------------- | --------------------------- | -------------------------------------------------------------------------------- |
-| `protocol`          | `'openai'`                  | OpenAI Chat Completions or Anthropic Messages                                    |
-| `apiKey`            | `''`                        | Key or async key getter; omit for an authenticated proxy                         |
-| `model`             | `''`                        | Model ID for the built-in transport                                              |
-| `baseURL`           | provider `/v1` root         | API root, not a complete endpoint                                                |
-| `maxTokens`         | `2048`                      | Maximum generated tokens                                                         |
-| `headers`           | `{}`                        | Extra or overridden request headers                                              |
-| `systemPrompt`      | writing-assistant prompt    | Asks for the user's language and Markdown-only output                            |
-| `generate`          | `null`                      | Custom transport `(request, onChunk?) => Promise<string>`                        |
-| `stream`            | `true`                      | Ask for server-sent events                                                       |
-| `spaceTrigger`      | `true`                      | Space on an empty line opens Ask AI                                              |
-| `documentContext`   | `12000`                     | Characters of the document sent with document-level prompts                      |
-| `translateLanguages`| `[]`                        | Fixed Translate targets; empty means the browser language                        |
-| `enableImageInput`  | `true`                      | Attach images (the model has to accept them)                                     |
-| `enableFileInput`   | `true`                      | Attach text files, inlined into the prompt                                       |
-| `imageMimes`, `fileMimes`, `maxAttachmentSize` | see source | Accepted attachment types and size (4 MB)                          |
-| `renderResult`      | —                           | React: replace how the panel shows the answer (`{ markdown, html, streaming }`)   |
-| `components.Panel`  | —                           | React: replace the whole panel                                                   |
-| `mountPanel`        | React/Vue renderer          | Framework hook: `(mount, props) => unmount`; the core entry ships it as `null`   |
+| Option                                         | Default                  | Purpose                                                                         |
+| ---------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------- |
+| `protocol`                                     | `'openai'`               | OpenAI Chat Completions or Anthropic Messages                                   |
+| `apiKey`                                       | `''`                     | Key or async key getter; omit for an authenticated proxy                        |
+| `model`                                        | `''`                     | Model ID for the built-in transport                                             |
+| `baseURL`                                      | provider `/v1` root      | API root, not a complete endpoint                                               |
+| `maxTokens`                                    | `2048`                   | Maximum generated tokens                                                        |
+| `headers`                                      | `{}`                     | Extra or overridden request headers                                             |
+| `systemPrompt`                                 | writing-assistant prompt | Asks for the user's language and Markdown-only output                           |
+| `generate`                                     | `null`                   | Custom transport `(request, onChunk?) => Promise<string>`                       |
+| `stream`                                       | `true`                   | Ask for server-sent events                                                      |
+| `spaceTrigger`                                 | `true`                   | Space on an empty line opens Ask AI                                             |
+| `documentContext`                              | `12000`                  | Characters of the document sent with document-level prompts                     |
+| `translateLanguages`                           | `[]`                     | Fixed Translate targets; empty means the browser language                       |
+| `enableImageInput`                             | `true`                   | Attach images (the model has to accept them)                                    |
+| `enableFileInput`                              | `true`                   | Attach text files, inlined into the prompt                                      |
+| `imageMimes`, `fileMimes`, `maxAttachmentSize` | see source               | Accepted attachment types and size (4 MB)                                       |
+| `renderResult`                                 | —                        | React: replace how the panel shows the answer (`{ markdown, html, streaming }`) |
+| `components.Panel`                             | —                        | React: replace the whole panel                                                  |
+| `mountPanel`                                   | React/Vue renderer       | Framework hook: `(mount, props) => unmount`; the core entry ships it as `null`  |
 
 Only the selected text (or the document context you allow), your prompt and successful turns are sent. Document edits during a panel session — including collaborative ones — close the session and abort its request. Closing, stopping or destroying the editor aborts requests.
 

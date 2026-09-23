@@ -214,8 +214,10 @@ async function demoAIGenerate(
     return override(request, onChunk);
   }
 
-  const last = request.messages[request.messages.length - 1]?.content ?? '';
-  const selected = /Selected text:\n([\s\S]*?)(?:\n\n|$)/.exec(last)?.[1]?.trim();
+  const message = request.messages[request.messages.length - 1]?.content ?? '';
+  const selected = /Selected text:\n([\s\S]*?)(?:\n\n|$)/.exec(message)?.[1]?.trim();
+  // The instruction is the last paragraph; the rest is selection/document context.
+  const last = message.trim().split('\n\n').pop() ?? '';
 
   // Ghost-text autocomplete asks for a few words, not a document.
   if (/complete text inside an editor/i.test(request.systemPrompt)) {

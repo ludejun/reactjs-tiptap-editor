@@ -1,0 +1,331 @@
+/*
+ * The Vue layer: what the React layer gets from its dynamic theme stylesheet
+ * and its Radix-based primitives. Everything else is shared with React
+ * through the `richtext-*` classes.
+ */
+
+/* React injects the theme variables at runtime. Vue gets the default light and
+   dark palettes as zero-specificity fallbacks, so a host theme or the React
+   stylesheet still wins wherever they define the same variables. */
+:where(.sparkwrite) {
+  --radius: 0.65rem;
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+}
+
+:where(.sparkwrite.dark) {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+}
+
+/* Popovers and dialogs */
+/* Anchored under its trigger with `position: fixed` by `useAnchoredPanel`. */
+.richtext-vue-popover {
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  background: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  box-shadow: 0 10px 30px #0002;
+  font-size: 13px;
+}
+
+.richtext-vue-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: #0006;
+}
+.richtext-vue-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 18px 20px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+  background: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  box-shadow: 0 24px 64px #0004;
+  font-size: 13px;
+}
+.richtext-vue-dialog__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.richtext-vue-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.richtext-vue-dialog__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Form controls */
+.richtext-vue-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+}
+.richtext-vue-field {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid hsl(var(--input));
+  border-radius: 6px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  &:focus {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: -1px;
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+textarea.richtext-vue-field {
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+.richtext-vue-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  input {
+    margin: 0;
+  }
+}
+.richtext-vue-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  &:hover:not(:disabled) {
+    background: hsl(var(--accent));
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  &.richtext-vue-button--primary {
+    border-color: hsl(var(--primary));
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+      background: hsl(var(--primary));
+    }
+  }
+  &.richtext-vue-button--danger {
+    color: hsl(var(--destructive));
+  }
+}
+.richtext-vue-error {
+  margin: 0;
+  color: hsl(var(--destructive));
+  font-size: 12px;
+}
+.richtext-vue-hint {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+}
+
+/* Drop zone for uploads */
+.richtext-vue-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 96px;
+  padding: 12px;
+  border: 1px dashed hsl(var(--border));
+  border-radius: 10px;
+  background: hsl(var(--muted) / 0.4);
+  color: hsl(var(--muted-foreground));
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  &:hover,
+  &.richtext-vue-dropzone--active {
+    border-color: hsl(var(--ring));
+    color: hsl(var(--foreground));
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: progress;
+  }
+}
+
+/* Live previews in the Katex and Mermaid dialogs */
+.richtext-vue-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 12px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  overflow: auto;
+  svg {
+    max-width: 100%;
+  }
+}
+
+/* Context menu (table) */
+.richtext-vue-menu {
+  position: fixed;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 13rem;
+  padding: 4px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  box-shadow: 0 10px 30px #0003;
+}
+.richtext-vue-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  &:hover:not(:disabled) {
+    background: hsl(var(--accent));
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  &.richtext-vue-menu__item--danger:hover:not(:disabled) {
+    background: hsl(var(--destructive) / 0.15);
+    color: hsl(var(--destructive));
+  }
+  svg {
+    flex-shrink: 0;
+    color: hsl(var(--muted-foreground));
+  }
+}
+.richtext-vue-menu__shortcut {
+  margin-left: auto;
+  padding-left: 12px;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.richtext-vue-menu__separator {
+  height: 1px;
+  margin: 3px 0;
+  background: hsl(var(--border));
+}
+
+/* Colour palette dropdown */
+.richtext-vue-swatches {
+  display: grid;
+  grid-template-columns: repeat(10, 1.25rem);
+  gap: 4px;
+}
+.richtext-vue-swatch {
+  box-sizing: border-box;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 1px solid #0002;
+  border-radius: 4px;
+  cursor: pointer;
+  &[aria-checked='true'] {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 1px;
+  }
+}
+.richtext-vue-color-bar {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  left: 6px;
+  height: 3px;
+  border-radius: 2px;
+}

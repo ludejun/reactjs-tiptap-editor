@@ -4,16 +4,16 @@ The editor is Tiptap underneath, and Tiptap is framework-agnostic: the same exte
 
 The package is therefore split in two layers:
 
-| Layer | Import                                                      | Depends on React | Contents                                                                                                                                                                                                                                                                                                                          |
-| ----- | ----------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core  | `ai-sparkwrite-editor/core`                                           | No               | Extensions without node views (marks, headings, lists, tables, links, alignment, indent, font, colour, divider…; columns and the suggestion popups — mention, short message — stay in the React layer for now), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
-| React | `ai-sparkwrite-editor`, `ai-sparkwrite-editor/<feature>`, `ai-sparkwrite-editor/bubble/*` | Yes              | Everything above plus controls, bubble menus, dialogs and node views                                                                                                                                                                                                                                                              |
+| Layer | Import                                                                                    | Depends on React | Contents                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ----- | ----------------------------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core  | `ai-sparkwrite-editor/core`                                                               | No               | Every extension without its node view (marks, headings, lists, tables, links, alignment, indent, font, colour, divider, code block, callout, details, video, iframe, images and GIFs, Katex, Mermaid, attachment, table of contents…; columns, Excalidraw, drawer, Twitter and the suggestion popups — mention, short message, emoji, slash commands — stay in the React layer), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
+| React | `ai-sparkwrite-editor`, `ai-sparkwrite-editor/<feature>`, `ai-sparkwrite-editor/bubble/*` | Yes              | Everything above plus controls, bubble menus, dialogs and node views                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 A build check (`tests/core-headless.test.mjs`) walks the chunk graph of the core bundle and fails if anything reachable from it imports `react`, `@tiptap/react`, Radix or lucide.
 
 ## Vue
 
-Two imports: `ai-sparkwrite-editor/core` for the extensions and `ai-sparkwrite-editor/vue` for the UI. The Vue layer ships a provider, composables, toolbar primitives, ready-made controls for the core extensions, and Vue node views (the divider today). It depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`, and shares the stylesheet with the React controls, so both toolbars look the same.
+Two imports: `ai-sparkwrite-editor/core` for the extensions and `ai-sparkwrite-editor/vue` for the UI. The Vue layer ships a provider, composables, toolbar primitives, ready-made controls for the core extensions, and Vue node views for the blocks (divider, code block, callout, image, GIF, iframe, Katex, Mermaid, attachment, table of contents). It depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`, and shares the stylesheet with the React controls, so both toolbars look the same.
 
 ```bash
 pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
@@ -37,6 +37,7 @@ import {
 } from 'ai-sparkwrite-editor/core';
 import {
   Divider, // core divider + Vue node view
+  CodeBlock, // core code block + Vue node view; same for Image, Callout, Katex…
   RichTextProvider,
   RichTextToolbar,
   RichTextToolbarDivider,
@@ -66,6 +67,7 @@ const editor = useEditor({
     Table,
     TextAlign,
     Divider,
+    CodeBlock,
     RichPaste,
   ],
   content: '<p>你好</p>',
@@ -90,18 +92,18 @@ const editor = useEditor({
 
 ### What the Vue layer contains
 
-| Kind                     | Exports                                                                                                                                                                                                                                                                                                                     |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Provider and composables | `RichTextProvider`, `useEditorInstance()`, `useEditorState(selector, fallback)`, `useLocale()`                                                                                                                                                                                                                              |
-| Toolbar primitives       | `RichTextToolbar`, `RichTextToolbarDivider`, `RichTextToolbarButton`, `RichTextDropdown`, `RichTextToolbarMore`, `RichTextToolbarMoreGroup`, `RichTextToolbarMoreRow`                                                                                                                                                       |
-| Controls                 | `RichTextUndo`, `RichTextRedo`, `RichTextBold`, `RichTextItalic`, `RichTextUnderline`, `RichTextStrike`, `RichTextCode`, `RichTextClear`, `RichTextHeading`, `RichTextBulletList`, `RichTextOrderedList`, `RichTextTaskList`, `RichTextBlockquote`, `RichTextTextAlign`, `RichTextLink`, `RichTextTable`, `RichTextDivider` |
-| Node views               | `Divider` (style picker and editable caption, same DOM and CSS as the React one)                                                                                                                                                                                                                                            |
+| Kind                     | Exports                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Provider and composables | `RichTextProvider`, `useEditorInstance()`, `useEditorState(selector, fallback)`, `useLocale()`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Toolbar primitives       | `RichTextToolbar`, `RichTextToolbarDivider`, `RichTextToolbarButton`, `RichTextDropdown`, `RichTextToolbarMore`, `RichTextToolbarMoreGroup`, `RichTextToolbarMoreRow`                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Controls                 | `RichTextUndo`, `RichTextRedo`, `RichTextBold`, `RichTextItalic`, `RichTextUnderline`, `RichTextStrike`, `RichTextCode`, `RichTextClear`, `RichTextHeading`, `RichTextBulletList`, `RichTextOrderedList`, `RichTextTaskList`, `RichTextBlockquote`, `RichTextTextAlign`, `RichTextLink`, `RichTextTable`, `RichTextDivider`                                                                                                                                                                                                                                                                                                                  |
+| Node views               | `Divider` (style picker, editable caption), `CodeBlock` (language picker, copy, delete), `Callout`, `Image` + `ImageBlock` (resize handles, caption, flip and rotation), `ImageGif`, `Iframe` (URL prompt, resize, edit link), `Katex` (renders with the extension's `loadKatex` or `import('katex')`), `Mermaid`, `Attachment` (file picker, upload state, file card), `TableOfContents` + `TableOfContentsNode` (live heading list). Each is `<Name>Core.extend({ addNodeView })` with the same DOM and CSS as the React one; the components are exported as `<Name>NodeView`, and `useImageResize` is the shared corner-handle composable |
 
 Your own control is a `RichTextToolbarButton` with an `onClick` that runs a command, or a `RichTextDropdown` with items; `useEditorState` gives it reactive `isActive`/`can()` state.
 
 ### Not in Vue yet
 
-Bubble menus, the AI panel, dialogs (link, image upload, Katex, Mermaid) and the node views for code block, callout, details, image, video, iframe, Katex, Mermaid, Excalidraw, drawer, attachment, table of contents. Their extensions still work — blocks render through `renderHTML`, `generateAIText` and `markdownToSlice` do the AI work — but the in-document affordances are React only. The Vue divider node view is the template for porting the rest: same DOM, same classes, `VueNodeViewRenderer` instead of `ReactNodeViewRenderer`.
+Bubble menus, the AI panel, dialogs (link, image upload and crop, Katex and Mermaid editors, attachment and video upload) and the node views for Excalidraw and the drawer, which wrap React-only libraries, plus columns and the suggestion popups (mention, short message, emoji, slash commands). Their extensions still work where they are framework-free — blocks render through `renderHTML`, `generateAIText` and `markdownToSlice` do the AI work — but those affordances are React only. Details and video have no node view in either layer: they render through `renderHTML` and are in `ai-sparkwrite-editor/core`. To insert a Katex formula, a Mermaid diagram or an image from Vue, run the commands (`setKatex`, `setMermaid`, `setImageBlock`) from your own UI; the node views then take over.
 
 ## Plain JavaScript
 
@@ -118,10 +120,61 @@ const editor = new Editor({
 ## What stays React-only today
 
 - Controls and bubble menus (`RichText*` components).
-- Node views: code block language picker, callout, details, image (crop, caption, rotate), video, iframe, Katex, Mermaid, Excalidraw, drawer, attachment, emoji and mention popups, table of contents, the AI panel.
+- Dialogs: link, image crop, the Katex and Mermaid editors, attachment and video upload.
+- Node views: Excalidraw, drawer, emoji, mention and slash-command popups, the AI panel.
 
-Each of these is a thin layer over a command or an attribute the core already exposes, so a Vue port is UI work, not editor work. The natural order is: a Vue `Divider` node view (smallest), then the AI panel (`generateAIText` + `markdownToSlice` already do the heavy lifting), then the bubble menus.
+Each of these is a thin layer over a command or an attribute the core already exposes, so a Vue port is UI work, not editor work. The natural order is: the AI panel (`generateAIText` + `markdownToSlice` already do the heavy lifting), then the bubble menus, then the dialogs.
 
 ## Adding a framework-free extension
 
 Keep the extension module (`src/extensions/<Name>/<Name>.ts`) free of component imports and re-export components from the folder's `index.ts` only; the build makes the React entry from `index.ts` and the core entry from the extension module, so the two never share a React-bearing chunk. Then export it from `src/core.ts` and run the headless check.
+
+An extension with a node view is split in three: `<Name>.ts` exports `<Name>Core` (no node view), `<Name>React.ts` exports `<Name>` = `<Name>Core.extend({ addNodeView: ReactNodeViewRenderer(...) })` and is what `index.ts` re-exports, and `src/vue/nodeviews/<Name>.ts` exports `<Name>` = `<Name>Core.extend({ addNodeView: VueNodeViewRenderer(...) })`. Helpers both node views need (caption detection, language lists, file icons, the heading list) live in framework-free files next to the extension, never in a `.tsx`.
+
+## AI, bubble menus and dialogs in Vue
+
+Everything below comes from `ai-sparkwrite-editor/vue` and shares its stylesheet, class names and prompts with the React layer.
+
+**AI.** Register `AI` (the core extension with the Vue panel mounted through `VueRenderer`) and, optionally, `AIAutocomplete` for ghost-text suggestions. Its options are the core `AIOptions` plus `renderResult(context)` to draw the answer yourself and `components.Panel` to replace the whole dialog. Then place the components:
+
+- `RichTextAI` — the toolbar button (Sparkles + "AI", `aria-pressed` while the dock is open); toggles the composer, as `Mod-J` does.
+- `RichTextAIComposer` — the dock under `EditorContent`: quick-action chips from `AI_COMPOSER_ACTIONS`, a prompt with a target select (selection, cursor, top, end, whole document), streaming straight into the document through `writeWithAI`, then Keep / Undo / Retry and refinement with the conversation history. Props: `actions`, `defaultOpen`.
+- `RichTextAIImprove` — the selection menu of the text bubble: edit (improve, grammar, shorter, longer, simplify), change tone, generate (summarize, explain, table, list), translate to the browser language (or the configured `translateLanguages`), ask anything, open the composer. Each entry opens the AI panel on the selection captured when the menu opened.
+- `AIPanel` — the panel component itself, for a custom `mountPanel`.
+
+The framework-free pieces are re-exported so one import covers a Vue app: `AICore`, `AIAutocomplete`, `aiPluginKey`, `aiAutocompleteKey`, `writeWithAI`, `aiOptionsOf`, `resolveWriteTarget`, `documentContext`, `generateAIText`, `AI_COMPOSER_ACTIONS`, `composerPrompt`, `browserLanguage`, `markdownToHTML`, `markdownToFragment`, `markdownToSlice`, `markdownToPreviewHTML`, `DEFAULT_AI_SYSTEM_PROMPT`, and the `AI*` types.
+
+```vue
+<script setup lang="ts">
+import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/vue';
+
+const editor = useEditor({
+  extensions: [
+    ,
+    /* … */ AI.configure({ model: 'gpt-4o-mini', apiKey: () => fetchKey() }),
+    AIAutocomplete,
+  ],
+});
+</script>
+
+<template>
+  <RichTextProvider :editor="editor">
+    <RichTextToolbar><!-- … --><RichTextAI /></RichTextToolbar>
+    <EditorContent :editor="editor" />
+    <RichTextAIComposer />
+  </RichTextProvider>
+</template>
+```
+
+**Bubble menus.** Built on `BubbleMenu` from `@tiptap/vue-3/menus`; place them anywhere inside `RichTextProvider`.
+
+- `RichTextBubbleText` — over a text selection (not in code blocks, hidden while an AI panel is open): `RichTextAIImprove`, the paragraph/heading dropdown, bold, italic, underline, strike, code, link, colour, highlight, alignment. Put your own buttons in the default slot to replace them.
+- `RichTextBubbleTable` — a right click inside a table opens a context menu: insert/delete rows and columns, merge/split cells, "Paragraph after table" with its shortcut, delete table. `hiddenActions` leaves entries out.
+- `RichTextBubbleLink` — while the caret is in a link: the address, open, edit (text, address, new tab), unlink.
+- `RichTextBubbleImage` — when an image is selected: align left/centre/right, S/M/L sizes, remove.
+
+`BUBBLE_CLASS`, `BUBBLE_OPTIONS` and `useBubbleEditor()` are exported for a bubble menu of your own.
+
+**Dialogs and controls.** `RichTextLink` opens a popover (text, address, open in new tab; unlink when in a link) and `RichTextLinkForm` is that form on its own. `RichTextImage` and `RichTextVideo` open a dialog with a drop zone (the extension's `upload`, `acceptMimes`, `maxSize`, `multiple`, `onError` are honoured; uploads are remembered for `getImageChanges`) and an address field; `RichTextKatex` and `RichTextMermaid` open a dialog with the source, a live preview and — when the AI extension is registered — a one-line "describe it" prompt (`RichTextAIGenerateField`). `RichTextIframe` and `RichTextCallout` are popovers; `RichTextAttachment` picks a file and uploads it through the extension's `upload`; `RichTextCodeBlock`, `RichTextDetails`, `RichTextTableOfContents`, `RichTextIndent` and `RichTextOutdent` run their command; `RichTextColor` and `RichTextHighlight` open a palette (the extension's `colors`, else the default list, plus a native picker); `RichTextFontSize` and `RichTextLineHeight` are dropdowns over the configured lists.
+
+The primitives behind them are exported too: `RichTextPopover` (a toolbar button with a panel; the slot receives `{ close }`), `RichTextDialog` (`open` / `update:open`, `title`, `footer` slot) and `useDismiss(open, root, close)` for outside-click and Escape handling. Search and replace has no Vue control yet.

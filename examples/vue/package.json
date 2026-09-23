@@ -11,10 +11,11 @@
     "@tiptap/extension-document": "^3.29.2",
     "@tiptap/extension-paragraph": "^3.29.2",
     "@tiptap/extension-text": "^3.29.2",
+    "@tiptap/extension-text-style": "^3.29.2",
     "@tiptap/pm": "^3.29.2",
     "@tiptap/vue-3": "3.29.2",
-    "lucide-vue-next": "^1.0.0",
     "ai-sparkwrite-editor": "workspace:*",
+    "lucide-vue-next": "^1.0.0",
     "vue": "^3.4.37"
   },
   "devDependencies": {

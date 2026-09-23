@@ -39,7 +39,7 @@ export function RichTextProvider({ editor, children }: IProviderRichTextProps) {
   }
 
   return (
-    <div className='ai-sparkwrite-editor'>
+    <div className='sparkwrite'>
       <ReactBusProvider>
         <EditorContext.Provider value={contextValue}>
           <TooltipProvider delayDuration={0} disableHoverableContent>

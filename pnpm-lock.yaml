@@ -406,6 +406,9 @@ importers:
       '@tiptap/extension-text':
         specifier: ^3.29.2
         version: 3.29.2(@tiptap/core@3.29.2)
+      '@tiptap/extension-text-style':
+        specifier: ^3.29.2
+        version: 3.29.2(@tiptap/core@3.29.2)
       '@tiptap/pm':
         specifier: ^3.29.2
         version: 3.29.2

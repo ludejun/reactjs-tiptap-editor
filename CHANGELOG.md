@@ -50,9 +50,16 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 ### Frameworks
 
 - `ai-sparkwrite-editor/core`: the framework-agnostic layer (extensions without node views, paste rules, recorder, AI transport and markdown rendering, image bookkeeping, translations). A build check fails if React becomes reachable from it.
-- `ai-sparkwrite-editor/vue`: Vue 3 provider, composables, toolbar primitives, controls for the core extensions, and a Vue node view for the divider, on the same stylesheet as the React controls. `examples/vue` shows every control.
+- `ai-sparkwrite-editor/vue`: Vue 3 provider, composables, toolbar primitives and controls on the same stylesheet as the React ones — now including the AI layer (`AI` with the Vue panel, `RichTextAI`, `RichTextAIComposer`, `RichTextAIImprove`), bubble menus (text, table, link, image), dialogs (link, image, video, attachment, Katex and Mermaid with AI generation, iframe) and Vue node views for divider, code block, callout, iframe, image, GIF, Katex, Mermaid, attachment and table of contents. `examples/vue` shows everything; the playground switches between the React and Vue layers.
+- Every block extension is split into a framework-free `<Name>Core` and a thin React `<Name>` that only adds the node view; `ai-sparkwrite-editor/core` exports the cores. Excalidraw, Drawer and Twitter stay React-only (they wrap React libraries).
 - Translations moved to a dependency-free store; `useLocale` (React) subscribes with `useSyncExternalStore`.
 - The AI panel's tone selector was removed.
+
+### Bundle size
+
+- Icons are a registry: each control registers the Lucide icons it uses, so a host that imports one feature no longer pays for ~90 icons. `registerIcons` is exported for custom icon names.
+- The `cn` class merger is a 25-line local helper; the shared stores use `useSyncExternalStore` instead of `reactjs-signal`.
+- Importing `ai-sparkwrite-editor/bold` now reaches 30 KB of library code (was 88 KB) and one icon (was 87). `pnpm measure:entries` prints the per-entry figures; see the Bundle size guide.
 
 ### Build
 
