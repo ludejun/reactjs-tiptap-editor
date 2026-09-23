@@ -359,3 +359,30 @@ div[data-twitter] > div {
   align-items: center;
   margin-left: auto;
 }
+
+/* Drag-to-pin between the kit toolbar and its More panel. */
+.richtext-kit-toolbar--drop {
+  box-shadow: inset 0 0 0 2px hsl(var(--primary) / 0.5);
+  border-radius: 6px;
+}
+.richtext-kit-toolbar-more--drop > div > button {
+  box-shadow: inset 0 0 0 2px hsl(var(--primary) / 0.5);
+}
+.richtext-kit-toolbar__row {
+  cursor: grab;
+}
+.richtext-kit-toolbar__row:active {
+  cursor: grabbing;
+}
+.richtext-kit-toolbar__pinned {
+  display: inline-flex;
+  align-items: center;
+  cursor: grab;
+}
+.richtext-kit-toolbar__hint {
+  margin: -4px 0 -6px;
+  padding: 0 4px;
+  font-size: 11px;
+  line-height: 16px;
+  color: hsl(var(--muted-foreground));
+}

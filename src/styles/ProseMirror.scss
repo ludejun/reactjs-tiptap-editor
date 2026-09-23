@@ -56,7 +56,12 @@
   }
 
   a.link {
-    @apply richtext-font-extrabold richtext-text-blue-500 dark:richtext-text-blue-400;
+    @apply richtext-font-extrabold;
+    color: var(--richtext-link, #2f54eb);
+  }
+  &.dark a.link,
+  .dark & a.link {
+    color: var(--richtext-link-dark, #597ef7);
   }
 
   mark {

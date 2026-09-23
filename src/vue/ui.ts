@@ -351,9 +351,19 @@ export const RichTextToolbarMore = defineComponent({
   },
 });
 
+const GROUP_COLUMNS: Record<number, string> = {
+  2: 'richtext-grid-cols-2',
+  3: 'richtext-grid-cols-3',
+  4: 'richtext-grid-cols-4',
+};
+
 export const RichTextToolbarMoreGroup = defineComponent({
   name: 'RichTextToolbarMoreGroup',
-  props: { label: { type: String, required: true } },
+  props: {
+    label: { type: String, required: true },
+    /** Rows per line. Default 2; a wider panel fits 3. */
+    columns: { type: Number, default: 2 },
+  },
   setup(props, { slots }) {
     return () =>
       h('div', { class: 'richtext-flex richtext-flex-col richtext-gap-0.5' }, [
@@ -367,7 +377,12 @@ export const RichTextToolbarMoreGroup = defineComponent({
         ),
         h(
           'div',
-          { class: 'richtext-grid richtext-grid-cols-2 richtext-gap-x-2' },
+          {
+            class: [
+              'richtext-grid richtext-gap-x-2',
+              GROUP_COLUMNS[props.columns] ?? GROUP_COLUMNS[2],
+            ],
+          },
           slots.default?.()
         ),
       ]);

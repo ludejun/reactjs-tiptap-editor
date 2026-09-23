@@ -6,6 +6,7 @@ import {
   BetweenVerticalStart,
   Columns3,
   CornerDownLeft,
+  PaintBucket,
   Rows3,
   TableCellsMerge,
   TableCellsSplit,
@@ -22,9 +23,11 @@ import {
   type PropType,
 } from 'vue';
 
+import { COLORS_LIST } from '@/constants';
 import { getShortcutKeys } from '@/utils/plateform';
 
 import { useEditorState, useLocale } from '../context';
+import { colorPalette } from '../controls';
 import { useDismiss } from '../ui';
 
 import { useBubbleEditor } from './shared';
@@ -36,7 +39,7 @@ interface MenuPosition {
   y: number;
 }
 
-const MENU_WIDTH = 230;
+const MENU_WIDTH = 260;
 const MENU_HEIGHT = 400;
 
 /**
@@ -56,6 +59,10 @@ export const RichTextBubbleTable = defineComponent({
     const menu = ref<MenuPosition | null>(null);
     const root = ref<HTMLElement | null>(null);
     const open = computed(() => !!menu.value);
+    const paletteOpen = ref(false);
+    watch(open, (value) => {
+      if (!value) paletteOpen.value = false;
+    });
 
     useDismiss(open, root, () => {
       menu.value = null;
@@ -74,6 +81,7 @@ export const RichTextBubbleTable = defineComponent({
           mergeCells: !!commands.mergeCells?.(),
           splitCell: !!commands.splitCell?.(),
           deleteTable: !!commands.deleteTable?.(),
+          cellBackground: !!commands.setTableCellBackground?.('#000000'),
         };
       },
       {
@@ -86,6 +94,7 @@ export const RichTextBubbleTable = defineComponent({
         mergeCells: false,
         splitCell: false,
         deleteTable: false,
+        cellBackground: false,
       }
     );
 
@@ -134,6 +143,7 @@ export const RichTextBubbleTable = defineComponent({
 
       const items: (
         | { key: string; separator: true }
+        | { key: string; palette: true }
         | {
             key: string;
             icon: Component;
@@ -202,6 +212,7 @@ export const RichTextBubbleTable = defineComponent({
           disabled: !can.value.splitCell,
           action: (e) => e.chain().focus().splitCell().run(),
         },
+        { key: 'cellBackground', palette: true },
         { key: 'separator-table', separator: true },
         {
           key: 'insertParagraphAfterTable',
@@ -237,6 +248,47 @@ export const RichTextBubbleTable = defineComponent({
           if ('separator' in item)
             return h('div', { key: item.key, class: 'richtext-vue-menu__separator' });
           if (props.hiddenActions.includes(item.key)) return null;
+          if ('palette' in item) {
+            // Cell background: the row toggles a palette right under it.
+            return h('div', { key: item.key, class: 'richtext-vue-menu__group' }, [
+              h(
+                'button',
+                {
+                  type: 'button',
+                  role: 'menuitem',
+                  class: 'richtext-vue-menu__item',
+                  'aria-expanded': paletteOpen.value ? 'true' : 'false',
+                  disabled: !can.value.cellBackground,
+                  onMousedown: (event: MouseEvent) => event.preventDefault(),
+                  onClick: () => {
+                    paletteOpen.value = !paletteOpen.value;
+                  },
+                },
+                [
+                  h(PaintBucket, { size: 16, 'aria-hidden': 'true' }),
+                  h('span', t('editor.table.menu.setCellsBgColor')),
+                ]
+              ),
+              paletteOpen.value
+                ? h(
+                    'div',
+                    { class: 'richtext-vue-menu__palette' },
+                    colorPalette(
+                      COLORS_LIST,
+                      undefined,
+                      { reset: t('editor.nofill'), more: t('editor.color.more') },
+                      (color, sweeping) => {
+                        const current = editor.value;
+                        if (!current) return;
+                        if (color) current.chain().focus().setTableCellBackground(color).run();
+                        else current.chain().focus().unsetTableCellBackground().run();
+                        if (!sweeping) menu.value = null;
+                      }
+                    )
+                  )
+                : null,
+            ]);
+          }
           return h(
             'button',
             {

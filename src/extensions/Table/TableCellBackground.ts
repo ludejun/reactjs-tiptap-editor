@@ -51,13 +51,26 @@ function updateCellBackground(
 ): Transaction {
   const { doc, selection } = tr;
 
-  if (!doc || !selection || !(selection instanceof CellSelection)) {
+  if (!doc || !selection) {
     return tr;
   }
 
-  selection.forEachCell((node, pos) => {
-    tr = setCellBackgroundMarkup(tr, pos, backgroundColor);
-  });
+  if (selection instanceof CellSelection) {
+    selection.forEachCell((node, pos) => {
+      tr = setCellBackgroundMarkup(tr, pos, backgroundColor);
+    });
+    return tr;
+  }
+
+  // A caret or text selection inside one cell colours that cell.
+  const types = options.types ?? [];
+  const { $from } = selection;
+  for (let depth = $from.depth; depth > 0; depth -= 1) {
+    const node = $from.node(depth);
+    if (types.includes(node.type.name)) {
+      return setCellBackgroundMarkup(tr, $from.before(depth), backgroundColor);
+    }
+  }
 
   return tr;
 }
@@ -84,7 +97,7 @@ export const TableCellBackground = Extension.create<TableCellBackgroundOptions>(
   name: 'tableCellBackground',
   addOptions() {
     return {
-      types: ['tableCell'],
+      types: ['tableCell', 'tableHeader'],
       HTMLAttributes: {},
     };
   },

@@ -103,6 +103,7 @@
   position: relative;
 }
 
+/* Same font, size and line-height as the code so every number sits on its line's baseline. */
 .richtext-code-block__gutter {
   position: absolute;
   top: var(--richtext-code-padding-y);
@@ -111,7 +112,7 @@
   padding-right: 0.75em;
   font-family:
     ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
-  font-size: 13px;
+  font-size: inherit;
   line-height: var(--richtext-code-line-height);
   text-align: right;
   color: var(--shj-numbers);
@@ -137,6 +138,36 @@
 .richtext-code-block:hover .richtext-code-block__toolbar,
 .richtext-code-block__toolbar[data-open='true'] {
   opacity: 1;
+}
+
+/* Small, quiet controls: a 12px language label and 14px icons on 24px targets. */
+.richtext-code-block__toolbar button {
+  height: 24px;
+  min-width: 24px;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-family: var(--richtext-font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 12px !important;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.01em;
+  color: var(--shj-numbers);
+  background: transparent;
+  border: 0;
+}
+.richtext-code-block__toolbar button:hover,
+.richtext-code-block__toolbar button[data-state='open'] {
+  color: var(--shj-fg);
+  background: var(--shj-inline-bg);
+}
+.richtext-code-block__toolbar button svg {
+  width: 14px;
+  height: 14px;
+}
+.richtext-code-block__toolbar button > svg:last-child:not(:first-child) {
+  width: 12px;
+  height: 12px;
+  margin-left: 2px;
 }
 
 /* the badge the inline-style mode gives a one-line HTTP request */
