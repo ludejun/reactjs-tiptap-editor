@@ -23,6 +23,8 @@ import {
   TextUnderline,
   localeActions,
 } from 'sparkwrite/core';
+import es from 'sparkwrite/locales/es';
+import zhCN from 'sparkwrite/locales/zh-cn';
 import {
   Divider,
   RichTextBlockquote,
@@ -49,10 +51,9 @@ import {
   RichTextUnderline,
   RichTextUndo,
 } from 'sparkwrite/vue';
-import es from 'sparkwrite/locales/es';
-import zhCN from 'sparkwrite/locales/zh-cn';
-import 'sparkwrite/style.css';
 import { ref, watch } from 'vue';
+
+import 'sparkwrite/style.css';
 
 // Only English is bundled; register the languages you offer.
 localeActions.setMessage('zh_CN', zhCN);
@@ -94,7 +95,14 @@ const editor = useEditor({
 
 <template>
   <div class="bar">
-    <label>Language <select v-model="lang"><option value="en">English</option><option value="zh_CN">中文</option><option value="es">Español</option></select></label>
+    <label
+      >Language
+      <select v-model="lang">
+        <option value="en">English</option>
+        <option value="zh_CN">中文</option>
+        <option value="es">Español</option>
+      </select></label
+    >
   </div>
   <div class="frame">
     <RichTextProvider :editor="editor">

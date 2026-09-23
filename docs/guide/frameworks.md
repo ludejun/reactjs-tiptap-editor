@@ -4,10 +4,10 @@ The editor is Tiptap underneath, and Tiptap is framework-agnostic: the same exte
 
 The package is therefore split in two layers:
 
-| Layer | Import | Depends on React | Contents |
-| --- | --- | --- | --- |
-| Core | `sparkwrite/core` | No | Extensions without node views (marks, headings, lists, tables, links, alignment, indent, font, colour, divider…; columns and the suggestion popups — mention, short message — stay in the React layer for now), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
-| React | `sparkwrite`, `sparkwrite/<feature>`, `sparkwrite/bubble/*` | Yes | Everything above plus controls, bubble menus, dialogs and node views |
+| Layer | Import                                                      | Depends on React | Contents                                                                                                                                                                                                                                                                                                                          |
+| ----- | ----------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core  | `sparkwrite/core`                                           | No               | Extensions without node views (marks, headings, lists, tables, links, alignment, indent, font, colour, divider…; columns and the suggestion popups — mention, short message — stay in the React layer for now), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
+| React | `sparkwrite`, `sparkwrite/<feature>`, `sparkwrite/bubble/*` | Yes              | Everything above plus controls, bubble menus, dialogs and node views                                                                                                                                                                                                                                                              |
 
 A build check (`tests/core-headless.test.mjs`) walks the chunk graph of the core bundle and fails if anything reachable from it imports `react`, `@tiptap/react`, Radix or lucide.
 
@@ -25,11 +25,27 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { Bold, Heading, BulletList, ListItem, Table, TextAlign, RichPaste, localeActions } from 'sparkwrite/core';
+import {
+  Bold,
+  Heading,
+  BulletList,
+  ListItem,
+  Table,
+  TextAlign,
+  RichPaste,
+  localeActions,
+} from 'sparkwrite/core';
 import {
   Divider, // core divider + Vue node view
-  RichTextProvider, RichTextToolbar, RichTextToolbarDivider,
-  RichTextHeading, RichTextBold, RichTextBulletList, RichTextTable, RichTextTextAlign, RichTextDivider,
+  RichTextProvider,
+  RichTextToolbar,
+  RichTextToolbarDivider,
+  RichTextHeading,
+  RichTextBold,
+  RichTextBulletList,
+  RichTextTable,
+  RichTextTextAlign,
+  RichTextDivider,
 } from 'sparkwrite/vue';
 import 'sparkwrite/style.css';
 
@@ -39,7 +55,19 @@ localeActions.setMessage('zh_CN', zhCN); // only English is bundled
 localeActions.setLang('zh_CN');
 
 const editor = useEditor({
-  extensions: [Document, Paragraph, Text, Bold, Heading, BulletList, ListItem, Table, TextAlign, Divider, RichPaste],
+  extensions: [
+    Document,
+    Paragraph,
+    Text,
+    Bold,
+    Heading,
+    BulletList,
+    ListItem,
+    Table,
+    TextAlign,
+    Divider,
+    RichPaste,
+  ],
   content: '<p>你好</p>',
 });
 </script>
@@ -62,12 +90,12 @@ const editor = useEditor({
 
 ### What the Vue layer contains
 
-| Kind | Exports |
-| --- | --- |
-| Provider and composables | `RichTextProvider`, `useEditorInstance()`, `useEditorState(selector, fallback)`, `useLocale()` |
-| Toolbar primitives | `RichTextToolbar`, `RichTextToolbarDivider`, `RichTextToolbarButton`, `RichTextDropdown`, `RichTextToolbarMore`, `RichTextToolbarMoreGroup`, `RichTextToolbarMoreRow` |
-| Controls | `RichTextUndo`, `RichTextRedo`, `RichTextBold`, `RichTextItalic`, `RichTextUnderline`, `RichTextStrike`, `RichTextCode`, `RichTextClear`, `RichTextHeading`, `RichTextBulletList`, `RichTextOrderedList`, `RichTextTaskList`, `RichTextBlockquote`, `RichTextTextAlign`, `RichTextLink`, `RichTextTable`, `RichTextDivider` |
-| Node views | `Divider` (style picker and editable caption, same DOM and CSS as the React one) |
+| Kind                     | Exports                                                                                                                                                                                                                                                                                                                     |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Provider and composables | `RichTextProvider`, `useEditorInstance()`, `useEditorState(selector, fallback)`, `useLocale()`                                                                                                                                                                                                                              |
+| Toolbar primitives       | `RichTextToolbar`, `RichTextToolbarDivider`, `RichTextToolbarButton`, `RichTextDropdown`, `RichTextToolbarMore`, `RichTextToolbarMoreGroup`, `RichTextToolbarMoreRow`                                                                                                                                                       |
+| Controls                 | `RichTextUndo`, `RichTextRedo`, `RichTextBold`, `RichTextItalic`, `RichTextUnderline`, `RichTextStrike`, `RichTextCode`, `RichTextClear`, `RichTextHeading`, `RichTextBulletList`, `RichTextOrderedList`, `RichTextTaskList`, `RichTextBlockquote`, `RichTextTextAlign`, `RichTextLink`, `RichTextTable`, `RichTextDivider` |
+| Node views               | `Divider` (style picker and editable caption, same DOM and CSS as the React one)                                                                                                                                                                                                                                            |
 
 Your own control is a `RichTextToolbarButton` with an `onClick` that runs a command, or a `RichTextDropdown` with items; `useEditorState` gives it reactive `isActive`/`can()` state.
 
@@ -81,7 +109,10 @@ Bubble menus, the AI panel, dialogs (link, image upload, Katex, Mermaid) and the
 import { Editor } from '@tiptap/core';
 import { Bold, Heading, Table, RichPaste } from 'sparkwrite/core';
 
-const editor = new Editor({ element: document.querySelector('#editor')!, extensions: [/* Document, Paragraph, Text, */ Bold, Heading, Table, RichPaste] });
+const editor = new Editor({
+  element: document.querySelector('#editor')!,
+  extensions: [/* Document, Paragraph, Text, */ Bold, Heading, Table, RichPaste],
+});
 ```
 
 ## What stays React-only today
