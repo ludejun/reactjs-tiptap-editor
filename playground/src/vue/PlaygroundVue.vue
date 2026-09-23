@@ -141,7 +141,7 @@ const editor = useEditor({
     AIAutocomplete,
   ],
   content: [
-    '<h1>SparkWrite in Vue</h1>',
+    '<h1>ai-sparkwrite-editor in Vue</h1>',
     '<p>Everything on this page is the Vue layer: <code>ai-sparkwrite-editor/core</code> for the extensions, <code>ai-sparkwrite-editor/vue</code> for the UI. The React and Vue toolbars share one stylesheet.</p>',
     '<p>The same extensions, the same stylesheet, a Vue toolbar. Select some text to see the bubble menu, right-click the table for its menu, put the caret in <a href="https://tiptap.dev">this link</a>, or click the <strong>AI</strong> button.</p>',
     '<table><tbody><tr><th>Layer</th><th>Entry</th></tr><tr><td>Core</td><td>ai-sparkwrite-editor/core</td></tr><tr><td>Vue</td><td>ai-sparkwrite-editor/vue</td></tr></tbody></table>',

@@ -12,6 +12,7 @@ import { Dropcursor, Gapcursor, Placeholder, TrailingNode } from '@tiptap/extens
 // import * as Y from 'yjs'
 import { EditorContent, useEditor, useEditorState } from '@tiptap/react';
 import {
+  getShortcutKeys,
   RichTextProvider,
   RichTextToolbar,
   RichTextToolbarDivider,
@@ -396,7 +397,7 @@ const extensions = [
 ];
 
 const DEFAULT = `
-<h1>SparkWrite</h1>
+<h1>ai-sparkwrite-editor</h1>
 <p>A rich text editor built on Tiptap. Everything below is live — edit it, or start from scratch.</p>
 <div class="table-of-contents" data-type="table-of-contents"></div>
 <h2>Text</h2>
@@ -416,7 +417,7 @@ export function slugify(post: Post): string {
 }</code></pre>
 <h2>Tables</h2>
 <p>Right-click inside a table for row and column actions.</p>
-<table><tbody><tr><th><p>Feature</p></th><th><p>Shortcut</p></th></tr><tr><td><p>Bold</p></td><td><p>Mod+B</p></td></tr><tr><td><p>Code block</p></td><td><p>Mod+Alt+C</p></td></tr></tbody></table>
+<table><tbody><tr><th><p>Feature</p></th><th><p>Shortcut</p></th></tr><tr><td><p>Bold</p></td><td><p>${getShortcutKeys(['mod', 'B'])}</p></td></tr><tr><td><p>Code block</p></td><td><p>${getShortcutKeys(['mod', 'alt', 'C'])}</p></td></tr></tbody></table>
 <h2>Everything else</h2>
 <p>Type <code>/</code> on an empty line to insert images, diagrams, callouts and more.</p>
 <p>try the AI button below: teh editor recieves your text and  fixes it, i promise</p>

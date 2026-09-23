@@ -503,6 +503,12 @@
   align-items: center;
   gap: 8px;
   padding: 6px 8px 6px 12px;
+  /* The prompt box is two lines tall; the icon sits on the first line,
+     the controls stay centred on the box. */
+  .richtext-ai-composer-icon {
+    align-self: flex-start;
+    margin-top: calc(6px + (1.5em - 18px) / 2);
+  }
   border-radius: 14px;
   /* A gradient border: the popover colour fills the padding box, the gradient
      the border box, and the gradient slides slowly. */
@@ -522,7 +528,7 @@
     300% 100%;
   animation: richtext-ai-border 9s linear infinite;
   &:focus-within {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ai-accent) 18%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ai-accent) 30%, transparent);
   }
 
   textarea {
