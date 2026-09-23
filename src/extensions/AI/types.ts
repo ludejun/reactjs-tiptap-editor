@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { Editor, Range } from '@tiptap/core';
 
 export type AIProtocol = 'openai' | 'anthropic';
 
@@ -29,6 +29,31 @@ export interface AIRequest {
   signal: AbortSignal;
 }
 
+/**
+ * What a panel implementation receives when the extension opens an AI
+ * session. The React and Vue layers each mount their own component with
+ * these props; a custom `mountPanel` gets the same.
+ */
+export interface AIPanelComponentProps {
+  editor: Editor;
+  options: AIOptions;
+  /** Text the user had selected when the panel opened. */
+  selectedText: string;
+  /** Prompt preselected from a menu entry, if any. */
+  initialPrompt?: string;
+  /** Insert `markdown` in place of the selection and close. */
+  apply: (markdown: string) => void;
+  close: () => void;
+}
+
+/**
+ * Where AI output goes. `selection` replaces the selected text (or inserts
+ * at the caret when nothing is selected); `cursor` always inserts at the
+ * caret; `start`/`end` prepend or append to the document; `document`
+ * rewrites the whole document; a `Range` targets exactly that span.
+ */
+export type AIWriteTarget = 'selection' | 'cursor' | 'start' | 'end' | 'document' | Range;
+
 export interface AIOptions {
   protocol: AIProtocol;
   apiKey: string | (() => string | Promise<string>);
@@ -51,15 +76,11 @@ export interface AIOptions {
    */
   stream?: boolean;
   /**
-   * Replace how the answer is shown. Receives the markdown so far, the HTML
-   * the editor would produce from it, and whether more is coming. The default
-   * renders `html` with the document's own styles.
+   * Mounts the panel UI into `mount` when a session opens and returns a
+   * function that unmounts it. The React and Vue extensions fill this in;
+   * `null` runs the extension headless (commands and decorations only).
    */
-  renderResult?: (context: AIResultContext) => ReactNode;
-  /** Replace UI pieces wholesale. `Panel` takes over the entire AI dialog. */
-  components?: {
-    Panel?: ComponentType<AIPanelComponentProps>;
-  };
+  mountPanel: ((mount: HTMLElement, props: AIPanelComponentProps) => () => void) | null;
   /**
    * Fixed targets for the "Translate" entry of the selection menu, shown as a
    * submenu. Empty (the default) offers a single target: the browser language.
@@ -78,6 +99,17 @@ export interface AIOptions {
   fileMimes: string[];
   /** Per-attachment size limit in bytes. */
   maxAttachmentSize: number;
+  /**
+   * Pressing Space on an empty line opens Ask AI, the way an empty line in
+   * Notion does. Off, Space is just a space. Default `true`.
+   */
+  spaceTrigger: boolean;
+  /**
+   * How much of the document (in characters, as Markdown) document-level
+   * actions such as "Continue writing" or "Summarize" send as context.
+   * `0` sends none. Default `12000`.
+   */
+  documentContext: number;
 }
 
 export interface AIResultContext {
@@ -87,17 +119,4 @@ export interface AIResultContext {
   html: string;
   /** More text is still arriving. */
   streaming: boolean;
-}
-
-/** What a replacement panel receives; the same props the built-in one uses. */
-export interface AIPanelComponentProps {
-  editor: import('@tiptap/core').Editor;
-  options: AIOptions;
-  /** Text the user had selected when the panel opened. */
-  selectedText: string;
-  /** Prompt preselected from a menu entry, if any. */
-  initialPrompt?: string;
-  /** Insert `markdown` in place of the selection and close. */
-  apply: (markdown: string) => void;
-  close: () => void;
 }

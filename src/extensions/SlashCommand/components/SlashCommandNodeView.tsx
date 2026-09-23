@@ -8,6 +8,8 @@ import React, {
 } from 'react';
 
 import { IconComponent, Label } from '@/components';
+import { AI_COMPOSER_ACTIONS, composerPrompt } from '@/extensions/AI/composer';
+import { writeWithAI } from '@/extensions/AI/writer';
 import { useFilterCommandList } from '@/extensions/SlashCommand/renderCommandListDefault';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
@@ -45,6 +47,28 @@ function SlashCommandNodeView(
               aliases: ['ai', 'write', 'generate'],
               action: ({ editor, range }: Parameters<Command['action']>[0]) => {
                 editor.chain().deleteRange(range).openAI().run();
+              },
+            },
+            {
+              name: 'aiContinue',
+              label: t('editor.ai.compose.continue'),
+              iconName: 'PenLine',
+              aliases: ['ai', 'continue', 'more', 'xuxie'],
+              action: ({ editor, range }: Parameters<Command['action']>[0]) => {
+                editor.chain().deleteRange(range).run();
+                editor.commands.toggleAIComposer(true);
+                const action = AI_COMPOSER_ACTIONS.find((item) => item.target === 'end');
+                if (action)
+                  void writeWithAI(editor, { prompt: composerPrompt(action), target: 'cursor' });
+              },
+            },
+            {
+              name: 'aiComposer',
+              label: t('editor.ai.compose.title'),
+              iconName: 'PanelBottomOpen',
+              aliases: ['ai', 'composer', 'chat'],
+              action: ({ editor, range }: Parameters<Command['action']>[0]) => {
+                editor.chain().deleteRange(range).toggleAIComposer(true).run();
               },
             },
           ],

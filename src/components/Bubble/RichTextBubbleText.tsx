@@ -1,4 +1,4 @@
-import { TextSelection } from '@tiptap/pm/state';
+import { AllSelection, TextSelection } from '@tiptap/pm/state';
 import { useEditorState } from '@tiptap/react';
 import { BubbleMenu } from '@tiptap/react/menus';
 import { Check } from 'lucide-react';
@@ -155,7 +155,7 @@ export function RichTextBubbleText({ buttonBubble }: RichTextBubbleTextProps) {
   const editable = useEditableEditor();
 
   const shouldShow = ({ editor }: { editor: Editor }) => {
-    if (aiPluginKey.getState(editor.state)) return false;
+    if (aiPluginKey.getState(editor.state)?.session) return false;
     const { selection } = editor.view.state;
     const { $from, to } = selection;
 
@@ -169,7 +169,8 @@ export function RichTextBubbleText({ buttonBubble }: RichTextBubbleTextProps) {
       return false;
     }
 
-    return selection instanceof TextSelection;
+    // Select All produces an AllSelection, which deserves the same menu.
+    return selection instanceof TextSelection || selection instanceof AllSelection;
   };
 
   if (!editable) {

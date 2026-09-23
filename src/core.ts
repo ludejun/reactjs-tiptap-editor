@@ -51,7 +51,27 @@ export { MarkdownPaste } from '@/extensions/MarkdownPaste/MarkdownPaste';
 export { Recorder, getRecording, replayRecording } from '@/extensions/Recorder/Recorder';
 export type { Recording, RecordingEntry, RecorderOptions } from '@/extensions/Recorder/Recorder';
 
-// AI transport and markdown rendering (the panel itself is React)
+// AI: the extension (headless — supply `mountPanel` or use the React/Vue
+// layers for the panel), writing straight into the document, ghost-text
+// autocomplete, the composer presets, transport and markdown rendering.
+export { AICore as AI, DEFAULT_AI_SYSTEM_PROMPT } from '@/extensions/AI/AICore';
+export { aiPluginKey } from '@/extensions/AI/state';
+export type { AIState, AISession, AIWriting } from '@/extensions/AI/state';
+export {
+  writeWithAI,
+  aiOptionsOf,
+  resolveWriteTarget,
+  documentContext,
+} from '@/extensions/AI/writer';
+export type { WriteWithAIOptions, WriteWithAIResult } from '@/extensions/AI/writer';
+export { AIAutocomplete, aiAutocompleteKey } from '@/extensions/AI/Autocomplete';
+export type {
+  AIAutocompleteOptions,
+  AIAutocompleteState,
+  AISuggestion,
+} from '@/extensions/AI/Autocomplete';
+export { AI_COMPOSER_ACTIONS, composerPrompt, browserLanguage } from '@/extensions/AI/composer';
+export type { AIComposerAction } from '@/extensions/AI/composer';
 export { generateAIText } from '@/extensions/AI/client';
 export {
   markdownToFragment,
@@ -59,7 +79,14 @@ export {
   markdownToPreviewHTML,
   markdownToSlice,
 } from '@/extensions/AI/markdown';
-export type { AIMessage, AIOptions, AIProtocol, AIRequest } from '@/extensions/AI/types';
+export type {
+  AIMessage,
+  AIOptions,
+  AIPanelComponentProps,
+  AIProtocol,
+  AIRequest,
+  AIWriteTarget,
+} from '@/extensions/AI/types';
 
 // Image bookkeeping (the image node itself has a React view)
 export {

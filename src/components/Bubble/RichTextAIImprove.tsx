@@ -1,13 +1,16 @@
 import {
   Briefcase,
   Languages,
+  List,
   ListTree,
+  PanelBottomOpen,
   Maximize2,
   MessageCircleQuestion,
   Minimize2,
   Smile,
   Sparkles,
   SpellCheck,
+  Table as TableIcon,
   Text,
   Volume2,
   WandSparkles,
@@ -93,6 +96,20 @@ const GENERATE_ACTIONS = [
     icon: MessageCircleQuestion,
     prompt:
       'Explain the selected text in plain terms, in its original language. Return only the explanation.',
+  },
+  // Structure changes: the answer is Markdown, so a table or a list arrives
+  // as the real node, not as text that looks like one.
+  {
+    key: 'editor.ai.menu.table',
+    icon: TableIcon,
+    prompt:
+      'Turn the selected text into a Markdown table with a header row, keeping every fact and its original language. Return only the table.',
+  },
+  {
+    key: 'editor.ai.menu.list',
+    icon: List,
+    prompt:
+      'Turn the selected text into a concise Markdown bullet list, one point per item, in its original language. Return only the list.',
   },
 ];
 
@@ -277,6 +294,14 @@ export function RichTextAIImprove() {
           <DropdownMenuItem className='richtext-ai-improve-item' onSelect={() => run()}>
             <Sparkles size={17} />
             {t('editor.ai.menu.ask')}
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className='richtext-ai-improve-item'
+            onSelect={() => editor.commands.toggleAIComposer(true)}
+          >
+            <PanelBottomOpen size={17} />
+            {t('editor.ai.menu.composer')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

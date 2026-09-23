@@ -6,6 +6,7 @@ import { useLocale } from '@/locales';
 import { generateAIText } from './client';
 import { markdownToPreviewHTML } from './markdown';
 
+import type { AIReactOptions } from './AI';
 import type { AIAttachment, AIMessage, AIPanelComponentProps } from './types';
 
 function readAsDataUrl(file: File): Promise<string> {
@@ -222,8 +223,9 @@ export function AIPanel({
     input.current?.focus();
   }
 
-  const preview = options.renderResult ? (
-    options.renderResult({ markdown: result, html: previewHtml, streaming })
+  const renderResult = (options as AIReactOptions).renderResult;
+  const preview = renderResult ? (
+    renderResult({ markdown: result, html: previewHtml, streaming })
   ) : (
     <div
       className={`richtext-ai-rendered ProseMirror ${streaming ? 'richtext-ai-streaming' : ''}`}
