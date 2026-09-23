@@ -4,3 +4,4 @@ minimumReleaseAge: 0
 packages:
   - playground
   - docs
+  - examples/*

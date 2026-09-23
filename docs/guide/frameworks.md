@@ -6,14 +6,18 @@ The package is therefore split in two layers:
 
 | Layer | Import | Depends on React | Contents |
 | --- | --- | --- | --- |
-| Core | `ai-richtext-editor/core` | No | Extensions without node views (marks, headings, lists, tables, links, alignment, indent, font, colour, divider…; columns and the suggestion popups — mention, short message — stay in the React layer for now), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
-| React | `ai-richtext-editor`, `ai-richtext-editor/<feature>`, `ai-richtext-editor/bubble/*` | Yes | Everything above plus controls, bubble menus, dialogs and node views |
+| Core | `sparkwrite/core` | No | Extensions without node views (marks, headings, lists, tables, links, alignment, indent, font, colour, divider…; columns and the suggestion popups — mention, short message — stay in the React layer for now), paste rules, search & replace, recorder, the AI transport and markdown rendering, image bookkeeping, translations |
+| React | `sparkwrite`, `sparkwrite/<feature>`, `sparkwrite/bubble/*` | Yes | Everything above plus controls, bubble menus, dialogs and node views |
 
 A build check (`tests/core-headless.test.mjs`) walks the chunk graph of the core bundle and fails if anything reachable from it imports `react`, `@tiptap/react`, Radix or lucide.
 
 ## Vue
 
-Use `@tiptap/vue-3` for the editor and `ai-richtext-editor/core` for the document behaviour. Bring your own toolbar (Tiptap commands are the same everywhere) and the stylesheet:
+Two imports: `sparkwrite/core` for the extensions and `sparkwrite/vue` for the UI. The Vue layer ships a provider, composables, toolbar primitives, ready-made controls for the core extensions, and Vue node views (the divider today). It depends only on `vue`, `@tiptap/vue-3` and `lucide-vue-next`, and shares the stylesheet with the React controls, so both toolbars look the same.
+
+```bash
+pnpm add sparkwrite @tiptap/vue-3 @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text lucide-vue-next
+```
 
 ```vue
 <script setup lang="ts">
@@ -21,46 +25,61 @@ import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
+import { Bold, Heading, BulletList, ListItem, Table, TextAlign, RichPaste, localeActions } from 'sparkwrite/core';
 import {
-  Bold, Heading, BulletList, OrderedList, Table, Divider, RichPaste, Recorder,
-  generateAIText, markdownToSlice, localeActions,
-} from 'ai-richtext-editor/core';
-import 'ai-richtext-editor/style.css';
+  Divider, // core divider + Vue node view
+  RichTextProvider, RichTextToolbar, RichTextToolbarDivider,
+  RichTextHeading, RichTextBold, RichTextBulletList, RichTextTable, RichTextTextAlign, RichTextDivider,
+} from 'sparkwrite/vue';
+import 'sparkwrite/style.css';
 
+import zhCN from 'sparkwrite/locales/zh-cn';
+
+localeActions.setMessage('zh_CN', zhCN); // only English is bundled
 localeActions.setLang('zh_CN');
 
 const editor = useEditor({
-  extensions: [Document, Paragraph, Text, Bold, Heading, BulletList, OrderedList, Table, Divider, RichPaste, Recorder],
+  extensions: [Document, Paragraph, Text, Bold, Heading, BulletList, ListItem, Table, TextAlign, Divider, RichPaste],
   content: '<p>你好</p>',
 });
-
-async function askAI(prompt: string) {
-  const text = await generateAIText(
-    { protocol: 'openai', apiKey: '', baseURL: '/api/ai', model: 'gpt-4o-mini', maxTokens: 1024, headers: {}, systemPrompt: '', generate: null, translateLanguages: [], enableImageInput: false, enableFileInput: false, imageMimes: [], fileMimes: [], maxAttachmentSize: 0 },
-    { messages: [{ role: 'user', content: prompt }], systemPrompt: 'You write documents.', signal: new AbortController().signal },
-    (chunk) => console.log(chunk) // stream
-  );
-  const { from, to } = editor.value!.state.selection;
-  editor.value!.view.dispatch(editor.value!.state.tr.replaceRange(from, to, markdownToSlice(editor.value!, text)));
-}
 </script>
 
 <template>
-  <div class="ai-richtext-editor">
-    <button @click="editor?.chain().focus().toggleBold().run()">B</button>
-    <button @click="editor?.chain().focus().setDivider({ variant: 'text', label: 'Chapter' }).run()">Divider</button>
+  <RichTextProvider :editor="editor">
+    <RichTextToolbar>
+      <RichTextHeading />
+      <RichTextToolbarDivider />
+      <RichTextBold /><RichTextBulletList /><RichTextTextAlign />
+      <RichTextToolbarDivider />
+      <RichTextTable /><RichTextDivider />
+    </RichTextToolbar>
     <EditorContent :editor="editor" />
-  </div>
+  </RichTextProvider>
 </template>
 ```
 
-Wrap the editor in an element with the `ai-richtext-editor` class so the stylesheet applies. Blocks that have React node views (`Divider` in the React package, code block, callout, image…) render through their `renderHTML` in Vue: a divider is still a divider, a code block still a `<pre>`; only the in-document editing affordances (style picker, caption input, language menu) are missing until a Vue node view exists.
+`RichTextProvider` renders the root element with the `sparkwrite` class and hands the editor to every control below it. The example under `examples/vue` in the repository is this page with every control on it (`pnpm --dir examples/vue dev`).
+
+### What the Vue layer contains
+
+| Kind | Exports |
+| --- | --- |
+| Provider and composables | `RichTextProvider`, `useEditorInstance()`, `useEditorState(selector, fallback)`, `useLocale()` |
+| Toolbar primitives | `RichTextToolbar`, `RichTextToolbarDivider`, `RichTextToolbarButton`, `RichTextDropdown`, `RichTextToolbarMore`, `RichTextToolbarMoreGroup`, `RichTextToolbarMoreRow` |
+| Controls | `RichTextUndo`, `RichTextRedo`, `RichTextBold`, `RichTextItalic`, `RichTextUnderline`, `RichTextStrike`, `RichTextCode`, `RichTextClear`, `RichTextHeading`, `RichTextBulletList`, `RichTextOrderedList`, `RichTextTaskList`, `RichTextBlockquote`, `RichTextTextAlign`, `RichTextLink`, `RichTextTable`, `RichTextDivider` |
+| Node views | `Divider` (style picker and editable caption, same DOM and CSS as the React one) |
+
+Your own control is a `RichTextToolbarButton` with an `onClick` that runs a command, or a `RichTextDropdown` with items; `useEditorState` gives it reactive `isActive`/`can()` state.
+
+### Not in Vue yet
+
+Bubble menus, the AI panel, dialogs (link, image upload, Katex, Mermaid) and the node views for code block, callout, details, image, video, iframe, Katex, Mermaid, Excalidraw, drawer, attachment, table of contents. Their extensions still work — blocks render through `renderHTML`, `generateAIText` and `markdownToSlice` do the AI work — but the in-document affordances are React only. The Vue divider node view is the template for porting the rest: same DOM, same classes, `VueNodeViewRenderer` instead of `ReactNodeViewRenderer`.
 
 ## Plain JavaScript
 
 ```ts
 import { Editor } from '@tiptap/core';
-import { Bold, Heading, Table, RichPaste } from 'ai-richtext-editor/core';
+import { Bold, Heading, Table, RichPaste } from 'sparkwrite/core';
 
 const editor = new Editor({ element: document.querySelector('#editor')!, extensions: [/* Document, Paragraph, Text, */ Bold, Heading, Table, RichPaste] });
 ```

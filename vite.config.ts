@@ -17,6 +17,9 @@ const rootDir = import.meta.dirname;
 const reactExternal = /^react(-dom)?(\/|$)/;
 
 const externalPackages = [
+  'vue',
+  '@tiptap/vue-3',
+  'lucide-vue-next',
   'katex',
   'docx',
   '@radix-ui/react-dropdown-menu',
@@ -60,6 +63,7 @@ export default defineConfig(({ mode }) => {
   const entryFiles = [
     'src/index.ts',
     'src/core.ts',
+    'src/vue/index.ts',
     'src/locale-bundle.ts',
     'src/locale.ts',
     ...globbySync('src/locales/*.ts', { cwd: rootDir, ignore: ['**/index.ts'] }).sort(),
@@ -69,7 +73,11 @@ export default defineConfig(({ mode }) => {
   ];
 
   const entry: Record<string, string> = Object.fromEntries(
-    entryFiles.map((file) => [path.basename(file, path.extname(file)), path.resolve(rootDir, file)])
+    entryFiles.map((file) => [
+      // `src/vue/index.ts` would otherwise collide with `src/index.ts`.
+      file === 'src/vue/index.ts' ? 'vue' : path.basename(file, path.extname(file)),
+      path.resolve(rootDir, file),
+    ])
   );
 
   // One entry per extension folder, built from its index.ts (extension +

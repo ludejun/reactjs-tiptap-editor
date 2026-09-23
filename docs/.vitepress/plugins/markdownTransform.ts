@@ -23,7 +23,7 @@ export function replacer(
 
 export function MarkdownTransform(): Plugin {
   return {
-    name: 'ai-richtext-editor-transform',
+    name: 'sparkwrite-transform',
     enforce: 'pre',
     async transform(code, id) {
       if (!/\.md\b/.test(id)) return null;
@@ -43,8 +43,8 @@ export function MarkdownTransform(): Plugin {
   };
 }
 
-const GITHUB_BLOB_URL = 'https://github.com/ludejun/ai-richtext-editor/blob/master/src/extensions';
-const GITHUB_BLOB_DOCS_URL = 'https://github.com/ludejun/ai-richtext-editor/blob/master/docs/extensions';
+const GITHUB_BLOB_URL = 'https://github.com/ludejun/sparkwrite/blob/master/src/extensions';
+const GITHUB_BLOB_DOCS_URL = 'https://github.com/ludejun/sparkwrite/blob/master/docs/extensions';
 
 export async function getFunctionMarkdown(pkg: string, name: string) {
   const URL =

@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Recorder, getRecording, replayRecording } from 'ai-richtext-editor/recorder';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Recorder, getRecording, replayRecording } from 'sparkwrite/recorder';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, Recorder.configure({ autoStart: true })];
 

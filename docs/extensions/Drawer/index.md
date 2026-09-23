@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Drawer, RichTextDrawer } from 'ai-richtext-editor/drawer';
-import { RichTextBubbleDrawer } from 'ai-richtext-editor/bubble/drawer';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Drawer, RichTextDrawer } from 'sparkwrite/drawer';
+import { RichTextBubbleDrawer } from 'sparkwrite/bubble/drawer';
+import 'sparkwrite/style.css';
 import 'easydrawer/styles.css';
 
 const extensions = [Document, Paragraph, Text, Drawer];

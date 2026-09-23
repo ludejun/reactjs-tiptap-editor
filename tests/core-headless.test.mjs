@@ -37,7 +37,7 @@ function externals(entry) {
 
 // Run after pnpm build:lib. The core entry must stay usable from Vue or plain
 // ProseMirror, so nothing reachable from it may pull in React.
-for (const file of ['core.js', 'core.cjs']) {
+for (const file of ['core.js', 'core.cjs', 'vue.js', 'vue.cjs']) {
   test(`${file} does not depend on React`, () => {
     const { packages, chunks } = externals(path.join(lib, file));
     assert.ok(chunks > 1, 'walked the chunk graph');

@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { LineHeight, RichTextLineHeight } from 'ai-richtext-editor/lineheight';
+import { RichTextProvider } from 'sparkwrite';
+import { LineHeight, RichTextLineHeight } from 'sparkwrite/lineheight';
 import { TextStyle } from '@tiptap/extension-text-style';
-import 'ai-richtext-editor/style.css';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, LineHeight];
 
@@ -53,7 +53,7 @@ Register `TextStyle`. Select text, then choose a value from the dropdown. `Defau
 ## Configuration
 
 ```ts
-import { LineHeight } from 'ai-richtext-editor/lineheight';
+import { LineHeight } from 'sparkwrite/lineheight';
 
 LineHeight.configure({
   lineHeights: ['Default', '1.5', '2', '2.5'],

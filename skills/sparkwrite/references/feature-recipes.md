@@ -8,7 +8,7 @@ Load the relevant section for features beyond the base editor. Snippets extend t
 2. Render the matching `RichText*` component inside `RichTextProvider`.
 
 ```tsx
-import { History, RichTextRedo, RichTextUndo } from 'ai-richtext-editor/history';
+import { History, RichTextRedo, RichTextUndo } from 'sparkwrite/history';
 
 const extensions = [...baseExtensions, History];
 
@@ -27,10 +27,10 @@ function Toolbar() {
 Bubble components must render inside `RichTextProvider`; most require their matching extension.
 
 ```tsx
-import { RichTextBubbleImage } from 'ai-richtext-editor/bubble/media';
-import { RichTextBubbleLink } from 'ai-richtext-editor/bubble/link';
-import { RichTextBubbleMenuDragHandle } from 'ai-richtext-editor/bubble/drag-handle';
-import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
+import { RichTextBubbleImage } from 'sparkwrite/bubble/media';
+import { RichTextBubbleLink } from 'sparkwrite/bubble/link';
+import { RichTextBubbleMenuDragHandle } from 'sparkwrite/bubble/drag-handle';
+import { RichTextBubbleText } from 'sparkwrite/bubble/text';
 
 function BubbleMenus() {
   return (
@@ -47,7 +47,7 @@ function BubbleMenus() {
 ## Slash Command
 
 ```tsx
-import { SlashCommand, SlashCommandList } from 'ai-richtext-editor/slashcommand';
+import { SlashCommand, SlashCommandList } from 'sparkwrite/slashcommand';
 
 const extensions = [...baseExtensions, SlashCommand];
 
@@ -110,7 +110,7 @@ export function createHttpImageUpload(endpoint: string): UploadImage {
 Consume the callback in `image-feature.ts`:
 
 ```ts
-import { Image } from 'ai-richtext-editor/image';
+import { Image } from 'sparkwrite/image';
 import type { UploadImage } from './upload-image';
 
 export function createImageExtension(upload: UploadImage) {
@@ -125,7 +125,7 @@ export function createImageExtension(upload: UploadImage) {
 Wire the adapter in app composition, alongside the quickstart's `baseExtensions`:
 
 ```tsx
-import { RichTextImage } from 'ai-richtext-editor/image';
+import { RichTextImage } from 'sparkwrite/image';
 import { createHttpImageUpload } from './http-image-upload';
 import { createImageExtension } from './image-feature';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -148,10 +148,10 @@ Module-level composition fits static configuration. If credentials or callbacks 
 These features also accept upload callbacks in repo examples. Return a `Promise<string>` URL.
 
 ```tsx
-import { Video } from 'ai-richtext-editor/video';
-import { Attachment } from 'ai-richtext-editor/attachment';
-import { Mermaid } from 'ai-richtext-editor/mermaid';
-import { Drawer } from 'ai-richtext-editor/drawer';
+import { Video } from 'sparkwrite/video';
+import { Attachment } from 'sparkwrite/attachment';
+import { Mermaid } from 'sparkwrite/mermaid';
+import { Drawer } from 'sparkwrite/drawer';
 
 Video.configure({ upload: async (file: File) => uploadFile(file) });
 Attachment.configure({ upload: async (file: File) => uploadFile(file) });
@@ -164,7 +164,7 @@ Drawer.configure({ upload: async (file: File) => uploadFile(file) });
 ## Mention
 
 ```tsx
-import { Mention } from 'ai-richtext-editor/mention';
+import { Mention } from 'sparkwrite/mention';
 
 // Replace these demo records with the app's data source.
 const users = [{ id: 'user-1', label: 'Alex' }];
@@ -192,7 +192,7 @@ const extensions = [
 ## Code Block
 
 ```tsx
-import { CodeBlock, RichTextCodeBlock } from 'ai-richtext-editor/codeblock';
+import { CodeBlock, RichTextCodeBlock } from 'sparkwrite/codeblock';
 
 const extensions = [...baseExtensions, CodeBlock];
 ```
@@ -202,7 +202,7 @@ Render `<RichTextCodeBlock />` in the toolbar. The block's own controls (languag
 ## Export PDF
 
 ```tsx
-import { ExportPdf, RichTextExportPdf } from 'ai-richtext-editor/exportpdf';
+import { ExportPdf, RichTextExportPdf } from 'sparkwrite/exportpdf';
 
 const extensions = [
   ...baseExtensions,
@@ -221,7 +221,7 @@ const extensions = [
 ## Export Word
 
 ```tsx
-import { ExportWord, RichTextExportWord } from 'ai-richtext-editor/exportword';
+import { ExportWord, RichTextExportWord } from 'sparkwrite/exportword';
 
 const extensions = [...baseExtensions, ExportWord];
 ```
@@ -229,8 +229,8 @@ const extensions = [...baseExtensions, ExportWord];
 ## Internationalization
 
 ```tsx
-import { en, localeActions, useLocale } from 'ai-richtext-editor/locale';
-import vi from 'ai-richtext-editor/locales/vi';
+import { en, localeActions, useLocale } from 'sparkwrite/locale';
+import vi from 'sparkwrite/locales/vi';
 
 localeActions.setMessage('vi', vi);
 localeActions.setLang('vi');
@@ -253,7 +253,7 @@ Language keys differ from some file names: `zh_CN` uses `/locales/zh-cn`, `pt_BR
 ## Theme
 
 ```tsx
-import { themeActions, useTheme } from 'ai-richtext-editor/theme';
+import { themeActions, useTheme } from 'sparkwrite/theme';
 
 themeActions.setTheme('light'); // or 'dark'
 themeActions.setColor('default'); // "red" | "blue" | "green" | "orange" | "rose" | "violet" | "yellow"

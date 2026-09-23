@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { ImportWord, RichTextImportWord } from 'ai-richtext-editor/importword';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { ImportWord, RichTextImportWord } from 'sparkwrite/importword';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, ImportWord];
 
@@ -61,7 +61,7 @@ Click the toolbar button and choose a `.docx` file. Import replaces the current 
 For example, replace `ImportWord` in your array with:
 
 ```ts
-import { ImportWord } from 'ai-richtext-editor/importword';
+import { ImportWord } from 'sparkwrite/importword';
 
 ImportWord.configure({
   limit: 5 * 1024 * 1024,

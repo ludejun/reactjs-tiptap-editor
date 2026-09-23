@@ -1,5 +1,5 @@
 {
-  "name": "ai-richtext-editor",
+  "name": "sparkwrite",
   "version": "0.1.0",
   "description": "AI-first rich-text editor SDK on Tiptap: streaming AI writing that lands as real document nodes, AI-generated formulas and diagrams, plus toolbar, bubble menus, tables, code, images, 16 languages and session replay. React UI today, framework-agnostic core.",
   "keywords": [
@@ -18,15 +18,15 @@
     "markdown",
     "tailwind"
   ],
-  "homepage": "https://github.com/ludejun/ai-richtext-editor#readme",
+  "homepage": "https://github.com/ludejun/sparkwrite#readme",
   "bugs": {
-    "url": "https://github.com/ludejun/ai-richtext-editor/issues"
+    "url": "https://github.com/ludejun/sparkwrite/issues"
   },
   "license": "MIT",
   "author": "ludejun",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ludejun/ai-richtext-editor.git"
+    "url": "git+https://github.com/ludejun/sparkwrite.git"
   },
   "files": [
     "lib",
@@ -270,6 +270,9 @@
       ],
       "./core": [
         "./lib/core.d.ts"
+      ],
+      "./vue": [
+        "./lib/vue/index.d.ts"
       ]
     }
   },
@@ -1025,6 +1028,16 @@
         "types": "./lib/core.d.ts",
         "default": "./lib/core.js"
       }
+    },
+    "./vue": {
+      "require": {
+        "types": "./lib/vue/index.d.ts",
+        "default": "./lib/vue.cjs"
+      },
+      "import": {
+        "types": "./lib/vue/index.d.ts",
+        "default": "./lib/vue.js"
+      }
     }
   },
   "scripts": {
@@ -1132,6 +1145,7 @@
     "yjs": "^13.6.32"
   },
   "devDependencies": {
+    "@tiptap/vue-3": "3.29.2",
     "@types/deep-equal": "^1.0.4",
     "@types/katex": "^0.16.8",
     "@types/lodash-es": "^4.17.12",
@@ -1139,11 +1153,13 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.1",
+    "@vitejs/plugin-vue": "^6.0.9",
     "autoprefixer": "^10.5.4",
     "bumpp": "^10.4.1",
     "esno": "^4.8.0",
     "execa": "^9.6.1",
     "globby": "^14.1.0",
+    "lucide-vue-next": "^1.0.0",
     "md5": "^2.3.0",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.77.0",
@@ -1158,11 +1174,15 @@
     "typescript": "^5.9.3",
     "unplugin-dts": "^1.1.0",
     "verify-commit-msg": "^0.1.0",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "vue": "^3.4.37"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vue": "^3.4.0",
+    "@tiptap/vue-3": "^3.0.0",
+    "lucide-vue-next": ">=0.400.0"
   },
   "browserslist": [
     ">0.3%",
@@ -1181,6 +1201,17 @@
       "@excalidraw/mermaid-to-excalidraw>nanoid": "5.1.6",
       "esbuild": "0.25.12",
       "prosemirror-view": "1.41.1"
+    }
+  },
+  "peerDependenciesMeta": {
+    "vue": {
+      "optional": true
+    },
+    "@tiptap/vue-3": {
+      "optional": true
+    },
+    "lucide-vue-next": {
+      "optional": true
     }
   }
 }

@@ -4,7 +4,7 @@ Thanks for helping out.
 
 ## Setup
 
-AI Richtext Editor uses [pnpm](https://pnpm.io/).
+SparkWrite uses [pnpm](https://pnpm.io/).
 
 ```bash
 pnpm install
@@ -30,10 +30,10 @@ Format only the files you touched: `pnpm exec oxfmt <files>`.
 
 ## Layout
 
-- `src/extensions/<Name>/` — one feature: the Tiptap extension (`<Name>.ts`), its React controls (`components/`), and an `index.ts`. Each folder is a package subpath (`ai-richtext-editor/<name>`) declared in `package.json` under `exports` and `typesVersions`.
+- `src/extensions/<Name>/` — one feature: the Tiptap extension (`<Name>.ts`), its React controls (`components/`), and an `index.ts`. Each folder is a package subpath (`sparkwrite/<name>`) declared in `package.json` under `exports` and `typesVersions`.
 - `src/components/` — shared UI (buttons, menus, toolbar primitives, bubble menus).
 - `src/locales/` — one file per language, 260+ keys each; every key must exist in every file.
-- `src/styles/` — SCSS, compiled into `ai-richtext-editor/style.css`. Tailwind classes carry the `richtext-` prefix.
+- `src/styles/` — SCSS, compiled into `sparkwrite/style.css`. Tailwind classes carry the `richtext-` prefix.
 - `docs/` — VitePress. Every extension has `docs/extensions/<Name>/index.md` and an entry in `docs/.vitepress/locale.ts`.
 - `playground/` — the demo app.
 
@@ -45,7 +45,7 @@ Single-line messages, `type(scope): summary`, checked by a hook. Allowed types i
 
 ## Bringing in fixes from reactjs-tiptap-editor
 
-AI Richtext Editor descends from [hunghg255/reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor). The shared history is kept on the `archive/reactjs-tiptap-editor` branch, and `upstream` points at the original repository:
+SparkWrite descends from [hunghg255/reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor). The shared history is kept on the `archive/reactjs-tiptap-editor` branch, and `upstream` points at the original repository:
 
 ```bash
 git remote add upstream https://github.com/hunghg255/reactjs-tiptap-editor.git  # once
@@ -60,10 +60,10 @@ git cherry-pick -x <sha>            # applies cleanly when the files match
 git cherry-pick -x -X theirs <sha>  # or resolve conflicts by hand
 ```
 
-When a fix touches files AI Richtext Editor has rewritten, read the upstream diff and re-implement the fix here rather than forcing the patch:
+When a fix touches files SparkWrite has rewritten, read the upstream diff and re-implement the fix here rather than forcing the patch:
 
 ```bash
 git show upstream/main~3 -- src/extensions/Table/Table.ts
 ```
 
-Package subpaths were renamed (`reactjs-tiptap-editor/...` → `ai-richtext-editor/...`) and the root CSS class is `.ai-richtext-editor`; cherry-picked docs or tests need those adjusted. Record the upstream commit in your message (`-x` does this) so the provenance stays visible.
+Package subpaths were renamed (`reactjs-tiptap-editor/...` → `sparkwrite/...`) and the root CSS class is `.sparkwrite`; cherry-picked docs or tests need those adjusted. Record the upstream commit in your message (`-x` does this) so the provenance stays visible.

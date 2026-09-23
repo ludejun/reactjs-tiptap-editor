@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Table, RichTextTable } from 'ai-richtext-editor/table';
-import { RichTextBubbleTable } from 'ai-richtext-editor/bubble/table';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Table, RichTextTable } from 'sparkwrite/table';
+import { RichTextBubbleTable } from 'sparkwrite/bubble/table';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, Table];
 

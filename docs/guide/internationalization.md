@@ -15,9 +15,9 @@ The library includes translations for its controls and dialogs. English (`en`) i
 The lightweight `/locale` entry includes English only. Import and register each additional dictionary before selecting its language. Use `localeActions.setLang` during application initialization or in an event handler:
 
 ```tsx
-import { localeActions, useLocale } from 'ai-richtext-editor/locale';
-import vi from 'ai-richtext-editor/locales/vi';
-import ja from 'ai-richtext-editor/locales/ja';
+import { localeActions, useLocale } from 'sparkwrite/locale';
+import vi from 'sparkwrite/locales/vi';
+import ja from 'sparkwrite/locales/ja';
 
 localeActions.setMessage('vi', vi);
 localeActions.setMessage('ja', ja);
@@ -78,35 +78,35 @@ Loading one only when the reader picks it keeps the initial bundle at English
 alone; each dictionary is its own chunk of roughly 3.5 to 4.5 kB.
 
 The loader has to be written out per language. A bundler cannot follow a
-computed specifier, so ``import(`ai-richtext-editor/locales/${code}`)`` either
+computed specifier, so ``import(`sparkwrite/locales/${code}`)`` either
 fails to build or quietly pulls in all of them — the map below keeps every
 specifier a literal:
 
 ```tsx
 import { useState } from 'react';
-import { localeActions, useLocale } from 'ai-richtext-editor/locale';
+import { localeActions, useLocale } from 'sparkwrite/locale';
 
 type Loader = () => Promise<{ default: Record<string, string> }>;
 
 /** English needs no loader: the `/locale` entry already registers it. */
 const LANGUAGES: { code: string; label: string; load?: Loader }[] = [
   { code: 'en', label: 'English' },
-  { code: 'zh_CN', label: '中文', load: () => import('ai-richtext-editor/locales/zh-cn') },
-  { code: 'hi', label: 'हिन्दी', load: () => import('ai-richtext-editor/locales/hi') },
-  { code: 'es', label: 'Español', load: () => import('ai-richtext-editor/locales/es') },
-  { code: 'fr', label: 'Français', load: () => import('ai-richtext-editor/locales/fr') },
-  { code: 'bn', label: 'বাংলা', load: () => import('ai-richtext-editor/locales/bn') },
-  { code: 'pt_BR', label: 'Português', load: () => import('ai-richtext-editor/locales/pt-br') },
-  { code: 'ru', label: 'Русский', load: () => import('ai-richtext-editor/locales/ru') },
-  { code: 'id', label: 'Bahasa Indonesia', load: () => import('ai-richtext-editor/locales/id') },
-  { code: 'de', label: 'Deutsch', load: () => import('ai-richtext-editor/locales/de') },
-  { code: 'ja', label: '日本語', load: () => import('ai-richtext-editor/locales/ja') },
-  { code: 'tr', label: 'Türkçe', load: () => import('ai-richtext-editor/locales/tr') },
-  { code: 'vi', label: 'Tiếng Việt', load: () => import('ai-richtext-editor/locales/vi') },
-  { code: 'ko', label: '한국어', load: () => import('ai-richtext-editor/locales/ko') },
-  { code: 'it', label: 'Italiano', load: () => import('ai-richtext-editor/locales/it') },
-  { code: 'hu_HU', label: 'Magyar', load: () => import('ai-richtext-editor/locales/hu') },
-  { code: 'fi', label: 'Suomi', load: () => import('ai-richtext-editor/locales/fi') },
+  { code: 'zh_CN', label: '中文', load: () => import('sparkwrite/locales/zh-cn') },
+  { code: 'hi', label: 'हिन्दी', load: () => import('sparkwrite/locales/hi') },
+  { code: 'es', label: 'Español', load: () => import('sparkwrite/locales/es') },
+  { code: 'fr', label: 'Français', load: () => import('sparkwrite/locales/fr') },
+  { code: 'bn', label: 'বাংলা', load: () => import('sparkwrite/locales/bn') },
+  { code: 'pt_BR', label: 'Português', load: () => import('sparkwrite/locales/pt-br') },
+  { code: 'ru', label: 'Русский', load: () => import('sparkwrite/locales/ru') },
+  { code: 'id', label: 'Bahasa Indonesia', load: () => import('sparkwrite/locales/id') },
+  { code: 'de', label: 'Deutsch', load: () => import('sparkwrite/locales/de') },
+  { code: 'ja', label: '日本語', load: () => import('sparkwrite/locales/ja') },
+  { code: 'tr', label: 'Türkçe', load: () => import('sparkwrite/locales/tr') },
+  { code: 'vi', label: 'Tiếng Việt', load: () => import('sparkwrite/locales/vi') },
+  { code: 'ko', label: '한국어', load: () => import('sparkwrite/locales/ko') },
+  { code: 'it', label: 'Italiano', load: () => import('sparkwrite/locales/it') },
+  { code: 'hu_HU', label: 'Magyar', load: () => import('sparkwrite/locales/hu') },
+  { code: 'fi', label: 'Suomi', load: () => import('sparkwrite/locales/fi') },
 ];
 
 /** Locale state is global, so the cache of loaded dictionaries can be too. */
@@ -193,14 +193,14 @@ Map those cases explicitly if it matters to your users.
 
 ### Compatibility entry
 
-Existing imports from `ai-richtext-editor/locale-bundle` still work and register all included languages automatically. Use that entry when you need all languages; use `/locale` and individual dictionaries to avoid loading unused translations. Both entries share the same locale state.
+Existing imports from `sparkwrite/locale-bundle` still work and register all included languages automatically. Use that entry when you need all languages; use `/locale` and individual dictionaries to avoid loading unused translations. Both entries share the same locale state.
 
 ## Override existing messages
 
 `setMessage` merges the supplied keys into the language's current messages. You can override a single label without copying the entire dictionary:
 
 ```ts
-import { localeActions } from 'ai-richtext-editor/locale';
+import { localeActions } from 'sparkwrite/locale';
 
 localeActions.setMessage('en', {
   'editor.remove': 'Delete',
@@ -212,7 +212,7 @@ localeActions.setMessage('en', {
 Start from the exported English dictionary, override the keys you have translated, then select the new language:
 
 ```ts
-import { en, localeActions } from 'ai-richtext-editor/locale';
+import { en, localeActions } from 'sparkwrite/locale';
 
 localeActions.setMessage('fr', {
   ...en,
@@ -226,7 +226,7 @@ The English spread is optional: missing translations fall back to the current En
 ## Use translations in custom controls
 
 ```tsx
-import { useLocale } from 'ai-richtext-editor/locale';
+import { useLocale } from 'sparkwrite/locale';
 
 export function RemoveLabel() {
   const { t } = useLocale();

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./docs/public/logo.svg" alt="AI Richtext Editor" width="96" />
+  <img src="./docs/public/logo.svg" alt="SparkWrite" width="96" />
 </p>
 
-<h1 align="center">AI Richtext Editor</h1>
+<h1 align="center">SparkWrite</h1>
 
 <p align="center">
   <b>The rich-text editor that writes with you.</b><br/>
@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/ai-richtext-editor"><img src="https://img.shields.io/npm/v/ai-richtext-editor.svg" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/sparkwrite"><img src="https://img.shields.io/npm/v/sparkwrite.svg" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
   <a href="./README.zh-CN.md">中文文档</a>
 </p>
@@ -34,13 +34,13 @@
 - **Pastes right.** Web pages, Excel, Google Docs and Word keep their formatting; Word's fake lists become lists and code from VS Code becomes a code block.
 - **16 languages** ordered by speaker population, loadable on demand, with matching CJK, Devanagari and Bengali fonts.
 - **Record and replay** any writing session as timestamped steps.
-- **Framework-agnostic core.** The document logic — extensions, commands, paste rules, AI client and markdown rendering, recorder — has no React in it and is published as `ai-richtext-editor/core` for Vue and other Tiptap bindings. See [Frameworks](./docs/guide/frameworks.md).
+- **React and Vue.** The document logic ships React-free as `sparkwrite/core`; `sparkwrite/vue` adds a Vue 3 provider, toolbar, controls and node views on the same stylesheet. See [Frameworks](./docs/guide/frameworks.md).
 - **Fits your design system.** Prefixed Tailwind classes and a handful of CSS variables.
 
 ## Install
 
 ```bash
-pnpm add ai-richtext-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
+pnpm add sparkwrite @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
 ```
 
 Keep every `@tiptap/*` package on one version (this repository uses `^3.29`).
@@ -52,12 +52,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-richtext-editor';
-import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
-import { Heading, RichTextHeading } from 'ai-richtext-editor/heading';
-import { Table, RichTextTable } from 'ai-richtext-editor/table';
-import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'sparkwrite';
+import { Bold, RichTextBold } from 'sparkwrite/bold';
+import { Heading, RichTextHeading } from 'sparkwrite/heading';
+import { Table, RichTextTable } from 'sparkwrite/table';
+import { RichTextBubbleText } from 'sparkwrite/bubble/text';
+import 'sparkwrite/style.css';
 
 export function Editor() {
   const editor = useEditor({
@@ -83,7 +83,7 @@ export function Editor() {
 }
 ```
 
-Every feature is one import: the extension and its control come from the same subpath (`ai-richtext-editor/<feature>`), bubble menus from `ai-richtext-editor/bubble/<name>`, languages from `ai-richtext-editor/locales/<code>`.
+Every feature is one import: the extension and its control come from the same subpath (`sparkwrite/<feature>`), bubble menus from `sparkwrite/bubble/<name>`, languages from `sparkwrite/locales/<code>`.
 
 ## Documentation
 
@@ -119,7 +119,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the commit convention and how fixes
 
 ## Origin
 
-AI Richtext Editor started as a fork of [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor) by hunghg255 and its contributors, and has since been reworked extensively. Thank you to them and to the [Tiptap](https://tiptap.dev) and [shadcn/ui](https://ui.shadcn.com/) projects.
+SparkWrite started as a fork of [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor) by hunghg255 and its contributors, and has since been reworked extensively. Thank you to them and to the [Tiptap](https://tiptap.dev) and [shadcn/ui](https://ui.shadcn.com/) projects.
 
 ## License
 

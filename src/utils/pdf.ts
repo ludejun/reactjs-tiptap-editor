@@ -2,7 +2,7 @@ import { type ExportPdfOptions } from '@/extensions/ExportPdf';
 
 import type { Editor } from '@tiptap/core';
 
-const CDN_STYLESHEET = 'https://cdn.jsdelivr.net/npm/ai-richtext-editor@latest/lib/style.css';
+const CDN_STYLESHEET = 'https://cdn.jsdelivr.net/npm/sparkwrite@latest/lib/style.css';
 
 /**
  * Minimal layout rules that must hold even if no external stylesheet loads
@@ -31,7 +31,7 @@ const FALLBACK_PRINT_STYLES = `
 
 /**
  * Collect the stylesheets already loaded by the host page (the app imports
- * `ai-richtext-editor/style.css`), so the print document uses the exact
+ * `sparkwrite/style.css`), so the print document uses the exact
  * same CSS version without depending on the network.
  */
 function collectHostStyles(): string {
@@ -59,7 +59,7 @@ function printHtml(content: string, exportPdfOptions: ExportPdfOptions) {
 
   const {
     paperSize,
-    title = 'AI Richtext Editor',
+    title = 'SparkWrite',
     margins: { top: marginTop, right: marginRight, bottom: marginBottom, left: marginLeft },
   } = exportPdfOptions;
 
@@ -106,7 +106,7 @@ function printHtml(content: string, exportPdfOptions: ExportPdfOptions) {
       </style>
     </head>
     <body>
-      <div class="print-container ai-richtext-editor">
+      <div class="print-container sparkwrite">
         <div class="ProseMirror">
           ${content}
         </div>

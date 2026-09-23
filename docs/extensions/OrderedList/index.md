@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { OrderedList, RichTextOrderedList } from 'ai-richtext-editor/orderedlist';
+import { RichTextProvider } from 'sparkwrite';
+import { OrderedList, RichTextOrderedList } from 'sparkwrite/orderedlist';
 import { ListItem } from '@tiptap/extension-list';
-import 'ai-richtext-editor/style.css';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, ListItem, OrderedList];
 

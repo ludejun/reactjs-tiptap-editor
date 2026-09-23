@@ -1,9 +1,9 @@
-import { RichTextBubbleImage } from 'ai-richtext-editor/bubble/media';
-import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
-import { Katex } from 'ai-richtext-editor/katex';
-import { localeActions, useLocale } from 'ai-richtext-editor/locale';
-import vi from 'ai-richtext-editor/locales/vi';
-import { ShortMessage } from 'ai-richtext-editor/shortmessage';
+import { RichTextBubbleImage } from 'sparkwrite/bubble/media';
+import { RichTextBubbleText } from 'sparkwrite/bubble/text';
+import { Katex } from 'sparkwrite/katex';
+import { localeActions, useLocale } from 'sparkwrite/locale';
+import vi from 'sparkwrite/locales/vi';
+import { ShortMessage } from 'sparkwrite/shortmessage';
 
 export const deferredKatex = Katex.configure({
   loadKatex: async () => (await import('katex')).default,

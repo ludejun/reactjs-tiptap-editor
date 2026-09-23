@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Highlight, RichTextHighlight } from 'ai-richtext-editor/highlight';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Highlight, RichTextHighlight } from 'sparkwrite/highlight';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, Highlight];
 
@@ -113,7 +113,7 @@ The extension maintains a shared highlight color state across all instances:
 ### Basic Usage
 
 ```tsx
-import { Highlight } from 'ai-richtext-editor/highlight';
+import { Highlight } from 'sparkwrite/highlight';
 
 const extensions = [Highlight];
 ```
@@ -121,7 +121,7 @@ const extensions = [Highlight];
 ### With Default Color
 
 ```tsx
-import { Highlight } from 'ai-richtext-editor/highlight';
+import { Highlight } from 'sparkwrite/highlight';
 
 const extensions = [
   Highlight.configure({

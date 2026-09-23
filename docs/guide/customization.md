@@ -14,9 +14,9 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
-} from 'ai-richtext-editor';
-import { RichTextBold } from 'ai-richtext-editor/bold';
-import { RichTextTable } from 'ai-richtext-editor/table';
+} from 'sparkwrite';
+import { RichTextBold } from 'sparkwrite/bold';
+import { RichTextTable } from 'sparkwrite/table';
 
 <RichTextToolbar>
   <RichTextBold />
@@ -71,7 +71,7 @@ export const Signature = Extension.create({
 
 Two levels, depending on how far you need to go.
 
-**Change how a built-in node looks.** Most nodes carry a `class` or `data-*` hook you can style, and several take render options: `Divider.configure({ renderDivider })` decides the saved HTML, `Image.configure({ HTMLAttributes })` adds attributes, code blocks follow the `CODE_THEME` palette. Styles live behind one root class, `.ai-richtext-editor`, so overriding them needs one more selector than the library uses.
+**Change how a built-in node looks.** Most nodes carry a `class` or `data-*` hook you can style, and several take render options: `Divider.configure({ renderDivider })` decides the saved HTML, `Image.configure({ HTMLAttributes })` adds attributes, code blocks follow the `CODE_THEME` palette. Styles live behind one root class, `.sparkwrite`, so overriding them needs one more selector than the library uses.
 
 **Add a block of your own.** Any Tiptap node works, and a React node view gives it an interactive editing state. The `Divider` extension is a compact example of the whole pattern — attributes, `parseHTML`/`renderHTML` for the saved form, a node view with an input, a plugin that keeps derived attributes in sync — and `Callout` a simpler one:
 

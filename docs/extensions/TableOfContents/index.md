@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Heading } from 'ai-richtext-editor/heading';
-import { TableOfContents, RichTextTableOfContents } from 'ai-richtext-editor/tableofcontents';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Heading } from 'sparkwrite/heading';
+import { TableOfContents, RichTextTableOfContents } from 'sparkwrite/tableofcontents';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, TableOfContents];
 
@@ -66,7 +66,7 @@ editor.chain().focus().insertTableOfContents().run();
 Use the `useTableOfContents` hook to build a sidebar with the same data:
 
 ```tsx
-import { useTableOfContents, scrollToTableOfContentsItem } from 'ai-richtext-editor/tableofcontents';
+import { useTableOfContents, scrollToTableOfContentsItem } from 'sparkwrite/tableofcontents';
 
 function Outline({ editor }) {
   const items = useTableOfContents(editor);
@@ -88,7 +88,7 @@ function Outline({ editor }) {
 ## Options
 
 ```ts
-import { getLinearIndexes } from 'ai-richtext-editor/tableofcontents';
+import { getLinearIndexes } from 'sparkwrite/tableofcontents';
 
 TableOfContents.configure({
   // node types that count as headings (default: ['heading'])

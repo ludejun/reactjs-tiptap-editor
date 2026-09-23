@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: AI Richtext Editor
+  name: SparkWrite
   text: The rich-text editor that writes with you
   tagline: AI-first editor SDK on Tiptap — streaming answers become real tables and code blocks, formulas and diagrams from a sentence. Toolbar, bubble menus, slash commands, 16 languages, replay. React UI, framework-agnostic core.
   image:
     src: /logo.svg
-    alt: AI Richtext Editor
+    alt: SparkWrite
   actions:
     - theme: brand
       text: Get Started
@@ -17,7 +17,7 @@ hero:
       link: /guide/features
     - theme: alt
       text: GitHub
-      link: https://github.com/ludejun/ai-richtext-editor
+      link: https://github.com/ludejun/sparkwrite
 features:
   - title: AI that writes real content
     details: Streaming answers rendered through the editor schema — tables, code blocks and lists arrive as nodes, not pasted text. OpenAI, Anthropic, a proxy, or your own transport.

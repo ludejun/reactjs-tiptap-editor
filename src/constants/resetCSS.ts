@@ -1,5 +1,5 @@
 export const RESET_CSS = `
-.ai-richtext-editor {
+.sparkwrite {
   button,
   input:where([type=button]),
   input:where([type=reset]),

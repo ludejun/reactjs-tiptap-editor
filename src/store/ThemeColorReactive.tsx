@@ -23,8 +23,8 @@ export function ThemeColorReactive() {
 
     updateCSS(
       `
-      .ai-richtext-editor, .ai-richtext-editor *,
-      .ai-richtext-editor-theme, .ai-richtext-editor-theme *,
+      .sparkwrite, .sparkwrite *,
+      .sparkwrite-theme, .sparkwrite-theme *,
       div[data-richtext-portal], div[data-richtext-portal] * {
         ${Object.entries(themeObject)
           .map(([key, value]) => {

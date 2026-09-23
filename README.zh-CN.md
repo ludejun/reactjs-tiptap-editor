@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./docs/public/logo.svg" alt="AI Richtext Editor" width="96" />
+  <img src="./docs/public/logo.svg" alt="SparkWrite" width="96" />
 </p>
 
-<h1 align="center">AI Richtext Editor</h1>
+<h1 align="center">SparkWrite</h1>
 
 <p align="center">
   <b>会和你一起写的富文本编辑器。</b><br/>
@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/ai-richtext-editor"><img src="https://img.shields.io/npm/v/ai-richtext-editor.svg" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/sparkwrite"><img src="https://img.shields.io/npm/v/sparkwrite.svg" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
   <a href="./README.md">English</a>
 </p>
@@ -34,13 +34,13 @@
 - **粘贴正确。** 网页、Excel、Google Docs、Word 保留格式；Word 假列表变真列表，VS Code 代码变代码块。
 - **16 种语言**，按使用人数排序，按需加载，配套 CJK、天城文、孟加拉文字体。
 - **录制与回放**任意一次书写过程。
-- **框架无关的内核。** 文档逻辑（扩展、命令、粘贴规则、AI 客户端与 Markdown 渲染、录制）不含 React，以 `ai-richtext-editor/core` 发布，可用于 Vue 等其他 Tiptap 绑定。见 [多框架](./docs/guide/frameworks.md)。
+- **React 和 Vue。** 文档逻辑以不含 React 的 `sparkwrite/core` 发布；`sparkwrite/vue` 提供 Vue 3 的 Provider、工具栏、控件和节点视图，共用同一套样式。见 [多框架](./docs/guide/frameworks.md)。
 - **融入你的设计体系。** 带前缀的 Tailwind 类名和几个 CSS 变量。
 
 ## 安装
 
 ```bash
-pnpm add ai-richtext-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
+pnpm add sparkwrite @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
 ```
 
 所有 `@tiptap/*` 包请保持同一版本（本仓库使用 `^3.29`）。
@@ -52,12 +52,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-richtext-editor';
-import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
-import { Heading, RichTextHeading } from 'ai-richtext-editor/heading';
-import { Table, RichTextTable } from 'ai-richtext-editor/table';
-import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'sparkwrite';
+import { Bold, RichTextBold } from 'sparkwrite/bold';
+import { Heading, RichTextHeading } from 'sparkwrite/heading';
+import { Table, RichTextTable } from 'sparkwrite/table';
+import { RichTextBubbleText } from 'sparkwrite/bubble/text';
+import 'sparkwrite/style.css';
 
 export function Editor() {
   const editor = useEditor({
@@ -83,7 +83,7 @@ export function Editor() {
 }
 ```
 
-每个功能只需一个导入：扩展和它的控件来自同一个子路径（`ai-richtext-editor/<feature>`），气泡菜单来自 `ai-richtext-editor/bubble/<name>`，语言包来自 `ai-richtext-editor/locales/<code>`。
+每个功能只需一个导入：扩展和它的控件来自同一个子路径（`sparkwrite/<feature>`），气泡菜单来自 `sparkwrite/bubble/<name>`，语言包来自 `sparkwrite/locales/<code>`。
 
 ## 文档
 
@@ -119,7 +119,7 @@ pnpm exec esno --test tests/ai-client.test.ts tests/locale-loading.test.ts tests
 
 ## 来源
 
-AI Richtext Editor 起源于 hunghg255 及贡献者们的 [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor)，此后经过了大幅重构。感谢他们，也感谢 [Tiptap](https://tiptap.dev) 与 [shadcn/ui](https://ui.shadcn.com/)。
+SparkWrite 起源于 hunghg255 及贡献者们的 [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor)，此后经过了大幅重构。感谢他们，也感谢 [Tiptap](https://tiptap.dev) 与 [shadcn/ui](https://ui.shadcn.com/)。
 
 ## 许可
 

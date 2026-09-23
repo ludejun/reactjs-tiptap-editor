@@ -4,19 +4,19 @@ import { createTranslate } from './i18n/utils';
 
 import type { DefaultTheme, HeadConfig, LocaleConfig } from 'vitepress';
 
-const docsLink = 'https://ludejun.github.io/ai-richtext-editor';
-const githubRepo = 'ludejun/ai-richtext-editor';
-const githubLink: 'https://github.com/ludejun/ai-richtext-editor' = `https://github.com/${githubRepo}`;
+const docsLink = 'https://ludejun.github.io/sparkwrite';
+const githubRepo = 'ludejun/sparkwrite';
+const githubLink: 'https://github.com/ludejun/sparkwrite' = `https://github.com/${githubRepo}`;
 
 const VERSIONS: (DefaultTheme.NavItemWithLink | DefaultTheme.NavItemChildren)[] = [
   { text: `v${version} (current)`, link: '/' },
   {
     text: 'Release Notes',
-    link: 'https://github.com/ludejun/ai-richtext-editor/releases',
+    link: 'https://github.com/ludejun/sparkwrite/releases',
   },
   {
     text: 'Contributing',
-    link: 'https://github.com/ludejun/ai-richtext-editor/blob/main/CONTRIBUTING.md',
+    link: 'https://github.com/ludejun/sparkwrite/blob/main/CONTRIBUTING.md',
   },
 ];
 
@@ -24,7 +24,7 @@ export function getLocaleConfig(lang: string) {
   const t = createTranslate(lang);
 
   const urlPrefix = lang && lang !== 'en' ? `/${lang}` : '';
-  const title = t('AI Richtext Editor');
+  const title = t('SparkWrite');
   const description = t(
     'AI-first rich-text editor SDK on Tiptap: streaming AI writing as real document nodes, formulas and diagrams from a sentence, 16 languages, session replay. React UI, framework-agnostic core.'
   );
@@ -60,7 +60,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: t('Playground'),
-      link: 'https://github.com/ludejun/ai-richtext-editor/tree/main/playground',
+      link: 'https://github.com/ludejun/sparkwrite/tree/main/playground',
     },
     {
       text: t('Skills'),
@@ -69,7 +69,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: 'llmstxt',
-      link: 'https://ludejun.github.io/ai-richtext-editor/llms-full.txt',
+      link: 'https://ludejun.github.io/sparkwrite/llms-full.txt',
     },
     {
       text: `v${version}`,
@@ -203,7 +203,7 @@ export function getLocaleConfig(lang: string) {
       { icon: 'github', link: githubLink },
       {
         icon: 'npm',
-        link: 'https://www.npmjs.com/package/ai-richtext-editor',
+        link: 'https://www.npmjs.com/package/sparkwrite',
       },
     ],
     footer: {

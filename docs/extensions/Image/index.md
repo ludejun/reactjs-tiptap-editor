@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Image, RichTextImage } from 'ai-richtext-editor/image';
-import { RichTextBubbleImage } from 'ai-richtext-editor/bubble/media';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Image, RichTextImage } from 'sparkwrite/image';
+import { RichTextBubbleImage } from 'sparkwrite/bubble/media';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, Image.configure({ resourceImage: 'link' })];
 
@@ -247,7 +247,7 @@ saves, the server keeps a file nothing refers to. The extension tracks enough
 to clean that up at save time:
 
 ```ts
-import { getImageChanges, markImagesSaved } from 'ai-richtext-editor/image';
+import { getImageChanges, markImagesSaved } from 'sparkwrite/image';
 
 async function save(editor: Editor) {
   const { current, removed, orphaned } = getImageChanges(editor);

@@ -42,7 +42,6 @@ export function AIPanel({
 }: AIPanelProps) {
   const { t } = useLocale();
   const [prompt, setPrompt] = useState(initialPrompt || '');
-  const [tone, setTone] = useState('');
   const [attachments, setAttachments] = useState<AIAttachment[]>([]);
   const filePicker = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState('');
@@ -161,7 +160,6 @@ export function AIPanel({
             content: [
               history.current.length === 0 && selectedText ? `Selected text:\n${selectedText}` : '',
               instruction.trim(),
-              tone ? `Tone: ${tone}` : '',
             ]
               .filter(Boolean)
               .join('\n\n'),
@@ -381,22 +379,6 @@ export function AIPanel({
                   />
                 </>
               ) : null}
-
-              <label className='richtext-ai-tone'>
-                {t('editor.ai.tone')}{' '}
-                <select
-                  aria-label={t('editor.ai.tone')}
-                  value={tone}
-                  disabled={working}
-                  onChange={(event) => setTone(event.target.value)}
-                >
-                  <option value=''>{t('editor.ai.tone.default')}</option>
-                  <option value='Professional'>{t('editor.ai.tone.professional')}</option>
-                  <option value='Friendly'>{t('editor.ai.tone.friendly')}</option>
-                  <option value='Casual'>{t('editor.ai.tone.casual')}</option>
-                  <option value='Confident'>{t('editor.ai.tone.confident')}</option>
-                </select>
-              </label>
 
               {/* The error sits on this row rather than on a line of its own. */}
               <span className='richtext-ai-error' role='alert'>

@@ -278,11 +278,11 @@
   }
 }
 
-.ai-richtext-editor .ProseMirror .search-result {
+.sparkwrite .ProseMirror .search-result {
   background-color: #ffd90080;
 }
 
-.ai-richtext-editor .ProseMirror .search-result-current {
+.sparkwrite .ProseMirror .search-result-current {
   background-color: #0dff0080;
 }
 
@@ -292,9 +292,9 @@
    and bottom edge and the table draws the outer frame — otherwise every inner
    line would be 2px.
    The selector carries one extra class on purpose: `resetCSS` sets
-   `border-collapse: collapse` on `.ai-richtext-editor table`, the same
+   `border-collapse: collapse` on `.sparkwrite table`, the same
    specificity as `.ProseMirror table`, and is injected after this stylesheet. */
-.ai-richtext-editor .ProseMirror table {
+.sparkwrite .ProseMirror table {
   border-collapse: separate;
   border-spacing: 0;
 }

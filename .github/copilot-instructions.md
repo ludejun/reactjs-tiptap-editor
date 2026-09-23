@@ -1,4 +1,4 @@
-# Copilot Instructions for ai-richtext-editor
+# Copilot Instructions for sparkwrite
 
 ## Architecture Overview
 
@@ -10,7 +10,7 @@ This is a modular rich-text editor library built on **Tiptap 3.x** with **Shadcn
 
 ### Key Design Decisions
 
-- **Tree-shakable extensions**: Each of 40+ extensions is independently importable (`ai-richtext-editor/bold`)
+- **Tree-shakable extensions**: Each of 40+ extensions is independently importable (`sparkwrite/bold`)
 - **Tiptap-native**: Uses `@tiptap/react`'s `useEditor` hook directly—no custom wrapper
 - **Signal-based state**: Uses `reactjs-signal` for theme, locale, and editor state
 - **CSS isolation**: All Tailwind classes prefixed with `richtext-` (configured in `vite.config.ts` postcss)
@@ -78,8 +78,8 @@ const useSetValue = () => useSetSignal(signal);
 
 Theme and locale actions are exposed via:
 
-- `ai-richtext-editor/theme` → `themeActions.setTheme()`, `themeActions.setColor()`
-- `ai-richtext-editor/locale-bundle` → `localeActions.setLang()`
+- `sparkwrite/theme` → `themeActions.setTheme()`, `themeActions.setColor()`
+- `sparkwrite/locale-bundle` → `localeActions.setLang()`
 
 ## Development Commands
 

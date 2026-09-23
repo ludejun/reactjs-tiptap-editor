@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'ai-richtext-editor/column';
-import { RichTextBubbleMenuDragHandle } from 'ai-richtext-editor/bubble/drag-handle';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'sparkwrite/column';
+import { RichTextBubbleMenuDragHandle } from 'sparkwrite/bubble/drag-handle';
+import 'sparkwrite/style.css';
 
 const DocumentColumn = Document.extend({ content: '(block|columns)+' });
 

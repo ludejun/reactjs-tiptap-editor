@@ -9,14 +9,14 @@ export async function transformHead({ pageData }: TransformContext) {
         'meta',
         {
           property: 'og:image',
-          content: 'https://ludejun.github.io/ai-richtext-editor/og.png',
+          content: 'https://ludejun.github.io/sparkwrite/og.png',
         },
       ],
       [
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://ludejun.github.io/ai-richtext-editor/og.png',
+          content: 'https://ludejun.github.io/sparkwrite/og.png',
         },
       ]
     );
@@ -28,14 +28,14 @@ export async function transformHead({ pageData }: TransformContext) {
       'meta',
       {
         property: 'og:image',
-        content: 'https://ludejun.github.io/ai-richtext-editor/og.png',
+        content: 'https://ludejun.github.io/sparkwrite/og.png',
       },
     ],
     [
       'meta',
       {
         property: 'twitter:image',
-        content: 'https://ludejun.github.io/ai-richtext-editor/og.png',
+        content: 'https://ludejun.github.io/sparkwrite/og.png',
       },
     ]
   );

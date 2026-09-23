@@ -23,11 +23,11 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'ai-richtext-editor';
-import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
-import { Italic, RichTextItalic } from 'ai-richtext-editor/italic';
-import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
-import 'ai-richtext-editor/style.css';
+import { RichTextProvider } from 'sparkwrite';
+import { Bold, RichTextBold } from 'sparkwrite/bold';
+import { Italic, RichTextItalic } from 'sparkwrite/italic';
+import { RichTextBubbleText } from 'sparkwrite/bubble/text';
+import 'sparkwrite/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic];
 
@@ -80,7 +80,7 @@ For images, register `Image` in the existing extension array and mount `RichText
 | `RichTextBubbleCallout`    | [Callout](/extensions/Callout/)                         | Edit a callout.                 |
 | `RichTextBubbleKatex`      | [Katex](/extensions/Katex/)                             | Edit a mathematical expression. |
 
-All menu components in this table are exported from `ai-richtext-editor/bubble`. Mount each menu once per editor and only include the menus your editor needs.
+All menu components in this table are exported from `sparkwrite/bubble`. Mount each menu once per editor and only include the menus your editor needs.
 
 `RichTextBubbleTable` is the odd one out: despite the name it mounts a context
 menu rather than a bubble, so the table actions appear where you right-click
@@ -95,7 +95,7 @@ Two blocks deliberately have no bubble menu:
 
 Use these public subpaths to make feature dependencies explicit. The existing `/bubble` entry remains supported. Import only the components you mount.
 
-| Component                      | Subpath after `ai-richtext-editor` |
+| Component                      | Subpath after `sparkwrite` |
 | ------------------------------ | ----------------------- |
 | `RichTextBubbleText`           | `/bubble/text`          |
 | `RichTextBubbleMenuDragHandle` | `/bubble/drag-handle`   |
@@ -120,7 +120,7 @@ Use these public subpaths to make feature dependencies explicit. The existing `/
 `RichTextBubbleMenuDragHandle` provides a handle for moving document blocks and a block action menu. It does not move the bubble menu itself.
 
 ```tsx
-import { RichTextBubbleMenuDragHandle } from 'ai-richtext-editor/bubble/drag-handle';
+import { RichTextBubbleMenuDragHandle } from 'sparkwrite/bubble/drag-handle';
 
 // Mount inside your existing RichTextProvider.
 <RichTextBubbleMenuDragHandle />;

@@ -1,7 +1,7 @@
 /* Divider: one block, many looks. The saved HTML is
    <div data-type="divider" class="divider divider--x"><hr>[<span>label</span><hr>]</div>
    and the node view renders the same shape, so this sheet styles both. */
-.ai-richtext-editor .divider,
+.sparkwrite .divider,
 .divider-preview {
   --divider-color: hsl(var(--border, 240 5.9% 90%));
   --divider-thickness: 1px;
@@ -100,7 +100,7 @@
   }
 }
 
-.ai-richtext-editor .ProseMirror .divider {
+.sparkwrite .ProseMirror .divider {
   &.divider--selected {
     outline: 2px solid hsl(var(--ring, 240 5% 65%) / 0.6);
     outline-offset: 6px;

@@ -1,10 +1,10 @@
 # Changelog
 
-All notable changes to AI Richtext Editor are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [semantic versioning](https://semver.org/).
+All notable changes to SparkWrite are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [semantic versioning](https://semver.org/).
 
 ## 0.1.0 — 2026-09-22
 
-First release under the AI Richtext Editor name. The code base descends from reactjs-tiptap-editor 1.0.46 and was reworked extensively before this release; the history before this point lives in the `archive/reactjs-tiptap-editor` branch.
+First release under the SparkWrite name. The code base descends from reactjs-tiptap-editor 1.0.46 and was reworked extensively before this release; the history before this point lives in the `archive/reactjs-tiptap-editor` branch.
 
 ### Editing
 
@@ -35,7 +35,7 @@ First release under the AI Richtext Editor name. The code base descends from rea
 
 ### Internationalization
 
-- 16 bundled languages ordered by speaker population: zh-CN, hi, es, fr, bn, pt-BR, ru, id, de, ja, tr, vi, ko, it, hu, fi, plus English. Load them on demand from `ai-richtext-editor/locales/<code>`.
+- 16 bundled languages ordered by speaker population: zh-CN, hi, es, fr, bn, pt-BR, ru, id, de, ja, tr, vi, ko, it, hu, fi, plus English. Load them on demand from `sparkwrite/locales/<code>`.
 
 ### Recording
 
@@ -44,4 +44,4 @@ First release under the AI Richtext Editor name. The code base descends from rea
 ### Build
 
 - Named imports from `@tiptap/*` packages so the CommonJS bundles load.
-- Package renamed to `ai-richtext-editor`; subpaths keep their shape (`ai-richtext-editor/table`, `ai-richtext-editor/bubble/text`, `ai-richtext-editor/locales/es`). The root CSS class is `.ai-richtext-editor`.
+- Package renamed to `sparkwrite`; subpaths keep their shape (`sparkwrite/table`, `sparkwrite/bubble/text`, `sparkwrite/locales/es`). The root CSS class is `.sparkwrite`.
