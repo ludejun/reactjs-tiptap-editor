@@ -1,5 +1,5 @@
 export const RESET_CSS = `
-.richkit {
+.ai-richtext-editor {
   button,
   input:where([type=button]),
   input:where([type=reset]),

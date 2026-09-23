@@ -4,19 +4,19 @@ import { createTranslate } from './i18n/utils';
 
 import type { DefaultTheme, HeadConfig, LocaleConfig } from 'vitepress';
 
-const docsLink = 'https://ludejun.github.io/richkit';
-const githubRepo = 'ludejun/richkit';
-const githubLink: 'https://github.com/ludejun/richkit' = `https://github.com/${githubRepo}`;
+const docsLink = 'https://ludejun.github.io/ai-richtext-editor';
+const githubRepo = 'ludejun/ai-richtext-editor';
+const githubLink: 'https://github.com/ludejun/ai-richtext-editor' = `https://github.com/${githubRepo}`;
 
 const VERSIONS: (DefaultTheme.NavItemWithLink | DefaultTheme.NavItemChildren)[] = [
   { text: `v${version} (current)`, link: '/' },
   {
     text: 'Release Notes',
-    link: 'https://github.com/ludejun/richkit/releases',
+    link: 'https://github.com/ludejun/ai-richtext-editor/releases',
   },
   {
     text: 'Contributing',
-    link: 'https://github.com/ludejun/richkit/blob/main/CONTRIBUTING.md',
+    link: 'https://github.com/ludejun/ai-richtext-editor/blob/main/CONTRIBUTING.md',
   },
 ];
 
@@ -24,9 +24,9 @@ export function getLocaleConfig(lang: string) {
   const t = createTranslate(lang);
 
   const urlPrefix = lang && lang !== 'en' ? `/${lang}` : '';
-  const title = t('RichKit');
+  const title = t('AI Richtext Editor');
   const description = t(
-    'A modern WYSIWYG rich text editor based on tiptap and shadcn ui for React'
+    'AI-first rich-text editor SDK on Tiptap: streaming AI writing as real document nodes, formulas and diagrams from a sentence, 16 languages, session replay. React UI, framework-agnostic core.'
   );
 
   const head: HeadConfig[] = [
@@ -60,7 +60,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: t('Playground'),
-      link: 'https://github.com/ludejun/richkit/tree/main/playground',
+      link: 'https://github.com/ludejun/ai-richtext-editor/tree/main/playground',
     },
     {
       text: t('Skills'),
@@ -69,7 +69,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: 'llmstxt',
-      link: 'https://ludejun.github.io/richkit/llms-full.txt',
+      link: 'https://ludejun.github.io/ai-richtext-editor/llms-full.txt',
     },
     {
       text: `v${version}`,
@@ -96,6 +96,10 @@ export function getLocaleConfig(lang: string) {
         {
           text: t('Features'),
           link: `${urlPrefix}/guide/features`,
+        },
+        {
+          text: t('Frameworks'),
+          link: `${urlPrefix}/guide/frameworks`,
         },
         {
           text: t('Customization'),
@@ -199,7 +203,7 @@ export function getLocaleConfig(lang: string) {
       { icon: 'github', link: githubLink },
       {
         icon: 'npm',
-        link: 'https://www.npmjs.com/package/richkit',
+        link: 'https://www.npmjs.com/package/ai-richtext-editor',
       },
     ],
     footer: {

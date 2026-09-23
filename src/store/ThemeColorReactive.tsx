@@ -23,8 +23,8 @@ export function ThemeColorReactive() {
 
     updateCSS(
       `
-      .richkit, .richkit *,
-      .richkit-theme, .richkit-theme *,
+      .ai-richtext-editor, .ai-richtext-editor *,
+      .ai-richtext-editor-theme, .ai-richtext-editor-theme *,
       div[data-richtext-portal], div[data-richtext-portal] * {
         ${Object.entries(themeObject)
           .map(([key, value]) => {

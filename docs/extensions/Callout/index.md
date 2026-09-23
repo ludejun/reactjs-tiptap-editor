@@ -17,10 +17,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Callout, RichTextCallout } from 'richkit/callout';
-import { RichTextBubbleCallout } from 'richkit/bubble/callout';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Callout, RichTextCallout } from 'ai-richtext-editor/callout';
+import { RichTextBubbleCallout } from 'ai-richtext-editor/bubble/callout';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Callout];
 

@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: 📖 Documentation
-    url: https://ludejun.github.io/richkit/
+    url: https://ludejun.github.io/ai-richtext-editor/
     about: Check the docs first — setup, extension options and examples.
   - name: 💬 Questions & Discussions
-    url: https://github.com/ludejun/richkit/discussions
+    url: https://github.com/ludejun/ai-richtext-editor/discussions
     about: Ask usage questions or share ideas here instead of opening an issue.

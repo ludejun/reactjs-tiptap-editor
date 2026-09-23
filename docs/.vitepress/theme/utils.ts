@@ -17,7 +17,7 @@ export function renderMarkdown(markdownText = '') {
 export function renderCommitMessage(msg: string) {
   return renderMarkdown(msg).replace(
     /#(\d+)/g,
-    "<a href='https://github.com/ludejun/richkit/issues/$1'>#$1</a>"
+    "<a href='https://github.com/ludejun/ai-richtext-editor/issues/$1'>#$1</a>"
   );
 }
 

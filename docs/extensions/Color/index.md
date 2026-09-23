@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Color, RichTextColor } from 'richkit/color';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Color, RichTextColor } from 'ai-richtext-editor/color';
 import { TextStyle } from '@tiptap/extension-text-style';
-import 'richkit/style.css';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, Color];
 
@@ -55,7 +55,7 @@ Register `TextStyle` because color is stored as a text-style attribute. Select t
 Use this configuration in place of `Color` in your extension array:
 
 ```ts
-import { Color } from 'richkit/color';
+import { Color } from 'ai-richtext-editor/color';
 
 Color.configure({
   colors: ['#dc2626', '#16a34a', '#2563eb', '#262626'],

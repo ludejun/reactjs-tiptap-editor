@@ -20,58 +20,58 @@ Snapshot: repository 1.0.46 / Tiptap 3. Public paths come from `package.json` ex
 
 | Feature           | Extension import                         | Toolbar/component import                                                                  |
 | ----------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Attachment        | `richkit/attachment`       | `Attachment`, `RichTextAttachment`                                                        |
-| Blockquote        | `richkit/blockquote`       | `Blockquote`, `RichTextBlockquote`                                                        |
-| Bold              | `richkit/bold`             | `Bold`, `RichTextBold`                                                                    |
-| Bullet list       | `richkit/bulletlist`       | `BulletList`, `RichTextBulletList`                                                        |
-| Callout           | `richkit/callout`          | `Callout`, `RichTextCallout`                                                              |
-| Clear formatting  | `richkit/clear`            | `Clear`, `RichTextClear`                                                                  |
-| Code              | `richkit/code`             | `Code`, `RichTextCode`                                                                    |
-| Code block        | `richkit/codeblock`        | `CodeBlock`, `RichTextCodeBlock`                                                          |
-| Code view         | `richkit/codeview`         | `CodeView`, `RichTextCodeView`                                                            |
-| Color             | `richkit/color`            | `Color`, `RichTextColor`                                                                  |
-| Column            | `richkit/column`           | `Column`, `ColumnNode`, `MultipleColumnNode`, `RichTextColumn`                            |
-| Drawer            | `richkit/drawer`           | `Drawer`, `RichTextDrawer`                                                                |
-| Emoji             | `richkit/emoji`            | `Emoji`, `RichTextEmoji`                                                                  |
-| Excalidraw        | `richkit/excalidraw`       | `Excalidraw`, `RichTextExcalidraw`                                                        |
-| Export PDF        | `richkit/exportpdf`        | `ExportPdf`, `RichTextExportPdf`                                                          |
-| Export Word       | `richkit/exportword`       | `ExportWord`, `RichTextExportWord`                                                        |
-| Font family       | `richkit/fontfamily`       | `FontFamily`, `RichTextFontFamily`                                                        |
-| Font size         | `richkit/fontsize`         | `FontSize`, `RichTextFontSize`                                                            |
-| Format painter    | `richkit/formatpainter`    | `FormatPainter`, `RichTextFormatPainter`                                                  |
-| Heading           | `richkit/heading`          | `Heading`, `RichTextHeading`                                                              |
-| Highlight         | `richkit/highlight`        | `Highlight`, `RichTextHighlight`                                                          |
-| History           | `richkit/history`          | `History`, `RichTextUndo`, `RichTextRedo`                                                 |
-| Horizontal rule   | `richkit/horizontalrule`   | `HorizontalRule`, `RichTextHorizontalRule`                                                |
-| Iframe            | `richkit/iframe`           | `Iframe`, `RichTextIframe`                                                                |
-| Image             | `richkit/image`            | `Image`, `RichTextImage`                                                                  |
-| Image GIF         | `richkit/imagegif`         | `ImageGif`, `RichTextImageGif`                                                            |
-| Import Word       | `richkit/importword`       | `ImportWord`, `RichTextImportWord`                                                        |
-| Indent            | `richkit/indent`           | `Indent`, `RichTextIndent`                                                                |
-| Italic            | `richkit/italic`           | `Italic`, `RichTextItalic`                                                                |
-| KaTeX             | `richkit/katex`            | `Katex`, `RichTextKatex`                                                                  |
-| Line height       | `richkit/lineheight`       | `LineHeight`, `RichTextLineHeight`                                                        |
-| Link              | `richkit/link`             | `Link`, `RichTextLink`                                                                    |
-| Markdown paste    | `richkit/markdownpaste`    | `MarkdownPaste`                                                                           |
-| Mention           | `richkit/mention`          | `Mention`                                                                                 |
-| Mermaid           | `richkit/mermaid`          | `Mermaid`, `RichTextMermaid`                                                              |
-| More mark         | `richkit/moremark`         | `MoreMark`, `RichTextMoreMark`                                                            |
-| Ordered list      | `richkit/orderedlist`      | `OrderedList`, `RichTextOrderedList`                                                      |
-| Search/replace    | `richkit/searchandreplace` | `SearchAndReplace`, `RichTextSearchAndReplace`                                            |
-| Short message     | `richkit/shortmessage`     | `ShortMessage`                                                                            |
-| Slash command     | `richkit/slashcommand`     | `SlashCommand`, `SlashCommandList`                                                        |
-| Strike            | `richkit/strike`           | `Strike`, `RichTextStrike`                                                                |
-| Table             | `richkit/table`            | `Table`, `RichTextTable`                                                                  |
-| Task list         | `richkit/tasklist`         | `TaskList`, `RichTextTaskList`                                                            |
-| Text align        | `richkit/textalign`        | `TextAlign`, `RichTextAlign`                                                              |
-| Text direction    | `richkit/textdirection`    | `TextDirection`, `RichTextTextDirection`                                                  |
-| Underline         | `richkit/textunderline`    | `TextUnderline`, `RichTextUnderline`                                                      |
-| Twitter           | `richkit/twitter`          | `Twitter`, `RichTextTwitter`                                                              |
-| Video             | `richkit/video`            | `Video`, `RichTextVideo`                                                                  |
-| AI                | `richkit/ai`               | `AI` (bubble UI: `RichTextAIImprove` from `/bubble/ai`)                                   |
-| Details           | `richkit/details`          | `Details`, `DetailsSummary`, `DetailsContent`, `RichTextDetails`                          |
-| Table of contents | `richkit/tableofcontents`  | `TableOfContents`, `TableOfContentsNode`, `RichTextTableOfContents`, `useTableOfContents` |
-| Export Markdown   | `richkit/exportmarkdown`   | `ExportMarkdown`, `RichTextExportMarkdown`, `getMarkdown`                                 |
+| Attachment        | `ai-richtext-editor/attachment`       | `Attachment`, `RichTextAttachment`                                                        |
+| Blockquote        | `ai-richtext-editor/blockquote`       | `Blockquote`, `RichTextBlockquote`                                                        |
+| Bold              | `ai-richtext-editor/bold`             | `Bold`, `RichTextBold`                                                                    |
+| Bullet list       | `ai-richtext-editor/bulletlist`       | `BulletList`, `RichTextBulletList`                                                        |
+| Callout           | `ai-richtext-editor/callout`          | `Callout`, `RichTextCallout`                                                              |
+| Clear formatting  | `ai-richtext-editor/clear`            | `Clear`, `RichTextClear`                                                                  |
+| Code              | `ai-richtext-editor/code`             | `Code`, `RichTextCode`                                                                    |
+| Code block        | `ai-richtext-editor/codeblock`        | `CodeBlock`, `RichTextCodeBlock`                                                          |
+| Code view         | `ai-richtext-editor/codeview`         | `CodeView`, `RichTextCodeView`                                                            |
+| Color             | `ai-richtext-editor/color`            | `Color`, `RichTextColor`                                                                  |
+| Column            | `ai-richtext-editor/column`           | `Column`, `ColumnNode`, `MultipleColumnNode`, `RichTextColumn`                            |
+| Drawer            | `ai-richtext-editor/drawer`           | `Drawer`, `RichTextDrawer`                                                                |
+| Emoji             | `ai-richtext-editor/emoji`            | `Emoji`, `RichTextEmoji`                                                                  |
+| Excalidraw        | `ai-richtext-editor/excalidraw`       | `Excalidraw`, `RichTextExcalidraw`                                                        |
+| Export PDF        | `ai-richtext-editor/exportpdf`        | `ExportPdf`, `RichTextExportPdf`                                                          |
+| Export Word       | `ai-richtext-editor/exportword`       | `ExportWord`, `RichTextExportWord`                                                        |
+| Font family       | `ai-richtext-editor/fontfamily`       | `FontFamily`, `RichTextFontFamily`                                                        |
+| Font size         | `ai-richtext-editor/fontsize`         | `FontSize`, `RichTextFontSize`                                                            |
+| Format painter    | `ai-richtext-editor/formatpainter`    | `FormatPainter`, `RichTextFormatPainter`                                                  |
+| Heading           | `ai-richtext-editor/heading`          | `Heading`, `RichTextHeading`                                                              |
+| Highlight         | `ai-richtext-editor/highlight`        | `Highlight`, `RichTextHighlight`                                                          |
+| History           | `ai-richtext-editor/history`          | `History`, `RichTextUndo`, `RichTextRedo`                                                 |
+| Horizontal rule   | `ai-richtext-editor/horizontalrule`   | `HorizontalRule`, `RichTextHorizontalRule`                                                |
+| Iframe            | `ai-richtext-editor/iframe`           | `Iframe`, `RichTextIframe`                                                                |
+| Image             | `ai-richtext-editor/image`            | `Image`, `RichTextImage`                                                                  |
+| Image GIF         | `ai-richtext-editor/imagegif`         | `ImageGif`, `RichTextImageGif`                                                            |
+| Import Word       | `ai-richtext-editor/importword`       | `ImportWord`, `RichTextImportWord`                                                        |
+| Indent            | `ai-richtext-editor/indent`           | `Indent`, `RichTextIndent`                                                                |
+| Italic            | `ai-richtext-editor/italic`           | `Italic`, `RichTextItalic`                                                                |
+| KaTeX             | `ai-richtext-editor/katex`            | `Katex`, `RichTextKatex`                                                                  |
+| Line height       | `ai-richtext-editor/lineheight`       | `LineHeight`, `RichTextLineHeight`                                                        |
+| Link              | `ai-richtext-editor/link`             | `Link`, `RichTextLink`                                                                    |
+| Markdown paste    | `ai-richtext-editor/markdownpaste`    | `MarkdownPaste`                                                                           |
+| Mention           | `ai-richtext-editor/mention`          | `Mention`                                                                                 |
+| Mermaid           | `ai-richtext-editor/mermaid`          | `Mermaid`, `RichTextMermaid`                                                              |
+| More mark         | `ai-richtext-editor/moremark`         | `MoreMark`, `RichTextMoreMark`                                                            |
+| Ordered list      | `ai-richtext-editor/orderedlist`      | `OrderedList`, `RichTextOrderedList`                                                      |
+| Search/replace    | `ai-richtext-editor/searchandreplace` | `SearchAndReplace`, `RichTextSearchAndReplace`                                            |
+| Short message     | `ai-richtext-editor/shortmessage`     | `ShortMessage`                                                                            |
+| Slash command     | `ai-richtext-editor/slashcommand`     | `SlashCommand`, `SlashCommandList`                                                        |
+| Strike            | `ai-richtext-editor/strike`           | `Strike`, `RichTextStrike`                                                                |
+| Table             | `ai-richtext-editor/table`            | `Table`, `RichTextTable`                                                                  |
+| Task list         | `ai-richtext-editor/tasklist`         | `TaskList`, `RichTextTaskList`                                                            |
+| Text align        | `ai-richtext-editor/textalign`        | `TextAlign`, `RichTextAlign`                                                              |
+| Text direction    | `ai-richtext-editor/textdirection`    | `TextDirection`, `RichTextTextDirection`                                                  |
+| Underline         | `ai-richtext-editor/textunderline`    | `TextUnderline`, `RichTextUnderline`                                                      |
+| Twitter           | `ai-richtext-editor/twitter`          | `Twitter`, `RichTextTwitter`                                                              |
+| Video             | `ai-richtext-editor/video`            | `Video`, `RichTextVideo`                                                                  |
+| AI                | `ai-richtext-editor/ai`               | `AI` (bubble UI: `RichTextAIImprove` from `/bubble/ai`)                                   |
+| Details           | `ai-richtext-editor/details`          | `Details`, `DetailsSummary`, `DetailsContent`, `RichTextDetails`                          |
+| Table of contents | `ai-richtext-editor/tableofcontents`  | `TableOfContents`, `TableOfContentsNode`, `RichTextTableOfContents`, `useTableOfContents` |
+| Export Markdown   | `ai-richtext-editor/exportmarkdown`   | `ExportMarkdown`, `RichTextExportMarkdown`, `getMarkdown`                                 |
 
 For AI endpoint/protocol options, inspect `src/extensions/AI/types.ts` or installed declarations before configuring a backend. For Details/TableOfContents options, inspect their implementation and bundled child extensions rather than registering every exported node.
 
@@ -88,15 +88,15 @@ For AI endpoint/protocol options, inspect `src/extensions/AI/types.ts` or instal
 
 | Purpose           | Import                                                                     |
 | ----------------- | -------------------------------------------------------------------------- |
-| Provider          | `import { RichTextProvider } from 'richkit';`                |
-| Styles            | `import 'richkit/style.css';`                                |
-| Bubble components | `import { RichTextBubbleText } from 'richkit/bubble/text';`  |
-| Locale            | `import { localeActions, useLocale } from 'richkit/locale';` |
-| Theme             | `import { themeActions, useTheme } from 'richkit/theme';`    |
+| Provider          | `import { RichTextProvider } from 'ai-richtext-editor';`                |
+| Styles            | `import 'ai-richtext-editor/style.css';`                                |
+| Bubble components | `import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';`  |
+| Locale            | `import { localeActions, useLocale } from 'ai-richtext-editor/locale';` |
+| Theme             | `import { themeActions, useTheme } from 'ai-richtext-editor/theme';`    |
 
 ## Bubble Components
 
-The compatibility barrel `richkit/bubble` exports the following. Prefer the specific entry point when available to avoid pulling unrelated feature modules into the import graph:
+The compatibility barrel `ai-richtext-editor/bubble` exports the following. Prefer the specific entry point when available to avoid pulling unrelated feature modules into the import graph:
 
 - `RichTextBubbleText`
 - `RichTextBubbleLink`
@@ -114,7 +114,7 @@ The compatibility barrel `richkit/bubble` exports the following. Prefer the spec
 - `RichTextBubbleMenuDragHandle`
 - `RichTextAIImprove`
 
-| Subpath (after `richkit/`) | Named exports                                                          |
+| Subpath (after `ai-richtext-editor/`) | Named exports                                                          |
 | ---------------------------------------- | ---------------------------------------------------------------------- |
 | `bubble/text`                            | `RichTextBubbleText`                                                   |
 | `bubble/link`                            | `RichTextBubbleLink`                                                   |
@@ -134,4 +134,4 @@ The compatibility barrel `richkit/bubble` exports the following. Prefer the spec
 
 - Image crop UI: install `react-image-crop` and import `react-image-crop/dist/ReactCrop.css`.
 - ImageGif with Giphy: configure `ImageGif.configure({ provider: 'giphy', API_KEY })`.
-- Always import `richkit/style.css`.
+- Always import `ai-richtext-editor/style.css`.

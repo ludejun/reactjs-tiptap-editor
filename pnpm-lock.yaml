@@ -388,15 +388,15 @@ importers:
 
   playground:
     dependencies:
+      ai-richtext-editor:
+        specifier: workspace:*
+        version: link:..
       react:
         specifier: ^19.1.0
         version: 19.2.4
       react-dom:
         specifier: ^19.1.0
         version: 19.2.4(react@19.2.4)
-      richkit:
-        specifier: workspace:*
-        version: link:..
     devDependencies:
       '@types/node':
         specifier: ^22.14.0

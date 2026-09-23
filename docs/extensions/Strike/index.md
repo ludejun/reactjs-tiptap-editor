@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Strike, RichTextStrike } from 'richkit/strike';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Strike, RichTextStrike } from 'ai-richtext-editor/strike';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Strike];
 

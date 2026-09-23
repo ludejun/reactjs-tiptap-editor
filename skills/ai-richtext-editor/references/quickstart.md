@@ -9,7 +9,7 @@ Use the existing package manager and preserve compatible installed versions. Dec
 For a new app using this version:
 
 ```bash
-pnpm add richkit@1.0.46 @tiptap/react@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+pnpm add ai-richtext-editor@1.0.46 @tiptap/react@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 The app also needs compatible `react` and `react-dom` (this version supports 18 or 19). Add other directly imported packages only for selected features.
@@ -27,9 +27,9 @@ import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { EditorContent, useEditor } from '@tiptap/react';
-import { RichTextProvider } from 'richkit';
-import { Bold, RichTextBold } from 'richkit/bold';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
+import 'ai-richtext-editor/style.css';
 
 const baseExtensions = [Document, Paragraph, Text];
 const extensions = [...baseExtensions, Bold];

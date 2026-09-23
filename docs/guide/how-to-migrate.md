@@ -40,12 +40,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Bold, RichTextBold } from 'richkit/bold';
-import { Italic, RichTextItalic } from 'richkit/italic';
-import { History, RichTextUndo, RichTextRedo } from 'richkit/history';
-import { RichTextBubbleText } from 'richkit/bubble/text';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
+import { Italic, RichTextItalic } from 'ai-richtext-editor/italic';
+import { History, RichTextUndo, RichTextRedo } from 'ai-richtext-editor/history';
+import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic, History];
 
@@ -152,9 +152,9 @@ See [Toolbar](/guide/toolbar) and [Bubble Menu](/guide/bubble-menu) for componen
 Use actions during client initialization or in preference-change handlers:
 
 ```ts
-import { themeActions } from 'richkit/theme';
-import { localeActions } from 'richkit/locale';
-import vi from 'richkit/locales/vi';
+import { themeActions } from 'ai-richtext-editor/theme';
+import { localeActions } from 'ai-richtext-editor/locale';
+import vi from 'ai-richtext-editor/locales/vi';
 
 themeActions.setTheme('dark');
 localeActions.setMessage('vi', vi);

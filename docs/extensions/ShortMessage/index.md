@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { ShortMessage } from 'richkit/shortmessage';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { ShortMessage } from 'ai-richtext-editor/shortmessage';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [
   Document,

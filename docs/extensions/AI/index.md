@@ -12,9 +12,9 @@ A custom writing assistant with an inline prompt, tone selection, plain-text pre
 follow-up instructions, retry, cancellation, discard, and apply. Works in light and dark themes.
 
 ```tsx
-import { AI } from 'richkit/ai';
-import { SlashCommand, SlashCommandList } from 'richkit/slashcommand';
-import 'richkit/style.css';
+import { AI } from 'ai-richtext-editor/ai';
+import { SlashCommand, SlashCommandList } from 'ai-richtext-editor/slashcommand';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [
   // Your existing document, paragraph, text, history, etc.
@@ -144,7 +144,7 @@ All panel and menu strings go through the editor's locale system; add
 `editor.ai.*` keys to a custom locale to override them.
 
 For a custom `buttonBubble`, import `RichTextAIImprove` from
-`richkit/bubble/ai` and place it inside your toolbar.
+`ai-richtext-editor/bubble/ai` and place it inside your toolbar.
 You can also run a preset programmatically with
 `editor.commands.openAI('Make the selected text more concise.')`.
 Calling `openAI()` without a prompt retains the manual input flow.
@@ -180,7 +180,7 @@ Apply merges a single-paragraph answer into the paragraph being edited and repla
 Two levels:
 
 - `renderResult({ markdown, html, streaming })` replaces only how the answer is shown — for example to render the markdown with your own component, add a word count, or show a diff against the selection. `html` is the schema-rendered form described above.
-- `components.Panel` replaces the whole dialog. It receives `editor`, `options`, `selectedText`, `initialPrompt`, `apply(markdown)` and `close()`; call `generateAIText(options, request, onChunk)` from `richkit/ai` for the transport, or your own.
+- `components.Panel` replaces the whole dialog. It receives `editor`, `options`, `selectedText`, `initialPrompt`, `apply(markdown)` and `close()`; call `generateAIText(options, request, onChunk)` from `ai-richtext-editor/ai` for the transport, or your own.
 
 ```tsx
 AI.configure({

@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Mention } from 'richkit/mention';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Mention } from 'ai-richtext-editor/mention';
+import 'ai-richtext-editor/style.css';
 
 const users = [
   { id: '1', label: 'Alex' },
@@ -69,7 +69,7 @@ Type `@` followed by a name to filter suggestions. Return objects with stable `i
 Use `suggestions` to provide separate sources for people and tags. Replace the single `suggestion` configuration with this setup:
 
 ```ts
-import { Mention } from 'richkit/mention';
+import { Mention } from 'ai-richtext-editor/mention';
 
 const people = [{ id: 'user-1', label: 'Alex' }];
 const tags = [{ id: 'tag-1', label: 'Documentation' }];

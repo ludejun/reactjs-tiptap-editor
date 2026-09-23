@@ -1,5 +1,5 @@
 name: 🐛 Bug report
-description: Something is broken in richkit
+description: Something is broken in ai-richtext-editor
 title: "[Bug]: "
 labels: ["bug"]
 body:
@@ -128,8 +128,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: richkit version
-      description: Run `npm ls richkit`.
+      label: ai-richtext-editor version
+      description: Run `npm ls ai-richtext-editor`.
       placeholder: 1.0.41
     validations:
       required: true
@@ -150,7 +150,7 @@ body:
       options:
         - label: I have searched existing issues and this is not a duplicate.
           required: true
-        - label: I have reproduced this on the latest version of richkit.
+        - label: I have reproduced this on the latest version of ai-richtext-editor.
           required: true
         - label: I have read the documentation and this is not a usage question.
           required: true

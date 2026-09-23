@@ -112,8 +112,8 @@ if (lib.includes('locale.js')) {
           },
           load(id) {
             if (id !== '\0virtual:locale-audit') return;
-            return `import { localeActions, useLocale } from 'richkit/${full ? 'locale-bundle' : 'locale'}';
-            ${full ? '' : "import vi from 'richkit/locales/vi'; localeActions.setMessage('vi', vi);"}
+            return `import { localeActions, useLocale } from 'ai-richtext-editor/${full ? 'locale-bundle' : 'locale'}';
+            ${full ? '' : "import vi from 'ai-richtext-editor/locales/vi'; localeActions.setMessage('vi', vi);"}
             localeActions.setLang('vi'); window.localeAudit = { localeActions, useLocale };`;
           },
         },

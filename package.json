@@ -1,28 +1,32 @@
 {
-  "name": "richkit",
+  "name": "ai-richtext-editor",
   "version": "0.1.0",
-  "description": "A composable React rich-text editor SDK on Tiptap: toolbar, bubble menus, AI, tables, code, images, 16 languages, replay, and a Tailwind-prefixed UI.",
+  "description": "AI-first rich-text editor SDK on Tiptap: streaming AI writing that lands as real document nodes, AI-generated formulas and diagrams, plus toolbar, bubble menus, tables, code, images, 16 languages and session replay. React UI today, framework-agnostic core.",
   "keywords": [
     "ai",
-    "editor",
-    "markdown",
-    "prosemirror",
-    "react",
+    "ai-editor",
+    "llm",
+    "openai",
+    "anthropic",
+    "streaming",
     "rich-text",
-    "shadcn",
-    "tailwind",
+    "wysiwyg",
+    "editor",
+    "react",
     "tiptap",
-    "wysiwyg"
+    "prosemirror",
+    "markdown",
+    "tailwind"
   ],
-  "homepage": "https://github.com/ludejun/richkit#readme",
+  "homepage": "https://github.com/ludejun/ai-richtext-editor#readme",
   "bugs": {
-    "url": "https://github.com/ludejun/richkit/issues"
+    "url": "https://github.com/ludejun/ai-richtext-editor/issues"
   },
   "license": "MIT",
   "author": "ludejun",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ludejun/richkit.git"
+    "url": "git+https://github.com/ludejun/ai-richtext-editor.git"
   },
   "files": [
     "lib",
@@ -263,6 +267,9 @@
       ],
       "bubble/ai": [
         "./lib/components/Bubble/RichTextAIImprove.d.ts"
+      ],
+      "./core": [
+        "./lib/core.d.ts"
       ]
     }
   },
@@ -1007,6 +1014,16 @@
       "require": {
         "types": "./lib/components/Bubble/RichTextAIImprove.d.ts",
         "default": "./lib/RichTextAIImprove.cjs"
+      }
+    },
+    "./core": {
+      "require": {
+        "types": "./lib/core.d.ts",
+        "default": "./lib/core.cjs"
+      },
+      "import": {
+        "types": "./lib/core.d.ts",
+        "default": "./lib/core.js"
       }
     }
   },

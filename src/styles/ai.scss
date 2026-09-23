@@ -365,7 +365,7 @@
 
 /* The answer, rendered through the editor schema: the same classes as the
    document, minus the editor's own chrome (padding, min-height, caret). */
-.richkit .richtext-ai-rendered.ProseMirror {
+.ai-richtext-editor .richtext-ai-rendered.ProseMirror {
   padding: 0 !important;
   min-height: 0 !important;
   outline: none;

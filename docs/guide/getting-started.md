@@ -1,5 +1,5 @@
 ---
-description: How to install richkit
+description: How to install ai-richtext-editor
 
 next:
   text: Toolbar
@@ -8,7 +8,7 @@ next:
 
 # Getting Started
 
-`richkit` combines Tiptap extensions with ready-made React controls. You create the editor instance, choose its features, and compose the interface.
+`ai-richtext-editor` combines Tiptap extensions with ready-made React controls. You create the editor instance, choose its features, and compose the interface.
 
 This guide describes the **1.x composable API** used in this repository. If your app uses `RichTextEditor` or `BaseKit`, start with the [migration guide](/guide/how-to-migrate).
 
@@ -23,24 +23,24 @@ Install the editor and the packages imported by the minimal example:
 ::: code-group
 
 ```sh [pnpm]
-pnpm add richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+pnpm add ai-richtext-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [npm]
-npm install richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+npm install ai-richtext-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [bun]
-bun add richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+bun add ai-richtext-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 ```sh [yarn]
-yarn add richkit @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+yarn add ai-richtext-editor @tiptap/react@^3.29.2 @tiptap/pm@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
 ```
 
 :::
 
-When another example imports an additional `@tiptap/*` package, add that package to your application too. Extension subpaths such as `richkit/bold` are included in the editor package; they are not separate packages to install.
+When another example imports an additional `@tiptap/*` package, add that package to your application too. Extension subpaths such as `ai-richtext-editor/bold` are included in the editor package; they are not separate packages to install.
 
 ## 2. Render a working editor
 
@@ -53,11 +53,11 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Bold, RichTextBold } from 'richkit/bold';
-import { Italic, RichTextItalic } from 'richkit/italic';
-import { History, RichTextUndo, RichTextRedo } from 'richkit/history';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
+import { Italic, RichTextItalic } from 'ai-richtext-editor/italic';
+import { History, RichTextUndo, RichTextRedo } from 'ai-richtext-editor/history';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Italic, History];
 
@@ -189,7 +189,7 @@ Keep the editor in a client component (`'use client'`) and use `immediatelyRende
 | Toolbar button is missing                     | Register its matching extension and render the button under `RichTextProvider`.   |
 | Unknown node or missing command               | Check required companion extensions on the feature's page.                        |
 | Duplicate extension warning                   | Remove overlapping registrations, including those inside `StarterKit`.            |
-| UI has no styling                             | Import `richkit/style.css` and any feature-specific stylesheet.                   |
+| UI has no styling                             | Import `ai-richtext-editor/style.css` and any feature-specific stylesheet.                   |
 | Content does not change after fetching        | Use `setContent` after loading; `content` initializes the document.               |
 | A slash placeholder appears but no menu opens | Register `SlashCommand` and mount `SlashCommandList`; a placeholder is only text. |
 | Upload does not persist                       | Supply an upload callback that resolves to a durable URL.                         |

@@ -1,9 +1,9 @@
-import { RichTextBubbleImage } from 'richkit/bubble/media';
-import { RichTextBubbleText } from 'richkit/bubble/text';
-import { Katex } from 'richkit/katex';
-import { localeActions, useLocale } from 'richkit/locale';
-import vi from 'richkit/locales/vi';
-import { ShortMessage } from 'richkit/shortmessage';
+import { RichTextBubbleImage } from 'ai-richtext-editor/bubble/media';
+import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
+import { Katex } from 'ai-richtext-editor/katex';
+import { localeActions, useLocale } from 'ai-richtext-editor/locale';
+import vi from 'ai-richtext-editor/locales/vi';
+import { ShortMessage } from 'ai-richtext-editor/shortmessage';
 
 export const deferredKatex = Katex.configure({
   loadKatex: async () => (await import('katex')).default,

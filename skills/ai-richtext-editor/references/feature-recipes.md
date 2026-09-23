@@ -8,7 +8,7 @@ Load the relevant section for features beyond the base editor. Snippets extend t
 2. Render the matching `RichText*` component inside `RichTextProvider`.
 
 ```tsx
-import { History, RichTextRedo, RichTextUndo } from 'richkit/history';
+import { History, RichTextRedo, RichTextUndo } from 'ai-richtext-editor/history';
 
 const extensions = [...baseExtensions, History];
 
@@ -27,10 +27,10 @@ function Toolbar() {
 Bubble components must render inside `RichTextProvider`; most require their matching extension.
 
 ```tsx
-import { RichTextBubbleImage } from 'richkit/bubble/media';
-import { RichTextBubbleLink } from 'richkit/bubble/link';
-import { RichTextBubbleMenuDragHandle } from 'richkit/bubble/drag-handle';
-import { RichTextBubbleText } from 'richkit/bubble/text';
+import { RichTextBubbleImage } from 'ai-richtext-editor/bubble/media';
+import { RichTextBubbleLink } from 'ai-richtext-editor/bubble/link';
+import { RichTextBubbleMenuDragHandle } from 'ai-richtext-editor/bubble/drag-handle';
+import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
 
 function BubbleMenus() {
   return (
@@ -47,7 +47,7 @@ function BubbleMenus() {
 ## Slash Command
 
 ```tsx
-import { SlashCommand, SlashCommandList } from 'richkit/slashcommand';
+import { SlashCommand, SlashCommandList } from 'ai-richtext-editor/slashcommand';
 
 const extensions = [...baseExtensions, SlashCommand];
 
@@ -110,7 +110,7 @@ export function createHttpImageUpload(endpoint: string): UploadImage {
 Consume the callback in `image-feature.ts`:
 
 ```ts
-import { Image } from 'richkit/image';
+import { Image } from 'ai-richtext-editor/image';
 import type { UploadImage } from './upload-image';
 
 export function createImageExtension(upload: UploadImage) {
@@ -125,7 +125,7 @@ export function createImageExtension(upload: UploadImage) {
 Wire the adapter in app composition, alongside the quickstart's `baseExtensions`:
 
 ```tsx
-import { RichTextImage } from 'richkit/image';
+import { RichTextImage } from 'ai-richtext-editor/image';
 import { createHttpImageUpload } from './http-image-upload';
 import { createImageExtension } from './image-feature';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -148,10 +148,10 @@ Module-level composition fits static configuration. If credentials or callbacks 
 These features also accept upload callbacks in repo examples. Return a `Promise<string>` URL.
 
 ```tsx
-import { Video } from 'richkit/video';
-import { Attachment } from 'richkit/attachment';
-import { Mermaid } from 'richkit/mermaid';
-import { Drawer } from 'richkit/drawer';
+import { Video } from 'ai-richtext-editor/video';
+import { Attachment } from 'ai-richtext-editor/attachment';
+import { Mermaid } from 'ai-richtext-editor/mermaid';
+import { Drawer } from 'ai-richtext-editor/drawer';
 
 Video.configure({ upload: async (file: File) => uploadFile(file) });
 Attachment.configure({ upload: async (file: File) => uploadFile(file) });
@@ -164,7 +164,7 @@ Drawer.configure({ upload: async (file: File) => uploadFile(file) });
 ## Mention
 
 ```tsx
-import { Mention } from 'richkit/mention';
+import { Mention } from 'ai-richtext-editor/mention';
 
 // Replace these demo records with the app's data source.
 const users = [{ id: 'user-1', label: 'Alex' }];
@@ -192,7 +192,7 @@ const extensions = [
 ## Code Block
 
 ```tsx
-import { CodeBlock, RichTextCodeBlock } from 'richkit/codeblock';
+import { CodeBlock, RichTextCodeBlock } from 'ai-richtext-editor/codeblock';
 
 const extensions = [...baseExtensions, CodeBlock];
 ```
@@ -202,7 +202,7 @@ Render `<RichTextCodeBlock />` in the toolbar. The block's own controls (languag
 ## Export PDF
 
 ```tsx
-import { ExportPdf, RichTextExportPdf } from 'richkit/exportpdf';
+import { ExportPdf, RichTextExportPdf } from 'ai-richtext-editor/exportpdf';
 
 const extensions = [
   ...baseExtensions,
@@ -221,7 +221,7 @@ const extensions = [
 ## Export Word
 
 ```tsx
-import { ExportWord, RichTextExportWord } from 'richkit/exportword';
+import { ExportWord, RichTextExportWord } from 'ai-richtext-editor/exportword';
 
 const extensions = [...baseExtensions, ExportWord];
 ```
@@ -229,8 +229,8 @@ const extensions = [...baseExtensions, ExportWord];
 ## Internationalization
 
 ```tsx
-import { en, localeActions, useLocale } from 'richkit/locale';
-import vi from 'richkit/locales/vi';
+import { en, localeActions, useLocale } from 'ai-richtext-editor/locale';
+import vi from 'ai-richtext-editor/locales/vi';
 
 localeActions.setMessage('vi', vi);
 localeActions.setLang('vi');
@@ -253,7 +253,7 @@ Language keys differ from some file names: `zh_CN` uses `/locales/zh-cn`, `pt_BR
 ## Theme
 
 ```tsx
-import { themeActions, useTheme } from 'richkit/theme';
+import { themeActions, useTheme } from 'ai-richtext-editor/theme';
 
 themeActions.setTheme('light'); // or 'dark'
 themeActions.setColor('default'); // "red" | "blue" | "green" | "orange" | "rose" | "violet" | "yellow"

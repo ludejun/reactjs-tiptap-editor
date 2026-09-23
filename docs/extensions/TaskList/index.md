@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { TaskList, RichTextTaskList } from 'richkit/tasklist';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { TaskList, RichTextTaskList } from 'ai-richtext-editor/tasklist';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TaskList];
 

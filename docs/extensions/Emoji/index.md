@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Emoji, RichTextEmoji } from 'richkit/emoji';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Emoji, RichTextEmoji } from 'ai-richtext-editor/emoji';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Emoji];
 
@@ -49,7 +49,7 @@ export default function EmojiExample() {
 
 Open the toolbar picker and choose an emoji. The extension supplies its emoji data and suggestion UI; no upload endpoint or separate toolbar provider is needed.
 
-- Copy Emoji List here: https://github.com/ludejun/richkit-demo/blob/master/src/components/Editor/emojis.ts
+- Copy Emoji List here: https://github.com/ludejun/ai-richtext-editor-demo/blob/master/src/components/Editor/emojis.ts
 
 ## Loading behavior
 

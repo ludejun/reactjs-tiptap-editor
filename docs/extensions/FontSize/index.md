@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { FontSize, RichTextFontSize } from 'richkit/fontsize';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { FontSize, RichTextFontSize } from 'ai-richtext-editor/fontsize';
 import { TextStyle } from '@tiptap/extension-text-style';
-import 'richkit/style.css';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, TextStyle, FontSize];
 
@@ -61,7 +61,7 @@ the one control that will not line up, so the compact form matches the shape of
 ## Configuration
 
 ```ts
-import { FontSize } from 'richkit/fontsize';
+import { FontSize } from 'ai-richtext-editor/fontsize';
 
 FontSize.configure({
   fontSizes: ['Default', '14px', '18px', { name: 'Large', value: '24px' }],

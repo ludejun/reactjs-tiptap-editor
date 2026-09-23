@@ -278,11 +278,11 @@
   }
 }
 
-.richkit .ProseMirror .search-result {
+.ai-richtext-editor .ProseMirror .search-result {
   background-color: #ffd90080;
 }
 
-.richkit .ProseMirror .search-result-current {
+.ai-richtext-editor .ProseMirror .search-result-current {
   background-color: #0dff0080;
 }
 
@@ -292,9 +292,9 @@
    and bottom edge and the table draws the outer frame — otherwise every inner
    line would be 2px.
    The selector carries one extra class on purpose: `resetCSS` sets
-   `border-collapse: collapse` on `.richkit table`, the same
+   `border-collapse: collapse` on `.ai-richtext-editor table`, the same
    specificity as `.ProseMirror table`, and is injected after this stylesheet. */
-.richkit .ProseMirror table {
+.ai-richtext-editor .ProseMirror table {
   border-collapse: separate;
   border-spacing: 0;
 }

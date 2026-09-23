@@ -24,11 +24,11 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
-} from 'richkit';
-import { AI } from 'richkit/ai';
-import { Attachment, RichTextAttachment } from 'richkit/attachment';
-import { Blockquote, RichTextBlockquote } from 'richkit/blockquote';
-import { Bold, RichTextBold } from 'richkit/bold';
+} from 'ai-richtext-editor';
+import { AI } from 'ai-richtext-editor/ai';
+import { Attachment, RichTextAttachment } from 'ai-richtext-editor/attachment';
+import { Blockquote, RichTextBlockquote } from 'ai-richtext-editor/blockquote';
+import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
 // Bubble
 import {
   RichTextBubbleCallout,
@@ -45,62 +45,62 @@ import {
   RichTextBubbleText,
   RichTextBubbleTwitter,
   RichTextBubbleMenuDragHandle,
-} from 'richkit/bubble';
-import { BulletList, RichTextBulletList } from 'richkit/bulletlist';
-import { Callout, RichTextCallout } from 'richkit/callout';
-import { Clear, RichTextClear } from 'richkit/clear';
-import { Code, RichTextCode } from 'richkit/code';
-import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'richkit/codeblock';
-import { CodeView, RichTextCodeView } from 'richkit/codeview';
-import { Color, RichTextColor } from 'richkit/color';
-import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'richkit/column';
-import { Details, RichTextDetails } from 'richkit/details';
-import { Divider, RichTextDivider } from 'richkit/divider';
-import { Drawer, RichTextDrawer } from 'richkit/drawer';
-import { Emoji, RichTextEmoji } from 'richkit/emoji';
-import { Excalidraw, RichTextExcalidraw } from 'richkit/excalidraw';
-import { ExportMarkdown, RichTextExportMarkdown } from 'richkit/exportmarkdown';
-import { ExportPdf, RichTextExportPdf } from 'richkit/exportpdf';
-import { ExportWord, RichTextExportWord } from 'richkit/exportword';
-import { FontFamily, RichTextFontFamily } from 'richkit/fontfamily';
-import { FontSize, RichTextFontSize } from 'richkit/fontsize';
-import { FormatPainter, RichTextFormatPainter } from 'richkit/formatpainter';
-import { Heading, RichTextHeading } from 'richkit/heading';
-import { Highlight, RichTextHighlight } from 'richkit/highlight';
+} from 'ai-richtext-editor/bubble';
+import { BulletList, RichTextBulletList } from 'ai-richtext-editor/bulletlist';
+import { Callout, RichTextCallout } from 'ai-richtext-editor/callout';
+import { Clear, RichTextClear } from 'ai-richtext-editor/clear';
+import { Code, RichTextCode } from 'ai-richtext-editor/code';
+import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'ai-richtext-editor/codeblock';
+import { CodeView, RichTextCodeView } from 'ai-richtext-editor/codeview';
+import { Color, RichTextColor } from 'ai-richtext-editor/color';
+import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'ai-richtext-editor/column';
+import { Details, RichTextDetails } from 'ai-richtext-editor/details';
+import { Divider, RichTextDivider } from 'ai-richtext-editor/divider';
+import { Drawer, RichTextDrawer } from 'ai-richtext-editor/drawer';
+import { Emoji, RichTextEmoji } from 'ai-richtext-editor/emoji';
+import { Excalidraw, RichTextExcalidraw } from 'ai-richtext-editor/excalidraw';
+import { ExportMarkdown, RichTextExportMarkdown } from 'ai-richtext-editor/exportmarkdown';
+import { ExportPdf, RichTextExportPdf } from 'ai-richtext-editor/exportpdf';
+import { ExportWord, RichTextExportWord } from 'ai-richtext-editor/exportword';
+import { FontFamily, RichTextFontFamily } from 'ai-richtext-editor/fontfamily';
+import { FontSize, RichTextFontSize } from 'ai-richtext-editor/fontsize';
+import { FormatPainter, RichTextFormatPainter } from 'ai-richtext-editor/formatpainter';
+import { Heading, RichTextHeading } from 'ai-richtext-editor/heading';
+import { Highlight, RichTextHighlight } from 'ai-richtext-editor/highlight';
 // build extensions
-import { History, RichTextUndo, RichTextRedo } from 'richkit/history';
-import { Iframe, RichTextIframe } from 'richkit/iframe';
-import { Image, RichTextImage } from 'richkit/image';
-import { ImageGif, RichTextImageGif } from 'richkit/imagegif';
-import { ImportWord, RichTextImportWord } from 'richkit/importword';
-import { Indent } from 'richkit/indent';
-import { Italic, RichTextItalic } from 'richkit/italic';
-import { Katex, RichTextKatex } from 'richkit/katex';
-import { LineHeight, RichTextLineHeight } from 'richkit/lineheight';
-import { Link, RichTextLink } from 'richkit/link';
-import { localeActions, useLocale } from 'richkit/locale-bundle';
-import { MarkdownPaste } from 'richkit/markdownpaste';
-import { Mention } from 'richkit/mention';
-import { Mermaid, RichTextMermaid } from 'richkit/mermaid';
-import { MoreMark } from 'richkit/moremark';
-import { OrderedList, RichTextOrderedList } from 'richkit/orderedlist';
-import { Recorder, getRecording, replayRecording } from 'richkit/recorder';
-import { RichPaste } from 'richkit/richpaste';
-import { SearchAndReplace, RichTextSearchAndReplace } from 'richkit/searchandreplace';
-import { ShortMessage } from 'richkit/shortmessage';
-import { SlashCommand, SlashCommandList } from 'richkit/slashcommand';
-import { Strike, RichTextStrike } from 'richkit/strike';
-import { Table, RichTextTable } from 'richkit/table';
-import { TableOfContents, RichTextTableOfContents } from 'richkit/tableofcontents';
-import { TaskList, RichTextTaskList } from 'richkit/tasklist';
-import { TextAlign, RichTextAlign } from 'richkit/textalign';
-import { TextDirection, RichTextTextDirection } from 'richkit/textdirection';
-import { TextUnderline, RichTextUnderline } from 'richkit/textunderline';
-import { themeActions, useTheme } from 'richkit/theme';
-import { Twitter, RichTextTwitter } from 'richkit/twitter';
-import { Video, RichTextVideo } from 'richkit/video';
+import { History, RichTextUndo, RichTextRedo } from 'ai-richtext-editor/history';
+import { Iframe, RichTextIframe } from 'ai-richtext-editor/iframe';
+import { Image, RichTextImage } from 'ai-richtext-editor/image';
+import { ImageGif, RichTextImageGif } from 'ai-richtext-editor/imagegif';
+import { ImportWord, RichTextImportWord } from 'ai-richtext-editor/importword';
+import { Indent } from 'ai-richtext-editor/indent';
+import { Italic, RichTextItalic } from 'ai-richtext-editor/italic';
+import { Katex, RichTextKatex } from 'ai-richtext-editor/katex';
+import { LineHeight, RichTextLineHeight } from 'ai-richtext-editor/lineheight';
+import { Link, RichTextLink } from 'ai-richtext-editor/link';
+import { localeActions, useLocale } from 'ai-richtext-editor/locale-bundle';
+import { MarkdownPaste } from 'ai-richtext-editor/markdownpaste';
+import { Mention } from 'ai-richtext-editor/mention';
+import { Mermaid, RichTextMermaid } from 'ai-richtext-editor/mermaid';
+import { MoreMark } from 'ai-richtext-editor/moremark';
+import { OrderedList, RichTextOrderedList } from 'ai-richtext-editor/orderedlist';
+import { Recorder, getRecording, replayRecording } from 'ai-richtext-editor/recorder';
+import { RichPaste } from 'ai-richtext-editor/richpaste';
+import { SearchAndReplace, RichTextSearchAndReplace } from 'ai-richtext-editor/searchandreplace';
+import { ShortMessage } from 'ai-richtext-editor/shortmessage';
+import { SlashCommand, SlashCommandList } from 'ai-richtext-editor/slashcommand';
+import { Strike, RichTextStrike } from 'ai-richtext-editor/strike';
+import { Table, RichTextTable } from 'ai-richtext-editor/table';
+import { TableOfContents, RichTextTableOfContents } from 'ai-richtext-editor/tableofcontents';
+import { TaskList, RichTextTaskList } from 'ai-richtext-editor/tasklist';
+import { TextAlign, RichTextAlign } from 'ai-richtext-editor/textalign';
+import { TextDirection, RichTextTextDirection } from 'ai-richtext-editor/textdirection';
+import { TextUnderline, RichTextUnderline } from 'ai-richtext-editor/textunderline';
+import { themeActions, useTheme } from 'ai-richtext-editor/theme';
+import { Twitter, RichTextTwitter } from 'ai-richtext-editor/twitter';
+import { Video, RichTextVideo } from 'ai-richtext-editor/video';
 
-import 'richkit/style.css';
+import 'ai-richtext-editor/style.css';
 // const ydoc = new Y.Doc()
 import 'katex/dist/katex.min.css';
 import 'easydrawer/styles.css';
@@ -177,7 +177,7 @@ const BaseKit = [
   DocumentColumn,
   Text,
   Dropcursor.configure({
-    class: 'richkit-theme',
+    class: 'ai-richtext-editor-theme',
     color: 'hsl(var(--primary))',
     width: 2,
   }),
@@ -198,7 +198,7 @@ const BaseKit = [
  * key. `window.__aiGenerate` overrides it (used by the browser checks).
  */
 async function demoAIGenerate(
-  request: import('richkit/ai').AIRequest,
+  request: import('ai-richtext-editor/ai').AIRequest,
   onChunk?: (text: string) => void
 ): Promise<string> {
   const override = (window as unknown as { __aiGenerate?: typeof demoAIGenerate }).__aiGenerate;
@@ -434,7 +434,7 @@ const extensions = [
 ];
 
 const DEFAULT = `
-<h1>richkit</h1>
+<h1>ai-richtext-editor</h1>
 <p>A rich text editor built on Tiptap. Everything below is live — edit it, or start from scratch.</p>
 <div class="table-of-contents" data-type="table-of-contents"></div>
 <h2>Text</h2>

@@ -18,7 +18,7 @@ test('all bubble entry points expose matching ESM/CJS exports and declarations',
         `
     const requirePackage = require('node:module').createRequire(process.argv[2]);
     console.log(JSON.stringify(Object.fromEntries(JSON.parse(process.argv[1]).map(path =>
-      [path, Object.keys(requirePackage('richkit/' + path.slice(2))).sort()]))));
+      [path, Object.keys(requirePackage('ai-richtext-editor/' + path.slice(2))).sort()]))));
   `,
         JSON.stringify(entries.map(([path]) => path)),
         fileURLToPath(new URL('../package.json', import.meta.url)),
@@ -27,7 +27,7 @@ test('all bubble entry points expose matching ESM/CJS exports and declarations',
     )
   );
   for (const [path, entry] of entries) {
-    const specifier = `richkit/${path.slice(2)}`;
+    const specifier = `ai-richtext-editor/${path.slice(2)}`;
     const esm = await import(specifier);
     assert.ok(Object.keys(esm).length);
     assert.deepEqual(Object.keys(esm).sort(), cjsExports[path]);
@@ -50,7 +50,7 @@ for (const entry of ['bubble', 'bubble/text']) {
           },
           load(id) {
             if (id === '\0virtual:isolation')
-              return `import { RichTextBubbleText } from 'richkit/${entry}'; window.bubble = RichTextBubbleText;`;
+              return `import { RichTextBubbleText } from 'ai-richtext-editor/${entry}'; window.bubble = RichTextBubbleText;`;
           },
         },
       ],

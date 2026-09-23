@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { SlashCommand, SlashCommandList } from 'richkit/slashcommand';
-import { Heading } from 'richkit/heading';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { SlashCommand, SlashCommandList } from 'ai-richtext-editor/slashcommand';
+import { Heading } from 'ai-richtext-editor/heading';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Heading, SlashCommand];
 
@@ -55,7 +55,7 @@ Register `SlashCommand` and mount `SlashCommandList` inside the provider. The co
 Use `commandList` on `SlashCommandList` to replace the default groups. Each group has a `name`, `title`, and `commands` array. A command receives the editor and the range containing the slash query.
 
 ```tsx
-import { SlashCommandList } from 'richkit/slashcommand';
+import { SlashCommandList } from 'ai-richtext-editor/slashcommand';
 
 export function CustomSlashCommands() {
   return (

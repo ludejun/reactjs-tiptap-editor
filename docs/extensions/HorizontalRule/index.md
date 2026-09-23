@@ -21,9 +21,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { HorizontalRule, RichTextHorizontalRule } from 'richkit/horizontalrule';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { HorizontalRule, RichTextHorizontalRule } from 'ai-richtext-editor/horizontalrule';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, HorizontalRule];
 

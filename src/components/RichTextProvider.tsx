@@ -39,7 +39,7 @@ export function RichTextProvider({ editor, children }: IProviderRichTextProps) {
   }
 
   return (
-    <div className='richkit'>
+    <div className='ai-richtext-editor'>
       <ReactBusProvider>
         <EditorContext.Provider value={contextValue}>
           <TooltipProvider delayDuration={0} disableHoverableContent>

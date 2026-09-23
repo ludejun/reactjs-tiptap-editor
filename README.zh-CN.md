@@ -1,36 +1,46 @@
 <p align="center">
-  <img src="https://api.iconify.design/ic:round-wysiwyg.svg?color=%237c3aed" alt="RichKit" width="88" />
+  <img src="./docs/public/logo.svg" alt="AI Richtext Editor" width="96" />
 </p>
 
-<h1 align="center">RichKit</h1>
+<h1 align="center">AI Richtext Editor</h1>
 
 <p align="center">
-  基于 Tiptap 的 React 富文本编辑器 SDK，按需组合。<br/>
-  工具栏、气泡菜单、斜杠命令、AI、表格、代码、图片、16 种语言、会话回放。
+  <b>会和你一起写的富文本编辑器。</b><br/>
+  AI 优先的编辑器 SDK，基于 Tiptap：流式回答直接变成真正的标题、表格和代码块；一句话生成公式和图表。<br/>
+  工具栏、气泡菜单、斜杠命令、16 种语言、会话回放。React UI，框架无关的内核。
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/richkit"><img src="https://img.shields.io/npm/v/richkit.svg" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/ai-richtext-editor"><img src="https://img.shields.io/npm/v/ai-richtext-editor.svg" alt="npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
   <a href="./README.md">English</a>
 </p>
 
 ![截图](./screenshot/screenshot.png)
 
-## 为什么选 RichKit
+## 为什么选它
 
-- **可组合。** 你自己创建 Tiptap 编辑器实例、挑选扩展、把 React 控件放到想放的位置，没有黑盒式的大组件。
-- **功能齐全。** 50+ 扩展：标题、列表、带圆角和「点击表格外侧退出」的表格、带语言识别的代码块、支持裁剪/题注/上传追踪的图片、带可编辑文字和编号的分割线、分栏、提示块、折叠块、Katex、Mermaid、Excalidraw、视频、iframe、附件、表情、提及、目录、查找替换，以及 Word / PDF / Markdown 的导入导出。
-- **内置 AI。** 流式输出，答案经编辑器 schema 渲染——表格、代码块、列表都是真正的节点；Katex 和 Mermaid 对话框支持「描述一下，AI 来写」。模型、代理、传输层都可以自定义。
-- **粘贴正确。** 网页、Excel、Google Docs、Word 保留格式；Word 的假列表变成真列表，VS Code 复制的代码变成代码块。
-- **16 种语言**，按使用人数排序，可按需加载。中文、日文、韩文、天城文、孟加拉文字体栈在界面语言或文档需要时出现。
-- **录制与回放**：把一次书写过程保存为带时间戳的步骤并回放。
-- **样式可控。** Tailwind 类名带 `richtext-` 前缀，主题只是一组 CSS 变量，可以放进任何设计体系。
+**AI 是一等功能，不是外挂插件。**
+
+- **直接流进文档。** 选中文字或输入 `/ai`，回答一边流式到达一边按编辑器自己的 schema 渲染：Markdown 表格就是编辑器的表格，围栏代码就是真正的代码块，`- [ ]` 就是任务列表。应用时插入的是节点，不是粘贴的文本。
+- **生成你打不出来的东西。** Katex 和 Mermaid 对话框接受一句描述（「一元二次方程求根公式」「登录流程」），实时写出源码。
+- **模型你定。** OpenAI 或 Anthropic 协议、任意 baseURL / 代理，或自己的 `generate(request, onChunk)` 传输层。翻译到浏览器语言、追问细化、附带图片和文件。
+- **渲染也归你。** `renderResult` 改答案样式，`components.Panel` 整个面板换掉。
+
+**以及文档需要的一切**
+
+- **可组合。** 自己创建 Tiptap 实例、挑扩展、把 React 控件放到想放的位置，每个功能一个导入。
+- **齐全。** 50+ 扩展：标题、列表、带圆角和「点击外侧退出」的表格、带语言识别的代码块、支持裁剪/题注/上传追踪的图片、带可编辑文字和编号的分割线、分栏、提示块、折叠块、Katex、Mermaid、Excalidraw、视频、iframe、附件、表情、提及、目录、查找替换、Word/PDF/Markdown 导入导出。
+- **粘贴正确。** 网页、Excel、Google Docs、Word 保留格式；Word 假列表变真列表，VS Code 代码变代码块。
+- **16 种语言**，按使用人数排序，按需加载，配套 CJK、天城文、孟加拉文字体。
+- **录制与回放**任意一次书写过程。
+- **框架无关的内核。** 文档逻辑（扩展、命令、粘贴规则、AI 客户端与 Markdown 渲染、录制）不含 React，以 `ai-richtext-editor/core` 发布，可用于 Vue 等其他 Tiptap 绑定。见 [多框架](./docs/guide/frameworks.md)。
+- **融入你的设计体系。** 带前缀的 Tailwind 类名和几个 CSS 变量。
 
 ## 安装
 
 ```bash
-pnpm add richkit @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
+pnpm add ai-richtext-editor @tiptap/react @tiptap/pm @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text
 ```
 
 所有 `@tiptap/*` 包请保持同一版本（本仓库使用 `^3.29`）。
@@ -42,12 +52,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'richkit';
-import { Bold, RichTextBold } from 'richkit/bold';
-import { Heading, RichTextHeading } from 'richkit/heading';
-import { Table, RichTextTable } from 'richkit/table';
-import { RichTextBubbleText } from 'richkit/bubble/text';
-import 'richkit/style.css';
+import { RichTextProvider, RichTextToolbar, RichTextToolbarDivider } from 'ai-richtext-editor';
+import { Bold, RichTextBold } from 'ai-richtext-editor/bold';
+import { Heading, RichTextHeading } from 'ai-richtext-editor/heading';
+import { Table, RichTextTable } from 'ai-richtext-editor/table';
+import { RichTextBubbleText } from 'ai-richtext-editor/bubble/text';
+import 'ai-richtext-editor/style.css';
 
 export function Editor() {
   const editor = useEditor({
@@ -73,7 +83,7 @@ export function Editor() {
 }
 ```
 
-每个功能只需一个导入：扩展和它的控件来自同一个子路径（`richkit/<feature>`），气泡菜单来自 `richkit/bubble/<name>`，语言包来自 `richkit/locales/<code>`。
+每个功能只需一个导入：扩展和它的控件来自同一个子路径（`ai-richtext-editor/<feature>`），气泡菜单来自 `ai-richtext-editor/bubble/<name>`，语言包来自 `ai-richtext-editor/locales/<code>`。
 
 ## 文档
 
@@ -109,7 +119,7 @@ pnpm exec esno --test tests/ai-client.test.ts tests/locale-loading.test.ts tests
 
 ## 来源
 
-RichKit 起源于 hunghg255 及贡献者们的 [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor)，此后经过了大幅重构。感谢他们，也感谢 [Tiptap](https://tiptap.dev) 与 [shadcn/ui](https://ui.shadcn.com/)。
+AI Richtext Editor 起源于 hunghg255 及贡献者们的 [reactjs-tiptap-editor](https://github.com/hunghg255/reactjs-tiptap-editor)，此后经过了大幅重构。感谢他们，也感谢 [Tiptap](https://tiptap.dev) 与 [shadcn/ui](https://ui.shadcn.com/)。
 
 ## 许可
 

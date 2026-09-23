@@ -21,11 +21,11 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Bold } from 'richkit/bold';
-import { Heading } from 'richkit/heading';
-import { ExportMarkdown, RichTextExportMarkdown } from 'richkit/exportmarkdown';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Bold } from 'ai-richtext-editor/bold';
+import { Heading } from 'ai-richtext-editor/heading';
+import { ExportMarkdown, RichTextExportMarkdown } from 'ai-richtext-editor/exportmarkdown';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Bold, Heading, ExportMarkdown];
 
@@ -72,7 +72,7 @@ Text styles such as color, font size, font family, alignment and line height are
 ## Use from code
 
 ```ts
-import { getMarkdown } from 'richkit/exportmarkdown';
+import { getMarkdown } from 'ai-richtext-editor/exportmarkdown';
 
 // download
 editor.chain().focus().exportToMarkdown({ fileName: 'notes.md' }).run();

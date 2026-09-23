@@ -15,7 +15,7 @@ Use the theme actions to control the editor's light/dark appearance, accent pale
 Run these actions during client initialization, or from your application's theme-change handler:
 
 ```ts
-import { themeActions } from 'richkit/theme';
+import { themeActions } from 'ai-richtext-editor/theme';
 
 // These settings apply to the library's editor UI and dialogs.
 themeActions.setTheme('dark');
@@ -34,7 +34,7 @@ The settings are shared by editor instances and their portaled dialogs. They are
 ## Add a theme toggle
 
 ```tsx
-import { themeActions, useTheme } from 'richkit/theme';
+import { themeActions, useTheme } from 'ai-richtext-editor/theme';
 
 export function EditorThemeToggle() {
   const { theme } = useTheme();

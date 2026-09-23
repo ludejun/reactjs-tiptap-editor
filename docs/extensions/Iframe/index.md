@@ -21,10 +21,10 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import { Document } from '@tiptap/extension-document';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
-import { RichTextProvider } from 'richkit';
-import { Iframe, RichTextIframe } from 'richkit/iframe';
-import { RichTextBubbleIframe } from 'richkit/bubble/iframe';
-import 'richkit/style.css';
+import { RichTextProvider } from 'ai-richtext-editor';
+import { Iframe, RichTextIframe } from 'ai-richtext-editor/iframe';
+import { RichTextBubbleIframe } from 'ai-richtext-editor/bubble/iframe';
+import 'ai-richtext-editor/style.css';
 
 const extensions = [Document, Paragraph, Text, Iframe];
 

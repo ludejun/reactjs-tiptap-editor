@@ -1,9 +1,9 @@
 ---
-name: richkit
-description: Integrate, configure, debug, migrate, refactor, and review React editors using richkit. Use for its provider, extensions, toolbars, bubble menus, uploads, persistence, localization, theme, and document import/export. Applies when this package is requested or already used, not to generic Tiptap integrations using other UI libraries.
+name: ai-richtext-editor
+description: Integrate, configure, debug, migrate, refactor, and review React editors using ai-richtext-editor. Use for its provider, extensions, toolbars, bubble menus, uploads, persistence, localization, theme, and document import/export. Applies when this package is requested or already used, not to generic Tiptap integrations using other UI libraries.
 ---
 
-# RichKit
+# AI Richtext Editor
 
 Implement the requested behavior with the smallest compatible extension set. Preserve the host app's framework, package manager, data format, and editor ownership.
 
@@ -41,7 +41,7 @@ Read only relevant sections. Feature recipes extend the quickstart; they are not
 - Preserve accepted inputs, result/error semantics, commands, and saved document compatibility when replacing callbacks or extending extensions.
 - Give controls only the capabilities they use; do not require unrelated services or no-op callbacks for unavailable features.
 - Share one `useEditor` instance between `RichTextProvider` and `EditorContent`. Guard the initial null editor before rendering the provider. Put context-dependent controls inside it.
-- Import `richkit/style.css` at the appropriate style boundary, plus selected feature CSS.
+- Import `ai-richtext-editor/style.css` at the appropriate style boundary, plus selected feature CSS.
 - Register commands and nodes required by visible controls. Check supporting schema nodes and extensions bundled by a feature before adding duplicates. If using StarterKit, disable overlaps or deliberately reuse existing equivalents.
 - Keep static extensions outside the component and follow the app's lifecycle for dynamic callbacks. Avoid recreating the editor on each keystroke.
 - Distinguish initial content from external document replacement. Save through `onUpdate`; changing the `content` option does not make the editor controlled.
