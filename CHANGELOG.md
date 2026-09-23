@@ -41,7 +41,14 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 
 - `Recorder` records every edit as timestamped ProseMirror steps; `replayRecording` plays a session back at any speed.
 
+### Frameworks
+
+- `sparkwrite/core`: the framework-agnostic layer (extensions without node views, paste rules, recorder, AI transport and markdown rendering, image bookkeeping, translations). A build check fails if React becomes reachable from it.
+- `sparkwrite/vue`: Vue 3 provider, composables, toolbar primitives, controls for the core extensions, and a Vue node view for the divider, on the same stylesheet as the React controls. `examples/vue` shows every control.
+- Translations moved to a dependency-free store; `useLocale` (React) subscribes with `useSyncExternalStore`.
+- The AI panel's tone selector was removed.
+
 ### Build
 
 - Named imports from `@tiptap/*` packages so the CommonJS bundles load.
-- Package renamed to `sparkwrite`; subpaths keep their shape (`sparkwrite/table`, `sparkwrite/bubble/text`, `sparkwrite/locales/es`). The root CSS class is `.sparkwrite`.
+- Package renamed to `sparkwrite`; subpaths keep their shape (`sparkwrite/table`, `sparkwrite/bubble/text`, `sparkwrite/locales/es`, plus `sparkwrite/core` and `sparkwrite/vue`). The root CSS class is `.sparkwrite`.
