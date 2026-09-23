@@ -126,4 +126,4 @@ For a different order or a hand-picked set, compose your own from the controls �
 
 ## Playground
 
-The [playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/) has a **Setup** switch: _Assembled_ is the editor composed control by control, _RichTextKit_ the same editor from the kit — in React and in Vue.
+The [playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/) runs on the kit by default; its **Setup** switch shows the same editor _Assembled_ control by control — in React and in Vue.

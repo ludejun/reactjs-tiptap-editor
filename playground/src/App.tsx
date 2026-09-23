@@ -1135,7 +1135,8 @@ function App() {
   const [content, setContent] = useState(SHOT ? SHOT_CONTENT : DEFAULT);
   const [theme, setTheme] = useState('light');
   const [framework, setFramework] = useState<Framework>('react');
-  const [setup, setSetup] = useState<Setup>('assembled');
+  const [setup, setSetup] = useState<Setup>('kit');
+  const [kitEditor, setKitEditor] = useState<import('@tiptap/core').Editor | null>(null);
 
   const onValueChange = useCallback(
     debounce((value: any) => {
@@ -1171,7 +1172,7 @@ function App() {
     >
       {SHOT ? null : (
         <Header
-          editor={editor}
+          editor={setup === 'kit' && framework === 'react' ? kitEditor : editor}
           framework={framework}
           setFramework={setFramework}
           setup={setup}
@@ -1184,7 +1185,12 @@ function App() {
       {framework === 'vue' ? (
         <VueEditor dark={theme === 'dark'} kit={setup === 'kit'} />
       ) : setup === 'kit' ? (
-        <KitEditor dark={theme === 'dark'} content={DEFAULT} />
+        <KitEditor
+          dark={theme === 'dark'}
+          content={SHOT ? SHOT_CONTENT : DEFAULT}
+          shot={SHOT}
+          onEditor={setKitEditor}
+        />
       ) : (
         <RichTextProvider editor={editor} dark={theme === 'dark'}>
           <div className='overflow-hidden rounded-[0.5rem] bg-background shadow outline outline-1'>

@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 
 import { demoAIGenerate } from './demoAI';
 
+import type { Editor } from '@tiptap/core';
+
 /** Fake upload: the file as a blob URL after a short delay. */
 function demoUpload(file: File): Promise<string> {
   return new Promise((resolve) => setTimeout(() => resolve(URL.createObjectURL(file)), 300));
@@ -18,7 +20,19 @@ function demoUpload(file: File): Promise<string> {
  * The same editor as the assembled playground, but from the kit: one
  * extension, one toolbar, one menus component — three imports in total.
  */
-export function KitEditor({ dark, content }: { dark: boolean; content: string }) {
+export function KitEditor({
+  dark,
+  content,
+  shot = false,
+  onEditor,
+}: {
+  dark: boolean;
+  content: string;
+  /** Screenshot mode: the composer starts open. */
+  shot?: boolean;
+  /** Hands the instance to the page header (editable toggle, recorder). */
+  onEditor?: (editor: Editor | null) => void;
+}) {
   const editor = useEditor({
     extensions: [
       RichTextKit.configure({
@@ -33,6 +47,7 @@ export function KitEditor({ dark, content }: { dark: boolean; content: string })
         excalidraw: {},
         twitter: {},
         emoji: {},
+        recorder: {},
         placeholder: { placeholder: 'Type / for blocks, or Space on an empty line for AI…' },
       }),
     ],
@@ -41,14 +56,15 @@ export function KitEditor({ dark, content }: { dark: boolean; content: string })
 
   useEffect(() => {
     (window as unknown as { kitEditor: unknown }).kitEditor = editor;
-  }, [editor]);
+    onEditor?.(editor);
+  }, [editor, onEditor]);
 
   return (
     <RichTextProvider editor={editor} dark={dark}>
       <div className='overflow-hidden rounded-[0.5rem] bg-background shadow outline outline-1'>
         <RichTextKitToolbar />
         <EditorContent editor={editor} />
-        <RichTextKitMenus />
+        <RichTextKitMenus composer={{ defaultOpen: shot }} />
       </div>
     </RichTextProvider>
   );

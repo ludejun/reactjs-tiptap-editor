@@ -352,3 +352,10 @@ div[data-twitter] > div {
   border-width: 1px;
   border-radius: 6px;
 }
+
+/* The kit toolbar's "More tools" panel sits at the right edge, like the playground's. */
+.richtext-kit-toolbar-more {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}

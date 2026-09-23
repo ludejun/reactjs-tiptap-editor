@@ -126,4 +126,4 @@ Kit 只是省事，不是锁定：同一个入口也单独导出每个扩展和�
 
 ## 在线体验
 
-[Playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/) 顶部有 **Setup** 切换：_Assembled_ 是逐个控件组装的编辑器，_RichTextKit_ 是用 Kit 得到的同一个编辑器——React 和 Vue 都有。
+[Playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/) 默认就跑在 Kit 上；顶部的 **Setup** 切换可以看到逐个控件组装（_Assembled_）的同一个编辑器——React 和 Vue 都有。
