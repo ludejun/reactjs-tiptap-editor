@@ -6,7 +6,7 @@ import { generateAIText } from './client';
 import { markdownToSlice } from './markdown';
 import { aiPluginKey, type AIAction } from './state';
 
-import type { AIMessage, AIOptions, AIWriteTarget } from './types';
+import type { AIMessage, AIOptions, AIWriteTarget, AIAttachment } from './types';
 import type { Editor, Range } from '@tiptap/core';
 
 export interface WriteWithAIOptions {
@@ -26,6 +26,8 @@ export interface WriteWithAIOptions {
    * text is sent in full anyway.
    */
   includeDocument?: boolean;
+  /** Images and text files sent with the prompt; see `AIAttachment`. */
+  attachments?: AIAttachment[];
   signal?: AbortSignal;
   /** Called with the Markdown so far every time the document is updated. */
   onProgress?: (markdown: string) => void;
@@ -154,6 +156,7 @@ export async function writeWithAI(
       content: options.history?.length
         ? options.prompt.trim()
         : buildPrompt(options.prompt, selectedText, context, target),
+      attachments: options.attachments?.length ? options.attachments : undefined,
     },
   ];
 

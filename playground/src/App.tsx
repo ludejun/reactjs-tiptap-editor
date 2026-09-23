@@ -1060,8 +1060,9 @@ const SHOT_CONTENT = `
 <p>Ask for a section, a table or a diagram and it lands here as real blocks — try <strong>Continue Writing</strong> below, or select this sentence and pick <strong>Improve</strong>.</p>
 <h2>Milestones</h2>
 <table><tbody><tr><th><p>Week</p></th><th><p>Deliverable</p></th><th><p>Owner</p></th></tr><tr><td><p>1</p></td><td><p>Draft the announcement</p></td><td><p>Mia</p></td></tr><tr><td><p>2</p></td><td><p>Beta with 20 customers</p></td><td><p>Ravi</p></td></tr><tr><td><p>3</p></td><td><p>Docs and pricing page</p></td><td><p>Lena</p></td></tr></tbody></table>
-<h2>Open questions</h2>
-<ul data-type="taskList"><li data-type="taskItem" data-checked="true"><p>Confirm the launch date with sales</p></li><li data-type="taskItem" data-checked="false"><p>Decide whether the free tier includes AI</p></li></ul>
+<h2>Rollout</h2>
+<pre><code class="language-ts">const rollout = await launch.plan({ weeks: 3, owners: ['Mia', 'Ravi', 'Lena'] });
+await rollout.notify('#launch'); // posts the table above as a checklist</code></pre>
 <p></p>
 `;
 

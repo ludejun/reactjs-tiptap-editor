@@ -20,7 +20,7 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 
 ### AI
 
-- **Composer dock** (`RichTextAIComposer` + the `RichTextAI` toolbar button, `⌘/Ctrl+J`, `/ai`): a prompt bar under the editor whose answers stream straight into the document as real blocks. Presets for the whole document — continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — plus a target selector (selection, caret, top, end, whole document). Keep, undo, retry or refine in place; the answer is one undo step.
+- **Composer dock** (`RichTextAIComposer` + the `RichTextAI` toolbar button, `⌘/Ctrl+J`, `/ai`): a prompt bar under the editor whose answers stream straight into the document as real blocks. Presets for the whole document — continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — plus a target selector (selection, caret, top, end, whole document). Keep, undo, retry or refine in place; the answer is one undo step. Images and text files can be attached to a prompt (paperclip, drop or paste), as in the panel.
 - Multi-block selections and the whole document reach the model as **Markdown** (the editor's own export), so "fix grammar everywhere" or "translate document" keep every heading, table and code block. `serializeDocument` overrides the serializer.
 - The playground's stand-in model transforms the real text — fixes the page's typos, tabulates the selection, outlines the headings — so every AI entry can be tried without a key.
 - `composer: false` on the AI extension removes the dock together with its toolbar button, shortcut, slash entry and menu item; the dock takes `actions`, `showTarget`, `hint`, `placeholder`, `rows`, `gradient`, `accent` props. Chips sit on one line with a `+N` menu for the rest; hovering shows the prompt.
@@ -65,6 +65,10 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 - Icons are a registry: each control registers the Lucide icons it uses, so a host that imports one feature no longer pays for ~90 icons. `registerIcons` is exported for custom icon names.
 - The `cn` class merger is a 25-line local helper; the shared stores use `useSyncExternalStore` instead of `reactjs-signal`.
 - Importing `ai-sparkwrite-editor/bold` now reaches 30 KB of library code (was 88 KB) and one icon (was 87). `pnpm measure:entries` prints the per-entry figures; see the Bundle size guide.
+
+### Documentation
+
+- The docs site has an English and a Simplified Chinese locale (language menu in the header), a new theme, React and Vue tabs on every extension page, and the favicon, logo and social image of the new brand.
 
 ### Build
 

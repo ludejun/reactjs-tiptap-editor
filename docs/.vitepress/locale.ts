@@ -8,25 +8,30 @@ const docsLink = 'https://ludejun.github.io/ai-sparkwrite-editor';
 const githubRepo = 'ludejun/ai-sparkwrite-editor';
 const githubLink: 'https://github.com/ludejun/ai-sparkwrite-editor' = `https://github.com/${githubRepo}`;
 
-const VERSIONS: (DefaultTheme.NavItemWithLink | DefaultTheme.NavItemChildren)[] = [
-  { text: `v${version} (current)`, link: '/' },
-  {
-    text: 'Release Notes',
-    link: 'https://github.com/ludejun/ai-sparkwrite-editor/releases',
-  },
-  {
-    text: 'Contributing',
-    link: 'https://github.com/ludejun/ai-sparkwrite-editor/blob/main/CONTRIBUTING.md',
-  },
-];
-
 export function getLocaleConfig(lang: string) {
   const t = createTranslate(lang);
 
-  const urlPrefix = lang && lang !== 'en' ? `/${lang}` : '';
+  const zh = lang === 'zh';
+  const urlPrefix = zh ? '/zh' : '';
+
+  const versions: (DefaultTheme.NavItemWithLink | DefaultTheme.NavItemChildren)[] = [
+    { text: `v${version} ${t('(current)')}`, link: `${urlPrefix}/` },
+    {
+      text: t('Release Notes'),
+      link: 'https://github.com/ludejun/ai-sparkwrite-editor/releases',
+    },
+    {
+      text: t('Contributing'),
+      link: 'https://github.com/ludejun/ai-sparkwrite-editor/blob/main/CONTRIBUTING.md',
+    },
+  ];
+  const ext = (name: string): DefaultTheme.SidebarItem => ({
+    text: name,
+    link: `${urlPrefix}/extensions/${name}/index.md`,
+  });
   const title = 'ai-sparkwrite-editor';
   const description = t(
-    'AI-first rich-text editor SDK on Tiptap: streaming AI writing as real document nodes, formulas and diagrams from a sentence, 16 languages, session replay. React UI, framework-agnostic core.'
+    'AI-first rich-text editor SDK on Tiptap: streaming AI writing as real document nodes, formulas and diagrams from a sentence, 16 languages, session replay. React and Vue UIs, framework-agnostic core.'
   );
 
   const head: HeadConfig[] = [
@@ -57,7 +62,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: t('Extensions'),
-      link: `${urlPrefix}/extensions/Attachment/index.md`,
+      link: `${urlPrefix}/extensions/AI/index.md`,
       activeMatch: 'extensions',
     },
     {
@@ -66,7 +71,7 @@ export function getLocaleConfig(lang: string) {
     },
     {
       text: `v${version}`,
-      items: VERSIONS,
+      items: versions,
     },
   ];
 
@@ -119,71 +124,59 @@ export function getLocaleConfig(lang: string) {
     {
       text: t('Extensions'),
       items: [
-        { text: 'AI', link: '/extensions/AI/index.md' },
-        { text: 'Attachment', link: '/extensions/Attachment/index.md' },
-        { text: 'Blockquote', link: '/extensions/Blockquote/index.md' },
-        { text: 'Bold', link: '/extensions/Bold/index.md' },
-        { text: 'BulletList', link: '/extensions/BulletList/index.md' },
-        { text: 'Callout', link: '/extensions/Callout/index.md' },
-        { text: 'Clear', link: '/extensions/Clear/index.md' },
-        { text: 'Code', link: '/extensions/Code/index.md' },
-        { text: 'CodeBlock', link: '/extensions/CodeBlock/index.md' },
-        { text: 'CodeView', link: '/extensions/CodeView/index.md' },
-        { text: 'Color', link: '/extensions/Color/index.md' },
-        { text: 'Column', link: '/extensions/Column/index.md' },
-        { text: 'Details', link: '/extensions/Details/index.md' },
-        { text: 'Drawer', link: '/extensions/Drawer/index.md' },
-        { text: 'Emoji', link: '/extensions/Emoji/index.md' },
-        { text: 'Excalidraw', link: '/extensions/Excalidraw/index.md' },
-        { text: 'ExportPdf', link: '/extensions/ExportPdf/index.md' },
-        { text: 'ExportWord', link: '/extensions/ExportWord/index.md' },
-        { text: 'ExportMarkdown', link: '/extensions/ExportMarkdown/index.md' },
-        { text: 'FontFamily', link: '/extensions/FontFamily/index.md' },
-        { text: 'FontSize', link: '/extensions/FontSize/index.md' },
-        { text: 'FormatPainter', link: '/extensions/FormatPainter/index.md' },
-        { text: 'Heading', link: '/extensions/Heading/index.md' },
-        { text: 'Highlight', link: '/extensions/Highlight/index.md' },
-        { text: 'History', link: '/extensions/History/index.md' },
-        {
-          text: 'HorizontalRule',
-          link: '/extensions/HorizontalRule/index.md',
-        },
-        { text: 'Iframe', link: '/extensions/Iframe/index.md' },
-        { text: 'Image', link: '/extensions/Image/index.md' },
-        { text: 'ImageGif', link: '/extensions/ImageGif/index.md' },
-        { text: 'ImportWord', link: '/extensions/ImportWord/index.md' },
-        { text: 'Indent', link: '/extensions/Indent/index.md' },
-        { text: 'Italic', link: '/extensions/Italic/index.md' },
-        { text: 'Katex', link: '/extensions/Katex/index.md' },
-        { text: 'LineHeight', link: '/extensions/LineHeight/index.md' },
-        { text: 'Link', link: '/extensions/Link/index.md' },
-        { text: 'Mention', link: '/extensions/Mention/index.md' },
-        { text: 'Mermaid', link: '/extensions/Mermaid/index.md' },
-        { text: 'MoreMark', link: '/extensions/MoreMark/index.md' },
-        { text: 'OrderedList', link: '/extensions/OrderedList/index.md' },
-        {
-          text: 'Recorder',
-          link: '/extensions/Recorder/index.md',
-        },
-        {
-          text: 'RichPaste',
-          link: '/extensions/RichPaste/index.md',
-        },
-        {
-          text: 'SearchAndReplace',
-          link: '/extensions/SearchAndReplace/index.md',
-        },
-        { text: 'ShortMessage', link: '/extensions/ShortMessage/index.md' },
-        { text: 'SlashCommand', link: '/extensions/SlashCommand/index.md' },
-        { text: 'Strike', link: '/extensions/Strike/index.md' },
-        { text: 'Table', link: '/extensions/Table/index.md' },
-        { text: 'TableOfContents', link: '/extensions/TableOfContents/index.md' },
-        { text: 'TaskList', link: '/extensions/TaskList/index.md' },
-        { text: 'TextAlign', link: '/extensions/TextAlign/index.md' },
-        { text: 'TextDirection', link: '/extensions/TextDirection/index.md' },
-        { text: 'TextUnderline', link: '/extensions/TextUnderline/index.md' },
-        { text: 'Twitter', link: '/extensions/Twitter/index.md' },
-        { text: 'Video', link: '/extensions/Video/index.md' },
+        ext('AI'),
+        ext('Attachment'),
+        ext('Blockquote'),
+        ext('Bold'),
+        ext('BulletList'),
+        ext('Callout'),
+        ext('Clear'),
+        ext('Code'),
+        ext('CodeBlock'),
+        ext('CodeView'),
+        ext('Color'),
+        ext('Column'),
+        ext('Details'),
+        ext('Drawer'),
+        ext('Emoji'),
+        ext('Excalidraw'),
+        ext('ExportPdf'),
+        ext('ExportWord'),
+        ext('ExportMarkdown'),
+        ext('FontFamily'),
+        ext('FontSize'),
+        ext('FormatPainter'),
+        ext('Heading'),
+        ext('Highlight'),
+        ext('History'),
+        ext('HorizontalRule'),
+        ext('Iframe'),
+        ext('Image'),
+        ext('ImageGif'),
+        ext('ImportWord'),
+        ext('Indent'),
+        ext('Italic'),
+        ext('Katex'),
+        ext('LineHeight'),
+        ext('Link'),
+        ext('Mention'),
+        ext('Mermaid'),
+        ext('MoreMark'),
+        ext('OrderedList'),
+        ext('Recorder'),
+        ext('RichPaste'),
+        ext('SearchAndReplace'),
+        ext('ShortMessage'),
+        ext('SlashCommand'),
+        ext('Strike'),
+        ext('Table'),
+        ext('TableOfContents'),
+        ext('TaskList'),
+        ext('TextAlign'),
+        ext('TextDirection'),
+        ext('TextUnderline'),
+        ext('Twitter'),
+        ext('Video'),
       ],
     },
   ];
@@ -207,11 +200,27 @@ export function getLocaleConfig(lang: string) {
       pattern: `${githubLink}/edit/main/docs/:path`,
       text: t('Edit this page on GitHub'),
     },
+    outline: { label: t('On this page'), level: [2, 3] },
+    docFooter: { prev: t('Previous page'), next: t('Next page') },
+    lastUpdated: { text: t('Last updated') },
+    returnToTopLabel: t('Return to top'),
+    sidebarMenuLabel: t('Menu'),
+    darkModeSwitchLabel: t('Appearance'),
+    lightModeSwitchTitle: t('Switch to light theme'),
+    darkModeSwitchTitle: t('Switch to dark theme'),
+    langMenuLabel: t('Change language'),
+    notFound: {
+      title: t('Page not found'),
+      quote: t('The page you are looking for does not exist or has moved.'),
+      linkLabel: t('go to home'),
+      linkText: t('Take me home'),
+    },
   };
 
   const localeConfig: LocaleConfig<DefaultTheme.Config>[string] = {
-    label: t('English'),
-    lang: t('en'),
+    label: zh ? '简体中文' : 'English',
+    lang: zh ? 'zh-CN' : 'en-US',
+    ...(zh ? { link: '/zh/' } : {}),
     title,
     description,
     head,

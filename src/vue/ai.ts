@@ -46,6 +46,7 @@ import {
 } from 'vue';
 
 import { AICore } from '@/extensions/AI/AICore';
+import { attachmentAccept, canAttach, filesOf, readAttachments } from '@/extensions/AI/attachments';
 import { generateAIText } from '@/extensions/AI/client';
 import {
   AI_COMPOSER_ACTIONS,
@@ -731,7 +732,31 @@ export const RichTextAIComposer = defineComponent({
     const result = shallowRef<WriteWithAIResult | null>(null);
     const input = ref<HTMLTextAreaElement | null>(null);
     let controller: AbortController | null = null;
-    let lastRequest: { prompt: string; target: AIWriteTarget } | null = null;
+    let lastRequest: {
+      prompt: string;
+      target: AIWriteTarget;
+      attachments: AIAttachment[];
+    } | null = null;
+    // Images and text files go with the prompt, like in the AI panel: picked,
+    // dropped onto the box or pasted into the prompt.
+    const attachments = ref<AIAttachment[]>([]);
+    const dragging = ref(false);
+    const filePicker = ref<HTMLInputElement | null>(null);
+    const attachable = () => {
+      const options = editor.value ? aiOptionsOf(editor.value) : null;
+      return !!options && canAttach(options);
+    };
+    async function addFiles(files: File[]) {
+      const options = editor.value ? aiOptionsOf(editor.value) : null;
+      if (!files.length || !options || !canAttach(options)) return;
+      const { attachments: next, error: problem } = await readAttachments(
+        files,
+        options,
+        attachments.value
+      );
+      if (problem) error.value = problem;
+      if (next.length) attachments.value = [...attachments.value, ...next];
+    }
     // The chips stay on one line; the ones that do not fit go behind a "more" button.
     const chipRow = ref<HTMLElement | null>(null);
     const visibleChips = ref(Infinity);
@@ -781,7 +806,8 @@ export const RichTextAIComposer = defineComponent({
     async function run(
       instruction: string,
       where: AIWriteTarget,
-      refineFrom?: WriteWithAIResult | null
+      refineFrom?: WriteWithAIResult | null,
+      files: AIAttachment[] = attachments.value
     ) {
       const current = editor.value;
       if (!current || busy.value || !instruction.trim()) return;
@@ -800,11 +826,13 @@ export const RichTextAIComposer = defineComponent({
           prompt: instruction,
           target: range ?? where,
           history: refineFrom?.messages,
+          attachments: files,
           signal: active.signal,
         });
-        if (!refineFrom) lastRequest = { prompt: instruction, target: where };
+        if (!refineFrom) lastRequest = { prompt: instruction, target: where, attachments: files };
         result.value = next;
         prompt.value = '';
+        attachments.value = [];
       } catch (cause) {
         if (!active.signal.aborted)
           error.value = cause instanceof Error ? cause.message : t('editor.ai.error.generic');
@@ -923,7 +951,13 @@ export const RichTextAIComposer = defineComponent({
                 {
                   type: 'button',
                   onClick: () => {
-                    if (lastRequest) void run(lastRequest.prompt, lastRequest.target, answer);
+                    if (lastRequest)
+                      void run(
+                        lastRequest.prompt,
+                        lastRequest.target,
+                        answer,
+                        lastRequest.attachments
+                      );
                   },
                 },
                 [h(RotateCcw, { size: 15 }), ` ${t('editor.ai.compose.retry')}`]
@@ -1015,10 +1049,27 @@ export const RichTextAIComposer = defineComponent({
           h(
             'form',
             {
-              class: 'richtext-ai-composer-box',
+              class: [
+                'richtext-ai-composer-box',
+                dragging.value ? 'richtext-ai-composer-box--dragging' : '',
+              ],
               onSubmit: (event: Event) => {
                 event.preventDefault();
                 submit();
+              },
+              onDragover: (event: DragEvent) => {
+                if (!attachable() || busy.value) return;
+                event.preventDefault();
+                dragging.value = true;
+              },
+              onDragleave: () => {
+                dragging.value = false;
+              },
+              onDrop: (event: DragEvent) => {
+                dragging.value = false;
+                if (!attachable() || busy.value) return;
+                event.preventDefault();
+                void addFiles(filesOf(event.dataTransfer));
               },
             },
             [
@@ -1039,6 +1090,13 @@ export const RichTextAIComposer = defineComponent({
                   onInput: (event: Event) => {
                     prompt.value = (event.target as HTMLTextAreaElement).value;
                   },
+                  onPaste: (event: ClipboardEvent) => {
+                    const files = filesOf(event.clipboardData);
+                    if (files.length && attachable()) {
+                      event.preventDefault();
+                      void addFiles(files);
+                    }
+                  },
                   onKeydown: (event: KeyboardEvent) => {
                     if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
                       event.preventDefault();
@@ -1047,36 +1105,93 @@ export const RichTextAIComposer = defineComponent({
                   },
                 }),
               ]),
-              h('div', { class: 'richtext-ai-composer-bar' }, [
-                !answer && props.showTarget
-                  ? // A pill that fits its label: the native <select> sits invisibly on
-                    // top for the dropdown and keyboard, the label and chevron below it.
-                    h('span', { class: 'richtext-ai-composer-target' }, [
-                      h('span', t(`editor.ai.compose.target.${effectiveTarget()}`)),
-                      h(ChevronDown, { size: 13, 'aria-hidden': 'true' }),
-                      h(
-                        'select',
-                        {
-                          'aria-label': t('editor.ai.compose.target'),
-                          value: effectiveTarget(),
-                          disabled: busy.value,
-                          onChange: (event: Event) => {
-                            target.value = (event.target as HTMLSelectElement)
-                              .value as ComposerTarget;
+              attachments.value.length
+                ? h(
+                    'ul',
+                    { class: 'richtext-ai-attachments richtext-ai-composer-attachments' },
+                    attachments.value.map((attachment) =>
+                      h('li', { key: attachment.id }, [
+                        attachment.kind === 'image'
+                          ? h('img', { alt: '', src: attachment.dataUrl })
+                          : h(Paperclip, { size: 13 }),
+                        h('span', { title: attachment.name }, attachment.name),
+                        h(
+                          'button',
+                          {
+                            type: 'button',
+                            'aria-label': t('editor.ai.attach.remove', { name: attachment.name }),
+                            onClick: () => {
+                              attachments.value = attachments.value.filter(
+                                (item) => item.id !== attachment.id
+                              );
+                            },
                           },
-                        },
-                        COMPOSER_TARGETS.filter(
-                          (value) => value !== 'selection' || current.hasSelection
-                        ).map((value) =>
-                          h(
-                            'option',
-                            { key: value, value, selected: value === effectiveTarget() },
-                            t(`editor.ai.compose.target.${value}`)
+                          [h(X, { size: 12 })]
+                        ),
+                      ])
+                    )
+                  )
+                : null,
+              h('div', { class: 'richtext-ai-composer-bar' }, [
+                h('span', { class: 'richtext-ai-composer-tools' }, [
+                  !answer && props.showTarget
+                    ? // A pill that fits its label: the native <select> sits invisibly on
+                      // top for the dropdown and keyboard, the label and chevron below it.
+                      h('span', { class: 'richtext-ai-composer-target' }, [
+                        h('span', t(`editor.ai.compose.target.${effectiveTarget()}`)),
+                        h(ChevronDown, { size: 13, 'aria-hidden': 'true' }),
+                        h(
+                          'select',
+                          {
+                            'aria-label': t('editor.ai.compose.target'),
+                            value: effectiveTarget(),
+                            disabled: busy.value,
+                            onChange: (event: Event) => {
+                              target.value = (event.target as HTMLSelectElement)
+                                .value as ComposerTarget;
+                            },
+                          },
+                          COMPOSER_TARGETS.filter(
+                            (value) => value !== 'selection' || current.hasSelection
+                          ).map((value) =>
+                            h(
+                              'option',
+                              { key: value, value, selected: value === effectiveTarget() },
+                              t(`editor.ai.compose.target.${value}`)
+                            )
                           )
-                        )
-                      ),
-                    ])
-                  : h('span'),
+                        ),
+                      ])
+                    : null,
+                  attachable()
+                    ? h(
+                        'button',
+                        {
+                          type: 'button',
+                          class: 'richtext-ai-attach',
+                          'aria-label': t('editor.ai.attach'),
+                          title: t('editor.ai.attach'),
+                          disabled: busy.value || !current.editable,
+                          onClick: () => filePicker.value?.click(),
+                        },
+                        [h(Paperclip, { size: 16 })]
+                      )
+                    : null,
+                  attachable()
+                    ? h('input', {
+                        ref: filePicker,
+                        type: 'file',
+                        hidden: true,
+                        multiple: true,
+                        accept: attachmentAccept(aiOptionsOf(editor.value!)!),
+                        onChange: (event: Event) => {
+                          const picker = event.target as HTMLInputElement;
+                          void addFiles(Array.from(picker.files ?? []));
+                          picker.value = '';
+                        },
+                      })
+                    : null,
+                ]),
                 busy.value
                   ? h(
                       'button',

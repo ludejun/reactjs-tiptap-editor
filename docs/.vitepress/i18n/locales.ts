@@ -1,12 +1,42 @@
-export const zhCN = {
+export const zh: Record<string, string> = {
   Guide: '指南',
-
-  English: '简体中文',
-  en: 'zh-CN',
-
+  Extensions: '扩展',
+  Playground: '在线体验',
+  '(current)': '（当前）',
+  'Release Notes': '更新日志',
+  Contributing: '参与贡献',
+  'Getting Started': '快速开始',
+  Toolbar: '工具栏',
+  Features: '功能一览',
+  Frameworks: '框架支持',
+  Customization: '自定义',
+  'Bundle size': '包体积',
+  'Bubble Menu': '气泡菜单',
+  Internationalization: '国际化',
+  'Custom Theme': '自定义主题',
+  'How to Migrate': '迁移指南',
+  'Made with ❤️': '用 ❤️ 打造',
+  'Edit this page on GitHub': '在 GitHub 上编辑此页',
+  'On this page': '本页目录',
+  'Previous page': '上一页',
+  'Next page': '下一页',
+  'Last updated': '最后更新于',
+  'Return to top': '回到顶部',
+  Menu: '菜单',
+  Appearance: '外观',
+  'Switch to light theme': '切换到浅色主题',
+  'Switch to dark theme': '切换到深色主题',
+  'Change language': '切换语言',
+  'Page not found': '页面不存在',
+  'The page you are looking for does not exist or has moved.': '你访问的页面不存在或已移动。',
+  'go to home': '回到首页',
+  'Take me home': '回到首页',
+  'AI-first rich-text editor SDK on Tiptap: streaming AI writing as real document nodes, formulas and diagrams from a sentence, 16 languages, session replay. React and Vue UIs, framework-agnostic core.':
+    '基于 Tiptap 的 AI 优先富文本编辑器 SDK：AI 流式写入真实文档节点，一句话生成公式与图表，16 种语言，编辑回放。React 与 Vue UI，框架无关的核心。',
   'Loading...': '加载中…',
 };
 
 export const langMap: Record<string, Record<string, string>> = {
-  'zh-CN': zhCN,
+  zh,
+  'zh-CN': zh,
 };

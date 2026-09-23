@@ -50,7 +50,7 @@ const extensions = [
 `RichTextAIComposer` sits under the editor and writes straight into it. It opens from the `RichTextAI` toolbar button, `⌘/Ctrl+J`, the `/ai` slash entry, the Improve menu ("Open AI composer") or `editor.commands.toggleAIComposer(true)`.
 
 - **Chips** run the document-level presets: Continue writing, Summarize, Outline, Suggest a title, Action items (a task list of every decision and open question), Fix grammar everywhere, Translate document. Each knows where its answer goes (end, top, caret, or the whole document).
-- **The prompt** takes anything; a target selector chooses _Replace selection_ / _At cursor_ / _Top_ / _End_ / _Whole document_.
+- **The prompt** takes anything; a target selector chooses _Replace selection_ / _At cursor_ / _Top_ / _End_ / _Whole document_. Images and text files go with it — the paperclip, a drop onto the box, or a paste — under the same `enableImageInput` / `enableFileInput` / `maxAttachmentSize` rules as the panel.
 - **The chips stay on one line.** Whatever does not fit sits behind a `+N` button. Hovering a chip shows the exact prompt it sends; the prompts are the `prompt` fields of `AI_COMPOSER_ACTIONS`.
 - **While the answer streams** the span it is filling is tinted and follows edits made elsewhere; Stop keeps what has arrived.
 - **Afterwards**: Keep, Undo (puts the original back), Retry, or type a follow-up — the same span is rewritten with the conversation so far. The finished answer is a single undo step.

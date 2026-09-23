@@ -1,3 +1,46 @@
+@mixin ai-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 6px 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 180px;
+    padding: 3px 4px 3px 6px;
+    border-radius: 6px;
+    background: hsl(var(--muted, 240 5% 96%));
+    font-size: 12px;
+
+    img {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      object-fit: cover;
+    }
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    button {
+      padding: 2px;
+      border-radius: 4px;
+      color: hsl(var(--muted-foreground, 240 3% 46%));
+
+      &:hover {
+        color: inherit;
+      }
+    }
+  }
+}
+
 .richtext-ai {
   --ai-accent: #804dff;
   color: hsl(var(--foreground, 240 5% 90%));
@@ -130,46 +173,7 @@
   }
 
   .richtext-ai-attachments {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: 0;
-    padding: 8px 6px 0;
-    list-style: none;
-
-    li {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      max-width: 180px;
-      padding: 3px 4px 3px 6px;
-      border-radius: 6px;
-      background: hsl(var(--muted, 240 5% 96%));
-      font-size: 12px;
-
-      img {
-        width: 18px;
-        height: 18px;
-        border-radius: 3px;
-        object-fit: cover;
-      }
-
-      span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      button {
-        padding: 2px;
-        border-radius: 4px;
-        color: hsl(var(--muted-foreground, 240 3% 46%));
-
-        &:hover {
-          color: inherit;
-        }
-      }
-    }
+    @include ai-attachments;
   }
 
   .richtext-ai-attach {
@@ -582,11 +586,41 @@
   /* On the first line of text: textarea padding plus half the line-height gap. */
   margin-top: calc(4px + (1.5em - 18px) / 2);
 }
+.richtext-ai-composer-box--dragging {
+  outline: 2px dashed var(--ai-accent);
+  outline-offset: -2px;
+}
+.richtext-ai-composer .richtext-ai-composer-attachments {
+  @include ai-attachments;
+  padding: 6px 0 0;
+}
 .richtext-ai-composer-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+
+  .richtext-ai-composer-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 28px;
+  }
+
+  .richtext-ai-attach {
+    display: inline-flex;
+    padding: 5px;
+    border-radius: 999px;
+    color: hsl(var(--muted-foreground));
+
+    &:hover:not(:disabled) {
+      color: inherit;
+      background: hsl(var(--muted));
+    }
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
 
   /* The target pill: the label and chevron are what you see; the native
      <select> lies invisibly on top so the dropdown and keyboard still work. */

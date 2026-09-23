@@ -12,13 +12,14 @@ export default defineConfig({
   ignoreDeadLinks: true,
   locales: {
     root: getLocaleConfig('en'),
+    zh: getLocaleConfig('zh'),
   },
   themeConfig: {
     search: {
       provider: 'local',
       options: {
         locales: {
-          'zh-CN': {
+          zh: {
             translations: {
               button: {
                 buttonText: '搜索文档',
