@@ -1,9 +1,14 @@
+import { CodeXmlIcon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton } from '@/components';
-import { CodeBlock } from '@/extensions/CodeBlock/CodeBlock';
+import { registerIcons } from '@/components/icons/icons';
+import { CodeBlockCore as CodeBlock } from '@/extensions/CodeBlock/CodeBlock';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Code2: CodeXmlIcon });
 
 export function RichTextCodeBlock() {
   const buttonProps = useButtonProps(CodeBlock.name);

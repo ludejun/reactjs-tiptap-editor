@@ -1,7 +1,13 @@
+import { TableOfContentsIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
-import { TableOfContents } from '@/extensions/TableOfContents/TableOfContents';
+import { registerIcons } from '@/components/icons/icons';
+import { TableOfContentsCore as TableOfContents } from '@/extensions/TableOfContents/TableOfContents';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ TableOfContents: TableOfContentsIcon });
 
 export function RichTextTableOfContents() {
   const buttonProps = useButtonProps(TableOfContents.name);

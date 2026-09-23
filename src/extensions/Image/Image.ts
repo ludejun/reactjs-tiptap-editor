@@ -1,12 +1,6 @@
 import { mergeAttributes } from '@tiptap/core';
 import { Image as TiptapImage } from '@tiptap/extension-image';
 import { NodeSelection, type EditorState } from '@tiptap/pm/state';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-
-import ImageView, {
-  isImageCaptionEvent,
-  isInsideImageCaption,
-} from '@/extensions/Image/components/ImageView';
 
 import type { ImageLifecycleStorage } from '@/extensions/Image/imageLifecycle';
 import type { ButtonViewParams, GeneralOptions, JSONContent } from '@/types';
@@ -310,7 +304,11 @@ function getImageOptions(extension: { parent?: () => Partial<IImageOptions> }) {
   };
 }
 
-export const ImageBlock = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
+/**
+ * The block image without a node view. `ImageCore` registers it; the React
+ * and Vue packages extend both with their node views.
+ */
+export const ImageBlockCore = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
   name: IMAGE_BLOCK_NAME,
   group: 'block',
   inline: false,
@@ -400,15 +398,6 @@ export const ImageBlock = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
     };
   },
 
-  addNodeView() {
-    return ReactNodeViewRenderer(ImageView, {
-      // Hand every event inside the caption input back to the input. Without
-      // this ProseMirror treats a click there as selecting the image (so the
-      // next keystroke replaces it) and swallows the keys themselves.
-      stopEvent: isImageCaptionEvent,
-      ignoreMutation: ({ mutation }) => isInsideImageCaption(mutation.target),
-    });
-  },
   renderHTML({ node, HTMLAttributes }) {
     const { flipX, flipY, align } = HTMLAttributes;
     const rotate = parseRotation(node.attrs.rotate);
@@ -503,8 +492,15 @@ export const ImageBlock = /* @__PURE__ */ TiptapImage.extend<IImageOptions>({
 });
 
 export * from '@/extensions/Image/imageLifecycle';
+export * from '@/extensions/Image/caption';
 
-export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions, ImageLifecycleStorage>({
+/**
+ * The image extension without node views: inline `image` plus the `imageBlock`
+ * node, commands, HTML round-trip and upload bookkeeping. Renders through
+ * `renderHTML`, so it works with any Tiptap binding. The React package extends
+ * it with the resizable node view as `Image`; the Vue layer does the same.
+ */
+export const ImageCore = /* @__PURE__ */ TiptapImage.extend<IImageOptions, ImageLifecycleStorage>({
   group: 'inline',
   inline: true,
   defining: true,
@@ -534,7 +530,7 @@ export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions, ImageLife
     return { uploaded: new Set<string>(), saved: null };
   },
   addExtensions() {
-    return [ImageBlock.configure(this.options)];
+    return [ImageBlockCore.configure(this.options)];
   },
   addAttributes() {
     return {
@@ -607,15 +603,6 @@ export const Image = /* @__PURE__ */ TiptapImage.extend<IImageOptions, ImageLife
     };
   },
 
-  addNodeView() {
-    return ReactNodeViewRenderer(ImageView, {
-      // Hand every event inside the caption input back to the input. Without
-      // this ProseMirror treats a click there as selecting the image (so the
-      // next keystroke replaces it) and swallows the keys themselves.
-      stopEvent: isImageCaptionEvent,
-      ignoreMutation: ({ mutation }) => isInsideImageCaption(mutation.target),
-    });
-  },
   addCommands() {
     return {
       ...this.parent?.(),

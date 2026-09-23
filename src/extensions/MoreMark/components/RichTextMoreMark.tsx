@@ -1,3 +1,4 @@
+import { SubscriptIcon, SuperscriptIcon, TypeIcon } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import {
@@ -9,12 +10,16 @@ import {
   IconComponent,
   MenuDown,
 } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { MoreMark } from '@/extensions/MoreMark/MoreMark';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { getShortcutKeys } from '@/utils/plateform';
 
 import type { ButtonViewReturnComponentProps } from '@/types';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Subscript: SubscriptIcon, Superscript: SuperscriptIcon, Type: TypeIcon });
 
 export interface Item {
   title: string;

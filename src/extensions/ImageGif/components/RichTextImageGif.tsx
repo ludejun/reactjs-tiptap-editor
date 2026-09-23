@@ -2,6 +2,8 @@ import { debounce } from 'lodash-es';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ActionButton, Input, Popover, PopoverContent, PopoverTrigger } from '@/components';
+import { GifIcon as GifIcon } from '@/components/icons/GIfIcon';
+import { registerIcons } from '@/components/icons/icons';
 import {
   type GifItem,
   serviceGetTrendingGiphy,
@@ -9,11 +11,14 @@ import {
   serviceSearchGiphy,
   serviceSearchTenor,
 } from '@/extensions/ImageGif/components/services';
-import { ImageGif } from '@/extensions/ImageGif/ImageGif';
+import { ImageGifCore as ImageGif } from '@/extensions/ImageGif/ImageGif';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 
 import type React from 'react';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ GifIcon: GifIcon });
 
 interface IProps {
   showClear?: boolean;

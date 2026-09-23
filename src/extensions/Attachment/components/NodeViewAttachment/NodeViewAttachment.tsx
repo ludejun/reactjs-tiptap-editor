@@ -1,7 +1,9 @@
 import { NodeViewWrapper } from '@tiptap/react';
+import { Trash2Icon } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
 import { useEditableEditor } from '@/store/store';
@@ -11,6 +13,9 @@ import { getFileTypeIcon } from './FileIcon';
 
 import styles from './index.module.scss';
 import type { NodeViewProps } from '@tiptap/react';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Trash2: Trash2Icon });
 
 export function NodeViewAttachment({
   editor,

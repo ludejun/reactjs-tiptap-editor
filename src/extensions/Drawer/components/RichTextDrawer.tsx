@@ -1,7 +1,9 @@
+import { PencilRulerIcon } from 'lucide-react';
 import { useState } from 'react';
 import svg64 from 'svg64';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { LazyContent } from '@/components/LazyContent';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Drawer } from '@/extensions/Drawer/Drawer';
@@ -10,6 +12,9 @@ import { useButtonProps } from '@/hooks/useButtonProps';
 import { useEditorInstance } from '@/store/editor';
 import { dataURLtoFile } from '@/utils/file';
 import { shortId } from '@/utils/shortId';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ PencilRuler: PencilRulerIcon });
 
 const loadCanvas = () => import('./DrawerCanvas');
 

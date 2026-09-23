@@ -1,7 +1,9 @@
 import { BubbleMenu } from '@tiptap/react/menus';
+import { PencilIcon, Trash2Icon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { Button, Input, Label } from '@/components/ui';
 import {
   Dialog,
@@ -23,6 +25,9 @@ import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 import { useEditableEditor } from '@/store/store';
 import { deleteNode } from '@/utils/delete-node';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Pencil: PencilIcon, Trash2: Trash2Icon });
 
 const CALLOUT_TYPES = [
   { value: 'note', label: 'Note', icon: 'Info' },

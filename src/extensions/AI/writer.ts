@@ -72,21 +72,27 @@ export function resolveWriteTarget(editor: Editor, target: AIWriteTarget): Range
 }
 
 /**
- * The document as Markdown when the Markdown export is available (it needs
- * the extensions' `renderMarkdown` hooks), plain text otherwise, trimmed to
- * `limit` characters around the caret so the context is where the user is.
+ * The document as text for the model, trimmed to `limit` characters from the
+ * end (a "continue writing" needs what comes last). Uses `serializeDocument`
+ * from the AI options when set, else `editor.getMarkdown()` when the host
+ * registered Tiptap's Markdown extension, else plain text. Not a dynamic
+ * import: one would drag a bundler interop chunk into the core entry.
  */
 export async function documentContext(editor: Editor, limit: number): Promise<string> {
   if (limit <= 0) return '';
+  const serialize = aiOptionsOf(editor)?.serializeDocument;
+  const withMarkdown = editor as Editor & { getMarkdown?: () => string };
   let text: string;
   try {
-    const { getMarkdown } = await import('@/extensions/ExportMarkdown/ExportMarkdown');
-    text = await getMarkdown(editor);
+    text = serialize
+      ? await serialize(editor)
+      : typeof withMarkdown.getMarkdown === 'function'
+        ? withMarkdown.getMarkdown()
+        : editor.getText({ blockSeparator: '\n\n' });
   } catch {
     text = editor.getText({ blockSeparator: '\n\n' });
   }
   if (text.length <= limit) return text;
-  // Keep the end: "continue writing" needs what comes last.
   return `…${text.slice(-limit)}`;
 }
 

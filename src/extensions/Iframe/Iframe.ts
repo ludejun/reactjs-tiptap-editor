@@ -1,8 +1,6 @@
 import { Node, mergeAttributes, nodeInputRule } from '@tiptap/core';
 import { NodeSelection } from '@tiptap/pm/state';
-import { ReactNodeViewRenderer } from '@tiptap/react';
 
-import IframeNodeView from '@/extensions/Iframe/components/IframeNodeView';
 import { getDatasetAttribute } from '@/utils/dom-dataset';
 
 declare module '@tiptap/core' {
@@ -16,7 +14,12 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Iframe = /* @__PURE__ */ Node.create({
+/**
+ * The iframe without a node view: renders through `renderHTML`, so it works
+ * with any Tiptap binding. The React package extends it with the resizable
+ * node view as `Iframe`; the Vue layer does the same.
+ */
+export const IframeCore = /* @__PURE__ */ Node.create({
   name: 'iframe',
   content: '',
   marks: '',
@@ -121,9 +124,5 @@ export const Iframe = /* @__PURE__ */ Node.create({
         },
       }),
     ];
-  },
-
-  addNodeView() {
-    return ReactNodeViewRenderer(IframeNodeView);
   },
 });

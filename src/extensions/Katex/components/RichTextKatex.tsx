@@ -1,7 +1,9 @@
+import { SigmaIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 import { ActionButton, Button, Label } from '@/components';
 import { AIGenerateField } from '@/components/AIGenerateField';
+import { registerIcons } from '@/components/icons/icons';
 import {
   Dialog,
   DialogContent,
@@ -11,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { KatexPreview } from '@/extensions/Katex/components/KatexPreview';
-import { Katex } from '@/extensions/Katex/Katex';
+import { KatexCore as Katex } from '@/extensions/Katex/Katex';
 import { useToggleActive } from '@/hooks/useActive';
 import { useAttributes } from '@/hooks/useAttributes';
 import { useButtonProps } from '@/hooks/useButtonProps';
@@ -20,6 +22,9 @@ import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 
 import type { IKatexAttrs } from '@/extensions/Katex/Katex';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ KatexIcon: SigmaIcon });
 
 export function RichTextKatex() {
   const { t } = useLocale();

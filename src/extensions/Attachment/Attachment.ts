@@ -1,9 +1,6 @@
 import { Node, mergeAttributes } from '@tiptap/core';
-import { ReactNodeViewRenderer } from '@tiptap/react';
 
-import { ActionButton } from '@/components';
-import { getFileTypeIcon } from '@/extensions/Attachment/components/NodeViewAttachment/FileIcon';
-import { NodeViewAttachment } from '@/extensions/Attachment/components/NodeViewAttachment/NodeViewAttachment';
+import { getFileTypeIconSpec } from '@/extensions/Attachment/fileIcon';
 import { getDatasetAttribute } from '@/utils/dom-dataset';
 import { normalizeFileSize } from '@/utils/file';
 
@@ -23,7 +20,14 @@ export interface AttachmentOptions extends GeneralOptions<AttachmentOptions> {
   upload?: (file: File) => Promise<string>;
 }
 
-export const Attachment = /* @__PURE__ */ Node.create<AttachmentOptions>({
+export * from '@/extensions/Attachment/fileIcon';
+
+/**
+ * The attachment without a node view: renders through `renderHTML`, so it
+ * works with any Tiptap binding. The React package extends it with the upload
+ * and file-card node view as `Attachment`; the Vue layer does the same.
+ */
+export const AttachmentCore = /* @__PURE__ */ Node.create<AttachmentOptions>({
   name: 'attachment',
   content: '',
   marks: '',
@@ -40,7 +44,6 @@ export const Attachment = /* @__PURE__ */ Node.create<AttachmentOptions>({
         class: 'attachment',
       },
       button: ({ editor, t }: ButtonViewParams<AttachmentOptions>) => ({
-        component: ActionButton,
         componentProps: {
           action: () => editor.chain().focus().setAttachment().run(),
           isActive: () => false,
@@ -81,7 +84,7 @@ export const Attachment = /* @__PURE__ */ Node.create<AttachmentOptions>({
         ? [
             'a',
             { href: url || '#' },
-            ['span', { class: 'attachment__icon' }, getFileTypeIcon(fileType, true)],
+            ['span', { class: 'attachment__icon' }, getFileTypeIconSpec(fileType)],
             [
               'span',
               { class: 'attachment__text' },
@@ -134,9 +137,5 @@ export const Attachment = /* @__PURE__ */ Node.create<AttachmentOptions>({
           return chain().insertContent({ type: this.name, attrs }).run();
         },
     };
-  },
-
-  addNodeView() {
-    return ReactNodeViewRenderer(NodeViewAttachment);
   },
 });

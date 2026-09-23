@@ -1,3 +1,4 @@
+import { VideoIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import {
@@ -9,6 +10,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Video } from '@/extensions/Video/Video';
 import { useToggleActive } from '@/hooks/useActive';
@@ -19,6 +21,9 @@ import { useEditorInstance } from '@/store/editor';
 import { checkIsVideoUrl } from '@/utils/checkIsVideoUrl';
 
 import { VideoUploadTab } from './VideoUploadTab';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Video: VideoIcon });
 
 export function RichTextVideo() {
   const { t } = useLocale();

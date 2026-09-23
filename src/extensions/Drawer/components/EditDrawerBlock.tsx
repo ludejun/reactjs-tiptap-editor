@@ -1,11 +1,16 @@
+import { PencilIcon } from 'lucide-react';
 import { useState } from 'react';
 import svg64 from 'svg64';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { LazyContent } from '@/components/LazyContent';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { dataURLtoFile } from '@/utils/file';
 import { shortId } from '@/utils/shortId';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Pencil: PencilIcon });
 
 const loadCanvas = () => import('./DrawerCanvas');
 

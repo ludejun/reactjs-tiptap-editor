@@ -4,8 +4,6 @@ import {
   DetailsSummary as TiptapDetailsSummary,
 } from '@tiptap/extension-details';
 
-import { ActionButton } from '@/components';
-
 import type { GeneralOptions } from '@/types';
 import type {
   DetailsContentOptions,
@@ -62,7 +60,6 @@ export const Details = /* @__PURE__ */ TiptapDetails.extend<DetailsOptions>({
       summary: {},
       content: {},
       button: ({ editor, t, extension }) => ({
-        component: ActionButton,
         componentProps: {
           action: () => {
             if (editor.isActive('details')) {

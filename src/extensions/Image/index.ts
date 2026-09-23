@@ -1,2 +1,2 @@
-export * from './Image';
+export * from './ImageReact';
 export * from '@/extensions/Image/components/RichTextImage';

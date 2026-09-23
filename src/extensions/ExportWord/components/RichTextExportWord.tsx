@@ -1,9 +1,15 @@
+import { LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { ActionButton } from '@/components';
+import ExportWordIcon from '@/components/icons/ExportWord';
+import { registerIcons } from '@/components/icons/icons';
 import { ExportWord } from '@/extensions/ExportWord/ExportWord';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ExportWord: ExportWordIcon, Loader: LoaderCircleIcon });
 
 export function RichTextExportWord() {
   const buttonProps = useButtonProps(ExportWord.name);

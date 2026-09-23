@@ -1,10 +1,15 @@
 import { useEditorState } from '@tiptap/react';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
+import { ImageCaption as ImageCaptionIcon } from '@/components/icons/ImageCaption';
 import { Image, ImageBlock } from '@/extensions/Image';
 import { useLocale } from '@/locales';
 
 import type { Editor } from '@tiptap/core';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ImageCaption: ImageCaptionIcon });
 
 /**
  * Position of this image among the ones that already carry a caption, so a new

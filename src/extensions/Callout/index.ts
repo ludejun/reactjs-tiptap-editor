@@ -1,2 +1,2 @@
-export * from './Callout';
+export * from './CalloutReact';
 export * from './components/RichTextCallout';

@@ -1,11 +1,16 @@
+import { LinkIcon } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 
 import { Button, IconComponent, Input, Label, Checkbox } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { Link } from '@/extensions/Link/Link';
 import { useExtension } from '@/hooks/useExtension';
 import { useLocale } from '@/locales';
 
 import type { Mark } from '@tiptap/pm/model';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Link: LinkIcon });
 
 interface IPropsLinkEditBlock {
   editor: import('@tiptap/core').Editor;

@@ -1,11 +1,16 @@
 import { useState } from 'react';
 
 import { ActionButton, IconComponent, Popover, PopoverContent, PopoverTrigger } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
+import { Twitter as TwitterIcon } from '@/components/icons/Twitter';
 import FormEditLinkTwitter from '@/extensions/Twitter/components/FormEditLinkTwitter';
 import { Twitter } from '@/extensions/Twitter/Twitter';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useEditorInstance } from '@/store/editor';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Twitter: TwitterIcon });
 
 export function RichTextTwitter() {
   const [open, setOpen] = useState(false);

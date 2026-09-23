@@ -1,3 +1,4 @@
+import { ChevronDownIcon, ChevronUpIcon, ReplaceIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import {
@@ -11,11 +12,19 @@ import {
   PopoverTrigger,
   Checkbox,
 } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { SearchAndReplace } from '@/extensions/SearchAndReplace/SearchAndReplace';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  ChevronDown: ChevronDownIcon,
+  ChevronUp: ChevronUpIcon,
+  SearchAndReplace: ReplaceIcon,
+});
 
 export function RichTextSearchAndReplace() {
   const { t } = useLocale();

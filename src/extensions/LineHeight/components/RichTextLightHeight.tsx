@@ -14,9 +14,14 @@ import {
   DropdownMenuTrigger,
   IconComponent,
 } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
+import { FormatLineHeight as FormatLineHeightIcon } from '@/components/icons/LineHeight';
 import { LineHeight } from '@/extensions/LineHeight/LineHeight';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ LineHeight: FormatLineHeightIcon });
 
 export function RichTextLineHeight() {
   const buttonProps = useButtonProps<{

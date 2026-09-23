@@ -1,6 +1,8 @@
+import { AlignCenterIcon, AlignJustifyIcon, AlignLeftIcon, AlignRightIcon } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { ActionButton, IconComponent } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import {
   Popover,
   PopoverContent,
@@ -16,6 +18,14 @@ import { useButtonProps } from '@/hooks/useButtonProps';
 import { getShortcutKey } from '@/utils/plateform';
 
 import type { ButtonViewReturnComponentProps } from '@/types';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  AlignCenter: AlignCenterIcon,
+  AlignJustify: AlignJustifyIcon,
+  AlignLeft: AlignLeftIcon,
+  AlignRight: AlignRightIcon,
+});
 
 export interface Item {
   title: string;

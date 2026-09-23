@@ -1,5 +1,19 @@
 import { DragHandle } from '@tiptap/extension-drag-handle-react';
 import { type NodeSelection } from '@tiptap/pm/state';
+import {
+  AlignCenterIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+  ClipboardIcon,
+  Columns2Icon,
+  CopyIcon,
+  GripVerticalIcon,
+  IndentDecreaseIcon,
+  IndentIncreaseIcon,
+  PaintRollerIcon,
+  PlusIcon,
+  Trash2Icon,
+} from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
@@ -15,6 +29,10 @@ import {
   DropdownMenuTrigger,
   IconComponent,
 } from '@/components';
+import { ColumnAddLeft as ColumnAddLeftIcon } from '@/components/icons/ColumnAddLeft';
+import { ColumnAddRight as ColumnAddRightIcon } from '@/components/icons/ColumnAddRight';
+import { DeleteColumn as DeleteColumnIcon } from '@/components/icons/DeleteColumn';
+import { registerIcons } from '@/components/icons/icons';
 import { Clear } from '@/extensions/Clear';
 import { Column, ColumnNode, MultipleColumnNode } from '@/extensions/Column';
 import { Indent } from '@/extensions/Indent';
@@ -27,6 +45,25 @@ import { IndentProps, setNodeIndentMarkup } from '@/utils/indent';
 import type {} from '@tiptap/extension-paragraph';
 import type { Node } from '@tiptap/pm/model';
 import type { Editor } from '@tiptap/react';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  AlignCenter: AlignCenterIcon,
+  AlignLeft: AlignLeftIcon,
+  AlignRight: AlignRightIcon,
+  Clipboard: ClipboardIcon,
+  ColumnAddLeft: ColumnAddLeftIcon,
+  ColumnAddRight: ColumnAddRightIcon,
+  Columns: Columns2Icon,
+  Copy: CopyIcon,
+  DeleteColumn: DeleteColumnIcon,
+  Grip: GripVerticalIcon,
+  IndentDecrease: IndentDecreaseIcon,
+  IndentIncrease: IndentIncreaseIcon,
+  PaintRoller: PaintRollerIcon,
+  Plus: PlusIcon,
+  Trash2: Trash2Icon,
+});
 
 /** Height of the handle row: two 32px action buttons side by side. */
 const HANDLE_HEIGHT = 32;

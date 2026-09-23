@@ -1,13 +1,13 @@
-import { createSignal, useSetSignal, useSignalValue } from 'reactjs-signal';
+import { createExternalStore, useExternalStoreValue } from '@/store/externalStore';
 
-const editableEditorSignal = createSignal<boolean>(false);
+const editableEditorStore = createExternalStore<boolean>(false);
 
 function useEditableEditor() {
-  return useSignalValue(editableEditorSignal);
+  return useExternalStoreValue(editableEditorStore);
 }
 
 function useStoreEditableEditor() {
-  return useSetSignal(editableEditorSignal);
+  return editableEditorStore.set;
 }
 
 export { useStoreEditableEditor, useEditableEditor };

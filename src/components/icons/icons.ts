@@ -1,245 +1,39 @@
-import {
-  ALargeSmall,
-  SeparatorHorizontal,
-  AlignCenter,
-  AlignJustify,
-  AlignLeft,
-  AlignRight,
-  BetweenHorizonalEnd,
-  BetweenHorizonalStart,
-  BetweenVerticalEnd,
-  BetweenVerticalStart,
-  Bold,
-  BookMarked,
-  ChevronDown,
-  ChevronUp,
-  ChevronsUpDown,
-  Clipboard,
-  Code,
-  CodeXml,
-  Columns2,
-  Columns3,
-  Columns4,
-  Copy,
-  CropIcon,
-  Eraser,
-  Eye,
-  FlipHorizontal,
-  FlipVertical,
-  Frame,
-  GripVertical,
-  Pilcrow,
-  RotateCwSquare,
-  Heading1,
-  Heading2,
-  Heading3,
-  Heading4,
-  Heading5,
-  Heading6,
-  ImageUp,
-  IndentDecrease,
-  IndentIncrease,
-  Italic,
-  Link,
-  List,
-  ListOrdered,
-  ListCollapse,
-  ListTodo,
-  LoaderCircle,
-  Maximize,
-  Minimize,
-  Minus,
-  PaintRoller,
-  PanelLeft,
-  PanelRight,
-  Paperclip,
-  Pencil,
-  Plus,
-  Quote,
-  Redo2,
-  Replace,
-  Settings,
-  Sigma,
-  SmilePlus,
-  SmilePlusIcon,
-  Sparkles,
-  Strikethrough,
-  Subscript,
-  Superscript,
-  Table,
-  TableCellsMerge,
-  TableOfContents,
-  TableCellsSplit,
-  Trash,
-  Trash2,
-  Type,
-  Underline,
-  Undo2,
-  Unlink,
-  Video,
-  ZoomIn,
-  ZoomOut,
-  PencilRuler,
-  WrapText,
-  CornerDownLeft,
-  Loader2 as Loader,
-  X,
-  ExternalLink,
-  NotebookPen,
-} from 'lucide-react';
+import { AspectRatio, MenuDown } from '@/components/icons';
 
-import {
-  AspectRatio,
-  BlockquoteLeft,
-  DeleteColumn,
-  DeleteRow,
-  FileWordOutline,
-  FormatLineHeight,
+/** Any component that draws a 16px icon from a `className` (and optional click). */
+export type IconType = React.ComponentType<{
+  className?: string;
+  onClick?: React.MouseEventHandler<SVGElement>;
+}>;
+
+/**
+ * Icons resolved by name — the `icon` of a `button()` config, the `iconName`
+ * of a slash command, the `name` of `IconComponent`.
+ *
+ * The registry starts almost empty. Every icon — Lucide or the editor's own
+ * SVGs — is registered by the React control that uses it (`registerIcons` at
+ * module scope in `RichTextTable.tsx`, `RichTextBubbleTable.tsx`, …), so a
+ * consumer who imports one feature bundles that feature's icons and nothing
+ * else.
+ */
+export const icons: Record<string, IconType> = {
+  // Shared by most dropdown controls; every other icon arrives with its feature.
   MenuDown,
-  SizeL,
-  SizeM,
-  SizeS,
-} from '@/components/icons';
-import { CodeView } from '@/components/icons/CodeView';
-import { ColumnAddLeft } from '@/components/icons/ColumnAddLeft';
-import { ColumnAddRight } from '@/components/icons/ColumnAddRight';
-import { Direction } from '@/components/icons/Direction';
-import { Excalidraw } from '@/components/icons/Excalidraw';
-import ExportMarkdown from '@/components/icons/ExportMarkdown';
-import { ExportPdf } from '@/components/icons/ExportPdf';
-import ExportWord from '@/components/icons/ExportWord';
-import { GifIcon } from '@/components/icons/GIfIcon';
-import { Html } from '@/components/icons/Html';
-import { ImageCaption } from '@/components/icons/ImageCaption';
-import { LeftToRight } from '@/components/icons/LeftToRight';
-import { Mermaid } from '@/components/icons/Mermaid';
-import { RightToLeft } from '@/components/icons/RightToLeft';
-import { Twitter } from '@/components/icons/Twitter';
-
-import ImportWord from './ImportWord';
-
-export const icons: Record<
-  string,
-  React.ComponentType<{ className?: string; onClick?: React.MouseEventHandler<SVGElement> }>
-> = {
-  Bold,
-  LoaderCircle,
-  Italic,
-  Underline,
-  Quote,
-  TextQuote: BlockquoteLeft,
-  Strikethrough,
-  Minus,
-  SeparatorHorizontal,
-  Eraser,
-  PaintRoller,
-  Redo2,
-  Undo2,
-  AlignCenter: AlignCenter,
-  AlignJustify: AlignJustify,
-  AlignLeft: AlignLeft,
-  AlignRight: AlignRight,
-  ChevronDown,
-  Subscript,
-  Superscript,
-  Code,
-  Code2: CodeXml,
-  Type,
-  RotateCwSquare,
-  ImageCaption,
-  IndentIncrease,
-  IndentDecrease,
-  List,
-  ListOrdered,
-  ListTodo,
-  Link,
-  ImageUp,
-  Video,
-  Maximize,
-  Minimize,
-  Table,
-  Sparkles,
-  Pencil,
-  Unlink,
-  BetweenHorizonalEnd,
-  BetweenHorizonalStart,
-  BetweenVerticalStart,
-  BetweenVerticalEnd,
-  TableCellsMerge,
-  TableCellsSplit,
-  Trash2,
-  Trash,
-  Replace,
-  ChevronsUpDown,
-  LineHeight: FormatLineHeight,
-  FontSize: ALargeSmall,
-  Word: FileWordOutline,
-  HeadingParagraph: Pilcrow,
-  Heading1,
-  Heading2,
-  Heading3,
-  Heading4,
-  Heading5,
-  Heading6,
-  Columns2,
-  Columns3,
-  Columns4,
-  Plus,
-  Grip: GripVertical,
-  Copy,
-  Clipboard,
-  PanelLeft,
-  PanelRight,
-  Columns: Columns2,
-  Iframe: Frame,
-
-  MenuDown,
-  SizeS,
-  SizeM,
-  SizeL,
   AspectRatio,
-
-  Emoji: SmilePlus,
-
-  DeleteColumn,
-  DeleteRow,
-  SearchAndReplace: Replace,
-  EmojiIcon: SmilePlusIcon,
-  KatexIcon: Sigma,
-  ExportPdf,
-  ExportWord,
-  ExportMarkdown,
-  ImportWord,
-  ColumnAddLeft,
-  ColumnAddRight,
-  BookMarked,
-  Excalidraw,
-  ZoomIn,
-  ZoomOut,
-  Settings,
-  Eye,
-
-  TextDirection: Direction,
-  LeftToRight,
-  RightToLeft,
-
-  Attachment: Paperclip,
-  GifIcon,
-  ChevronUp,
-  Crop: CropIcon,
-  Mermaid,
-  Twitter,
-  CodeView,
-  FlipX: FlipVertical,
-  FlipY: FlipHorizontal,
-  PencilRuler,
-  WrapText,
-  CornerDownLeft,
-  Loader,
-  X,
-  Html,
-  ExternalLink,
-  Callout: NotebookPen,
-  Details: ListCollapse,
-  TableOfContents,
 };
+
+/**
+ * Adds icons to the registry under the names used by `icon` / `iconName`
+ * options. Call it at module scope next to the control that needs them, with
+ * the Lucide components (or any component taking a `className`) — see
+ * docs/guide/customization.md. A host whose own `button()` config names a
+ * Lucide icon registers it the same way. Registering a name again replaces
+ * the previous component.
+ */
+export function registerIcons(map: Record<string, IconType | undefined>) {
+  for (const name in map) {
+    const icon = map[name];
+
+    if (icon) icons[name] = icon;
+  }
+}

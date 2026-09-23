@@ -1,11 +1,10 @@
-import { createSignal, useSignal } from 'reactjs-signal';
-
 import { type CommandList } from '@/extensions/SlashCommand/types';
+import { createExternalStore, useExternalStoreValue } from '@/store/externalStore';
 
-const useSignalCommandListStore = createSignal<CommandList[]>([]);
+const commandListStore = createExternalStore<CommandList[]>([]);
 
 export function useSignalCommandList() {
-  const [commandList, setCommandList] = useSignal(useSignalCommandListStore);
+  const commandList = useExternalStoreValue(commandListStore);
 
-  return [commandList, setCommandList] as const;
+  return [commandList, commandListStore.set] as const;
 }

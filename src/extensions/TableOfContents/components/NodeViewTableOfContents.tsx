@@ -4,27 +4,12 @@ import {
   scrollToTableOfContentsItem,
   useTableOfContents,
 } from '@/extensions/TableOfContents/components/useTableOfContents';
+import { tableOfContentsIndexLabel } from '@/extensions/TableOfContents/toc';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
 
-import type { TableOfContentsItem } from '@/extensions/TableOfContents/components/useTableOfContents';
 import type { NodeViewProps } from '@tiptap/react';
 import type { CSSProperties } from 'react';
-
-// Walk back through parent headings to produce "1.2.3" style labels.
-function buildIndexLabel(items: TableOfContentsItem[], index: number) {
-  const parts: number[] = [items[index].itemIndex];
-  let level = items[index].level;
-
-  for (let i = index - 1; i >= 0 && level > 1; i -= 1) {
-    if (items[i].level < level) {
-      parts.unshift(items[i].itemIndex);
-      level = items[i].level;
-    }
-  }
-
-  return parts.join('.');
-}
 
 export function NodeViewTableOfContents({ editor, selected }: NodeViewProps) {
   const { t } = useLocale();
@@ -55,7 +40,9 @@ export function NodeViewTableOfContents({ editor, selected }: NodeViewProps) {
                 onClick={() => scrollToTableOfContentsItem(editor, item)}
                 type='button'
               >
-                <span className='table-of-contents__index'>{buildIndexLabel(items, index)}</span>
+                <span className='table-of-contents__index'>
+                  {tableOfContentsIndexLabel(items, index)}
+                </span>
 
                 <span className='table-of-contents__text'>{item.textContent}</span>
               </button>

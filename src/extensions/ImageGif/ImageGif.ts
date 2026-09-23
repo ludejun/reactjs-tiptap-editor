@@ -1,8 +1,5 @@
 import { mergeAttributes } from '@tiptap/core';
 import { Image as TiptapImage } from '@tiptap/extension-image';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-
-import ImageGifView from '@/extensions/ImageGif/components/ImageGifView';
 
 import type { ButtonViewParams } from '@/types';
 import type { ImageOptions } from '@tiptap/extension-image';
@@ -19,7 +16,7 @@ export interface SetImageAttrsOptions {
   align?: 'left' | 'center' | 'right';
 }
 
-interface ImageGifOptions extends ImageOptions {
+export interface ImageGifOptions extends ImageOptions {
   provider: 'giphy' | 'tenor';
   /**
    * The key for the gif https://giphy.com/ or https://tenor.com/
@@ -46,7 +43,12 @@ declare module '@tiptap/core' {
   }
 }
 
-export const ImageGif = /* @__PURE__ */ TiptapImage.extend<ImageGifOptions>({
+/**
+ * The GIF node without a node view: renders through `renderHTML`, so it works
+ * with any Tiptap binding. The React package extends it with the resizable
+ * node view as `ImageGif`; the Vue layer does the same.
+ */
+export const ImageGifCore = /* @__PURE__ */ TiptapImage.extend<ImageGifOptions>({
   name: 'imageGif',
   //@ts-expect-error
   addOptions() {
@@ -108,9 +110,6 @@ export const ImageGif = /* @__PURE__ */ TiptapImage.extend<ImageGifOptions>({
     };
   },
 
-  addNodeView() {
-    return ReactNodeViewRenderer(ImageGifView);
-  },
   addCommands() {
     return {
       ...this.parent?.(),

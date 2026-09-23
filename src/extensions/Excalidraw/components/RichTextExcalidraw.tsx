@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState, useMemo } from 'react';
 
 import { ActionButton } from '@/components/ActionButton';
+import { Excalidraw as ExcalidrawIcon } from '@/components/icons/Excalidraw';
+import { registerIcons } from '@/components/icons/icons';
 import { useListener } from '@/components/ReactBus';
 import { Button } from '@/components/ui';
 import {
@@ -24,6 +26,9 @@ import type {
   ExcalidrawImperativeAPI,
   ExcalidrawInitialDataState,
 } from '@excalidraw/excalidraw/types';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Excalidraw: ExcalidrawIcon });
 
 export function RichTextExcalidraw() {
   const editor = useEditorInstance();

@@ -1,7 +1,13 @@
+import { IndentDecreaseIcon, IndentIncreaseIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { Indent } from '@/extensions/Indent/Indent';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ IndentDecrease: IndentDecreaseIcon, IndentIncrease: IndentIncreaseIcon });
 
 export function RichTextIndent() {
   const buttonProps = useButtonProps(Indent.name);

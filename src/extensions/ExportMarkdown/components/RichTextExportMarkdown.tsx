@@ -1,9 +1,15 @@
+import { LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { ActionButton } from '@/components';
+import ExportMarkdownIcon from '@/components/icons/ExportMarkdown';
+import { registerIcons } from '@/components/icons/icons';
 import { ExportMarkdown } from '@/extensions/ExportMarkdown/ExportMarkdown';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ExportMarkdown: ExportMarkdownIcon, Loader: LoaderCircleIcon });
 
 export function RichTextExportMarkdown() {
   const buttonProps = useButtonProps(ExportMarkdown.name);

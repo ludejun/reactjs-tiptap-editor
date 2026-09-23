@@ -1,9 +1,57 @@
+import {
+  CodeXmlIcon,
+  Columns2Icon,
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  Heading4Icon,
+  Heading5Icon,
+  Heading6Icon,
+  ImageUpIcon,
+  ListCollapseIcon,
+  ListIcon,
+  ListOrderedIcon,
+  ListTodoIcon,
+  MinusIcon,
+  PilcrowIcon,
+  SeparatorHorizontalIcon,
+  TableIcon,
+  TableOfContentsIcon,
+  VideoIcon,
+} from 'lucide-react';
+
+import { BlockquoteLeft as BlockquoteLeftIcon } from '@/components/icons/Blockquote';
+import { registerIcons } from '@/components/icons/icons';
 import { emit } from '@/components/ReactBus';
 import { HEADINGS } from '@/constants';
 import { EVENTS } from '@/utils/customEvents/events.constant';
 
 import type { CommandList } from './types';
 import type { Editor } from '@tiptap/core';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  Code2: CodeXmlIcon,
+  Columns2: Columns2Icon,
+  Details: ListCollapseIcon,
+  Heading1: Heading1Icon,
+  Heading2: Heading2Icon,
+  Heading3: Heading3Icon,
+  Heading4: Heading4Icon,
+  Heading5: Heading5Icon,
+  Heading6: Heading6Icon,
+  HeadingParagraph: PilcrowIcon,
+  ImageUp: ImageUpIcon,
+  List: ListIcon,
+  ListOrdered: ListOrderedIcon,
+  ListTodo: ListTodoIcon,
+  Minus: MinusIcon,
+  SeparatorHorizontal: SeparatorHorizontalIcon,
+  Table: TableIcon,
+  TableOfContents: TableOfContentsIcon,
+  TextQuote: BlockquoteLeftIcon,
+  Video: VideoIcon,
+});
 
 export function renderCommandListDefault({ t }: { t: (path: string) => string }) {
   // Insert comes first: someone who opens the menu usually wants a table, a

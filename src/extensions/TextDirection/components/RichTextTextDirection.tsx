@@ -1,6 +1,11 @@
+import { XIcon } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { ActionButton, IconComponent } from '@/components';
+import { Direction as DirectionIcon } from '@/components/icons/Direction';
+import { registerIcons } from '@/components/icons/icons';
+import { LeftToRight as LeftToRightIcon } from '@/components/icons/LeftToRight';
+import { RightToLeft as RightToLeftIcon } from '@/components/icons/RightToLeft';
 import {
   Popover,
   PopoverContent,
@@ -16,6 +21,14 @@ import { useButtonProps } from '@/hooks/useButtonProps';
 import { getShortcutKey } from '@/utils/plateform';
 
 import type { ButtonViewReturnComponentProps } from '@/types';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  LeftToRight: LeftToRightIcon,
+  RightToLeft: RightToLeftIcon,
+  TextDirection: DirectionIcon,
+  X: XIcon,
+});
 
 export interface Item {
   title: string;

@@ -1,3 +1,4 @@
+import { PanelBottomOpenIcon, PenLineIcon, SparklesIcon } from 'lucide-react';
 import React, {
   Fragment,
   forwardRef,
@@ -8,6 +9,7 @@ import React, {
 } from 'react';
 
 import { IconComponent, Label } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { AI_COMPOSER_ACTIONS, composerPrompt } from '@/extensions/AI/composer';
 import { writeWithAI } from '@/extensions/AI/writer';
 import { useFilterCommandList } from '@/extensions/SlashCommand/renderCommandListDefault';
@@ -18,6 +20,13 @@ import { useSignalCommandList } from '@/store/commandList';
 import type { Command } from '../types';
 import type { SuggestionHandle } from '@/utils/renderNodeView';
 import type { SuggestionProps } from '@tiptap/suggestion';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  PanelBottomOpen: PanelBottomOpenIcon,
+  PenLine: PenLineIcon,
+  Sparkles: SparklesIcon,
+});
 
 function SlashCommandNodeView(
   props: SuggestionProps<Command>,

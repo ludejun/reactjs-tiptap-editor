@@ -1,3 +1,4 @@
+import { ALargeSmallIcon } from 'lucide-react';
 import React, { Fragment, useMemo } from 'react';
 
 import {
@@ -10,12 +11,16 @@ import {
   DropdownMenuTrigger,
   IconComponent,
 } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { FontSize } from '@/extensions/FontSize/FontSize';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useLocale } from '@/locales';
 
 import type { ButtonViewReturnComponentProps } from '@/types';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ FontSize: ALargeSmallIcon });
 
 export interface Item {
   title: string;

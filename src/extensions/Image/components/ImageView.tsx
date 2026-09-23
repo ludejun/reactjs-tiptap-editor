@@ -3,29 +3,21 @@ import { clamp, isNumber, throttle } from 'lodash-es';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { IMAGE_MAX_SIZE, IMAGE_MIN_SIZE, IMAGE_THROTTLE_WAIT_TIME } from '@/constants';
+import { CAPTION_CLASS } from '@/extensions/Image/caption';
 import { parseRotation } from '@/extensions/Image/Image';
 import { useLocale } from '@/locales';
 
 import type { NodeViewProps } from '@tiptap/react';
 
+export {
+  CAPTION_CLASS,
+  isImageCaptionEvent,
+  isInsideImageCaption,
+} from '@/extensions/Image/caption';
+
 interface Size {
   width: number;
   height: number;
-}
-
-/** Marks the caption input so the node view can hand its events back to it. */
-export const CAPTION_CLASS = 'image-view__caption';
-
-/** True when the node sits inside the caption input rather than the image. */
-export function isInsideImageCaption(node: EventTarget | Node | null): boolean {
-  const element = node instanceof Element ? node : ((node as Node | null)?.parentElement ?? null);
-
-  return !!element?.closest(`.${CAPTION_CLASS}`);
-}
-
-/** True when the event came from the caption input rather than the image. */
-export function isImageCaptionEvent({ event }: { event: Event }): boolean {
-  return isInsideImageCaption(event.target);
 }
 
 const ResizeDirection = {

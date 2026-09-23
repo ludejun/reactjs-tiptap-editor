@@ -22,7 +22,9 @@
 
 **AI 是一等功能，不是外挂插件。**
 
-- **直接流进文档。** 选中文字或输入 `/ai`，回答一边流式到达一边按编辑器自己的 schema 渲染：Markdown 表格就是编辑器的表格，围栏代码就是真正的代码块，`- [ ]` 就是任务列表。应用时插入的是节点，不是粘贴的文本。
+- **写进文档，而不是聊天框。** 编辑器底部的 AI 写作台（工具栏 ✨、`⌘J`、`/ai`）把回答直接流式写进上方的文档，落地的是真正的块：Markdown 表格就是编辑器的表格，围栏代码就是代码块，`- [ ]` 就是任务列表。写完可保留、撤销、重试或就地追问；整段只占一步撤销。
+- **懂整篇文档。** 续写、总结、生成大纲、拟标题、提取待办、全文纠错、翻译全文——各一键，带着文档上下文。
+- **替你把句子写完。** 停顿后出现灰色续写建议，Tab 接受；空行按空格呼出 AI；选中文字有 Improve：润色、缩写、翻译、转表格、转列表。
 - **生成你打不出来的东西。** Katex 和 Mermaid 对话框接受一句描述（「一元二次方程求根公式」「登录流程」），实时写出源码。
 - **模型你定。** OpenAI 或 Anthropic 协议、任意 baseURL / 代理，或自己的 `generate(request, onChunk)` 传输层。翻译到浏览器语言、追问细化、附带图片和文件。
 - **渲染也归你。** `renderResult` 改答案样式，`components.Panel` 整个面板换掉。
@@ -34,7 +36,7 @@
 - **粘贴正确。** 网页、Excel、Google Docs、Word 保留格式；Word 假列表变真列表，VS Code 代码变代码块。
 - **16 种语言**，按使用人数排序，按需加载，配套 CJK、天城文、孟加拉文字体。
 - **录制与回放**任意一次书写过程。
-- **React 和 Vue。** 文档逻辑以不含 React 的 `ai-sparkwrite-editor/core` 发布；`ai-sparkwrite-editor/vue` 提供 Vue 3 的 Provider、工具栏、控件和节点视图，共用同一套样式。见 [多框架](./docs/guide/frameworks.md)。
+- **React 和 Vue。** 文档逻辑（含 AI 引擎）以不含 React 的 `ai-sparkwrite-editor/core` 发布；`ai-sparkwrite-editor/vue` 提供 Vue 3 的 Provider、工具栏、控件、气泡菜单、对话框、节点视图以及 AI 面板和写作台，共用同一套样式。Playground 可在两者间切换。见 [多框架](./docs/guide/frameworks.md)。
 - **融入你的设计体系。** 带前缀的 Tailwind 类名和几个 CSS 变量。
 
 ## 安装

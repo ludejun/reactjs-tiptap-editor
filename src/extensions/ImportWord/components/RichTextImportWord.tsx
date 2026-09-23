@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
 
 import { ActionButton, useToast } from '@/components';
+import { FileWordOutline as FileWordOutlineIcon } from '@/components/icons/FileWordOutline';
+import { registerIcons } from '@/components/icons/icons';
+import ImportWordIcon from '@/components/icons/ImportWord';
 import { Image } from '@/extensions/Image';
 import { ImportWord } from '@/extensions/ImportWord/ImportWord';
 import { useToggleActive } from '@/hooks/useActive';
@@ -12,6 +15,9 @@ import { base64ToBlob, blobToFile } from '@/utils/base64';
 import { hasExtension } from '@/utils/utils';
 
 import type mammoth from 'mammoth';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ImportWord: ImportWordIcon, Word: FileWordOutlineIcon });
 
 export function RichTextImportWord() {
   const editor = useEditorInstance();

@@ -266,3 +266,26 @@ function ThemeState() {
 ```
 
 The current provider accepts but ignores `dark`; synchronize the app's theme through `themeActions.setTheme(...)` in initialization, an event handler, or an effect. Theme and locale actions update shared stores, not per-editor state.
+
+## AI: composer dock, autocomplete, writing into the document
+
+```tsx
+import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
+import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+
+const extensions = [
+  AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }), // keys stay on the server
+  AIAutocomplete, // grey continuation after a pause; Tab accepts
+];
+
+<RichTextProvider editor={editor}>
+  <RichTextToolbar>
+    <RichTextAI /> {/* opens the dock; ⌘/Ctrl+J and "/ai" do too */}
+  </RichTextToolbar>
+  <EditorContent editor={editor} />
+  <RichTextAIComposer /> {/* answers stream into the document above */}
+  <RichTextBubbleText /> {/* Improve menu on a selection, also after Select All */}
+</RichTextProvider>;
+```
+
+From your own UI, `writeWithAI(editor, { prompt, target: 'end' })` streams an answer into the document and returns `keep()` / `discard()`; `AI_COMPOSER_ACTIONS` are the presets (continue, summarize, outline, title, action items, grammar, translate). Space on an empty line opens Ask AI (`spaceTrigger: false` to disable). Vue: the same names from `ai-sparkwrite-editor/vue`, extensions from `ai-sparkwrite-editor/core`.

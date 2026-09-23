@@ -1,11 +1,16 @@
+import { LinkIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { ActionButton, IconComponent, Popover, PopoverContent, PopoverTrigger } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import LinkEditBlock from '@/extensions/Link/components/LinkEditBlock';
 import { Link } from '@/extensions/Link/Link';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useEditorInstance } from '@/store/editor';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Link: LinkIcon });
 
 export function RichTextLink() {
   const [open, setOpen] = useState(false);

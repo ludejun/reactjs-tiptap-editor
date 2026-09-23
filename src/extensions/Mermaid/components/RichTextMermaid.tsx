@@ -3,6 +3,8 @@ import svg64 from 'svg64';
 
 import { ActionButton } from '@/components/ActionButton';
 import { AIGenerateField } from '@/components/AIGenerateField';
+import { registerIcons } from '@/components/icons/icons';
+import { Mermaid as MermaidIcon } from '@/components/icons/Mermaid';
 import { Button } from '@/components/ui';
 import {
   Dialog,
@@ -12,13 +14,16 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Mermaid } from '@/extensions/Mermaid/Mermaid';
+import { MermaidCore as Mermaid } from '@/extensions/Mermaid/Mermaid';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 import { dataURLtoFile } from '@/utils/file';
 import { shortId } from '@/utils/shortId';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Mermaid: MermaidIcon });
 
 const defaultCode = 'graph TB\na-->b';
 

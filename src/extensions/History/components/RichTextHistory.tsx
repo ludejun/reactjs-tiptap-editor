@@ -1,9 +1,14 @@
+import { Redo2Icon, Undo2Icon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton, icons } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { History } from '@/extensions/History/History';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Redo2: Redo2Icon, Undo2: Undo2Icon });
 
 export function RichTextUndo() {
   const buttonProps = useButtonProps(History.name);

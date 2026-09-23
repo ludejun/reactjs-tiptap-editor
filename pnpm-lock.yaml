@@ -195,9 +195,6 @@ importers:
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
-      cn:
-        specifier: ^0.2.6
-        version: 0.2.6
       deep-equal:
         specifier: ^2.2.3
         version: 2.2.3
@@ -440,15 +437,24 @@ importers:
 
   playground:
     dependencies:
+      '@tiptap/vue-3':
+        specifier: 3.29.2
+        version: 3.29.2(@floating-ui/dom@1.8.0)(@tiptap/core@3.29.2)(@tiptap/pm@3.29.2)(vue@3.5.30)
       ai-sparkwrite-editor:
         specifier: workspace:*
         version: link:..
+      lucide-vue-next:
+        specifier: ^1.0.0
+        version: 1.0.0(vue@3.5.30)
       react:
         specifier: ^19.1.0
         version: 19.2.4
       react-dom:
         specifier: ^19.1.0
         version: 19.2.4(react@19.2.4)
+      vue:
+        specifier: ^3.4.37
+        version: 3.5.30(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: ^22.14.0
@@ -462,6 +468,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.1.1
         version: 6.1.1(vite@8.3.0)
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.9
+        version: 6.0.9(vite@8.3.0)(vue@3.5.30)
       bumpp:
         specifier: ^9.11.1
         version: 9.11.1
@@ -5939,12 +5948,6 @@ packages:
   /clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
-    dev: false
-
-  /cn@0.2.6:
-    resolution: {integrity: sha512-+i4L0zUGgRcEnhsxueVrP7iBGxBx5iD0WOTYg1MwFEu2ZyCmH5Ov2V1cul2Ht5UchRQQgftCf4be/RxspuW6QQ==}
-    engines: {node: '>=20'}
-    hasBin: true
     dev: false
 
   /color-convert@2.0.1:

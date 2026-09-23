@@ -1,5 +1,15 @@
 import { isActive } from '@tiptap/core';
 import { useEditorState } from '@tiptap/react';
+import {
+  BetweenHorizonalEndIcon,
+  BetweenHorizonalStartIcon,
+  BetweenVerticalEndIcon,
+  BetweenVerticalStartIcon,
+  CornerDownLeftIcon,
+  TableCellsMergeIcon,
+  TableCellsSplitIcon,
+  Trash2Icon,
+} from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import {
@@ -11,11 +21,28 @@ import {
   DropdownMenuTrigger,
   IconComponent,
 } from '@/components';
+import { DeleteColumn as DeleteColumnIcon } from '@/components/icons/DeleteColumn';
+import { DeleteRow as DeleteRowIcon } from '@/components/icons/DeleteRow';
+import { registerIcons } from '@/components/icons/icons';
 import { Table } from '@/extensions/Table';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 import { useEditableEditor } from '@/store/store';
 import { getShortcutKeys } from '@/utils/plateform';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  BetweenHorizonalEnd: BetweenHorizonalEndIcon,
+  BetweenHorizonalStart: BetweenHorizonalStartIcon,
+  BetweenVerticalEnd: BetweenVerticalEndIcon,
+  BetweenVerticalStart: BetweenVerticalStartIcon,
+  CornerDownLeft: CornerDownLeftIcon,
+  DeleteColumn: DeleteColumnIcon,
+  DeleteRow: DeleteRowIcon,
+  TableCellsMerge: TableCellsMergeIcon,
+  TableCellsSplit: TableCellsSplitIcon,
+  Trash2: Trash2Icon,
+});
 
 interface RichTextBubbleTableProps {
   hiddenActions?: string[];

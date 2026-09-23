@@ -14,9 +14,14 @@ import {
   RichTextToolbarMore,
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
+  registerIcons,
 } from 'ai-sparkwrite-editor';
 import { RichTextBold } from 'ai-sparkwrite-editor/bold';
 import { RichTextTable } from 'ai-sparkwrite-editor/table';
+import { Pencil, Save } from 'lucide-react';
+
+// Icons are looked up by name; the built-in controls register theirs, you register yours.
+registerIcons({ Pencil, Save });
 
 <RichTextToolbar>
   <RichTextBold />
@@ -46,6 +51,21 @@ import { RichTextTable } from 'ai-sparkwrite-editor/table';
 ```
 
 `RichTextToolbarMore` keeps a dropdown opened from inside it (font size, line height…) alive while the panel is up, and clicking a row's label triggers its control. Any `RichText*` control from an extension can sit in a row; so can anything of your own. See [Toolbar](/guide/toolbar) for the conventions on what belongs in the top row.
+
+### Icons
+
+Every `icon` in the library is a name — `icon: 'Table'` in an extension's `button()` options, `iconName` in a slash command, `<RichTextToolbarButton icon='Save'>`. Names resolve through a registry that starts almost empty; each built-in control registers the icons it uses — [Lucide](https://lucide.dev) or the editor's own SVGs — when its module loads, so a bundle only carries the icons of the features it imports (see [Bundle size](/guide/bundle-size)).
+
+A name of your own has to be registered before it is rendered — at module scope, next to the component that uses it:
+
+```ts
+import { registerIcons } from 'ai-sparkwrite-editor';
+import { Save } from 'lucide-react';
+
+registerIcons({ Save });
+```
+
+`registerIcons` takes any component that accepts a `className` (a Lucide icon, your own SVG component), keyed by the name you use in configs. Registering a name again replaces the previous icon, which is also how you swap a built-in one: `registerIcons({ Bold: MyBoldIcon })` after importing `ai-sparkwrite-editor/bold` changes the Bold button everywhere. Reading a name back is `icons[name]` (`import { icons } from 'ai-sparkwrite-editor'`).
 
 A custom menu item usually calls a command. For an action the built-in extensions do not have, write a small extension:
 

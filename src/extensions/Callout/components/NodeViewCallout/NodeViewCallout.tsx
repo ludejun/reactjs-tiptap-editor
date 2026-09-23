@@ -1,53 +1,23 @@
 import { NodeViewWrapper } from '@tiptap/react';
 import { AlertCircle, Info, Lightbulb, OctagonAlert, TriangleAlert } from 'lucide-react';
 
+import { getCalloutType } from '@/extensions/Callout/calloutTypes';
 import { cn } from '@/lib/utils';
 
 import type { NodeViewProps } from '@tiptap/react';
 
-const CALLOUT_TYPES = [
-  {
-    value: 'note',
-    label: 'Note',
-    icon: Info,
-    color: '#1f6feb',
-    background: '#1f6feb1f',
-  },
-  {
-    value: 'tip',
-    label: 'Tip',
-    icon: Lightbulb,
-    color: '#238636',
-    background: '#2386361f',
-  },
-  {
-    value: 'important',
-    label: 'Important',
-    icon: AlertCircle,
-    color: '#ab7df8',
-    background: '#ab7df81f',
-  },
-  {
-    value: 'warning',
-    label: 'Warning',
-    icon: TriangleAlert,
-    color: '#d29922',
-    background: '#d299221f',
-  },
-  {
-    value: 'caution',
-    label: 'Caution',
-    icon: OctagonAlert,
-    color: '#f85149',
-    background: '#f851491f',
-  },
-] as const;
+const CALLOUT_ICONS = {
+  note: Info,
+  tip: Lightbulb,
+  important: AlertCircle,
+  warning: TriangleAlert,
+  caution: OctagonAlert,
+} as const;
 
 export function NodeViewCallout({ node }: NodeViewProps) {
   const { type = 'note', title = '', body = '' } = node.attrs;
 
-  const currentType = CALLOUT_TYPES.find((t) => t.value === type) || CALLOUT_TYPES[0];
-  const IconComponent = currentType.icon;
+  const IconComponent = CALLOUT_ICONS[getCalloutType(type).value];
 
   return (
     <NodeViewWrapper>

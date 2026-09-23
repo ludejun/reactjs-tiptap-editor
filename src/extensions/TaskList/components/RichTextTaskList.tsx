@@ -1,7 +1,13 @@
+import { ListTodoIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { TaskList } from '@/extensions/TaskList/TaskList';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ListTodo: ListTodoIcon });
 
 export function RichTextTaskList() {
   const buttonProps = useButtonProps(TaskList.name);

@@ -1,7 +1,9 @@
+import { PencilIcon } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import svg64 from 'svg64';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { Button } from '@/components/ui';
 import {
   Dialog,
@@ -15,6 +17,9 @@ import { dataURLtoFile } from '@/utils/file';
 import { shortId } from '@/utils/shortId';
 
 import type { Editor } from '@tiptap/core';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Pencil: PencilIcon });
 
 interface IProps {
   editor: Editor;

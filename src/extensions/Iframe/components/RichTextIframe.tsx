@@ -1,7 +1,13 @@
+import { FrameIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
-import { Iframe } from '@/extensions/Iframe/Iframe';
+import { registerIcons } from '@/components/icons/icons';
+import { IframeCore as Iframe } from '@/extensions/Iframe/Iframe';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Iframe: FrameIcon });
 
 export function RichTextIframe() {
   const buttonProps = useButtonProps(Iframe.name);

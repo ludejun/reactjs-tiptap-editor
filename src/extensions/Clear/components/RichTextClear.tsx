@@ -1,7 +1,13 @@
+import { EraserIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { Clear } from '@/extensions/Clear/Clear';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Eraser: EraserIcon });
 
 export function RichTextClear() {
   const buttonProps = useButtonProps(Clear.name);

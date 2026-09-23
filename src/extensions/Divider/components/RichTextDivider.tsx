@@ -1,3 +1,5 @@
+import { SeparatorHorizontalIcon } from 'lucide-react';
+
 import {
   ActionButton,
   DropdownMenu,
@@ -6,6 +8,7 @@ import {
   DropdownMenuTrigger,
   IconComponent,
 } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { variantLabel } from '@/extensions/Divider/components/NodeViewDivider';
 import { DividerCore as Divider } from '@/extensions/Divider/Divider';
 import { useActive } from '@/hooks/useActive';
@@ -13,6 +16,9 @@ import { useButtonProps } from '@/hooks/useButtonProps';
 import { useLocale } from '@/locales';
 
 import type { DividerVariant, DividerVariantOption } from '@/extensions/Divider/Divider';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ SeparatorHorizontal: SeparatorHorizontalIcon });
 
 /** Toolbar control: a menu of divider styles, each with a live preview. */
 export function RichTextDivider() {

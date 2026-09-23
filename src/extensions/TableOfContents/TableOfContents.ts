@@ -3,10 +3,6 @@ import {
   TableOfContents as TiptapTableOfContents,
   getHierarchicalIndexes,
 } from '@tiptap/extension-table-of-contents';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-
-import { ActionButton } from '@/components';
-import { NodeViewTableOfContents } from '@/extensions/TableOfContents/components/NodeViewTableOfContents';
 
 import type { GeneralOptions } from '@/types';
 import type { TableOfContentsOptions as TiptapTableOfContentsOptions } from '@tiptap/extension-table-of-contents';
@@ -16,6 +12,7 @@ export type {
   TableOfContentDataItem,
 } from '@tiptap/extension-table-of-contents';
 export { getHierarchicalIndexes, getLinearIndexes } from '@tiptap/extension-table-of-contents';
+export * from '@/extensions/TableOfContents/toc';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -41,10 +38,12 @@ export interface TableOfContentsOptions
 }
 
 /**
- * Block node that renders the headings collected by the `tableOfContents`
- * extension. It is registered automatically by `TableOfContents`.
+ * Block node for the headings collected by the `tableOfContents` extension,
+ * without a node view: it renders an empty `div.table-of-contents` through
+ * `renderHTML`. `TableOfContentsCore` registers it; the React and Vue packages
+ * extend it with the live list.
  */
-export const TableOfContentsNode =
+export const TableOfContentsNodeCore =
   /* @__PURE__ */ Node.create<TableOfContentsNodeOptions>({
     name: 'tableOfContentsNode',
     group: 'block',
@@ -82,19 +81,16 @@ export const TableOfContentsNode =
           },
       };
     },
-
-    addNodeView() {
-      return ReactNodeViewRenderer(NodeViewTableOfContents);
-    },
   });
 
 /**
  * Tracks headings in the document and exposes them through
  * `editor.storage.tableOfContents.content`. Also registers the
- * `tableOfContentsNode` block so a live table of contents can be inserted
- * into the document.
+ * `tableOfContentsNode` block so a table of contents can be inserted into the
+ * document. Framework-free: the React package extends it with the live node
+ * view as `TableOfContents`; the Vue layer does the same.
  */
-export const TableOfContents =
+export const TableOfContentsCore =
   /* @__PURE__ */ TiptapTableOfContents.extend<TableOfContentsOptions>({
     // @ts-expect-error
     addOptions() {
@@ -105,10 +101,9 @@ export const TableOfContents =
           class: 'table-of-contents',
         },
         button: ({ editor, t }) => ({
-          component: ActionButton,
           componentProps: {
             action: () => editor.chain().focus().insertTableOfContents().run(),
-            isActive: () => editor.isActive(TableOfContentsNode.name) || false,
+            isActive: () => editor.isActive(TableOfContentsNodeCore.name) || false,
             disabled: false,
             icon: 'TableOfContents',
             tooltip: t('editor.tableofcontents.tooltip'),
@@ -119,7 +114,7 @@ export const TableOfContents =
 
     addExtensions() {
       return [
-        TableOfContentsNode.configure({
+        TableOfContentsNodeCore.configure({
           HTMLAttributes: this.options.HTMLAttributes,
         }),
       ];

@@ -1,7 +1,13 @@
+import { ListIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { BulletList } from '@/extensions/BulletList/BulletList';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ List: ListIcon });
 
 export function RichTextBulletList() {
   const buttonProps = useButtonProps(BulletList.name);

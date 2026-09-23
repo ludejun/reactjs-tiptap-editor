@@ -1,7 +1,13 @@
+import { StrikethroughIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { Strike } from '@/extensions/Strike/Strike';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Strikethrough: StrikethroughIcon });
 
 export function RichTextStrike() {
   const buttonProps = useButtonProps(Strike.name);

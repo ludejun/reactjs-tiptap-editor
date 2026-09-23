@@ -42,6 +42,82 @@ export type {
   DividerVariant,
   DividerVariantOption,
 } from '@/extensions/Divider/Divider';
+export { Details, DetailsContent, DetailsSummary } from '@/extensions/Details/Details';
+export type { DetailsOptions } from '@/extensions/Details/Details';
+export {
+  CodeBlockCore as CodeBlock,
+  guessLanguage,
+  LIST_LANG,
+  MAP_LANGUAGE_LABEL,
+  languageLabel,
+} from '@/extensions/CodeBlock/CodeBlock';
+export type { CodeBlockOptions } from '@/extensions/CodeBlock/CodeBlock';
+export {
+  CalloutCore as Callout,
+  CALLOUT_TYPES,
+  getCalloutType,
+} from '@/extensions/Callout/Callout';
+export type { CalloutOptions, CalloutType } from '@/extensions/Callout/Callout';
+export { Video, DEFAULT_VIDEO_OPTIONS } from '@/extensions/Video/Video';
+export type {
+  VideoOptions,
+  VideoUploadContext,
+  VideoUploadProgress,
+} from '@/extensions/Video/Video';
+export { IframeCore as Iframe } from '@/extensions/Iframe/Iframe';
+export { EmbedServiceLink, getExampleUrl, getServiceSrc } from '@/extensions/Iframe/utils';
+export { KatexCore as Katex, loadKatex } from '@/extensions/Katex/Katex';
+export type {
+  IKatexAttrs,
+  IKatexOptions,
+  KatexLoader,
+  KatexRenderer,
+} from '@/extensions/Katex/Katex';
+export { MermaidCore as Mermaid } from '@/extensions/Mermaid/Mermaid';
+export type { MermaidOptions } from '@/extensions/Mermaid/Mermaid';
+export {
+  AttachmentCore as Attachment,
+  getFileTypeIconMarkup,
+  getFileTypeIconSpec,
+} from '@/extensions/Attachment/Attachment';
+export type { AttachmentOptions } from '@/extensions/Attachment/Attachment';
+export {
+  TableOfContentsCore as TableOfContents,
+  TableOfContentsNodeCore as TableOfContentsNode,
+  getHierarchicalIndexes,
+  getLinearIndexes,
+  readTableOfContents,
+  scrollToTableOfContentsItem,
+  tableOfContentsIndexLabel,
+} from '@/extensions/TableOfContents/TableOfContents';
+export type {
+  TableOfContentData,
+  TableOfContentDataItem,
+  TableOfContentsItem,
+  TableOfContentsNodeOptions,
+  TableOfContentsOptions,
+} from '@/extensions/TableOfContents/TableOfContents';
+
+// Images: the inline `image` + `imageBlock` nodes, the GIF node, and the
+// upload bookkeeping. Node views come from the React or Vue layer.
+export {
+  ImageCore as Image,
+  ImageBlockCore as ImageBlock,
+  IMAGE_BLOCK_NAME,
+  DEFAULT_OPTIONS as DEFAULT_IMAGE_OPTIONS,
+  getImageInsertNodeName,
+  migrateImageJSONToImageBlock,
+  parseRotation,
+  CAPTION_CLASS as IMAGE_CAPTION_CLASS,
+  isImageCaptionEvent,
+  isInsideImageCaption,
+} from '@/extensions/Image/Image';
+export type { IImageOptions, SetImageAttrsOptions } from '@/extensions/Image/Image';
+export { ImageGifCore as ImageGif } from '@/extensions/ImageGif/ImageGif';
+export type {
+  ImageGifOptions,
+  SetImageAttrsOptions as SetImageGifAttrsOptions,
+} from '@/extensions/ImageGif/ImageGif';
 
 // Behaviour
 export { History } from '@/extensions/History/History';
@@ -88,7 +164,7 @@ export type {
   AIWriteTarget,
 } from '@/extensions/AI/types';
 
-// Image bookkeeping (the image node itself has a React view)
+// Image bookkeeping: which uploads are still in the document at save time
 export {
   collectImageSources,
   getImageChanges,

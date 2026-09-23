@@ -1,11 +1,9 @@
 import { Node, mergeAttributes } from '@tiptap/core';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-
-import { ActionButton } from '@/components';
-import { NodeViewCallout } from '@/extensions/Callout/components/NodeViewCallout/NodeViewCallout';
 
 import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';
+
+export * from '@/extensions/Callout/calloutTypes';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -25,7 +23,12 @@ function getDatasetAttribute(attribute: string) {
   };
 }
 
-export const Callout = /* @__PURE__ */ Node.create<CalloutOptions>({
+/**
+ * The callout without a node view: renders through `renderHTML`, so it works
+ * with any Tiptap binding. The React package extends it with the coloured
+ * node view as `Callout`; the Vue layer does the same.
+ */
+export const CalloutCore = /* @__PURE__ */ Node.create<CalloutOptions>({
   name: 'callout',
   group: 'block',
   selectable: true,
@@ -41,7 +44,6 @@ export const Callout = /* @__PURE__ */ Node.create<CalloutOptions>({
         class: 'callout',
       },
       button: ({ editor, t }: ButtonViewParams<CalloutOptions>) => ({
-        component: ActionButton,
         componentProps: {
           action: () => {
             return true;
@@ -96,9 +98,5 @@ export const Callout = /* @__PURE__ */ Node.create<CalloutOptions>({
             .run();
         },
     };
-  },
-
-  addNodeView() {
-    return ReactNodeViewRenderer(NodeViewCallout);
   },
 });

@@ -1,11 +1,16 @@
+import { TableIcon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import CreateTablePopover from '@/extensions/Table/components/CreateTablePopover';
 import { Table } from '@/extensions/Table/Table';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useEditorInstance } from '@/store/editor';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Table: TableIcon });
 
 export function RichTextTable() {
   const editor = useEditorInstance();

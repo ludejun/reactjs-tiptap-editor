@@ -1,7 +1,9 @@
 import { BubbleMenu } from '@tiptap/react/menus';
+import { PencilIcon, TrashIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { Twitter } from '@/extensions/Twitter';
 import FormEditLinkTwitter from '@/extensions/Twitter/components/FormEditLinkTwitter';
 import { useLocale } from '@/locales';
@@ -10,6 +12,9 @@ import { useEditableEditor } from '@/store/store';
 import { deleteNode } from '@/utils/delete-node';
 
 import type { Editor } from '@tiptap/react';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Pencil: PencilIcon, Trash: TrashIcon });
 
 export function RichTextBubbleTwitter() {
   const { t } = useLocale();

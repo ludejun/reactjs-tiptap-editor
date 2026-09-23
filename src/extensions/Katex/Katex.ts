@@ -1,19 +1,17 @@
 import { Node, mergeAttributes, nodeInputRule } from '@tiptap/core';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-
-import { KatexNodeView } from '@/extensions/Katex/components/KatexWrapper';
 
 import type { KatexLoader } from './katex-loader';
 import type { ButtonViewParams } from '@/types';
 
-export type { KatexLoader } from './katex-loader';
+export type { KatexLoader, KatexRenderer } from './katex-loader';
+export { loadKatex } from './katex-loader';
 
 export interface IKatexAttrs {
   text?: string;
   macros?: string;
 }
 
-interface IKatexOptions {
+export interface IKatexOptions {
   HTMLAttributes: Record<string, unknown>;
   /** Optional renderer loader, e.g. to register mhchem before rendering. */
   loadKatex?: KatexLoader;
@@ -33,7 +31,12 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Katex = /* @__PURE__ */ Node.create<IKatexOptions>({
+/**
+ * The formula node without a node view: renders through `renderHTML`, so it
+ * works with any Tiptap binding. The React package extends it with the KaTeX
+ * preview node view as `Katex`; the Vue layer does the same.
+ */
+export const KatexCore = /* @__PURE__ */ Node.create<IKatexOptions>({
   name: 'katex',
   group: 'inline',
   inline: true,
@@ -106,9 +109,5 @@ export const Katex = /* @__PURE__ */ Node.create<IKatexOptions>({
         type: this.type,
       }),
     ];
-  },
-
-  addNodeView() {
-    return ReactNodeViewRenderer(KatexNodeView);
   },
 });

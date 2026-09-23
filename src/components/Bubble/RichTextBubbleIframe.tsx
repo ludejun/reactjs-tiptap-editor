@@ -1,7 +1,9 @@
 import { BubbleMenu } from '@tiptap/react/menus';
+import { EyeIcon, PencilIcon, SettingsIcon, Trash2Icon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { SizeSetter } from '@/components/SizeSetter/SizeSetter';
 import { Button, Input } from '@/components/ui';
 import {
@@ -19,6 +21,9 @@ import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 import { useEditableEditor } from '@/store/store';
 import { deleteNode } from '@/utils/delete-node';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Eye: EyeIcon, Pencil: PencilIcon, Settings: SettingsIcon, Trash2: Trash2Icon });
 
 interface IIframeAttrs {
   width?: number | string;

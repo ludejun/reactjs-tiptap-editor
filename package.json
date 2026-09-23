@@ -1058,7 +1058,8 @@
     "test:types": "tsc -p tests/tsconfig.json",
     "verify-commit": "verify-commit-msg",
     "release": "bumpp -r",
-    "measure:bundle": "node scripts/measure-bundle.mjs"
+    "measure:bundle": "node scripts/measure-bundle.mjs",
+    "measure:entries": "node scripts/measure-entries.mjs"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.1",
@@ -1121,7 +1122,6 @@
     "@tiptap/suggestion": "^3.29.2",
     "@tiptap/y-tiptap": "^3.0.8",
     "class-variance-authority": "^0.7.1",
-    "cn": "^0.2.6",
     "deep-equal": "^2.2.3",
     "docx": "^9.7.1",
     "easydrawer": "^0.0.15",

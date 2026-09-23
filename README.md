@@ -22,7 +22,9 @@
 
 **AI is a first-class feature, not a plugin bolted on.**
 
-- **Streams into the document.** Select text or type `/ai`; the answer streams in and is rendered through the editor's own schema, so a markdown table becomes _the editor's_ table, a fenced block a real code block, `- [ ]` a task list. Apply inserts nodes, not pasted text.
+- **Writes into the document, not a chat box.** A composer dock under the editor (toolbar ✨, `⌘J`, `/ai`) streams the answer straight into the page as real blocks — a markdown table becomes _the editor's_ table, a fenced block a code block, `- [ ]` a task list. Keep, undo, retry or refine in place; one undo step.
+- **Knows the whole document.** Continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — one click each, with the document as context.
+- **Finishes your sentence.** Ghost-text autocomplete after a pause; Tab accepts. Space on an empty line asks AI. Select text for Improve: rewrite, shorten, translate, turn into a table or a list.
 - **Generates what you cannot type.** Katex and Mermaid dialogs take a sentence ("the quadratic formula", "a login flow") and write the source, live.
 - **Your model, your rules.** OpenAI or Anthropic protocol, any base URL or proxy, or your own `generate(request, onChunk)` transport. Translate to the browser language, refine with a follow-up, attach images and files.
 - **Yours to render.** `renderResult` restyles the answer; `components.Panel` replaces the whole dialog.
@@ -34,7 +36,7 @@
 - **Pastes right.** Web pages, Excel, Google Docs and Word keep their formatting; Word's fake lists become lists and code from VS Code becomes a code block.
 - **16 languages** ordered by speaker population, loadable on demand, with matching CJK, Devanagari and Bengali fonts.
 - **Record and replay** any writing session as timestamped steps.
-- **React and Vue.** The document logic ships React-free as `ai-sparkwrite-editor/core`; `ai-sparkwrite-editor/vue` adds a Vue 3 provider, toolbar, controls and node views on the same stylesheet. See [Frameworks](./docs/guide/frameworks.md).
+- **React and Vue.** The document logic — AI engine included — ships React-free as `ai-sparkwrite-editor/core`; `ai-sparkwrite-editor/vue` adds a Vue 3 provider, toolbar, controls, bubble menus, dialogs, node views and the AI panel and composer on the same stylesheet. The playground switches between the two. See [Frameworks](./docs/guide/frameworks.md).
 - **Fits your design system.** Prefixed Tailwind classes and a handful of CSS variables.
 
 ## Install

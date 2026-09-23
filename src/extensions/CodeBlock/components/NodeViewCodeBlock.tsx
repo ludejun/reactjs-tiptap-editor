@@ -5,124 +5,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { IconComponent } from '@/components/icons';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { guessLanguage } from '@/extensions/CodeBlock/detect-language';
+import { LIST_LANG, languageLabel } from '@/extensions/CodeBlock/languages';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
 
 import type { NodeViewProps } from '@tiptap/react';
 
-/**
- * Languages in rough order of how often they turn up in documents. The picker
- * lists them in this order, then everything else alphabetically, so the common
- * choice is a glance away instead of a scroll away.
- */
-const POPULAR_LANGUAGES = [
-  'js',
-  'ts',
-  'tsx',
-  'jsx',
-  'py',
-  'java',
-  'go',
-  'rs',
-  'json',
-  'html',
-  'css',
-  'scss',
-  'bash',
-  'sql',
-  'yaml',
-  'md',
-  'php',
-  'cs',
-  'cpp',
-  'c',
-  'rb',
-  'swift',
-  'kt',
-];
-
-const OTHER_LANGUAGES = [
-  'asm',
-  'astro',
-  'csv',
-  'dart',
-  'diff',
-  'docker',
-  'graphql',
-  'http',
-  'ini',
-  'less',
-  'log',
-  'lua',
-  'make',
-  'pl',
-  'plain',
-  'ps1',
-  'svelte',
-  'toml',
-  'uri',
-  'vue',
-  'xml',
-];
-
-export const LIST_LANG = [...POPULAR_LANGUAGES, ...OTHER_LANGUAGES.slice().sort()];
-
-export const MAP_LANGUAGE_LABEL: Record<string, string> = {
-  plaintext: 'Plain Text',
-  js: 'JavaScript',
-  ts: 'TypeScript',
-  css: 'CSS',
-  html: 'HTML',
-  python: 'Python',
-  bash: 'Bash',
-  asm: 'Assembly',
-  astro: 'Astro',
-  c: 'C',
-  cpp: 'C++',
-  cs: 'C#',
-  csv: 'CSV',
-  dart: 'Dart',
-  diff: 'Diff',
-  docker: 'Dockerfile',
-  go: 'Go',
-  graphql: 'GraphQL',
-  http: 'HTTP',
-  ini: 'INI',
-  java: 'Java',
-  json: 'JSON',
-  jsx: 'JSX',
-  kt: 'Kotlin',
-  less: 'Less',
-  log: 'Log',
-  lua: 'Lua',
-  make: 'Makefile',
-  md: 'Markdown',
-  php: 'PHP',
-  pl: 'Perl',
-  plain: 'Plain Text',
-  ps1: 'PowerShell',
-  py: 'Python',
-  rb: 'Ruby',
-  rs: 'Rust',
-  scss: 'SCSS',
-  sql: 'SQL',
-  svelte: 'Svelte',
-  swift: 'Swift',
-  toml: 'TOML',
-  ts_: 'TypeScript',
-  tsx: 'TSX',
-  uri: 'URI/URL',
-  vue: 'Vue.js',
-  xml: 'XML',
-  yaml: 'YAML',
-};
+export { LIST_LANG, MAP_LANGUAGE_LABEL } from '@/extensions/CodeBlock/languages';
 
 const AUTO_VALUE = '__auto__';
 const COPIED_FEEDBACK_MS = 1500;
 
-function labelOf(value: string) {
-  return MAP_LANGUAGE_LABEL[value] || value;
-}
+const labelOf = languageLabel;
 
 const toolbarButtonClass =
   'richtext-flex richtext-items-center richtext-justify-center richtext-rounded richtext-border-none richtext-bg-transparent richtext-p-1 richtext-text-[var(--shj-numbers)] richtext-transition-colors hover:richtext-text-[var(--shj-fg)] focus-visible:richtext-text-[var(--shj-fg)]';

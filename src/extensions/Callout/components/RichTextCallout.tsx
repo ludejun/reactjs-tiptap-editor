@@ -1,6 +1,8 @@
+import { NotebookPenIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { Button, Input, Label } from '@/components/ui';
 import {
   Dialog,
@@ -17,11 +19,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Callout } from '@/extensions/Callout/Callout';
+import { CalloutCore as Callout } from '@/extensions/Callout/Callout';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Callout: NotebookPenIcon });
 
 const CALLOUT_TYPES = [
   { value: 'note', label: 'Note', icon: 'Info' },

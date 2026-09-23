@@ -1,7 +1,9 @@
+import { CropIcon, LoaderCircleIcon, Trash2Icon } from 'lucide-react';
 import React, { useRef, useState, useMemo } from 'react';
 import ReactCrop, { type Crop, type PixelCrop } from 'react-image-crop';
 
 import { IconComponent, useToast } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -16,6 +18,9 @@ import { useExtension } from '@/hooks/useExtension';
 import { useLocale } from '@/locales';
 import { dataURLtoFile, readImageAsBase64 } from '@/utils/file';
 import { validateFiles } from '@/utils/validateFile';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Crop: CropIcon, Loader: LoaderCircleIcon, Trash2: Trash2Icon });
 
 export function ImageCropper({
   editor,

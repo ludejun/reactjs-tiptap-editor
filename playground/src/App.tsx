@@ -11,12 +11,6 @@ import { Dropcursor, Gapcursor, Placeholder, TrailingNode } from '@tiptap/extens
 // import { HocuspocusProvider } from '@hocuspocus/provider'
 // import * as Y from 'yjs'
 import { EditorContent, useEditor, useEditorState } from '@tiptap/react';
-// const hocuspocusProvider = new HocuspocusProvider({
-//   url: 'ws://0.0.0.0:8080',
-//   name: 'github.com/hunghg255',
-//   document: ydoc,
-// })
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   RichTextProvider,
   RichTextToolbar,
@@ -25,7 +19,7 @@ import {
   RichTextToolbarMoreGroup,
   RichTextToolbarMoreRow,
 } from 'ai-sparkwrite-editor';
-import { AI } from 'ai-sparkwrite-editor/ai';
+import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
 import { Attachment, RichTextAttachment } from 'ai-sparkwrite-editor/attachment';
 import { Blockquote, RichTextBlockquote } from 'ai-sparkwrite-editor/blockquote';
 import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
@@ -53,7 +47,12 @@ import { Code, RichTextCode } from 'ai-sparkwrite-editor/code';
 import { CodeBlock, RichTextCodeBlock, guessLanguage } from 'ai-sparkwrite-editor/codeblock';
 import { CodeView, RichTextCodeView } from 'ai-sparkwrite-editor/codeview';
 import { Color, RichTextColor } from 'ai-sparkwrite-editor/color';
-import { Column, ColumnNode, MultipleColumnNode, RichTextColumn } from 'ai-sparkwrite-editor/column';
+import {
+  Column,
+  ColumnNode,
+  MultipleColumnNode,
+  RichTextColumn,
+} from 'ai-sparkwrite-editor/column';
 import { Details, RichTextDetails } from 'ai-sparkwrite-editor/details';
 import { Divider, RichTextDivider } from 'ai-sparkwrite-editor/divider';
 import { Drawer, RichTextDrawer } from 'ai-sparkwrite-editor/drawer';
@@ -99,12 +98,20 @@ import { TextUnderline, RichTextUnderline } from 'ai-sparkwrite-editor/textunder
 import { themeActions, useTheme } from 'ai-sparkwrite-editor/theme';
 import { Twitter, RichTextTwitter } from 'ai-sparkwrite-editor/twitter';
 import { Video, RichTextVideo } from 'ai-sparkwrite-editor/video';
+// const hocuspocusProvider = new HocuspocusProvider({
+//   url: 'ws://0.0.0.0:8080',
+//   name: 'github.com/hunghg255',
+//   document: ydoc,
+// })
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import 'ai-sparkwrite-editor/style.css';
 // const ydoc = new Y.Doc()
 import 'katex/dist/katex.min.css';
 import 'easydrawer/styles.css';
 import '@excalidraw/excalidraw/index.css';
+
+import { VueEditor } from './VueEditor';
 
 // This is only an example, all supported languages are already loaded above
 // but you can also register only specific languages to reduce bundle-size
@@ -209,26 +216,56 @@ async function demoAIGenerate(
 
   const last = request.messages[request.messages.length - 1]?.content ?? '';
   const selected = /Selected text:\n([\s\S]*?)(?:\n\n|$)/.exec(last)?.[1]?.trim();
+
+  // Ghost-text autocomplete asks for a few words, not a document.
+  if (/complete text inside an editor/i.test(request.systemPrompt)) {
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    return ' — and this grey continuation came from the AI; press Tab to keep it.';
+  }
+
   const answer = /translate/i.test(last)
-    ? `${selected ?? 'Nothing selected'} *(translated — demo)*`
-    : [
-        '## Summary *(demo answer)*',
-        '',
-        selected ? `You selected **${selected.slice(0, 60)}**.` : 'No text was selected.',
-        '',
-        '| Step | What happens |',
-        '| --- | --- |',
-        '| 1 | Text streams in from the provider |',
-        '| 2 | Markdown is rendered through the editor schema |',
-        '| 3 | Apply inserts real nodes |',
-        '',
-        '```ts',
-        "editor.commands.applyAI('## Summary…');",
-        '```',
-        '',
-        '- [x] streaming',
-        '- [ ] your API key (set `VITE_AI_MODEL` to use a real model)',
-      ].join('\n');
+    ? selected
+      ? `${selected} *(translated — demo)*`
+      : '# 演示译文\n\n这是整篇文档翻译后的样子 *(demo)*。'
+    : /continue writing/i.test(last)
+      ? 'The next paragraph arrives while you watch: the composer streams straight into the document, so headings, lists and tables take shape as real blocks instead of a preview.\n\nWhen it stops you can keep it, undo it, or ask for a change — the same span is rewritten in place.'
+      : /summary/i.test(last)
+        ? '## Summary\n\n- Streams Markdown from the model into real editor nodes\n- Works on the selection, at the caret, or on the whole document\n- One undo step, Keep/Undo/Retry after it finishes'
+        : /outline/i.test(last)
+          ? '- Text\n  - Formatting bubble\n- Lists\n- Code\n- Tables\n- Everything else'
+          : /title for the document/i.test(last)
+            ? '# SparkWrite: writing with the model in the page'
+            : /task list/i.test(last)
+              ? '## Action items\n\n- [ ] Try the composer under the editor\n- [ ] Press Space on an empty line\n- [x] Read this list'
+              : /Correct spelling, grammar and punctuation in the whole document/i.test(last)
+                ? (/Document:\n([\s\S]*)\n\n/.exec(last)?.[1] ?? '') +
+                  '\n\n*(every typo fixed — demo)*'
+                : /Markdown table/i.test(last)
+                  ? '| Item | Detail |\n| --- | --- |\n| Selection | ' +
+                    (selected?.slice(0, 40) ?? '') +
+                    ' |\n| Rows | 2 |'
+                  : /bullet list/i.test(last)
+                    ? '- ' + (selected ?? 'first point') + '\n- second point\n- third point'
+                    : [
+                        '## Summary *(demo answer)*',
+                        '',
+                        selected
+                          ? `You selected **${selected.slice(0, 60)}**.`
+                          : 'No text was selected.',
+                        '',
+                        '| Step | What happens |',
+                        '| --- | --- |',
+                        '| 1 | Text streams in from the provider |',
+                        '| 2 | Markdown is rendered through the editor schema |',
+                        '| 3 | Apply inserts real nodes |',
+                        '',
+                        '```ts',
+                        "editor.commands.applyAI('## Summary…');",
+                        '```',
+                        '',
+                        '- [x] streaming',
+                        '- [ ] your API key (set `VITE_AI_MODEL` to use a real model)',
+                      ].join('\n');
 
   for (const piece of answer.match(/[\s\S]{1,8}/g) ?? []) {
     request.signal.throwIfAborted();
@@ -399,6 +436,7 @@ const extensions = [
     // markdown rendering, Apply — can be tried without a key.
     generate: import.meta.env.VITE_AI_MODEL ? null : demoAIGenerate,
   }),
+  AIAutocomplete,
   SlashCommand,
   RichPaste.configure({ detectLanguage: guessLanguage }),
   Recorder,
@@ -663,12 +701,18 @@ const RecordingControls = ({ editor }: { editor: import('@tiptap/core').Editor |
   );
 };
 
+type Framework = 'react' | 'vue';
+
 const Header = ({
   editor,
+  framework,
+  setFramework,
   theme,
   setTheme,
 }: {
   editor: import('@tiptap/core').Editor | null;
+  framework: Framework;
+  setFramework: (framework: Framework) => void;
   theme: string;
   setTheme: (theme: string) => void;
 }) => {
@@ -699,6 +743,17 @@ const Header = ({
   return (
     <header className='rounded-xl border border-solid border-gray-200 bg-white px-4 py-3.5'>
       <div className='flex flex-wrap items-start gap-x-7 gap-y-4'>
+        <Field label='UI layer'>
+          <Segmented
+            value={framework}
+            options={[
+              { value: 'react', label: 'React' },
+              { value: 'vue', label: 'Vue' },
+            ]}
+            onChange={setFramework}
+          />
+        </Field>
+
         <Field label='Language'>
           <Picker
             label='Language'
@@ -878,6 +933,10 @@ const PlaygroundToolbar = ({ editor }: { editor: import('@tiptap/core').Editor |
 
   return (
     <div className='flex flex-wrap items-center gap-0.5 border-0 border-b border-solid border-gray-200 px-2 py-1.5'>
+      <RichTextAI />
+
+      <RichTextToolbarDivider />
+
       <RichTextUndo />
       <RichTextRedo />
 
@@ -1061,6 +1120,7 @@ const PlaygroundToolbar = ({ editor }: { editor: import('@tiptap/core').Editor |
 function App() {
   const [content, setContent] = useState(DEFAULT);
   const [theme, setTheme] = useState('light');
+  const [framework, setFramework] = useState<Framework>('react');
 
   const onValueChange = useCallback(
     debounce((value: any) => {
@@ -1088,39 +1148,52 @@ function App() {
 
   return (
     <div className='mx-auto my-0 flex w-full max-w-screen-lg flex-col gap-5 px-6 py-10'>
-      <Header editor={editor} setTheme={setTheme} theme={theme} />
+      <Header
+        editor={editor}
+        framework={framework}
+        setFramework={setFramework}
+        setTheme={setTheme}
+        theme={theme}
+      />
 
-      <RichTextProvider editor={editor} dark={theme === 'dark'}>
-        <div className='overflow-hidden rounded-[0.5rem] bg-background shadow outline outline-1'>
-          <div className='flex max-h-full w-full flex-col'>
-            <PlaygroundToolbar editor={editor} />
+      {framework === 'vue' ? (
+        <VueEditor dark={theme === 'dark'} />
+      ) : (
+        <RichTextProvider editor={editor} dark={theme === 'dark'}>
+          <div className='overflow-hidden rounded-[0.5rem] bg-background shadow outline outline-1'>
+            <div className='flex max-h-full w-full flex-col'>
+              <PlaygroundToolbar editor={editor} />
 
-            <EditorContent editor={editor} />
+              <EditorContent editor={editor} />
 
-            {/* Bubble */}
-            <RichTextBubbleCallout />
-            <RichTextBubbleDrawer />
-            <RichTextBubbleExcalidraw />
-            <RichTextBubbleIframe />
-            <RichTextBubbleKatex />
-            <RichTextBubbleLink />
+              {/* AI composer dock: opened by the toolbar AI button, Mod-J or /ai */}
+              <RichTextAIComposer />
 
-            <RichTextBubbleImage />
-            <RichTextBubbleVideo />
-            <RichTextBubbleImageGif />
+              {/* Bubble */}
+              <RichTextBubbleCallout />
+              <RichTextBubbleDrawer />
+              <RichTextBubbleExcalidraw />
+              <RichTextBubbleIframe />
+              <RichTextBubbleKatex />
+              <RichTextBubbleLink />
 
-            <RichTextBubbleMermaid />
-            <RichTextBubbleTable />
-            <RichTextBubbleText />
-            <RichTextBubbleTwitter />
+              <RichTextBubbleImage />
+              <RichTextBubbleVideo />
+              <RichTextBubbleImageGif />
 
-            <RichTextBubbleMenuDragHandle />
+              <RichTextBubbleMermaid />
+              <RichTextBubbleTable />
+              <RichTextBubbleText />
+              <RichTextBubbleTwitter />
 
-            {/* Command List */}
-            <SlashCommandList />
+              <RichTextBubbleMenuDragHandle />
+
+              {/* Command List */}
+              <SlashCommandList />
+            </div>
           </div>
-        </div>
-      </RichTextProvider>
+        </RichTextProvider>
+      )}
 
       {typeof content === 'string' && (
         <details className='rounded-xl border border-solid border-gray-200 bg-white px-4 py-3'>

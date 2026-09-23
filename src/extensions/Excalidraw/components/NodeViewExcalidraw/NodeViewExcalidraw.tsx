@@ -1,8 +1,10 @@
 import { NodeViewWrapper } from '@tiptap/react';
+import { ZoomInIcon, ZoomOutIcon } from 'lucide-react';
 import { Resizable } from 're-resizable';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { Excalidraw } from '@/extensions/Excalidraw/Excalidraw';
 import { cn } from '@/lib/utils';
 import { useEditableEditor } from '@/store/store';
@@ -10,6 +12,9 @@ import { clamp } from '@/utils/utils';
 
 import styles from './index.module.scss';
 import type { NodeViewProps } from '@tiptap/react';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ZoomIn: ZoomInIcon, ZoomOut: ZoomOutIcon });
 
 const MIN_ZOOM = 10;
 const MAX_ZOOM = 200;

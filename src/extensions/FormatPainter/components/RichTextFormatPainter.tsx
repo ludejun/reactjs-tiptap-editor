@@ -1,10 +1,15 @@
+import { PaintRollerIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { FormatPainter } from '@/extensions/FormatPainter/FormatPainter';
 import { useButtonProps } from '@/hooks/useButtonProps';
 import { useEditorInstance } from '@/store/editor';
 import { useEditableEditor } from '@/store/store';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ PaintRoller: PaintRollerIcon });
 
 export function RichTextFormatPainter() {
   const editor = useEditorInstance();

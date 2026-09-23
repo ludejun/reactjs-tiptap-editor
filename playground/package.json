@@ -12,15 +12,19 @@
     "release": "bumpp -r"
   },
   "dependencies": {
+    "@tiptap/vue-3": "3.29.2",
+    "ai-sparkwrite-editor": "workspace:*",
+    "lucide-vue-next": "^1.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "ai-sparkwrite-editor": "workspace:*"
+    "vue": "^3.4.37"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.1",
     "@vitejs/plugin-react": "^6.1.1",
+    "@vitejs/plugin-vue": "^6.0.9",
     "bumpp": "^9.11.1",
     "git-scm-hooks": "^0.0.11",
     "sass": "^1.86.2",

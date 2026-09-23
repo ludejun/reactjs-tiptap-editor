@@ -1,7 +1,12 @@
+import { ExternalLinkIcon, PencilIcon, UnlinkIcon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { useLocale } from '@/locales';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ExternalLink: ExternalLinkIcon, Pencil: PencilIcon, Unlink: UnlinkIcon });
 
 interface IPropsLinkViewBlock {
   editor: import('@tiptap/core').Editor;

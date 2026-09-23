@@ -1,7 +1,13 @@
+import { ListOrderedIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { OrderedList } from '@/extensions/OrderedList/OrderedList';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ListOrdered: ListOrderedIcon });
 
 export function RichTextOrderedList() {
   const buttonProps = useButtonProps(OrderedList.name);

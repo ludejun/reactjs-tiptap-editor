@@ -20,6 +20,12 @@ First release under the SparkWrite name. The code base descends from reactjs-tip
 
 ### AI
 
+- **Composer dock** (`RichTextAIComposer` + the `RichTextAI` toolbar button, `⌘/Ctrl+J`, `/ai`): a prompt bar under the editor whose answers stream straight into the document as real blocks. Presets for the whole document — continue writing, summarize, outline, suggest a title, extract action items, fix grammar everywhere, translate — plus a target selector (selection, caret, top, end, whole document). Keep, undo, retry or refine in place; the answer is one undo step.
+- **`writeWithAI(editor, { prompt, target })`**, the framework-free engine behind the dock: streams Markdown into a tracked span that follows other edits, and returns `keep()`/`discard()` and the conversation for follow-ups.
+- **Ghost-text autocomplete** (`AIAutocomplete`): after a pause at the end of a block the next words appear in grey; Tab accepts.
+- **Space on an empty line** opens Ask AI (`spaceTrigger`).
+- The Improve menu gains **Turn into table**, **Turn into list** and **Open AI composer**, and works after Select All.
+- The extension is split into a framework-free `AICore` (commands, state, decorations, `mountPanel` hook) and thin React/Vue layers; `ai-sparkwrite-editor/core` exports the headless `AI`.
 - Answers stream (OpenAI and Anthropic server-sent events, or a custom `generate` with `onChunk`).
 - Answers are markdown, rendered through the editor schema: the preview is the exact HTML the editor would save, and Apply inserts real nodes. Single paragraphs merge into the current paragraph.
 - Translate targets the browser language by default.

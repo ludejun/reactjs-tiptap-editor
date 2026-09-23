@@ -1,7 +1,19 @@
 import { deleteSelection } from '@tiptap/pm/commands';
+import {
+  AlignCenterIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+  PencilIcon,
+  RotateCwSquareIcon,
+  Trash2Icon,
+} from 'lucide-react';
 
 import { ActionButton } from '@/components';
 import { ImageCaptionButton } from '@/components/Bubble/ImageCaptionButton';
+import { registerIcons } from '@/components/icons/icons';
+import { SizeL as SizeLIcon } from '@/components/icons/SizeL';
+import { SizeM as SizeMIcon } from '@/components/icons/SizeM';
+import { SizeS as SizeSIcon } from '@/components/icons/SizeS';
 import { BUBBLE_TEXT_LIST, IMAGE_SIZE, VIDEO_SIZE } from '@/constants';
 import { Image, ImageBlock } from '@/extensions/Image';
 
@@ -12,6 +24,19 @@ import type {
   VideoAlignment,
 } from '@/types';
 import type { Editor } from '@tiptap/react';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({
+  AlignCenter: AlignCenterIcon,
+  AlignLeft: AlignLeftIcon,
+  AlignRight: AlignRightIcon,
+  Pencil: PencilIcon,
+  RotateCwSquare: RotateCwSquareIcon,
+  SizeL: SizeLIcon,
+  SizeM: SizeMIcon,
+  SizeS: SizeSIcon,
+  Trash2: Trash2Icon,
+});
 
 /** Represents the size types for bubble images or videos */
 type BubbleImageOrVideoSizeType = 'size-small' | 'size-medium' | 'size-large';

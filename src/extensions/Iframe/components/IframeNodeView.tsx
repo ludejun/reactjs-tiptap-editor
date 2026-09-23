@@ -3,7 +3,7 @@ import { Resizable } from 're-resizable';
 import { useCallback, useState } from 'react';
 
 import { Button, Input } from '@/components/ui';
-import { Iframe } from '@/extensions/Iframe/Iframe';
+import { IframeCore as Iframe } from '@/extensions/Iframe/Iframe';
 import { getServiceSrc } from '@/extensions/Iframe/utils';
 import { cn } from '@/lib/utils';
 import { useEditableEditor } from '@/store/store';

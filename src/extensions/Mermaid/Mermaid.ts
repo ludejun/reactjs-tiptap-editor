@@ -3,9 +3,6 @@ import {
   Image as TiptapImage,
   type ImageOptions as TiptapImageOptions,
 } from '@tiptap/extension-image';
-import { ReactNodeViewRenderer } from '@tiptap/react';
-
-import { NodeViewMermaid } from '@/extensions/Mermaid/components/NodeViewMermaid/NodeViewMermaid';
 
 import type { ButtonViewParams } from '@/types';
 import type { GeneralOptions } from '@/types';
@@ -28,7 +25,13 @@ export interface MermaidOptions extends TiptapImageOptions, GeneralOptions<Merma
   upload?: (file: File) => Promise<string>;
 }
 
-export const Mermaid = /* @__PURE__ */ TiptapImage.extend<MermaidOptions>({
+/**
+ * The Mermaid node without a node view: the diagram is stored as an image
+ * (`src`) with the source in `alt`, so it renders through `renderHTML` with
+ * any Tiptap binding. The React package extends it with the resizable node
+ * view as `Mermaid`; the Vue layer does the same.
+ */
+export const MermaidCore = /* @__PURE__ */ TiptapImage.extend<MermaidOptions>({
   name: 'mermaid',
 
   //@ts-expect-error
@@ -104,10 +107,6 @@ export const Mermaid = /* @__PURE__ */ TiptapImage.extend<MermaidOptions>({
         },
       },
     };
-  },
-
-  addNodeView() {
-    return ReactNodeViewRenderer(NodeViewMermaid);
   },
 
   addCommands() {

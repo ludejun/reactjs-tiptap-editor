@@ -1,6 +1,8 @@
+import { LoaderCircleIcon } from 'lucide-react';
 import { type ChangeEvent, useMemo, useRef, useState } from 'react';
 
 import { Button, IconComponent, useToast } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import {
   DEFAULT_VIDEO_OPTIONS,
   type VideoOptions,
@@ -10,6 +12,9 @@ import { useLocale } from '@/locales';
 import { validateFiles } from '@/utils/validateFile';
 
 import type { Editor } from '@tiptap/core';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Loader: LoaderCircleIcon });
 
 type UploadStatus = 'error' | 'pending' | 'processing' | 'success' | 'uploading';
 

@@ -106,6 +106,10 @@ export function getLocaleConfig(lang: string) {
           link: `${urlPrefix}/guide/customization`,
         },
         {
+          text: t('Bundle size'),
+          link: `${urlPrefix}/guide/bundle-size`,
+        },
+        {
           text: t('Bubble Menu'),
           link: `${urlPrefix}/guide/bubble-menu`,
         },

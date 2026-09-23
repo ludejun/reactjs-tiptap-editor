@@ -1,12 +1,17 @@
+import { SmilePlusIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { ActionButton, Popover, PopoverContent, PopoverTrigger } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { LazyContent } from '@/components/LazyContent';
 import { Emoji } from '@/extensions/Emoji/Emoji';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 
 import type React from 'react';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ EmojiIcon: SmilePlusIcon });
 
 const loadPicker = () => import('./EmojiPickerPanel');
 

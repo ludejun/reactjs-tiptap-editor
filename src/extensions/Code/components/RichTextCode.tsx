@@ -1,7 +1,13 @@
+import { CodeIcon } from 'lucide-react';
+
 import { ActionButton } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { Code } from '@/extensions/Code/Code';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Code: CodeIcon });
 
 export function RichTextCode() {
   const buttonProps = useButtonProps(Code.name);

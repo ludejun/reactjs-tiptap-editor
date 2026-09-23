@@ -1,2 +1,2 @@
-export * from './Attachment';
+export * from './AttachmentReact';
 export * from './components/RichTextAttachment';

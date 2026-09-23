@@ -1,7 +1,9 @@
 import { BubbleMenu } from '@tiptap/react/menus';
+import { PencilIcon, SettingsIcon, Trash2Icon } from 'lucide-react';
 import { useCallback, useEffect } from 'react';
 
 import { ActionButton } from '@/components/ActionButton';
+import { registerIcons } from '@/components/icons/icons';
 import { emit } from '@/components/ReactBus';
 import { SizeSetter } from '@/components/SizeSetter/SizeSetter';
 import { Excalidraw } from '@/extensions/Excalidraw';
@@ -14,6 +16,9 @@ import { deleteNode } from '@/utils/delete-node';
 import { getEditorContainerDOMSize } from '@/utils/editor-container-size';
 
 import type { IExcalidrawAttrs } from '@/extensions/Excalidraw';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ Pencil: PencilIcon, Settings: SettingsIcon, Trash2: Trash2Icon });
 
 export function RichTextBubbleExcalidraw() {
   const editable = useEditableEditor();

@@ -1,3 +1,4 @@
+import { ImageUpIcon, LoaderCircleIcon } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 
 import {
@@ -12,14 +13,22 @@ import {
   TabsTrigger,
   useToast,
 } from '@/components';
+import { registerIcons } from '@/components/icons/icons';
 import { ImageCropper } from '@/extensions/Image/components/ImageCropper';
-import { DEFAULT_OPTIONS, getImageInsertNodeName, Image } from '@/extensions/Image/Image';
+import {
+  DEFAULT_OPTIONS,
+  getImageInsertNodeName,
+  ImageCore as Image,
+} from '@/extensions/Image/Image';
 import { rememberUploadedImage } from '@/extensions/Image/imageLifecycle';
 import { useExtension } from '@/hooks/useExtension';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
 import { validateFiles } from '@/utils/validateFile';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ImageUp: ImageUpIcon, Loader: LoaderCircleIcon });
 
 /** "image/jpeg" -> "JPEG", ".webp" -> "WEBP", "image/*" -> null. */
 function mimeToLabel(accept: string): string | null {

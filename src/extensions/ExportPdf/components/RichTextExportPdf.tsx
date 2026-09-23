@@ -1,7 +1,12 @@
 import { ActionButton } from '@/components';
+import { ExportPdf as ExportPdfIcon } from '@/components/icons/ExportPdf';
+import { registerIcons } from '@/components/icons/icons';
 import { ExportPdf } from '@/extensions/ExportPdf';
 import { useToggleActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
+
+// Icons this module (and its extension's `button()` options) resolves by name.
+registerIcons({ ExportPdf: ExportPdfIcon });
 
 export function RichTextExportPdf() {
   const buttonProps = useButtonProps(ExportPdf.name);

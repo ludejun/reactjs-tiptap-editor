@@ -51,10 +51,13 @@ const externalPackages = [
 
 const normalizePath = (id: string) => id.replaceAll('\\', '/');
 
+// Kept apart: `useAttributes` is a React hook, `json` is framework-free and
+// reached from the core and Vue entries, which must not pick up React.
+const editorHookModules = new Set(
+  ['src/hooks/useAttributes.tsx'].map((file) => normalizePath(path.resolve(rootDir, file)))
+);
 const editorUtilsModules = new Set(
-  ['src/hooks/useAttributes.tsx', 'src/utils/json.ts'].map((file) =>
-    normalizePath(path.resolve(rootDir, file))
-  )
+  ['src/utils/json.ts'].map((file) => normalizePath(path.resolve(rootDir, file)))
 );
 
 export default defineConfig(({ mode }) => {
@@ -139,6 +142,10 @@ export default defineConfig(({ mode }) => {
           // Keep generic helpers out of feature chunks with heavy external imports.
           codeSplitting: {
             groups: [
+              {
+                name: 'editor-hooks',
+                test: (id) => editorHookModules.has(normalizePath(id)),
+              },
               {
                 name: 'editor-utils',
                 test: (id) => editorUtilsModules.has(normalizePath(id)),
