@@ -105,7 +105,7 @@ export const MAP_LANGUAGE_LABEL: Record<string, string> = {
   yaml: 'YAML',
 };
 
-/** Display name of a language id; falls back to the id itself. */
+/** Display name of a language id; an id without a label is shown capitalised ("elixir" → "Elixir"). */
 export function languageLabel(value: string): string {
-  return MAP_LANGUAGE_LABEL[value] || value;
+  return MAP_LANGUAGE_LABEL[value] || value.charAt(0).toUpperCase() + value.slice(1);
 }
