@@ -1,9 +1,11 @@
 import { NodeViewWrapper } from '@tiptap/react';
+import { FrameIcon, XIcon } from 'lucide-react';
 import { Resizable } from 're-resizable';
-import { useCallback, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 
 import { Button, Input } from '@/components/ui';
-import { EMBED_SERVICES, resolveEmbed } from '@/extensions/Iframe/embeds';
+import { EmbedLogo } from '@/extensions/Iframe/components/EmbedLogo';
+import { EMBED_KINDS, resolveEmbed, servicesOfKind } from '@/extensions/Iframe/embeds';
 import { IframeCore as Iframe } from '@/extensions/Iframe/Iframe';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
@@ -12,10 +14,7 @@ import { useEditableEditor } from '@/store/store';
 import styles from './index.module.scss';
 import type { NodeViewProps } from '@tiptap/react';
 
-/** Names of the recognised services, for the prompt's hint line. */
-const SERVICE_NAMES = EMBED_SERVICES.map((service) => service.name).join(' · ');
-
-function IframeNodeView({ editor, node, updateAttributes }: NodeViewProps) {
+function IframeNodeView({ editor, node, updateAttributes, deleteNode }: NodeViewProps) {
   const isEditable = useEditableEditor();
   const { t } = useLocale();
 
@@ -54,11 +53,28 @@ function IframeNodeView({ editor, node, updateAttributes }: NodeViewProps) {
   return (
     <NodeViewWrapper>
       {!src && (
-        <div className='richtext-mx-auto richtext-my-[12px] richtext-flex richtext-max-w-[600px] richtext-flex-col richtext-gap-2 richtext-rounded-[12px] richtext-border richtext-border-solid richtext-border-border richtext-p-[10px]'>
-          <div className='richtext-flex richtext-items-center richtext-gap-[10px]'>
+        <div
+          className='richtext-my-3 richtext-w-full richtext-rounded-lg richtext-border richtext-border-dashed richtext-border-border richtext-bg-muted/40 richtext-p-3'
+          contentEditable={false}
+        >
+          <div className='richtext-mb-2 richtext-flex richtext-items-center richtext-gap-2 richtext-text-sm richtext-font-medium richtext-text-foreground'>
+            <FrameIcon className='richtext-size-4 richtext-text-muted-foreground' />
+            <span>{t('editor.iframe.tooltip')}</span>
+            <button
+              aria-label={t('editor.iframe.remove')}
+              className='richtext-ml-auto richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded richtext-border-0 richtext-bg-transparent richtext-text-muted-foreground hover:richtext-bg-accent hover:richtext-text-foreground'
+              onClick={() => deleteNode()}
+              title={t('editor.iframe.remove')}
+              type='button'
+            >
+              <XIcon className='richtext-size-4' />
+            </button>
+          </div>
+
+          <div className='richtext-flex richtext-items-center richtext-gap-2'>
             <Input
               autoFocus
-              className='richtext-flex-1'
+              className='richtext-flex-1 richtext-bg-background'
               onInput={(e) => setOriginalLink(e.currentTarget.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -71,23 +87,46 @@ function IframeNodeView({ editor, node, updateAttributes }: NodeViewProps) {
               value={originalLink}
             />
 
-            <Button className='richtext-w-[60px]' disabled={!resolved} onClick={handleConfirm}>
-              OK
+            <Button disabled={!resolved} onClick={handleConfirm}>
+              {t('editor.iframe.insert')}
             </Button>
           </div>
 
-          <div className='richtext-px-1 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground'>
+          {/* What the block understands: the recognised services as brand marks, grouped by
+              kind. Once a link is typed, the detected service and its tips take the row. */}
+          <div className='richtext-mt-2 richtext-min-h-6 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground'>
             {resolved ? (
-              <>
+              <div className='richtext-flex richtext-items-center richtext-gap-2'>
+                <EmbedLogo service={resolved.service} />
                 <span className='richtext-font-medium richtext-text-foreground'>
                   {resolved.service.name}
                 </span>
-                {resolved.service.tips ? ` — ${resolved.service.tips}` : null}
-              </>
+                {resolved.service.tips ? <span>— {resolved.service.tips}</span> : null}
+              </div>
             ) : originalLink.trim() ? (
               t('editor.iframe.invalid')
             ) : (
-              `${t('editor.iframe.supported')}: ${SERVICE_NAMES}`
+              // Two categories per row on wide screens, one on phones; the label column
+              // sizes to its longest word, so nothing wraps mid-word.
+              <div className='richtext-grid richtext-grid-cols-[auto_1fr] richtext-items-center richtext-gap-x-2.5 richtext-gap-y-2 sm:richtext-grid-cols-[auto_1fr_auto_1fr]'>
+                {EMBED_KINDS.map(({ kind }, index) => (
+                  <Fragment key={kind}>
+                    <span
+                      className={cn(
+                        'richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70',
+                        { 'sm:richtext-pl-6': index % 2 === 1 }
+                      )}
+                    >
+                      {t(`editor.iframe.kind.${kind}`)}
+                    </span>
+                    <div className='richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-1.5'>
+                      {servicesOfKind(kind).map((service) => (
+                        <EmbedLogo key={service.key} service={service} tooltip />
+                      ))}
+                    </div>
+                  </Fragment>
+                ))}
+              </div>
             )}
           </div>
         </div>

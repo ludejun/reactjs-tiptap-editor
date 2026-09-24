@@ -1,22 +1,20 @@
 /* oxlint-disable react-hooks/rules-of-hooks -- Vue composables, not React hooks */
 import { NodeViewWrapper, VueNodeViewRenderer, nodeViewProps } from '@tiptap/vue-3';
-import { Pencil } from 'lucide-vue-next';
+import { Frame, Pencil, X } from 'lucide-vue-next';
 import { defineComponent, h, ref, watch } from 'vue';
 
-import { EMBED_SERVICES, resolveEmbed } from '@/extensions/Iframe/embeds';
+import { EMBED_KINDS, resolveEmbed, servicesOfKind } from '@/extensions/Iframe/embeds';
 import { IframeCore } from '@/extensions/Iframe/Iframe';
+import { BRAND_LOGOS, isLightColor, loadMoreLogos, monogramOf } from '@/extensions/Iframe/logos';
 
 import { useLocale } from '../context';
 
 import styles from '@/extensions/Iframe/components/index.module.scss';
 
-/** Names of the recognised services, for the prompt's hint line. */
-const SERVICE_NAMES = EMBED_SERVICES.map((service) => service.name).join(' · ');
-
 const INPUT_CLASS =
   'richtext-flex-1 richtext-h-9 richtext-rounded-md richtext-border richtext-border-solid richtext-border-input richtext-bg-background richtext-px-3 richtext-text-sm richtext-text-foreground richtext-outline-none';
 const BUTTON_CLASS =
-  'richtext-w-[60px] richtext-h-9 richtext-rounded-md richtext-border-0 richtext-bg-primary richtext-text-sm richtext-font-medium richtext-text-primary-foreground hover:richtext-bg-primary/90';
+  'richtext-h-9 richtext-px-3 disabled:richtext-opacity-50 richtext-rounded-md richtext-border-0 richtext-bg-primary richtext-text-sm richtext-font-medium richtext-text-primary-foreground hover:richtext-bg-primary/90';
 
 /**
  * Same DOM and classes as the React `IframeNodeView`: a URL prompt until the
@@ -97,19 +95,137 @@ export const IframeNodeView = defineComponent({
       resizing.value = true;
     };
 
+    // A service's brand mark, or a monogram on its brand colour when there is no mark.
+    // Marks outside the small built-in set arrive with the on-demand chunk.
+    const logosReady = ref(false);
+    void loadMoreLogos().then(() => {
+      logosReady.value = true;
+    });
+
+    const logo = (service: { key: string; name: string; color: string }) =>
+      BRAND_LOGOS[service.key]
+        ? h('span', {
+            role: 'img',
+            'aria-label': service.name,
+            title: service.name,
+            class:
+              'richtext-inline-flex richtext-size-5 richtext-shrink-0 richtext-overflow-hidden richtext-rounded-[5px] richtext-leading-none [&>img]:richtext-size-full [&>img]:richtext-object-contain [&>svg]:richtext-size-full',
+            innerHTML: BRAND_LOGOS[service.key],
+          })
+        : h(
+            'span',
+            {
+              role: 'img',
+              'aria-label': service.name,
+              title: service.name,
+              class:
+                'richtext-inline-flex richtext-size-5 richtext-shrink-0 richtext-items-center richtext-justify-center richtext-rounded-[5px] richtext-text-[11px] richtext-font-bold richtext-leading-none',
+              style: {
+                background: service.color,
+                color: isLightColor(service.color) ? '#1f2937' : '#fff',
+              },
+            },
+            monogramOf(service.name)
+          );
+
+    // What the block understands: the recognised services as brand marks, grouped by
+    // kind. Once a link is typed, the detected service and its tips take the row.
+    const hint = () => {
+      // Read so the wall re-renders once the on-demand marks have arrived.
+      void logosReady.value;
+      const typed = originalLink.value.trim();
+      const resolved = typed ? resolveEmbed(typed) : null;
+      const body = resolved
+        ? h('div', { class: 'richtext-flex richtext-items-center richtext-gap-2' }, [
+            logo(resolved.service),
+            h(
+              'span',
+              { class: 'richtext-font-medium richtext-text-foreground' },
+              resolved.service.name
+            ),
+            resolved.service.tips ? h('span', `— ${resolved.service.tips}`) : null,
+          ])
+        : typed
+          ? t('editor.iframe.invalid')
+          : h(
+              'div',
+              {
+                // Two categories per row on wide screens, one on phones; the label column
+                // sizes to its longest word, so nothing wraps mid-word.
+                class:
+                  'richtext-grid richtext-grid-cols-[auto_1fr] richtext-items-center richtext-gap-x-2.5 richtext-gap-y-2 sm:richtext-grid-cols-[auto_1fr_auto_1fr]',
+              },
+              EMBED_KINDS.flatMap(({ kind }, index) => [
+                h(
+                  'span',
+                  {
+                    key: `${kind}-label`,
+                    class: [
+                      'richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70',
+                      index % 2 === 1 ? 'sm:richtext-pl-6' : '',
+                    ],
+                  },
+                  t(`editor.iframe.kind.${kind}`)
+                ),
+                h(
+                  'div',
+                  {
+                    key: kind,
+                    class:
+                      'richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-1.5',
+                  },
+                  servicesOfKind(kind).map((service) => logo(service))
+                ),
+              ])
+            );
+
+      return h(
+        'div',
+        {
+          class:
+            'richtext-mt-2 richtext-min-h-6 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground',
+        },
+        [body]
+      );
+    };
+
     const prompt = () =>
       h(
         'div',
         {
           class:
-            'richtext-mx-auto richtext-my-[12px] richtext-flex richtext-max-w-[600px] richtext-flex-col richtext-gap-2 richtext-rounded-[12px] richtext-border richtext-border-solid richtext-border-border richtext-p-[10px]',
+            'richtext-my-3 richtext-w-full richtext-rounded-lg richtext-border richtext-border-dashed richtext-border-border richtext-bg-muted/40 richtext-p-3',
           contenteditable: 'false',
         },
         [
-          h('div', { class: 'richtext-flex richtext-items-center richtext-gap-[10px]' }, [
+          h(
+            'div',
+            {
+              class:
+                'richtext-mb-2 richtext-flex richtext-items-center richtext-gap-2 richtext-text-sm richtext-font-medium richtext-text-foreground',
+            },
+            [
+              h(Frame, { size: 16, class: 'richtext-text-muted-foreground' }),
+              h('span', t('editor.iframe.tooltip')),
+              h(
+                'button',
+                {
+                  type: 'button',
+                  title: t('editor.iframe.remove'),
+                  'aria-label': t('editor.iframe.remove'),
+                  class:
+                    'richtext-ml-auto richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded richtext-border-0 richtext-bg-transparent richtext-text-muted-foreground hover:richtext-bg-accent hover:richtext-text-foreground',
+                  onMousedown: (event: MouseEvent) => event.preventDefault(),
+                  onClick: () => props.deleteNode(),
+                },
+                [h(X, { size: 16 })]
+              ),
+            ]
+          ),
+          h('div', { class: 'richtext-flex richtext-items-center richtext-gap-2' }, [
             h('input', {
               class: INPUT_CLASS,
-              type: 'url',
+              type: 'text',
               placeholder: t('editor.iframe.placeholder'),
               value: originalLink.value,
               onVnodeMounted: (vnode) => (vnode.el as HTMLInputElement).focus(),
@@ -129,37 +245,20 @@ export const IframeNodeView = defineComponent({
               },
               onMousedown: (event: MouseEvent) => event.stopPropagation(),
             }),
-            h('button', { type: 'button', class: BUTTON_CLASS, onClick: confirm }, 'OK'),
+            h(
+              'button',
+              {
+                type: 'button',
+                class: BUTTON_CLASS,
+                disabled: !resolveEmbed(originalLink.value),
+                onClick: confirm,
+              },
+              t('editor.iframe.insert')
+            ),
           ]),
           hint(),
         ]
       );
-
-    // Names the service the typed link belongs to (and its tips), or lists what works.
-    const hint = () => {
-      const typed = originalLink.value.trim();
-      const resolved = typed ? resolveEmbed(typed) : null;
-      const text = resolved
-        ? [
-            h(
-              'span',
-              { class: 'richtext-font-medium richtext-text-foreground' },
-              resolved.service.name
-            ),
-            resolved.service.tips ? ` — ${resolved.service.tips}` : '',
-          ]
-        : typed
-          ? [t('editor.iframe.invalid')]
-          : [`${t('editor.iframe.supported')}: ${SERVICE_NAMES}`];
-
-      return h(
-        'div',
-        {
-          class: 'richtext-px-1 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground',
-        },
-        text
-      );
-    };
 
     return () => {
       const { src, width, height } = props.node.attrs;
