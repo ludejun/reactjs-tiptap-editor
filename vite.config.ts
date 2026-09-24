@@ -140,6 +140,10 @@ export default defineConfig(({ mode }) => {
       },
       rolldownOptions: {
         plugins: [esmExternalRequirePlugin({ external: [reactExternal] })],
+        // A dynamic import anywhere made rolldown emit two entries (Notice,
+        // RichTextBubbleNotice) as hashed chunks instead of the named files the
+        // package exports point at; keeping entry signatures strict stops that.
+        preserveEntrySignatures: 'strict',
         output: {
           // Keep generic helpers out of feature chunks with heavy external imports.
           codeSplitting: {
