@@ -126,7 +126,7 @@ export function NodeViewCodeBlock({
                 )}
                 type='button'
               >
-                {explicitLanguage ? labelOf(activeLanguage) : `${labelOf(activeLanguage)} · auto`}
+                {explicitLanguage ? labelOf(activeLanguage) : `${labelOf(activeLanguage)} · Auto`}
 
                 <IconComponent className='richtext-size-3' name='MenuDown' />
               </button>

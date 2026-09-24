@@ -12,6 +12,7 @@ All notable changes to ai-sparkwrite-editor are recorded here. The format follow
 ### Fixed
 
 - Editor padding is responsive: 16–24px on phones, 40px on tablets, the previous 80px from 1024px up — a phone no longer spends 160px of its width on margins.
+- English UI labels use Title Case consistently ("Auto Detect", "Search Language", "Add Caption", "AI Prompt", "Table of Contents"…); code block language ids without a display name are capitalised ("Elixir") and the auto-detected marker reads "· Auto".
 - `RichTextKit` registers `TextStyle`, so picking a font family, font size, colour or line height works in the kit (it threw "There is no mark type named 'textStyle'" and the menu appeared stuck).
 - The link edit card no longer shares the screen with the text bubble, stays anchored to its link instead of following the caret, sits above the block drag handle, and closes on a click elsewhere.
 - Links keep the surrounding text's weight; only the colour marks them.

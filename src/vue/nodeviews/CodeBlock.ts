@@ -214,7 +214,7 @@ export const CodeBlockNodeView = defineComponent({
                     [
                       explicitLanguage
                         ? languageLabel(activeLanguage)
-                        : `${languageLabel(activeLanguage)} · auto`,
+                        : `${languageLabel(activeLanguage)} · Auto`,
                       h(ChevronDown, { class: 'richtext-size-3', 'aria-hidden': 'true' }),
                     ]
                   ),
