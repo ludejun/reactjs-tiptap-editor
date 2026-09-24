@@ -5,6 +5,7 @@ import { ListItem } from '@tiptap/extension-list';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { Dropcursor, Gapcursor, Placeholder } from '@tiptap/extensions';
+import { PinOff } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 import {
@@ -260,6 +261,8 @@ interface PanelEntry {
   name: string;
   label: string;
   node: ReactNode;
+  /** A control wider than the icon slot; its row spans two columns. */
+  wide?: boolean;
 }
 
 /**
@@ -302,6 +305,13 @@ export function RichTextKitToolbar({
     {
       label: t('editor.slash.format'),
       entries: [
+        {
+          key: 'fontFamily',
+          name: 'fontFamily',
+          label: t('editor.fontFamily.tooltip'),
+          node: <RichTextFontFamily />,
+          wide: true,
+        },
         {
           key: 'fontSize',
           name: 'fontSize',
@@ -485,7 +495,7 @@ export function RichTextKitToolbar({
       entries: group.entries.filter((entry) => on(entry.name) && !pins.includes(entry.key)),
     }))
     .filter((group) => group.entries.length);
-  const showMore = more && panelGroups.length > 0;
+  const showMore = more && (panelGroups.length > 0 || pinned.length > 0);
 
   const dragKey = (event: React.DragEvent) =>
     event.dataTransfer.types.includes(DRAG_TYPE) ? event.dataTransfer.getData(DRAG_TYPE) : '';
@@ -515,6 +525,8 @@ export function RichTextKitToolbar({
     updatePins((current) => current.filter((item) => item !== key));
   };
 
+  const unpin = (key: string) => updatePins((current) => current.filter((item) => item !== key));
+
   return (
     <RichTextToolbar
       className={cn(className, dropTarget === 'toolbar' && 'richtext-kit-toolbar--drop')}
@@ -531,10 +543,7 @@ export function RichTextKitToolbar({
           on('undoRedo') && <RichTextUndo key='undo' />,
           on('undoRedo') && <RichTextRedo key='redo' />,
         ],
-        [
-          on('heading') && <RichTextHeading key='heading' />,
-          on('fontFamily') && <RichTextFontFamily key='fontFamily' />,
-        ],
+        [on('heading') && <RichTextHeading key='heading' />],
         [
           on('bold') && <RichTextBold key='bold' />,
           on('italic') && <RichTextItalic key='italic' />,
@@ -567,6 +576,15 @@ export function RichTextKitToolbar({
             title={entry.label}
           >
             {entry.node}
+            <button
+              aria-label={t('editor.more.unpin')}
+              className='richtext-kit-toolbar__unpin'
+              onClick={() => unpin(entry.key)}
+              title={t('editor.more.unpin')}
+              type='button'
+            >
+              ×
+            </button>
           </span>
         )),
         [children],
@@ -581,9 +599,6 @@ export function RichTextKitToolbar({
           onDrop={dropOnPanel}
         >
           <RichTextToolbarMore label={t('editor.more')} width={620}>
-            {pinnable ? (
-              <span className='richtext-kit-toolbar__hint'>{t('editor.more.pinHint')}</span>
-            ) : null}
             {panelGroups.map((group) => (
               <RichTextToolbarMoreGroup columns={3} key={group.label} label={group.label}>
                 {group.entries.map((entry) => (
@@ -593,13 +608,37 @@ export function RichTextKitToolbar({
                     key={entry.key}
                     onDragStart={startDrag(entry.key)}
                   >
-                    <RichTextToolbarMoreRow label={entry.label}>
+                    <RichTextToolbarMoreRow label={entry.label} wide={entry.wide}>
                       {entry.node}
                     </RichTextToolbarMoreRow>
                   </div>
                 ))}
               </RichTextToolbarMoreGroup>
             ))}
+            {pinnable && pinned.length ? (
+              // What is on the toolbar already, each with a one-click way back.
+              <RichTextToolbarMoreGroup columns={3} label={t('editor.more.pinned')}>
+                {pinned.map((entry) => (
+                  <div className='richtext-kit-toolbar__pinned-row' key={entry.key}>
+                    <RichTextToolbarMoreRow label={entry.label}>
+                      {entry.node}
+                    </RichTextToolbarMoreRow>
+                    <button
+                      aria-label={t('editor.more.unpin')}
+                      className='richtext-kit-toolbar__unpin-row'
+                      onClick={() => unpin(entry.key)}
+                      title={t('editor.more.unpin')}
+                      type='button'
+                    >
+                      <PinOff size={14} />
+                    </button>
+                  </div>
+                ))}
+              </RichTextToolbarMoreGroup>
+            ) : null}
+            {pinnable ? (
+              <span className='richtext-kit-toolbar__hint'>{t('editor.more.pinHint')}</span>
+            ) : null}
           </RichTextToolbarMore>
         </div>
       ) : null}

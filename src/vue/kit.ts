@@ -6,6 +6,7 @@ import { ListItem } from '@tiptap/extension-list';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { Dropcursor, Gapcursor, Placeholder } from '@tiptap/extensions';
+import { PinOff } from 'lucide-vue-next';
 import { computed, defineComponent, h, ref, type PropType, type VNode } from 'vue';
 
 import {
@@ -390,7 +391,8 @@ export const RichTextKitToolbar = defineComponent({
           ),
         }))
         .filter((group) => group.entries.length);
-      const showMore = props.more && panelGroups.length > 0;
+      const showMore = props.more && (panelGroups.length > 0 || pinned.length > 0);
+      const unpin = (key: string) => setPins(pins.value.filter((item) => item !== key));
 
       return h(
         RichTextToolbar,
@@ -450,7 +452,20 @@ export const RichTextKitToolbar = defineComponent({
                   title: entry.label,
                   onDragstart: startDrag(entry.key),
                 },
-                [h(entry.control)]
+                [
+                  h(entry.control),
+                  h(
+                    'button',
+                    {
+                      type: 'button',
+                      class: 'richtext-kit-toolbar__unpin',
+                      'aria-label': t('editor.more.unpin'),
+                      title: t('editor.more.unpin'),
+                      onClick: () => unpin(entry.key),
+                    },
+                    '×'
+                  ),
+                ]
               )
             ),
             [...((slots.default?.() ?? []) as VNode[])],
@@ -475,9 +490,6 @@ export const RichTextKitToolbar = defineComponent({
                 },
                 [
                   h(RichTextToolbarMore, { label: t('editor.more'), width: '620px' }, () => [
-                    props.pinnable
-                      ? h('span', { class: 'richtext-kit-toolbar__hint' }, t('editor.more.pinHint'))
-                      : null,
                     ...panelGroups.map((group) =>
                       h(
                         RichTextToolbarMoreGroup,
@@ -501,6 +513,38 @@ export const RichTextKitToolbar = defineComponent({
                           )
                       )
                     ),
+                    props.pinnable && pinned.length
+                      ? h(
+                          RichTextToolbarMoreGroup,
+                          { label: t('editor.more.pinned'), columns: 3 },
+                          () =>
+                            pinned.map((entry) =>
+                              h(
+                                'div',
+                                { key: entry.key, class: 'richtext-kit-toolbar__pinned-row' },
+                                [
+                                  h(RichTextToolbarMoreRow, { label: entry.label }, () =>
+                                    h(entry.control)
+                                  ),
+                                  h(
+                                    'button',
+                                    {
+                                      type: 'button',
+                                      class: 'richtext-kit-toolbar__unpin-row',
+                                      'aria-label': t('editor.more.unpin'),
+                                      title: t('editor.more.unpin'),
+                                      onClick: () => unpin(entry.key),
+                                    },
+                                    [h(PinOff, { size: 14, 'aria-hidden': 'true' })]
+                                  ),
+                                ]
+                              )
+                            )
+                        )
+                      : null,
+                    props.pinnable
+                      ? h('span', { class: 'richtext-kit-toolbar__hint' }, t('editor.more.pinHint'))
+                      : null,
                   ]),
                 ]
               )

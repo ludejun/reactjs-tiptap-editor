@@ -11,8 +11,9 @@ const locale = {
   'editor.edit': 'Edit',
   'editor.settings': 'Settings',
   'editor.more': 'More Tools',
-  'editor.more.pinHint':
-    'Drag a tool onto the toolbar to keep it there; drag it back here to remove it.',
+  'editor.more.pinHint': 'Drag a tool onto the toolbar to keep it there.',
+  'editor.more.pinned': 'On the Toolbar',
+  'editor.more.unpin': 'Remove from Toolbar',
   'editor.importExport': 'Import & export',
   'editor.table_of_content': 'Table of Content',
   'editor.draghandle.tooltip': 'Modify',

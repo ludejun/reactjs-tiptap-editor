@@ -2,6 +2,12 @@
 
 All notable changes to ai-sparkwrite-editor are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [semantic versioning](https://semver.org/).
 
+## Unreleased
+
+### Changed
+
+- Kit toolbar: the font family picker moved into the "More tools" panel so the default toolbar fits one row at 1024px (the "⋯" trigger keeps its place at the right end of the last row when it does wrap); pinned controls show a × badge on hover and are listed in an "On the Toolbar" group at the bottom of the panel with a remove button; the drag hint moved below the groups. Code block line numbers are smaller (0.75em) and lighter, still on the code's line grid.
+
 ## 1.0.1 — 2026-09-23
 
 ### Fixed
