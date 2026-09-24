@@ -50,6 +50,16 @@ const RENDERERS: Record<string, RenderMarkdown> = {
 
     return lines.join('\n');
   },
+  // GitHub-style alerts; `SUCCESS` is not one of GitHub's five but degrades to a quote.
+  notice: (node, h) => {
+    const type = String(node.attrs?.type ?? 'info').toUpperCase();
+    const label = type === 'INFO' ? 'NOTE' : type;
+    const body = node.content ? h.renderChildren(node.content, '\n\n') : '';
+
+    return [`> [!${label}]`, ...body.split('\n').map((line) => (line ? `> ${line}` : '>'))].join(
+      '\n'
+    );
+  },
   columns: joinBlocks,
   column: joinBlocks,
   tableOfContentsNode: () => '[TOC]',

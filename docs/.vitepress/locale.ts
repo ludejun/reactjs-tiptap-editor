@@ -169,6 +169,7 @@ export function getLocaleConfig(lang: string) {
         ext('Mention'),
         ext('Mermaid'),
         ext('MoreMark'),
+        ext('Notice'),
         ext('OrderedList'),
         ext('Recorder'),
         ext('RichPaste'),

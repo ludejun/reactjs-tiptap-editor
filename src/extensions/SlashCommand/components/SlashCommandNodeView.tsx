@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 
-import { IconComponent, Label } from '@/components';
+import { IconComponent } from '@/components';
 import { registerIcons } from '@/components/icons/icons';
 import { AI_COMPOSER_ACTIONS, composerPrompt } from '@/extensions/AI/composer';
 import { writeWithAI } from '@/extensions/AI/writer';
@@ -36,6 +36,7 @@ function SlashCommandNodeView(
 
   const [selectedCommandIndex, setSelectedCommandIndex] = useState(0);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const scrollContainer = useRef<HTMLDivElement | null>(null);
 
   const { t } = useLocale();
@@ -99,6 +100,25 @@ function SlashCommandNodeView(
     setSelectedGroupIndex(0);
   }, [props.query]);
 
+  const selectedCommand = commandQuery[selectedGroupIndex]?.commands[selectedCommandIndex];
+
+  // Typing a variant's own word ("warning") preselects it; otherwise the first one.
+  useEffect(() => {
+    const query = props.query.toLowerCase().trim();
+    const index = query
+      ? (selectedCommand?.variants?.findIndex(
+          (variant) =>
+            variant.label.toLowerCase().includes(query) ||
+            variant.aliases?.some((alias) => alias.toLowerCase().includes(query))
+        ) ?? -1)
+      : -1;
+
+    setSelectedVariantIndex(index >= 0 ? index : 0);
+    // The command objects are rebuilt every render; key on the name so this
+    // runs only when the query or the highlighted row changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.query, selectedCommand?.name]);
+
   const activeItemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useImperativeHandle(ref, () => {
@@ -143,6 +163,12 @@ function SlashCommandNodeView(
 
     if (event.key === 'Enter') {
       enterHandler();
+      return true;
+    }
+    const variants = selectedCommand?.variants;
+    if (variants?.length && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+      const step = event.key === 'ArrowRight' ? 1 : -1;
+      setSelectedVariantIndex((selectedVariantIndex + step + variants.length) % variants.length);
       return true;
     }
 
@@ -198,9 +224,19 @@ function SlashCommandNodeView(
     selectItem(selectedGroupIndex, selectedCommandIndex);
   }
 
-  function selectItem(groupIndex: number, commandIndex: number) {
+  function selectItem(groupIndex: number, commandIndex: number, variantIndex?: number) {
     const command = commandQuery[groupIndex]?.commands[commandIndex];
-    if (command) props.command(command);
+    if (!command) return;
+    const variant = command.variants?.[variantIndex ?? selectedVariantIndex]?.value;
+    props.command(
+      variant === undefined
+        ? command
+        : {
+            ...command,
+            action: (args: Parameters<Command['action']>[0]) =>
+              command.action({ ...args, variant }),
+          }
+    );
   }
 
   function createCommandClickHandler(groupIndex: number, commandIndex: number) {
@@ -225,9 +261,11 @@ function SlashCommandNodeView(
           {commandQuery?.map((group, groupIndex) => {
             return (
               <Fragment key={`slash-${group.title}`}>
-                <Label className='richtext-mx-[4px] richtext-mb-[4px] richtext-mt-[8px] !richtext-text-[0.65rem] richtext-uppercase'>
+                {/* A quiet group heading: small caps in the muted colour, aligned
+                    with the item icons. Typography alone separates the groups. */}
+                <div className='richtext-mx-1 richtext-mb-0.5 richtext-mt-1.5 richtext-px-1 richtext-text-[0.65rem] richtext-font-semibold richtext-uppercase richtext-leading-4 richtext-tracking-[0.08em] richtext-text-muted-foreground/80'>
                   {group.title}
-                </Label>
+                </div>
 
                 {group.commands.map((command, commandIndex) => {
                   return (
@@ -249,13 +287,58 @@ function SlashCommandNodeView(
                       )}
 
                       {command.iconName && (
-                        <IconComponent
-                          className='!richtext-mr-1 !richtext-text-lg'
-                          name={command.iconName}
-                        />
+                        <span
+                          className='richtext-flex'
+                          style={command.iconColor ? { color: command.iconColor } : undefined}
+                        >
+                          <IconComponent
+                            className='!richtext-mr-1 !richtext-text-lg'
+                            name={command.iconName}
+                          />
+                        </span>
                       )}
 
                       {command.label}
+
+                      {command.variants?.length ? (
+                        <span className='richtext-ml-auto richtext-flex richtext-items-center richtext-gap-0.5 richtext-pl-3'>
+                          {command.variants.map((variant, variantIndex) => {
+                            const chosen =
+                              selectedGroupIndex === groupIndex &&
+                              selectedCommandIndex === commandIndex &&
+                              selectedVariantIndex === variantIndex;
+
+                            return (
+                              <span
+                                aria-label={variant.label}
+                                key={variant.value}
+                                role='button'
+                                title={variant.label}
+                                className={cn(
+                                  'richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded richtext-border richtext-border-solid richtext-border-transparent hover:richtext-bg-background',
+                                  { 'richtext-border-border richtext-bg-background': chosen }
+                                )}
+                                style={variant.iconColor ? { color: variant.iconColor } : undefined}
+                                onMouseDown={(event) => event.preventDefault()}
+                                onMouseEnter={() => {
+                                  setSelectedGroupIndex(groupIndex);
+                                  setSelectedCommandIndex(commandIndex);
+                                  setSelectedVariantIndex(variantIndex);
+                                }}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  selectItem(groupIndex, commandIndex, variantIndex);
+                                }}
+                              >
+                                <IconComponent
+                                  className='!richtext-text-base'
+                                  name={variant.iconName}
+                                />
+                              </span>
+                            );
+                          })}
+                        </span>
+                      ) : null}
 
                       {command.shortcut ? (
                         <kbd className='richtext-ml-auto richtext-rounded richtext-border richtext-border-solid richtext-border-border richtext-bg-muted richtext-px-1 richtext-font-mono richtext-text-[10px] richtext-leading-4 richtext-text-muted-foreground'>

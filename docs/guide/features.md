@@ -35,6 +35,7 @@ Everything comes from one import — `ai-sparkwrite-editor` (React) or `ai-spark
 | [Divider](/extensions/Divider/)                                                                                   | `ai-sparkwrite-editor/divider`         | `RichTextDivider`                          | `variants` (9 built in, editable text, numbered), `defaultVariant`, `renderDivider`, `parseRules` |
 | [Column](/extensions/Column/)                                                                                     | `ai-sparkwrite-editor/column`          | `RichTextColumn`                           | `insertColumns({ cols })`                                                                         |
 | [Callout](/extensions/Callout/)                                                                                   | `ai-sparkwrite-editor/callout`         | `RichTextCallout`, `RichTextBubbleCallout` | note, tip, important, warning, caution                                                            |
+| [Notice](/extensions/Notice/) | `ai-sparkwrite-editor/notice` | `RichTextNotice`, `RichTextBubbleNotice` | info, success, warning, tip — a coloured box of editable blocks |
 | [Details](/extensions/Details/)                                                                                   | `ai-sparkwrite-editor/details`         | `RichTextDetails`                          | collapsible block                                                                                 |
 | [TableOfContents](/extensions/TableOfContents/)                                                                   | `ai-sparkwrite-editor/tableofcontents` | `RichTextTableOfContents`                  | live outline node                                                                                 |
 | [HorizontalRule](/extensions/HorizontalRule/)                                                                     | `ai-sparkwrite-editor/horizontalrule`  | `RichTextHorizontalRule`                   | superseded by Divider; register one or the other                                                  |
@@ -82,7 +83,7 @@ Everything comes from one import — `ai-sparkwrite-editor` (React) or `ai-spark
 
 ## Bubble menus
 
-Imported individually from `ai-sparkwrite-editor/bubble/<name>`: `text`, `table`, `media` (image), `video`, `link`, `callout`, `drawer`, `excalidraw`, `iframe`, `katex`, `mermaid`, `drag-handle`. See [Bubble menus](/guide/bubble-menu).
+Imported individually from `ai-sparkwrite-editor/bubble/<name>`: `text`, `table`, `media` (image), `video`, `link`, `callout`, `notice`, `drawer`, `excalidraw`, `iframe`, `katex`, `mermaid`, `drag-handle`. See [Bubble menus](/guide/bubble-menu).
 
 ## Languages
 

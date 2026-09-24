@@ -3,4 +3,5 @@ export { RichTextBubbleText } from './RichTextBubbleText';
 export { RichTextBubbleTable } from './RichTextBubbleTable';
 export { RichTextBubbleLink } from './RichTextBubbleLink';
 export { RichTextBubbleImage } from './RichTextBubbleImage';
+export { RichTextBubbleNotice } from './RichTextBubbleNotice';
 export { BUBBLE_CLASS, BUBBLE_OPTIONS, useBubbleEditor } from './shared';

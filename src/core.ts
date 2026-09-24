@@ -59,6 +59,13 @@ export {
   getCalloutType,
 } from '@/extensions/Callout/Callout';
 export type { CalloutOptions, CalloutType } from '@/extensions/Callout/Callout';
+export {
+  Notice,
+  NOTICE_TYPES,
+  DEFAULT_NOTICE_TYPE,
+  getNoticeType,
+} from '@/extensions/Notice/Notice';
+export type { NoticeOptions, NoticeType } from '@/extensions/Notice/Notice';
 export { Video, DEFAULT_VIDEO_OPTIONS } from '@/extensions/Video/Video';
 export type {
   VideoOptions,

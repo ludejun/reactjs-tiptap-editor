@@ -6,6 +6,7 @@ export * from './RichTextBubbleKatex';
 export * from './RichTextBubbleLink';
 export * from './RichTextBubbleMedia';
 export * from './RichTextBubbleMermaid';
+export * from './RichTextBubbleNotice';
 export * from './RichTextBubbleTable';
 export * from './RichTextBubbleText';
 export * from './RichTextBubbleTwitter';
