@@ -30,6 +30,7 @@
   },
   "files": [
     "lib",
+    "skills",
     "LICENSE",
     "package.json",
     "README.md"

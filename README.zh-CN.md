@@ -126,6 +126,16 @@ Kit 的每个选项对应一个功能：`false` 去掉它（按钮和菜单一�
 
 全部在文档站：**[ludejun.github.io/ai-sparkwrite-editor](https://ludejun.github.io/ai-sparkwrite-editor/)**——[快速开始](https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started)、[AI](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/)、[全部功能与导入路径](https://ludejun.github.io/ai-sparkwrite-editor/guide/features)、[多框架](https://ludejun.github.io/ai-sparkwrite-editor/guide/frameworks)、[自定义](https://ludejun.github.io/ai-sparkwrite-editor/guide/customization)、[体积](https://ludejun.github.io/ai-sparkwrite-editor/guide/bundle-size)。先去 **[在线 Playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/)** 试：内置演示模型，不配密钥也能走完所有 AI 流程。
 
+## 配合 AI 编程助手使用
+
+仓库自带一份面向 Claude Code、Cursor、Codex 等助手的 skill——接入规则、AI 后端契约、上传与图片删除的做法、排错清单——npm 包内也附带一份：`node_modules/ai-sparkwrite-editor/skills/ai-sparkwrite-editor/SKILL.md`。
+
+```bash
+npx skills add ludejun/ai-sparkwrite-editor
+```
+
+文档同时以 [llms.txt](https://ludejun.github.io/ai-sparkwrite-editor/llms.txt) 和 [llms-full.txt](https://ludejun.github.io/ai-sparkwrite-editor/llms-full.txt) 发布；[AI 编程助手](https://ludejun.github.io/ai-sparkwrite-editor/zh/guide/ai-agents)一页说明还有哪些材料可以交给助手。
+
 ## 开发
 
 ```bash

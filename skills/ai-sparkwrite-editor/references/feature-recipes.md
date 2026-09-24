@@ -1,291 +1,215 @@
 # Feature Recipes
 
-Load the relevant section for features beyond the base editor. Snippets extend the quickstart's `baseExtensions`; compose selected extensions into one array rather than replacing it with each recipe. Render controls inside the provider after the null guard. App-specific data and callbacks are identified below.
+Each recipe extends the quickstart. With the kit, pass the options under the feature key (`image: { upload }`); when assembling, call `.configure()` and add the result to `extensions` (configuring alone registers nothing). Controls render inside `RichTextProvider`. App-owned code is marked as such.
 
-## Toolbar Pattern
+## Image upload
 
-1. Add the extension to `extensions`.
-2. Render the matching `RichText*` component inside `RichTextProvider`.
-
-```tsx
-import { History, RichTextRedo, RichTextUndo } from 'ai-sparkwrite-editor/history';
-
-const extensions = [...baseExtensions, History];
-
-function Toolbar() {
-  return (
-    <div className='flex flex-wrap items-center gap-2 border-b'>
-      <RichTextUndo />
-      <RichTextRedo />
-    </div>
-  );
-}
-```
-
-## Bubble Menu Pattern
-
-Bubble components must render inside `RichTextProvider`; most require their matching extension.
-
-```tsx
-import { RichTextBubbleImage } from 'ai-sparkwrite-editor/bubble/media';
-import { RichTextBubbleLink } from 'ai-sparkwrite-editor/bubble/link';
-import { RichTextBubbleMenuDragHandle } from 'ai-sparkwrite-editor/bubble/drag-handle';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
-
-function BubbleMenus() {
-  return (
-    <>
-      <RichTextBubbleText />
-      <RichTextBubbleLink />
-      <RichTextBubbleImage />
-      <RichTextBubbleMenuDragHandle />
-    </>
-  );
-}
-```
-
-## Slash Command
-
-```tsx
-import { SlashCommand, SlashCommandList } from 'ai-sparkwrite-editor/slashcommand';
-
-const extensions = [...baseExtensions, SlashCommand];
-
-// Render inside RichTextProvider:
-<SlashCommandList />;
-```
-
-Optionally add `Placeholder` from `@tiptap/extensions` with `placeholder: "Press '/' for commands"`. Check that the commands offered by the list have their required extensions enabled.
-
-## Image Upload
-
-Keep the upload contract, transport adapter, and feature composition separate. The following blocks are app-owned code, not additional exports from the package.
-
-Install and import crop CSS when using the image UI:
-
-```bash
-pnpm add react-image-crop
-```
-
-Define the consumer's narrow contract in `upload-image.ts`:
+Contract: `upload: (file: File) => Promise<string>` resolving to a **durable URL** (the saved document reopens it later), rejecting on failure. The extension validates `acceptMimes`/`maxSize` first and reports problems through `onError({ type: 'size' | 'type' | 'upload', message, file })` (default: a toast with a translated message).
 
 ```ts
-// Resolves a persistent media URL; rejects on failure.
-export type UploadImage = (file: File) => Promise<string>;
-```
-
-Implement the app's transport in `http-image-upload.ts`:
-
-```ts
-import type { UploadImage } from './upload-image';
-
-export function createHttpImageUpload(endpoint: string): UploadImage {
-  return async (file) => {
-    const body = new FormData();
-    body.append('file', file);
-    const response = await fetch(endpoint, { method: 'POST', body });
-    if (!response.ok) throw new Error(`Image upload failed: ${response.status}`);
-
-    const data: unknown = await response.json();
-    if (
-      typeof data !== 'object' ||
-      data === null ||
-      !('url' in data) ||
-      typeof data.url !== 'string' ||
-      !data.url.trim()
-    ) {
-      throw new Error('Image upload returned no URL');
-    }
-    const url = data.url.trim();
-    // This example contract accepts absolute HTTP(S) media URLs only.
-    const parsed = new URL(url);
-    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
-      throw new Error('Image upload returned an unsupported URL');
-    }
-    return url;
-  };
+// upload-image.ts — app-owned adapter; adapt auth and response mapping to the real service
+export async function uploadImage(file: File): Promise<string> {
+  const body = new FormData();
+  body.append('file', file);
+  const response = await fetch('/api/images', { method: 'POST', body, credentials: 'include' });
+  if (!response.ok) throw new Error(`Image upload failed: ${response.status}`);
+  const data = await response.json();
+  if (typeof data.url !== 'string' || !data.url.trim())
+    throw new Error('Upload response must contain a URL');
+  return data.url; // absolute or relative, as the app's existing contract allows
 }
 ```
 
-Consume the callback in `image-feature.ts`:
+```ts
+// kit
+RichTextKit.configure({
+  image: { upload: uploadImage, resourceImage: 'both', maxSize: 10 * 1024 * 1024 },
+});
+// assembled
+Image.configure({ upload: uploadImage, resourceImage: 'both' }); // + <RichTextImage /> and <RichTextBubbleImage />
+```
+
+Options: `upload`, `resourceImage: 'upload' | 'link' | 'both'` (dialog tabs), `acceptMimes` (default: every browser image format incl. SVG — drop `'image/svg+xml'` if the host serves uploads from its own origin), `maxSize` (5 MB), `multiple` (true), `defaultInline` (false), `enableAlt` (false), `onError`, `HTMLAttributes`. Bubble menu: align, sizes, crop (needs `react-image-crop` + its CSS in React), rotate (`rotate` attr → `data-rotate`), caption (`<div class="image-caption">`), remove. Saved form: `<img src alt width align inline flipx flipy data-rotate>` inside `div.image`, so HTML renders anywhere.
+
+Pasted/dropped files also go through `upload`. Without `upload`, only the link tab works.
+
+## Deleting uploaded images (server clean-up)
+
+`upload` runs when the file is chosen, before any save, so deleted pictures leave files behind. Do the clean-up **at save time**, never per edit (undo can restore an image):
 
 ```ts
-import { Image } from 'ai-sparkwrite-editor/image';
-import type { UploadImage } from './upload-image';
+import { getImageChanges, markImagesSaved, collectImageSources } from 'ai-sparkwrite-editor'; // also in /core and /vue
 
-export function createImageExtension(upload: UploadImage) {
-  return Image.configure({
-    upload,
-    resourceImage: 'both',
-    enableAlt: true,
-  });
+async function save(editor: Editor) {
+  const { current, added, removed, orphaned } = getImageChanges(editor);
+  await api.saveDocument({ html: editor.getHTML(), images: current });
+  await api.deleteImages([...removed, ...orphaned]); // removed: in last save, gone now; orphaned: uploaded this session, never in the doc
+  markImagesSaved(editor); // new baseline; current sources stop counting as orphans
 }
 ```
 
-Wire the adapter in app composition, alongside the quickstart's `baseExtensions`:
+- `getImageChanges(editor, previous?)` diffs against `markImagesSaved`'s snapshot or the `previous` list you pass (e.g. the `images` stored with the document, so the first save after a reload still finds deletions).
+- Only sources returned by `upload` can be `orphaned`; linked/pasted URLs never are. Covers `image`, `imageBlock` and `imageGif` nodes.
+- `collectImageSources(doc)` lists sources of any ProseMirror doc, for a server-side comparison.
+- Deleting a document: delete `collectImageSources(editor.state.doc)` (or the stored `images` list).
 
-```tsx
-import { RichTextImage } from 'ai-sparkwrite-editor/image';
-import { createHttpImageUpload } from './http-image-upload';
-import { createImageExtension } from './image-feature';
-import 'react-image-crop/dist/ReactCrop.css';
+## Video, attachment, Mermaid, Drawer, Word import uploads
 
-const uploadImage = createHttpImageUpload('/api/uploads/images');
-const extensions = [...baseExtensions, createImageExtension(uploadImage)];
+Same `Promise<string>` contract; all rejections must be real errors.
 
-// Render inside RichTextProvider:
-<RichTextImage />;
+```ts
+Video.configure({
+  upload: (file, { onProgress } = {}) => uploadVideo(file, onProgress), // onProgress({ loaded, total })
+  resourceVideo: 'both',
+  acceptMimes: ['video/mp4', 'video/webm'],
+  maxSize: 100 * 1024 * 1024,
+  multiple: true,
+  uploadConcurrency: 3,
+  showUploadProgress: true,
+  onError,
+});
+Attachment.configure({ upload: uploadFile }); // file card; node view shows upload state
+Mermaid.configure({ upload: uploadFile }); // rendered diagram exported as an image
+Drawer.configure({ upload: uploadFile }); // React only
+ImportWord.configure({ upload: async (files: File[]) => uploadMany(files) }); // images embedded in the .docx
 ```
 
-Relevant options: `upload`, `HTMLAttributes`, `multiple`, `acceptMimes`, `maxSize`, `resourceImage`, `defaultInline`, `enableAlt`, `onError`.
+## Embeds (Iframe)
 
-`/api/uploads/images` is an example contract, not an endpoint provided by the package. Adapt authentication and response mapping in the adapter to the app's real service. URL validation cannot establish durability: the service must guarantee that stored content can reopen the URL; temporary signed URLs need the app's durable media strategy. Preserve an existing contract that allows relative URLs instead of silently imposing this example's stricter format.
+`Iframe` recognises 35+ services (YouTube, Vimeo, Bilibili, Youku, Tencent Video, Loom, Spotify, SoundCloud, Google Maps, AMap, Baidu Maps, Figma, Canva, Miro, Whimsical, Excalidraw, dbdiagram, ProcessOn, Modao, Lanhu, Framer, CodePen, CodeSandbox, StackBlitz, JSFiddle, GitHub Gist, Google Docs/Sheets/Slides/Forms, Airtable, Trello, ClickUp, Descript, Typeform, Jinshuju) and any other page. A pasted share link or `<iframe>` snippet becomes the embeddable URL with a sensible height.
 
-Module-level composition fits static configuration. If credentials or callbacks change during an editor's lifetime, use the app's current-callback mechanism or a supported option update path. Verify the editor sees updated values without recreating it per render; a new memoized extension array alone does not establish this. These helpers can share a small module when cohesive.
-
-## Video, Attachment, Mermaid, Drawer Uploads
-
-These features also accept upload callbacks in repo examples. Return a `Promise<string>` URL.
-
-```tsx
-import { Video } from 'ai-sparkwrite-editor/video';
-import { Attachment } from 'ai-sparkwrite-editor/attachment';
-import { Mermaid } from 'ai-sparkwrite-editor/mermaid';
-import { Drawer } from 'ai-sparkwrite-editor/drawer';
-
-Video.configure({ upload: async (file: File) => uploadFile(file) });
-Attachment.configure({ upload: async (file: File) => uploadFile(file) });
-Mermaid.configure({ upload: async (file: File) => uploadFile(file) });
-Drawer.configure({ upload: async (file: File) => uploadFile(file) });
+```ts
+import { resolveEmbed, EMBED_SERVICES, EMBED_KINDS } from 'ai-sparkwrite-editor';
+const embed = resolveEmbed('https://youtu.be/I4sMhHbHYXM'); // { service, src, height } | null for non-links
+editor.commands.setIframe({ src: embed.src, service: embed.service.key, height: embed.height });
 ```
 
-`uploadFile` is supplied by the app and must reject failed uploads. Add the configured extension to the editor's array; calling `.configure()` alone does not register it.
+Saved HTML: `<iframe src data-service width height>`; style per service with `[data-service="youtube"]`. UI: `RichTextIframe` (prompt card with categorised brand logos), `RichTextBubbleIframe` (resize, edit link, remove), slash `/embed`, `/youtube`, `/figma`…. Brand marks beyond the built-in ten load on demand (a separate ~29 KB chunk).
+
+## Notice and callout
+
+`Notice`: info / success / warning / tip boxes containing ordinary blocks; saved as `<div class="notice" data-type="info">…</div>`, no node view, renders anywhere the stylesheet loads. Commands `setNotice(type)`, `toggleNotice(type)`, `updateNotice(type)`, `unsetNotice()`; `NOTICE_TYPES` for menus. Enter on an empty last line leaves the box; Backspace at the start of the first line lifts. Markdown export writes GitHub-style alerts.
+
+`Callout`: a highlighted note block (`CALLOUT_TYPES`: note, tip, important, warning, caution) with `RichTextBubbleCallout`.
+
+## Slash menu (React)
+
+```tsx
+const extensions = [...base, SlashCommand];
+// inside the provider
+<SlashCommandList />; // default groups Insert and Format (AI entries included), filtered by registered extensions
+```
+
+Custom list: `<SlashCommandList commandList={[{ name: 'custom', title: 'Custom', commands: [{ name: 'signature', label: 'Signature', iconName: 'PenLine', aliases: ['sig'], action: ({ editor, range }) => editor.chain().focus().deleteRange(range).insertSignature().run() }] }]} />`. `Command` also supports `iconColor`, `variants` (one row, several choices — the notice row uses it), `preview` (icons + `+N` text), `hiddenUntilSearched`, `shortcut` (markdown hint), `shouldBeHidden(editor)`. Icons resolve by name through `registerIcons`. Advertise `/` in a `Placeholder` only when both are registered. Space on an empty line opens Ask AI when `AI` is registered.
 
 ## Mention
 
-```tsx
-import { Mention } from 'ai-sparkwrite-editor/mention';
-
-// Replace these demo records with the app's data source.
-const users = [{ id: 'user-1', label: 'Alex' }];
-const tags = [{ id: 'tag-1', label: 'Planning' }];
-
-const extensions = [
-  ...baseExtensions,
-  Mention.configure({
-    suggestions: [
-      {
-        char: '@',
-        items: async ({ query }: { query: string }) =>
-          users.filter((user) => user.label.toLowerCase().startsWith(query.toLowerCase())),
-      },
-      {
-        char: '#',
-        items: async ({ query }: { query: string }) =>
-          tags.filter((tag) => tag.label.toLowerCase().startsWith(query.toLowerCase())),
-      },
-    ],
-  }),
-];
+```ts
+Mention.configure({
+  suggestions: [
+    { char: '@', items: async ({ query }) => users.filter((u) => u.label.toLowerCase().startsWith(query.toLowerCase())) },
+    { char: '#', items: async ({ query }) => tags.filter(...) },
+  ],
+});
+// or Tiptap's single `suggestion: { items, render }`
 ```
 
-## Code Block
+Items: `{ id, label, avatar? }`. React only.
 
-```tsx
-import { CodeBlock, RichTextCodeBlock } from 'ai-sparkwrite-editor/codeblock';
+## Code block
 
-const extensions = [...baseExtensions, CodeBlock];
-```
+`CodeBlock.configure({ defaultLanguage: 'ts', detectLanguageFn })`; `RichTextCodeBlock` in the toolbar. The block's own hover toolbar (language picker with search, copy, delete, "· Auto" marker) ships with the node view. Pasted code from VS Code/JetBrains etc. becomes a code block with a guessed language via `RichPaste`. Exports `guessLanguage`, `languageLabel`, `LIST_LANG`, `CODE_THEME` palette.
 
-Render `<RichTextCodeBlock />` in the toolbar. The block's own controls (language, copy, delete) ship with the extension as a hover toolbar in the block's top-right corner; there is no bubble component to mount.
+## Tables
 
-## Export PDF
+`Table` (+ `RichTextTable`, `RichTextBubbleTable`): right-click context menu with rows/columns, merge/split, cell background colour, "Paragraph After Table" (⌘/Ctrl+Enter also works), delete. `RichTextBubbleTable hiddenActions={['deleteTable']}` (keys: `addColumnBefore`, `addColumnAfter`, `deleteColumn`, `addRowAbove`, `addRowBelow`, `deleteRow`, `mergeCells`, `splitCells`, `cellBackground`, `insertParagraphAfterTable`, `deleteTable`).
 
-```tsx
-import { ExportPdf, RichTextExportPdf } from 'ai-sparkwrite-editor/exportpdf';
+## Export and import
 
-const extensions = [
-  ...baseExtensions,
-  ExportPdf.configure({
-    paperSize: 'A4',
-    margins: {
-      top: '1in',
-      right: '0.4in',
-      bottom: '1in',
-      left: '0.4in',
-    },
-  }),
-];
-```
-
-## Export Word
-
-```tsx
-import { ExportWord, RichTextExportWord } from 'ai-sparkwrite-editor/exportword';
-
-const extensions = [...baseExtensions, ExportWord];
-```
+- Markdown: `ExportMarkdown` + `RichTextExportMarkdown`, or `await getMarkdown(editor)` from app code (also what the AI layer sends as context).
+- Word: `ExportWord`, `ImportWord` (`upload` for embedded images). Libraries load on first use.
+- PDF: `ExportPdf.configure({ paperSize: 'A4', margins: { top: '1in', right: '0.4in', bottom: '1in', left: '0.4in' } })`.
 
 ## Internationalization
 
-```tsx
-import { en, localeActions, useLocale } from 'ai-sparkwrite-editor/locale';
-import vi from 'ai-sparkwrite-editor/locales/vi';
+Only English is bundled. Register a dictionary **before** selecting it; state is global to all editors on the page.
 
-localeActions.setMessage('vi', vi);
-localeActions.setLang('vi');
+```ts
+import { localeActions, useLocale, en } from 'ai-sparkwrite-editor/locale'; // useLocale also from /vue
+import zhCN from 'ai-sparkwrite-editor/locales/zh-cn';
 
-localeActions.setMessage('en', {
-  ...en,
-  'editor.remove': 'Delete',
-});
-
-function LocaleDebug() {
-  const { lang } = useLocale();
-  return null;
-}
+localeActions.setMessage('zh_CN', zhCN);
+localeActions.setLang('zh_CN');
+localeActions.setMessage('en', { 'editor.remove': 'Delete' }); // override one key; merges
 ```
 
-Run registration in app initialization, not repeatedly during component render. `/locale` includes English; register other dictionaries before selecting them. For compatibility, `/locale-bundle` registers all bundled languages as an import side effect.
-
-Language keys differ from some file names: `zh_CN` uses `/locales/zh-cn`, `pt_BR` uses `/locales/pt-br`, and `hu_HU` uses `/locales/hu`. Other keys match their file name: `en`, `hi`, `es`, `ar`, `fr`, `bn`, `ru`, `id`, `de`, `ja`, `tr`, `vi`, `ko`, `it`, and `fi`.
+Codes → files: `zh_CN`→`zh-cn`, `pt_BR`→`pt-br`, `hu_HU`→`hu`; others match (`hi es fr bn ru id de ja tr vi ko it fi`). Load on demand with literal `import('ai-sparkwrite-editor/locales/ja')` per language (a computed specifier pulls all or fails). `/locale-bundle` registers every language as a side effect. `useLocale()` → `{ lang, t }`; `t(key, params)`. English UI labels are Title Case; keep that in overrides.
 
 ## Theme
 
-```tsx
+```ts
 import { themeActions, useTheme } from 'ai-sparkwrite-editor/theme';
-
-themeActions.setTheme('light'); // or 'dark'
-themeActions.setColor('default'); // "red" | "blue" | "green" | "orange" | "rose" | "violet" | "yellow"
+themeActions.setTheme('dark');
+themeActions.setColor('blue');
 themeActions.setBorderRadius('0.5rem');
-
-function ThemeState() {
-  const { theme, color, borderRadius } = useTheme();
-  return null;
-}
 ```
 
-The current provider accepts but ignores `dark`; synchronize the app's theme through `themeActions.setTheme(...)` in initialization, an event handler, or an effect. Theme and locale actions update shared stores, not per-editor state.
+Global to all editors and their portaled dialogs; sync it with the host's theme in an effect. `RichTextProvider dark` is ignored. Fine-tuning: CSS variables on `.sparkwrite` (`--richtext-link`, `--richtext-link-dark`, `--ai-accent`…), `richtext-` prefixed utility classes, `.ProseMirror` padding is responsive (16–24 px phones, 40 px tablets, 80 px ≥1024 px). Document area: `<EditorContent className='article-editor' />` then `.article-editor .tiptap { min-height: 240px }`.
 
-## AI: composer dock, autocomplete, writing into the document
+## Custom toolbar and controls
 
 ```tsx
-import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from 'ai-sparkwrite-editor/ai';
-import { RichTextBubbleText } from 'ai-sparkwrite-editor/bubble/text';
+import {
+  RichTextToolbar,
+  RichTextToolbarButton,
+  RichTextToolbarDivider,
+  RichTextToolbarMore,
+  RichTextToolbarMoreGroup,
+  RichTextToolbarMoreRow,
+  registerIcons,
+} from 'ai-sparkwrite-editor';
+import { Save } from 'lucide-react';
+registerIcons({ Save }); // module scope, before render
 
-const extensions = [
-  AI.configure({ protocol: 'openai', model: 'gpt-4o-mini', baseURL: '/api/ai' }), // keys stay on the server
-  AIAutocomplete, // grey continuation after a pause; Tab accepts
-];
-
-<RichTextProvider editor={editor}>
-  <RichTextToolbar>
-    <RichTextAI /> {/* opens the dock; ⌘/Ctrl+J and "/ai" do too */}
-  </RichTextToolbar>
-  <EditorContent editor={editor} />
-  <RichTextAIComposer /> {/* answers stream into the document above */}
-  <RichTextBubbleText /> {/* Improve menu on a selection, also after Select All */}
-</RichTextProvider>;
+<RichTextToolbar>
+  <RichTextBold />
+  <RichTextToolbarDivider />
+  <RichTextTable />
+  <RichTextToolbarButton
+    icon='Save'
+    tooltip='Save'
+    shortcutKeys={['mod', 'S']}
+    onClick={() => save(editor)}
+  />
+  <RichTextToolbarMore label='More'>
+    <RichTextToolbarMoreGroup label='Insert' columns={3}>
+      <RichTextToolbarMoreRow label='Divider'>
+        <RichTextDivider />
+      </RichTextToolbarMoreRow>
+    </RichTextToolbarMoreGroup>
+  </RichTextToolbarMore>
+</RichTextToolbar>;
 ```
 
-From your own UI, `writeWithAI(editor, { prompt, target: 'end' })` streams an answer into the document and returns `keep()` / `discard()`; `AI_COMPOSER_ACTIONS` are the presets (continue, summarize, outline, title, action items, grammar, translate). Space on an empty line opens Ask AI (`spaceTrigger: false` to disable). Vue: the same names from `ai-sparkwrite-editor/vue`, extensions from `ai-sparkwrite-editor/core`.
+Icons are addressed by name and come from a registry that each feature fills (tree-shakable); a name of your own must be registered first; re-registering a built-in name replaces the icon everywhere. Vue: `RichTextToolbarButton`, `RichTextDropdown`, `RichTextPopover`, `RichTextDialog`, `useEditorState(selector)`. Keep the main row to ~18 constant controls and put the rest behind `RichTextToolbarMore` (the kit toolbar already does; extra controls go in its `children`).
+
+## Custom block
+
+Any Tiptap node works; give it a node view for interactive state (React `ReactNodeViewRenderer`, Vue `VueNodeViewRenderer`), `parseHTML`/`renderHTML` define the saved form, add a `RichTextToolbarButton` or slash entry that runs its command. `Divider` and `Callout` in the source are the reference implementations. Register the node alongside the others (a custom node cannot be added through kit options; put it next to `RichTextKit` in `extensions`).
+
+## Recorder (session replay)
+
+```ts
+Recorder.configure({
+  autoStart: true,
+  recordSelection: false,
+  onEntry: (entry, recording) => stream(entry),
+  maxEntries: 0,
+});
+const recording = getRecording(editor); // plain JSON to store
+await replayRecording(editor, recording, { speed: 4, maxDelay: 2000, onProgress, signal }); // set editable false while playing
+```
+
+## Bubble menus
+
+Mount only what the registered extensions need (the kit does this): `RichTextBubbleText` (any text), `RichTextBubbleLink` (hover a link; edit form; stays above the drag handle), `RichTextBubbleImage`/`Video`/`ImageGif` (`/bubble/media`), `RichTextBubbleTable`, `RichTextBubbleNotice`, `RichTextBubbleIframe`, `RichTextBubbleKatex`, `RichTextBubbleMermaid`, `RichTextBubbleMenuDragHandle` (block handle + "+"). Custom buttons: `RichTextBubbleText` takes a `buttonBubble` prop in React (the default slot in Vue) to replace its set.

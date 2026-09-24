@@ -2,6 +2,12 @@
 
 All notable changes to ai-sparkwrite-editor are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [semantic versioning](https://semver.org/).
 
+## Unreleased
+
+### Added
+
+- **For AI coding agents**: the `skills/ai-sparkwrite-editor` skill is rewritten for 1.1.0 — kit-first setup, React/Vue/core entry points, every export, the AI `endpoint` contract with Express and Next.js server samples for OpenAI and Anthropic, image/video/attachment upload recipes, deleting orphaned uploads at save time, embeds, notices, locale and theme, a debugging checklist — and ships inside the npm package (`node_modules/ai-sparkwrite-editor/skills/…`). The docs site publishes `llms.txt` and `llms-full.txt`, and a new guide page, [AI Coding Agents](https://ludejun.github.io/ai-sparkwrite-editor/guide/ai-agents), lists what to hand an agent.
+
 ## 1.1.0 — 2026-09-24
 
 Everything since 1.0.0. (1.0.1 was bumped in `package.json` but never published; its changes are listed here.)

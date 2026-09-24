@@ -306,4 +306,4 @@ const editor = useEditor({
 
 ## 接下来看什么
 
-[AI](/zh/extensions/AI/) 了解写作台、自动补全和提供方 · [工具栏](/zh/guide/toolbar) 和[气泡菜单](/zh/guide/bubble-menu)用于组合界面 · [功能一览](/zh/guide/features) 查看每个扩展及其选项 · [框架支持](/zh/guide/frameworks) 了解核心/React/Vue 的划分 · [国际化](/zh/guide/internationalization) · [自定义主题](/zh/guide/custom-theme) · [包体积](/zh/guide/bundle-size)。
+[AI](/zh/extensions/AI/) 了解写作台、自动补全和提供方 · [工具栏](/zh/guide/toolbar) 和[气泡菜单](/zh/guide/bubble-menu)用于组合界面 · [功能一览](/zh/guide/features) 查看每个扩展及其选项 · [框架支持](/zh/guide/frameworks) 了解核心/React/Vue 的划分 · [国际化](/zh/guide/internationalization) · [自定义主题](/zh/guide/custom-theme) · [包体积](/zh/guide/bundle-size) · [AI 编程助手](/zh/guide/ai-agents) 把接入工作交给 Claude Code 或 Cursor。

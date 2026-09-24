@@ -15,6 +15,7 @@ export const zh: Record<string, string> = {
   Internationalization: '国际化',
   'Custom Theme': '自定义主题',
   'How to Migrate': '迁移指南',
+  'AI Coding Agents': 'AI 编程助手',
   'Made with ❤️': '用 ❤️ 打造',
   'Edit this page on GitHub': '在 GitHub 上编辑此页',
   'On this page': '本页目录',
