@@ -55,14 +55,18 @@ export const CodeView = /* @__PURE__ */ Extension.create<CodeViewOptions>({
     return {
       toggleCodeView:
         () =>
-        ({ editor }) => {
-          //@ts-expect-error
-          const isActive = editor.storage.codeView.isActive;
+        ({ editor, commands }) => {
+          // `commands.setContent` runs inside this command's transaction; calling
+          // `editor.commands.setContent` here would dispatch a second transaction
+          // against a state that has already moved on ("mismatched transaction").
+          const storage = (editor.storage as unknown as Record<string, unknown>).codeView as {
+            isActive: boolean;
+            originalContent: string;
+          };
 
-          if (!isActive) {
+          if (!storage.isActive) {
             const htmlContent = editor.getHTML();
-            //@ts-expect-error
-            editor.storage.codeView.originalContent = htmlContent;
+            storage.originalContent = htmlContent;
 
             const escapedHtml = htmlContent
               .replace(/&/g, '&amp;')
@@ -71,17 +75,16 @@ export const CodeView = /* @__PURE__ */ Extension.create<CodeViewOptions>({
               .replace(/"/g, '&quot;')
               .replace(/'/g, '&#039;');
 
-            editor.commands.setContent(
+            storage.isActive = true;
+
+            return commands.setContent(
               `<div class="tiptap-code-view-wrapper">${escapedHtml}</div>`
             );
-          } else {
-            editor.commands.setContent(editor.getText());
           }
 
-          //@ts-expect-error
-          editor.storage.codeView.isActive = !isActive;
+          storage.isActive = false;
 
-          return true;
+          return commands.setContent(editor.getText());
         },
     };
   },

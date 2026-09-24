@@ -230,6 +230,8 @@ export const RichTextDropdown = defineComponent({
     items: { type: Array as PropType<DropdownItem[]>, required: true },
     disabled: { type: Boolean, default: false },
     width: { type: String, default: '12rem' },
+    /** Every label the trigger may show; the widest sets its width so it never shifts. */
+    reserve: { type: Array as PropType<string[]>, default: () => [] },
   },
   emits: ['select'],
   setup(props, { emit }) {
@@ -260,7 +262,25 @@ export const RichTextDropdown = defineComponent({
           [
             props.icon ? h(props.icon, { size: 16, 'aria-hidden': 'true' }) : null,
             props.label
-              ? h('span', { class: 'richtext-max-w-32 richtext-truncate' }, props.label)
+              ? h('span', { class: 'richtext-grid richtext-max-w-32' }, [
+                  h(
+                    'span',
+                    { class: 'richtext-col-start-1 richtext-row-start-1 richtext-truncate' },
+                    props.label
+                  ),
+                  ...props.reserve.map((text) =>
+                    h(
+                      'span',
+                      {
+                        key: text,
+                        'aria-hidden': 'true',
+                        class:
+                          'richtext-invisible richtext-col-start-1 richtext-row-start-1 richtext-truncate',
+                      },
+                      text
+                    )
+                  ),
+                ])
               : null,
             h(ChevronDown, { size: 12, class: 'richtext-text-zinc-500', 'aria-hidden': 'true' }),
           ]

@@ -66,6 +66,7 @@ export function RichTextHeading() {
         <ActionMenuButton
           disabled={disabled}
           icon={icon}
+          reserve={items.map((item) => item.title)}
           title={title}
           tooltip={tooltip}
           // tooltipOptions={tooltipOptions}

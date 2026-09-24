@@ -47,6 +47,8 @@ export function RichTextBubbleLink() {
     const dom = editor.view.dom;
 
     const onMouseOver = (event: MouseEvent) => {
+      // The edit card stays put on the link it was opened for.
+      if (showEdit) return;
       const anchor = (event.target as HTMLElement | null)?.closest?.('a');
 
       if (anchor instanceof HTMLAnchorElement && dom.contains(anchor)) {
@@ -101,6 +103,34 @@ export function RichTextBubbleLink() {
 
     return true;
   }, [editor, hoveredLink]);
+
+  /** The text bubble reads this flag, so both never show at once. */
+  const setEditing = useCallback(
+    (editing: boolean) => {
+      if (editor.storage.link) editor.storage.link.editing = editing;
+      setShowEdit(editing);
+    },
+    [editor]
+  );
+
+  // The card is anchored to the hovered link; while it is open the anchor must
+  // survive the pointer wandering off, or the card would fall back to following
+  // the caret. A click anywhere outside the card closes it instead.
+  useEffect(() => {
+    if (!showEdit) return;
+
+    clearTimeout(hideTimer.current);
+
+    const onMouseDown = (event: MouseEvent) => {
+      if (menu.current?.contains(event.target as Node)) return;
+      setEditing(false);
+      setHoveredLink(null);
+    };
+
+    document.addEventListener('mousedown', onMouseDown, true);
+
+    return () => document.removeEventListener('mousedown', onMouseDown, true);
+  }, [showEdit, setEditing]);
 
   const visible = !!hoveredLink || showEdit;
   const wasVisible = useRef(false);
@@ -159,19 +189,19 @@ export function RichTextBubbleLink() {
       .focus()
       .run();
 
-    setShowEdit(false);
+    setEditing(false);
     setHoveredLink(null);
   };
 
   const unSetLink = useCallback(() => {
     selectHoveredLink();
     editor.chain().extendMarkRange('link').unsetLink().focus().run();
-    setShowEdit(false);
+    setEditing(false);
     setHoveredLink(null);
-  }, [editor, selectHoveredLink]);
+  }, [editor, selectHoveredLink, setEditing]);
 
   const onClose = () => {
-    setShowEdit(false);
+    setEditing(false);
     scheduleHide();
   };
 
@@ -181,13 +211,14 @@ export function RichTextBubbleLink() {
 
   return (
     <BubbleMenu
+      className='richtext-z-20'
       editor={editor}
       getReferencedVirtualElement={getReferencedVirtualElement}
       options={{ placement: 'bottom', offset: 8, flip: true }}
       pluginKey={PLUGIN_KEY}
       shouldShow={shouldShow}
     >
-      <div ref={menu} onMouseEnter={cancelHide} onMouseLeave={scheduleHide}>
+      <div ref={menu} onMouseEnter={cancelHide} onMouseLeave={() => !showEdit && scheduleHide()}>
         {showEdit ? (
           <div className='richtext-flex richtext-items-center richtext-gap-2 richtext-rounded-md !richtext-border !richtext-border-solid !richtext-border-border richtext-bg-popover richtext-p-4 richtext-text-popover-foreground richtext-shadow-md richtext-outline-none'>
             <LinkEditBlock editor={editor} onClose={onClose} onSetLink={onSetLink} />
@@ -199,8 +230,9 @@ export function RichTextBubbleLink() {
               link={link}
               onClear={unSetLink}
               onEdit={() => {
+                // Flag first: selecting the link re-runs the text bubble's `shouldShow`.
+                setEditing(true);
                 selectHoveredLink();
-                setShowEdit(true);
               }}
             />
           </div>

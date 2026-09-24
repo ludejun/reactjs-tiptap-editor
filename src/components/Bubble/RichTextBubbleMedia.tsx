@@ -92,6 +92,7 @@ function RichTextBubbleImage() {
 
   return (
     <BubbleMenu
+      className='richtext-z-20'
       editor={editor}
       options={{ placement: 'bottom', offset: 8, flip: true }}
       pluginKey={'RichTextBubbleImage'}
@@ -140,6 +141,7 @@ function RichTextBubbleImageGif() {
 
   return (
     <BubbleMenu
+      className='richtext-z-20'
       editor={editor}
       options={{ placement: 'bottom', offset: 8, flip: true }}
       pluginKey={'RichTextBubbleImageGif'}
@@ -188,6 +190,7 @@ function RichTextBubbleVideo() {
 
   return (
     <BubbleMenu
+      className='richtext-z-20'
       editor={editor}
       options={{ placement: 'bottom', offset: 8, flip: true }}
       pluginKey={'RichTextBubbleVideo'}

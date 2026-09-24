@@ -2,6 +2,7 @@ import { Slot } from '@radix-ui/react-slot';
 import React from 'react';
 
 import { Button, Tooltip, TooltipContent, TooltipTrigger, icons } from '@/components';
+import { cn } from '@/lib/utils';
 import { getShortcutKeys } from '@/utils/plateform';
 
 import type { ButtonViewReturnComponentProps } from '@/types';
@@ -29,6 +30,12 @@ export interface ActionMenuButtonProps {
   /** Whether to render as child */
   asChild?: boolean;
   dataState?: boolean;
+  className?: string;
+  /**
+   * Every title this button may show. The widest one sets the width, so
+   * switching the title (Paragraph → Heading 1) no longer shifts the toolbar.
+   */
+  reserve?: string[];
 }
 
 const ActionMenuButton = React.forwardRef<HTMLButtonElement, ActionMenuButtonProps>(
@@ -49,6 +56,8 @@ const ActionMenuButton = React.forwardRef<HTMLButtonElement, ActionMenuButtonPro
       color,
       action,
       tooltipOptions,
+      className,
+      reserve,
       ...props
     },
     ref
@@ -60,7 +69,10 @@ const ActionMenuButton = React.forwardRef<HTMLButtonElement, ActionMenuButtonPro
       <Tooltip>
         <TooltipTrigger asChild>
           <Comp
-            className='richtext-h-[32px] richtext-min-w-0 richtext-max-w-32 richtext-overflow-hidden richtext-px-1.5 richtext-py-0'
+            className={cn(
+              'richtext-h-[32px] richtext-min-w-0 richtext-max-w-32 richtext-overflow-hidden richtext-px-1.5 richtext-py-0',
+              className
+            )}
             data-state={dataState ? 'on' : 'off'} // active background control
             disabled={props?.disabled}
             ref={ref}
@@ -69,8 +81,20 @@ const ActionMenuButton = React.forwardRef<HTMLButtonElement, ActionMenuButtonPro
           >
             <div className='richtext-flex richtext-h-full richtext-items-center richtext-font-normal'>
               {title && (
-                <div className='richtext-grow richtext-truncate richtext-text-left richtext-text-sm'>
-                  {title}
+                <div className='richtext-grid richtext-grow richtext-text-left richtext-text-sm'>
+                  <div className='richtext-col-start-1 richtext-row-start-1 richtext-truncate'>
+                    {title}
+                  </div>
+
+                  {reserve?.map((text) => (
+                    <div
+                      aria-hidden='true'
+                      className='richtext-invisible richtext-col-start-1 richtext-row-start-1 richtext-truncate'
+                      key={text}
+                    >
+                      {text}
+                    </div>
+                  ))}
                 </div>
               )}
 

@@ -17,6 +17,7 @@ test('the kit registers every default feature once and leaves opt-in features ou
     'paragraph',
     'text',
     'bold',
+    'textStyle',
     'table',
     'codeBlock',
     'listItem',

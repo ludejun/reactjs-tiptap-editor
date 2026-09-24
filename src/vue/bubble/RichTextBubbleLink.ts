@@ -23,6 +23,11 @@ export const RichTextBubbleLink = defineComponent({
     const { t } = useLocale();
     const { editor, editable, key } = useBubbleEditor();
     const editing = ref(false);
+    /** Mirrored into the Link extension's storage so the text bubble can stay hidden. */
+    const setEditing = (value: boolean) => {
+      editing.value = value;
+      if (editor.value?.storage.link) editor.value.storage.link.editing = value;
+    };
     const link = useEditorState(
       (current) => ({
         active: current.isActive('link'),
@@ -34,7 +39,7 @@ export const RichTextBubbleLink = defineComponent({
     watch(
       () => link.value.active,
       (active) => {
-        if (!active) editing.value = false;
+        if (!active) setEditing(false);
       }
     );
     // Switching between the view and the edit card changes the menu's size;
@@ -69,10 +74,10 @@ export const RichTextBubbleLink = defineComponent({
                 h(RichTextLinkForm, {
                   editor: current,
                   onDone: () => {
-                    editing.value = false;
+                    setEditing(false);
                   },
                   onCancel: () => {
-                    editing.value = false;
+                    setEditing(false);
                     current.commands.focus();
                   },
                 }),
@@ -99,9 +104,10 @@ export const RichTextBubbleLink = defineComponent({
                   icon: Pencil,
                   tooltip: t('editor.link.edit.tooltip'),
                   onClick: () => {
+                    // Flag first: selecting the link re-runs the text bubble's `shouldShow`.
+                    setEditing(true);
                     // Select the whole link so the form reads and replaces all of it.
                     current.chain().extendMarkRange('link').run();
-                    editing.value = true;
                   },
                 }),
                 h(RichTextToolbarButton, {

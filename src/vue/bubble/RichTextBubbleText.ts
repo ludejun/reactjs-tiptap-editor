@@ -52,6 +52,8 @@ export const RichTextBubbleText = defineComponent({
 
     const shouldShow = ({ editor: current }: { editor: Editor }) => {
       if (aiPluginKey.getState(current.state)?.session) return false;
+      // Editing a link selects it; the link card is the one menu wanted then.
+      if (current.storage.link?.editing) return false;
       const { selection } = current.view.state;
       const { $from, to } = selection;
 

@@ -530,6 +530,7 @@ export const RichTextHeading = defineComponent({
       return h(RichTextDropdown, {
         icon: HeadingIcon,
         label: current.label,
+        reserve: items.map((item) => item.label),
         tooltip: t('editor.heading.tooltip'),
         items,
         disabled: !state.value.enabled,
@@ -807,6 +808,7 @@ export const RichTextFontSize = defineComponent({
       h(RichTextDropdown, {
         icon: ALargeSmall,
         label: state.value.current || t('editor.fontSize.default.tooltip'),
+        reserve: [t('editor.fontSize.default.tooltip')],
         tooltip: t('editor.fontSize.tooltip'),
         width: '9rem',
         disabled: !state.value.enabled,

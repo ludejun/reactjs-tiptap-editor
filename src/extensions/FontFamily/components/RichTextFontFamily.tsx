@@ -128,9 +128,11 @@ export function RichTextFontFamily() {
     <DropdownMenu onOpenChange={(open) => open && setDocScripts(documentScripts(editor))}>
       <DropdownMenuTrigger asChild disabled={disabled}>
         <ActionMenuButton
+          // Fixed width: font names vary a lot, and the toolbar must not shift with them.
+          className='richtext-w-24'
           disabled={disabled}
           icon={icon}
-          title={title?.length > 12 ? `${title?.slice(0, 12)}...` : title}
+          title={title}
           tooltip={tooltip}
           // tooltipOptions={tooltipOptions}
         />

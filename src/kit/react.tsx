@@ -4,6 +4,7 @@ import { HardBreak } from '@tiptap/extension-hard-break';
 import { ListItem } from '@tiptap/extension-list';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
+import { TextStyle } from '@tiptap/extension-text-style';
 import { Dropcursor, Gapcursor, Placeholder } from '@tiptap/extensions';
 import { PinOff } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -124,6 +125,8 @@ const REGISTRY = {
   strike: { extension: Strike },
   code: { extension: Code },
   moreMark: { extension: MoreMark },
+  // The mark that colours, fonts, sizes and line heights hang on.
+  textStyle: { extension: TextStyle },
   color: { extension: Color },
   highlight: { extension: Highlight },
   fontFamily: { extension: FontFamily },
