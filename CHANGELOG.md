@@ -4,9 +4,17 @@ All notable changes to ai-sparkwrite-editor are recorded here. The format follow
 
 ## Unreleased
 
+### Fixed
+
+- `RichTextKit` registers `TextStyle`, so picking a font family, font size, colour or line height works in the kit (it threw "There is no mark type named 'textStyle'" and the menu appeared stuck).
+- The link edit card no longer shares the screen with the text bubble, stays anchored to its link instead of following the caret, sits above the block drag handle, and closes on a click elsewhere.
+- Links keep the surrounding text's weight; only the colour marks them.
+- The heading and font pickers keep a fixed width, so changing a block's level no longer shifts the toolbar.
+- Code View toggles inside one transaction instead of throwing "Applying a mismatched transaction".
+
 ### Changed
 
-- Kit toolbar: the font family picker moved into the "More tools" panel so the default toolbar fits one row at 1024px (the "⋯" trigger keeps its place at the right end of the last row when it does wrap); pinned controls show a × badge on hover and are listed in an "On the Toolbar" group at the bottom of the panel with a remove button; the drag hint moved below the groups. Code block line numbers are smaller (0.75em) and lighter, still on the code's line grid.
+- Kit toolbar: tighter spacing so the default row fits a 1024px column on one line (the "⋯" trigger keeps its place at the right end of the last row when it does wrap); pinned controls show a small remove badge on hover and are listed in an "On the Toolbar" group at the bottom of the panel with a remove button; the drag hint moved below the groups. Code block line numbers are smaller (0.75em) and lighter, still on the code's line grid.
 
 ## 1.0.1 — 2026-09-23
 

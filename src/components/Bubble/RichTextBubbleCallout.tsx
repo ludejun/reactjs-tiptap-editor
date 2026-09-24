@@ -102,6 +102,7 @@ export function RichTextBubbleCallout() {
 
   return (
     <BubbleMenu
+      className='richtext-z-20'
       editor={editor}
       options={{ placement: 'top', offset: 8, flip: true }}
       pluginKey='RichTextBubbleCallout'

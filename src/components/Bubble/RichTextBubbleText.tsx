@@ -170,6 +170,8 @@ export function RichTextBubbleText({ buttonBubble }: RichTextBubbleTextProps) {
 
   const shouldShow = ({ editor }: { editor: Editor }) => {
     if (aiPluginKey.getState(editor.state)?.session) return false;
+    // Editing a link selects it; the link card is the one menu wanted then.
+    if (editor.storage.link?.editing) return false;
     const { selection } = editor.view.state;
     const { $from, to } = selection;
 
@@ -193,6 +195,7 @@ export function RichTextBubbleText({ buttonBubble }: RichTextBubbleTextProps) {
 
   return (
     <BubbleMenu
+      className='richtext-z-20'
       editor={editor}
       options={{ placement: 'bottom', offset: 8, flip: true }}
       pluginKey={BUBBLE_TEXT_KEY}

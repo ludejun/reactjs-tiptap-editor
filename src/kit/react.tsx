@@ -4,6 +4,7 @@ import { HardBreak } from '@tiptap/extension-hard-break';
 import { ListItem } from '@tiptap/extension-list';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
+import { TextStyle } from '@tiptap/extension-text-style';
 import { Dropcursor, Gapcursor, Placeholder } from '@tiptap/extensions';
 import { PinOff } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -124,6 +125,8 @@ const REGISTRY = {
   strike: { extension: Strike },
   code: { extension: Code },
   moreMark: { extension: MoreMark },
+  // The mark that colours, fonts, sizes and line heights hang on.
+  textStyle: { extension: TextStyle },
   color: { extension: Color },
   highlight: { extension: Highlight },
   fontFamily: { extension: FontFamily },
@@ -305,13 +308,6 @@ export function RichTextKitToolbar({
     {
       label: t('editor.slash.format'),
       entries: [
-        {
-          key: 'fontFamily',
-          name: 'fontFamily',
-          label: t('editor.fontFamily.tooltip'),
-          node: <RichTextFontFamily />,
-          wide: true,
-        },
         {
           key: 'fontSize',
           name: 'fontSize',
@@ -529,7 +525,11 @@ export function RichTextKitToolbar({
 
   return (
     <RichTextToolbar
-      className={cn(className, dropTarget === 'toolbar' && 'richtext-kit-toolbar--drop')}
+      className={cn(
+        'richtext-kit-toolbar',
+        className,
+        dropTarget === 'toolbar' && 'richtext-kit-toolbar--drop'
+      )}
       data-pinnable={pinnable || undefined}
       onDragLeave={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDropTarget(null);
@@ -543,7 +543,10 @@ export function RichTextKitToolbar({
           on('undoRedo') && <RichTextUndo key='undo' />,
           on('undoRedo') && <RichTextRedo key='redo' />,
         ],
-        [on('heading') && <RichTextHeading key='heading' />],
+        [
+          on('heading') && <RichTextHeading key='heading' />,
+          on('fontFamily') && <RichTextFontFamily key='fontFamily' />,
+        ],
         [
           on('bold') && <RichTextBold key='bold' />,
           on('italic') && <RichTextItalic key='italic' />,

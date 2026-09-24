@@ -84,6 +84,7 @@ export function RichTextBubbleDrawer() {
 
   return (
     <BubbleMenu
+      className='richtext-z-20'
       editor={editor}
       options={{ placement: 'bottom', offset: 8, flip: true }}
       pluginKey={'RichTextBubbleDrawer'}

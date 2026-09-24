@@ -56,7 +56,6 @@
   }
 
   a.link {
-    @apply richtext-font-extrabold;
     color: var(--richtext-link, #2f54eb);
   }
   &.dark a.link,

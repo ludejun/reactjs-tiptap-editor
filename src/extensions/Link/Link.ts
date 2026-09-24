@@ -6,8 +6,22 @@ import type { LinkOptions as TiptapLinkOptions } from '@tiptap/extension-link';
 
 export interface LinkOptions extends TiptapLinkOptions, GeneralOptions<LinkOptions> {}
 
-export const Link = /* @__PURE__ */ TiptapLink.extend<LinkOptions>({
+export interface LinkStorage {
+  /** True while a link bubble's edit form is open; the text bubble stays away meanwhile. */
+  editing: boolean;
+}
+
+declare module '@tiptap/core' {
+  interface Storage {
+    link: LinkStorage;
+  }
+}
+
+export const Link = /* @__PURE__ */ TiptapLink.extend<LinkOptions, LinkStorage>({
   inclusive: false,
+  addStorage() {
+    return { editing: false };
+  },
   parseHTML() {
     return [
       {
