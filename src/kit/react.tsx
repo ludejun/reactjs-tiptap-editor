@@ -261,6 +261,8 @@ interface PanelEntry {
   name: string;
   label: string;
   node: ReactNode;
+  /** A control wider than the icon slot; its row spans two columns. */
+  wide?: boolean;
 }
 
 /**
@@ -303,6 +305,13 @@ export function RichTextKitToolbar({
     {
       label: t('editor.slash.format'),
       entries: [
+        {
+          key: 'fontFamily',
+          name: 'fontFamily',
+          label: t('editor.fontFamily.tooltip'),
+          node: <RichTextFontFamily />,
+          wide: true,
+        },
         {
           key: 'fontSize',
           name: 'fontSize',
@@ -528,63 +537,58 @@ export function RichTextKitToolbar({
       onDragOver={accept('toolbar')}
       onDrop={dropOnToolbar}
     >
-      <div className='richtext-kit-toolbar__groups'>
-        {withDividers([
-          [on('ai') && <RichTextAI key='ai' />],
-          [
-            on('undoRedo') && <RichTextUndo key='undo' />,
-            on('undoRedo') && <RichTextRedo key='redo' />,
-          ],
-          [
-            on('heading') && <RichTextHeading key='heading' />,
-            on('fontFamily') && <RichTextFontFamily key='fontFamily' />,
-          ],
-          [
-            on('bold') && <RichTextBold key='bold' />,
-            on('italic') && <RichTextItalic key='italic' />,
-            on('underline') && <RichTextUnderline key='underline' />,
-            on('strike') && <RichTextStrike key='strike' />,
-            on('color') && <RichTextColor key='color' />,
-            on('highlight') && <RichTextHighlight key='highlight' />,
-            on('clear') && <RichTextClear key='clear' />,
-          ],
-          [
-            on('bulletList') && <RichTextBulletList key='bulletList' />,
-            on('orderedList') && <RichTextOrderedList key='orderedList' />,
-            on('taskList') && <RichTextTaskList key='taskList' />,
-            on('blockquote') && <RichTextBlockquote key='blockquote' />,
-            on('textAlign') && <RichTextAlign key='textAlign' />,
-          ],
-          [
-            on('link') && <RichTextLink key='link' />,
-            on('image') && <RichTextImage key='image' />,
-            on('table') && <RichTextTable key='table' />,
-            on('codeBlock') && <RichTextCodeBlock key='codeBlock' />,
-          ],
-          // Controls the user dragged out of the panel. Drag one back to unpin it.
-          pinned.map((entry) => (
-            <span
-              className='richtext-kit-toolbar__pinned'
-              draggable={pinnable}
-              key={`pin-${entry.key}`}
-              onDragStart={startDrag(entry.key)}
-              title={entry.label}
+      {withDividers([
+        [on('ai') && <RichTextAI key='ai' />],
+        [
+          on('undoRedo') && <RichTextUndo key='undo' />,
+          on('undoRedo') && <RichTextRedo key='redo' />,
+        ],
+        [on('heading') && <RichTextHeading key='heading' />],
+        [
+          on('bold') && <RichTextBold key='bold' />,
+          on('italic') && <RichTextItalic key='italic' />,
+          on('underline') && <RichTextUnderline key='underline' />,
+          on('strike') && <RichTextStrike key='strike' />,
+          on('color') && <RichTextColor key='color' />,
+          on('highlight') && <RichTextHighlight key='highlight' />,
+          on('clear') && <RichTextClear key='clear' />,
+        ],
+        [
+          on('bulletList') && <RichTextBulletList key='bulletList' />,
+          on('orderedList') && <RichTextOrderedList key='orderedList' />,
+          on('taskList') && <RichTextTaskList key='taskList' />,
+          on('blockquote') && <RichTextBlockquote key='blockquote' />,
+          on('textAlign') && <RichTextAlign key='textAlign' />,
+        ],
+        [
+          on('link') && <RichTextLink key='link' />,
+          on('image') && <RichTextImage key='image' />,
+          on('table') && <RichTextTable key='table' />,
+          on('codeBlock') && <RichTextCodeBlock key='codeBlock' />,
+        ],
+        // Controls the user dragged out of the panel. Drag one back to unpin it.
+        pinned.map((entry) => (
+          <span
+            className='richtext-kit-toolbar__pinned'
+            draggable={pinnable}
+            key={`pin-${entry.key}`}
+            onDragStart={startDrag(entry.key)}
+            title={entry.label}
+          >
+            {entry.node}
+            <button
+              aria-label={t('editor.more.unpin')}
+              className='richtext-kit-toolbar__unpin'
+              onClick={() => unpin(entry.key)}
+              title={t('editor.more.unpin')}
+              type='button'
             >
-              {entry.node}
-              <button
-                aria-label={t('editor.more.unpin')}
-                className='richtext-kit-toolbar__unpin'
-                onClick={() => unpin(entry.key)}
-                title={t('editor.more.unpin')}
-                type='button'
-              >
-                ×
-              </button>
-            </span>
-          )),
-          [children],
-        ])}
-      </div>
+              ×
+            </button>
+          </span>
+        )),
+        [children],
+      ])}
       {showMore ? (
         <div
           className={cn(
@@ -604,7 +608,7 @@ export function RichTextKitToolbar({
                     key={entry.key}
                     onDragStart={startDrag(entry.key)}
                   >
-                    <RichTextToolbarMoreRow label={entry.label}>
+                    <RichTextToolbarMoreRow label={entry.label} wide={entry.wide}>
                       {entry.node}
                     </RichTextToolbarMoreRow>
                   </div>

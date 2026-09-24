@@ -412,68 +412,64 @@ export const RichTextKitToolbar = defineComponent({
           },
         },
         () => [
-          h(
-            'div',
-            { class: 'richtext-kit-toolbar__groups' },
-            withDividers([
-              [on('ai') && h(RichTextAI, { key: 'ai' })],
-              [
-                on('undoRedo') && h(RichTextUndo, { key: 'undo' }),
-                on('undoRedo') && h(RichTextRedo, { key: 'redo' }),
-              ],
-              [on('heading') && h(RichTextHeading, { key: 'heading' })],
-              [
-                on('bold') && h(RichTextBold, { key: 'bold' }),
-                on('italic') && h(RichTextItalic, { key: 'italic' }),
-                on('underline') && h(RichTextUnderline, { key: 'underline' }),
-                on('strike') && h(RichTextStrike, { key: 'strike' }),
-                on('code') && h(RichTextCode, { key: 'code' }),
-                on('color') && h(RichTextColor, { key: 'color' }),
-                on('highlight') && h(RichTextHighlight, { key: 'highlight' }),
-                on('clear') && h(RichTextClear, { key: 'clear' }),
-              ],
-              [
-                on('bulletList') && h(RichTextBulletList, { key: 'bulletList' }),
-                on('orderedList') && h(RichTextOrderedList, { key: 'orderedList' }),
-                on('taskList') && h(RichTextTaskList, { key: 'taskList' }),
-                on('blockquote') && h(RichTextBlockquote, { key: 'blockquote' }),
-                on('textAlign') && h(RichTextTextAlign, { key: 'textAlign' }),
-              ],
-              [
-                on('link') && h(RichTextLink, { key: 'link' }),
-                on('image') && h(RichTextImage, { key: 'image' }),
-                on('table') && h(RichTextTable, { key: 'table' }),
-                on('divider') && h(RichTextDivider, { key: 'divider' }),
-              ],
-              pinned.map((entry) =>
-                h(
-                  'span',
-                  {
-                    key: `pin-${entry.key}`,
-                    class: 'richtext-kit-toolbar__pinned',
-                    draggable: props.pinnable,
-                    title: entry.label,
-                    onDragstart: startDrag(entry.key),
-                  },
-                  [
-                    h(entry.control),
-                    h(
-                      'button',
-                      {
-                        type: 'button',
-                        class: 'richtext-kit-toolbar__unpin',
-                        'aria-label': t('editor.more.unpin'),
-                        title: t('editor.more.unpin'),
-                        onClick: () => unpin(entry.key),
-                      },
-                      '×'
-                    ),
-                  ]
-                )
-              ),
-              [...((slots.default?.() ?? []) as VNode[])],
-            ])
-          ),
+          ...withDividers([
+            [on('ai') && h(RichTextAI, { key: 'ai' })],
+            [
+              on('undoRedo') && h(RichTextUndo, { key: 'undo' }),
+              on('undoRedo') && h(RichTextRedo, { key: 'redo' }),
+            ],
+            [on('heading') && h(RichTextHeading, { key: 'heading' })],
+            [
+              on('bold') && h(RichTextBold, { key: 'bold' }),
+              on('italic') && h(RichTextItalic, { key: 'italic' }),
+              on('underline') && h(RichTextUnderline, { key: 'underline' }),
+              on('strike') && h(RichTextStrike, { key: 'strike' }),
+              on('code') && h(RichTextCode, { key: 'code' }),
+              on('color') && h(RichTextColor, { key: 'color' }),
+              on('highlight') && h(RichTextHighlight, { key: 'highlight' }),
+              on('clear') && h(RichTextClear, { key: 'clear' }),
+            ],
+            [
+              on('bulletList') && h(RichTextBulletList, { key: 'bulletList' }),
+              on('orderedList') && h(RichTextOrderedList, { key: 'orderedList' }),
+              on('taskList') && h(RichTextTaskList, { key: 'taskList' }),
+              on('blockquote') && h(RichTextBlockquote, { key: 'blockquote' }),
+              on('textAlign') && h(RichTextTextAlign, { key: 'textAlign' }),
+            ],
+            [
+              on('link') && h(RichTextLink, { key: 'link' }),
+              on('image') && h(RichTextImage, { key: 'image' }),
+              on('table') && h(RichTextTable, { key: 'table' }),
+              on('divider') && h(RichTextDivider, { key: 'divider' }),
+            ],
+            pinned.map((entry) =>
+              h(
+                'span',
+                {
+                  key: `pin-${entry.key}`,
+                  class: 'richtext-kit-toolbar__pinned',
+                  draggable: props.pinnable,
+                  title: entry.label,
+                  onDragstart: startDrag(entry.key),
+                },
+                [
+                  h(entry.control),
+                  h(
+                    'button',
+                    {
+                      type: 'button',
+                      class: 'richtext-kit-toolbar__unpin',
+                      'aria-label': t('editor.more.unpin'),
+                      title: t('editor.more.unpin'),
+                      onClick: () => unpin(entry.key),
+                    },
+                    '×'
+                  ),
+                ]
+              )
+            ),
+            [...((slots.default?.() ?? []) as VNode[])],
+          ]),
           showMore
             ? h(
                 'div',
