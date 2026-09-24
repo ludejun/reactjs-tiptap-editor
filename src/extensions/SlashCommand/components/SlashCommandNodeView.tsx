@@ -304,11 +304,11 @@ function SlashCommandNodeView(
                         <span className='richtext-ml-auto richtext-flex richtext-items-center richtext-gap-1 richtext-pl-3 richtext-text-[11px] richtext-text-muted-foreground'>
                           {command.preview.icons.map((icon) => (
                             <span
-                              className='richtext-flex'
+                              className='richtext-flex richtext-size-6 richtext-items-center richtext-justify-center'
                               key={icon.iconName}
                               style={icon.color ? { color: icon.color } : undefined}
                             >
-                              <IconComponent className='!richtext-text-base' name={icon.iconName} />
+                              <IconComponent className='!richtext-text-xl' name={icon.iconName} />
                             </span>
                           ))}
                           {command.preview.text}

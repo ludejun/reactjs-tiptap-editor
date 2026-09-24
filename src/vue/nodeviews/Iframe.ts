@@ -1,44 +1,15 @@
 /* oxlint-disable react-hooks/rules-of-hooks -- Vue composables, not React hooks */
 import { NodeViewWrapper, VueNodeViewRenderer, nodeViewProps } from '@tiptap/vue-3';
-import {
-  ClipboardList,
-  CodeXml,
-  FileText,
-  Frame,
-  LayoutDashboard,
-  MapPin,
-  Music,
-  Pencil,
-  PenTool,
-  Video,
-  X,
-} from 'lucide-vue-next';
-import { defineComponent, h, ref, watch, type Component } from 'vue';
+import { Frame, Pencil, X } from 'lucide-vue-next';
+import { defineComponent, h, ref, watch } from 'vue';
 
-import {
-  EMBED_KINDS,
-  resolveEmbed,
-  servicesOfKind,
-  type EmbedKind,
-} from '@/extensions/Iframe/embeds';
+import { EMBED_KINDS, resolveEmbed, servicesOfKind } from '@/extensions/Iframe/embeds';
 import { IframeCore } from '@/extensions/Iframe/Iframe';
+import { BRAND_LOGOS, isLightColor, monogramOf } from '@/extensions/Iframe/logos';
 
 import { useLocale } from '../context';
 
 import styles from '@/extensions/Iframe/components/index.module.scss';
-
-/** One icon per kind of service, drawn in the kind's colour under the prompt. */
-const KIND_ICONS: Record<EmbedKind, Component> = {
-  video: Video,
-  audio: Music,
-  map: MapPin,
-  design: PenTool,
-  board: LayoutDashboard,
-  code: CodeXml,
-  document: FileText,
-  form: ClipboardList,
-  other: Frame,
-};
 
 const INPUT_CLASS =
   'richtext-flex-1 richtext-h-9 richtext-rounded-md richtext-border richtext-border-solid richtext-border-input richtext-bg-background richtext-px-3 richtext-text-sm richtext-text-foreground richtext-outline-none';
@@ -124,35 +95,72 @@ export const IframeNodeView = defineComponent({
       resizing.value = true;
     };
 
-    // What the block understands: one coloured icon per kind, the services in its tooltip.
-    // Once a link is typed, the detected service and its tips take the row.
+    // A service's brand mark, or a monogram on its brand colour when there is no mark.
+    const logo = (service: { key: string; name: string; color: string }) =>
+      BRAND_LOGOS[service.key]
+        ? h('span', {
+            'aria-hidden': 'true',
+            class:
+              'richtext-inline-flex richtext-size-5 richtext-shrink-0 richtext-text-[20px] richtext-leading-none [&>svg]:richtext-size-full',
+            innerHTML: BRAND_LOGOS[service.key],
+          })
+        : h(
+            'span',
+            {
+              'aria-hidden': 'true',
+              class:
+                'richtext-inline-flex richtext-size-5 richtext-shrink-0 richtext-items-center richtext-justify-center richtext-rounded-[5px] richtext-text-[11px] richtext-font-bold richtext-leading-none',
+              style: {
+                background: service.color,
+                color: isLightColor(service.color) ? '#1f2937' : '#fff',
+              },
+            },
+            monogramOf(service.name)
+          );
+
+    // What the block understands: the recognised services as brand marks, grouped by
+    // kind. Once a link is typed, the detected service and its tips take the row.
     const hint = () => {
       const typed = originalLink.value.trim();
       const resolved = typed ? resolveEmbed(typed) : null;
-      const children = resolved
-        ? [
+      const body = resolved
+        ? h('div', { class: 'richtext-flex richtext-items-center richtext-gap-2' }, [
+            logo(resolved.service),
             h(
               'span',
               { class: 'richtext-font-medium richtext-text-foreground' },
               resolved.service.name
             ),
-            resolved.service.tips ? h('span', ` — ${resolved.service.tips}`) : null,
-          ]
+            resolved.service.tips ? h('span', `— ${resolved.service.tips}`) : null,
+          ])
         : typed
-          ? [t('editor.iframe.invalid')]
-          : EMBED_KINDS.map(({ kind, color }) =>
-              h(
-                'span',
-                {
-                  key: kind,
-                  class:
-                    'richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded',
-                  style: { color },
-                  title: `${t(`editor.iframe.kind.${kind}`)}: ${servicesOfKind(kind)
-                    .map((service) => service.name)
-                    .join(', ')}`,
-                },
-                [h(KIND_ICONS[kind], { size: 16 })]
+          ? t('editor.iframe.invalid')
+          : h(
+              'div',
+              {
+                class:
+                  'richtext-grid richtext-grid-cols-1 richtext-gap-x-6 richtext-gap-y-1.5 sm:richtext-grid-cols-2',
+              },
+              EMBED_KINDS.map(({ kind }) =>
+                h(
+                  'div',
+                  { key: kind, class: 'richtext-flex richtext-items-center richtext-gap-1.5' },
+                  [
+                    h(
+                      'span',
+                      {
+                        class:
+                          'richtext-w-14 richtext-shrink-0 richtext-text-[11px] richtext-uppercase richtext-tracking-wide richtext-text-muted-foreground/80',
+                      },
+                      t(`editor.iframe.kind.${kind}`)
+                    ),
+                    ...servicesOfKind(kind).map((service) =>
+                      h('span', { key: service.key, class: 'richtext-flex', title: service.name }, [
+                        logo(service),
+                      ])
+                    ),
+                  ]
+                )
               )
             );
 
@@ -160,9 +168,9 @@ export const IframeNodeView = defineComponent({
         'div',
         {
           class:
-            'richtext-mt-2 richtext-flex richtext-min-h-6 richtext-items-center richtext-gap-1 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground',
+            'richtext-mt-2 richtext-min-h-6 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground',
         },
-        children
+        [body]
       );
     };
 

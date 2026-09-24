@@ -25,15 +25,13 @@ import {
   TriangleAlertIcon,
   VideoIcon,
 } from 'lucide-react';
+import { createElement } from 'react';
 
-import { Bilibili } from '@/components/icons/Bilibili';
 import { BlockquoteLeft as BlockquoteLeftIcon } from '@/components/icons/Blockquote';
-import { Codepen as CodepenIcon } from '@/components/icons/Codepen';
-import { Figma as FigmaIcon } from '@/components/icons/Figma';
 import { registerIcons } from '@/components/icons/icons';
-import { Youtube as YoutubeIcon } from '@/components/icons/Youtube';
 import { emit } from '@/components/ReactBus';
 import { HEADINGS } from '@/constants';
+import { EmbedLogo } from '@/extensions/Iframe/components/EmbedLogo';
 import { EMBED_SERVICES } from '@/extensions/Iframe/embeds';
 import { NOTICE_TYPES, type NoticeType } from '@/extensions/Notice/Notice';
 import { getLocaleState } from '@/locales/store';
@@ -41,6 +39,12 @@ import { EVENTS } from '@/utils/customEvents/events.constant';
 
 import type { CommandList } from './types';
 import type { Editor } from '@tiptap/core';
+
+/** A service's brand mark as an icon component, for the embed row's preview. */
+function brandIcon(key: string) {
+  const service = EMBED_SERVICES.find((item) => item.key === key)!;
+  return () => createElement(EmbedLogo, { service });
+}
 
 // Icons this module (and its extension's `button()` options) resolves by name.
 registerIcons({
@@ -55,10 +59,10 @@ registerIcons({
   Heading6: Heading6Icon,
   HeadingParagraph: PilcrowIcon,
   Iframe: FrameIcon,
-  BrandBilibili: Bilibili,
-  BrandYoutube: YoutubeIcon,
-  BrandFigma: FigmaIcon,
-  BrandCodepen: CodepenIcon,
+  BrandBilibili: brandIcon('bilibili'),
+  BrandYoutube: brandIcon('youtube'),
+  BrandFigma: brandIcon('figma'),
+  BrandCodepen: brandIcon('codepen'),
   ImageUp: ImageUpIcon,
   List: ListIcon,
   ListOrdered: ListOrderedIcon,

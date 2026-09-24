@@ -1,26 +1,11 @@
 import { NodeViewWrapper } from '@tiptap/react';
-import {
-  ClipboardListIcon,
-  CodeXmlIcon,
-  FileTextIcon,
-  FrameIcon,
-  LayoutDashboardIcon,
-  MapPinIcon,
-  MusicIcon,
-  PenToolIcon,
-  VideoIcon,
-  XIcon,
-} from 'lucide-react';
+import { FrameIcon, XIcon } from 'lucide-react';
 import { Resizable } from 're-resizable';
 import { useCallback, useState } from 'react';
 
 import { Button, Input } from '@/components/ui';
-import {
-  EMBED_KINDS,
-  resolveEmbed,
-  servicesOfKind,
-  type EmbedKind,
-} from '@/extensions/Iframe/embeds';
+import { EmbedLogo } from '@/extensions/Iframe/components/EmbedLogo';
+import { EMBED_KINDS, resolveEmbed, servicesOfKind } from '@/extensions/Iframe/embeds';
 import { IframeCore as Iframe } from '@/extensions/Iframe/Iframe';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
@@ -28,19 +13,6 @@ import { useEditableEditor } from '@/store/store';
 
 import styles from './index.module.scss';
 import type { NodeViewProps } from '@tiptap/react';
-
-/** One icon per kind of service, drawn in the kind's colour under the prompt. */
-const KIND_ICONS: Record<EmbedKind, typeof VideoIcon> = {
-  video: VideoIcon,
-  audio: MusicIcon,
-  map: MapPinIcon,
-  design: PenToolIcon,
-  board: LayoutDashboardIcon,
-  code: CodeXmlIcon,
-  document: FileTextIcon,
-  form: ClipboardListIcon,
-  other: FrameIcon,
-};
 
 function IframeNodeView({ editor, node, updateAttributes, deleteNode }: NodeViewProps) {
   const isEditable = useEditableEditor();
@@ -120,36 +92,34 @@ function IframeNodeView({ editor, node, updateAttributes, deleteNode }: NodeView
             </Button>
           </div>
 
-          {/* What the block understands: one coloured icon per kind, the services in its tooltip.
-              Once a link is typed, the detected service and its tips take the row. */}
-          <div className='richtext-mt-2 richtext-flex richtext-min-h-6 richtext-items-center richtext-gap-1 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground'>
+          {/* What the block understands: the recognised services as brand marks, grouped by
+              kind. Once a link is typed, the detected service and its tips take the row. */}
+          <div className='richtext-mt-2 richtext-min-h-6 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground'>
             {resolved ? (
-              <>
+              <div className='richtext-flex richtext-items-center richtext-gap-2'>
+                <EmbedLogo service={resolved.service} />
                 <span className='richtext-font-medium richtext-text-foreground'>
                   {resolved.service.name}
                 </span>
-                {resolved.service.tips ? <span> — {resolved.service.tips}</span> : null}
-              </>
+                {resolved.service.tips ? <span>— {resolved.service.tips}</span> : null}
+              </div>
             ) : originalLink.trim() ? (
               t('editor.iframe.invalid')
             ) : (
-              EMBED_KINDS.map(({ kind, color }) => {
-                const Icon = KIND_ICONS[kind];
-                const names = servicesOfKind(kind)
-                  .map((service) => service.name)
-                  .join(', ');
-
-                return (
-                  <span
-                    className='richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded'
-                    key={kind}
-                    style={{ color }}
-                    title={`${t(`editor.iframe.kind.${kind}`)}: ${names}`}
-                  >
-                    <Icon className='richtext-size-4' />
-                  </span>
-                );
-              })
+              <div className='richtext-grid richtext-grid-cols-1 richtext-gap-x-6 richtext-gap-y-1.5 sm:richtext-grid-cols-2'>
+                {EMBED_KINDS.map(({ kind }) => (
+                  <div className='richtext-flex richtext-items-center richtext-gap-1.5' key={kind}>
+                    <span className='richtext-w-14 richtext-shrink-0 richtext-text-[11px] richtext-uppercase richtext-tracking-wide richtext-text-muted-foreground/80'>
+                      {t(`editor.iframe.kind.${kind}`)}
+                    </span>
+                    {servicesOfKind(kind).map((service) => (
+                      <span className='richtext-flex' key={service.key} title={service.name}>
+                        <EmbedLogo service={service} />
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>
