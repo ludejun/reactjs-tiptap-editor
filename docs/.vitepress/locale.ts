@@ -128,6 +128,10 @@ export function getLocaleConfig(lang: string) {
           text: t('How to Migrate'),
           link: `${urlPrefix}/guide/how-to-migrate`,
         },
+        {
+          text: t('AI Coding Agents'),
+          link: `${urlPrefix}/guide/ai-agents`,
+        },
       ],
     },
     {

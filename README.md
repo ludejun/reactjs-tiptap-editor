@@ -126,6 +126,16 @@ Your `/api/ai` receives `{ messages, systemPrompt, stream }` and answers `{ text
 
 Everything is on the docs site: **[ludejun.github.io/ai-sparkwrite-editor](https://ludejun.github.io/ai-sparkwrite-editor/)** — [getting started](https://ludejun.github.io/ai-sparkwrite-editor/guide/getting-started), [AI](https://ludejun.github.io/ai-sparkwrite-editor/extensions/AI/), [every feature and its import path](https://ludejun.github.io/ai-sparkwrite-editor/guide/features), [frameworks](https://ludejun.github.io/ai-sparkwrite-editor/guide/frameworks), [customization](https://ludejun.github.io/ai-sparkwrite-editor/guide/customization), [bundle size](https://ludejun.github.io/ai-sparkwrite-editor/guide/bundle-size). Try it first in the **[live playground](https://ludejun.github.io/ai-sparkwrite-editor/playground/)**, which answers with a demo model so every AI flow works without a key.
 
+## Using with AI coding agents
+
+The repository ships a skill for Claude Code, Cursor, Codex and friends — integration rules, the AI backend contract, upload and image-deletion recipes, a debugging checklist — and the npm package carries a copy at `node_modules/ai-sparkwrite-editor/skills/ai-sparkwrite-editor/SKILL.md`.
+
+```bash
+npx skills add ludejun/ai-sparkwrite-editor
+```
+
+The docs are also published as [llms.txt](https://ludejun.github.io/ai-sparkwrite-editor/llms.txt) and [llms-full.txt](https://ludejun.github.io/ai-sparkwrite-editor/llms-full.txt); the [AI Coding Agents](https://ludejun.github.io/ai-sparkwrite-editor/guide/ai-agents) page explains what else to hand an agent.
+
 ## Development
 
 ```bash

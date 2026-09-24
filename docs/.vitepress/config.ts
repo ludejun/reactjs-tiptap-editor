@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress';
 
+import { writeLlmsFiles } from './llms';
 import { getLocaleConfig } from './locale';
 import { transformHead } from './transformHead';
 
@@ -44,6 +45,8 @@ export default defineConfig({
     hostname: docsLink,
   },
   transformHead,
+  // llms.txt / llms-full.txt for AI coding agents, see guide/ai-agents.
+  buildEnd: writeLlmsFiles,
   markdown: {
     config(md) {},
   },

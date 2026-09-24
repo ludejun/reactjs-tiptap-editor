@@ -306,4 +306,4 @@ Read-only: `editable: false` in `useEditor`, or `editor.setEditable(false)` late
 
 ## Where next
 
-[AI](/extensions/AI/) for the composer, autocomplete and providers · [Toolbar](/guide/toolbar) and [Bubble Menu](/guide/bubble-menu) for composing the UI · [Features](/guide/features) for every extension and its options · [Frameworks](/guide/frameworks) for the core/React/Vue split · [Internationalization](/guide/internationalization) · [Custom Theme](/guide/custom-theme) · [Bundle size](/guide/bundle-size).
+[AI](/extensions/AI/) for the composer, autocomplete and providers · [Toolbar](/guide/toolbar) and [Bubble Menu](/guide/bubble-menu) for composing the UI · [Features](/guide/features) for every extension and its options · [Frameworks](/guide/frameworks) for the core/React/Vue split · [Internationalization](/guide/internationalization) · [Custom Theme](/guide/custom-theme) · [Bundle size](/guide/bundle-size) · [AI Coding Agents](/guide/ai-agents) to hand the whole thing to Claude Code or Cursor.

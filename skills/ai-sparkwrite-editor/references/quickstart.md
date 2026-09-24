@@ -1,49 +1,52 @@
 # Quickstart
 
-Use for setup and content lifecycle changes. Examples target repository version 1.0.46 with Tiptap 3; check the consumer's installed version first.
+Setup and document lifecycle for **1.1.0 / Tiptap ^3.29.2**. Check the consumer's installed version first; declarations in `node_modules/ai-sparkwrite-editor/lib/*.d.ts` win.
 
 ## Dependencies
 
-Use the existing package manager and preserve compatible installed versions. Declare packages directly imported by app code instead of relying on transitive dependency hoisting. Match Tiptap versions to the editor package's dependencies.
-
-For a new app using this version:
+Use the host's package manager. Every `@tiptap/*` package on one version; `@tiptap/vue-3` pinned to the exact `@tiptap/core` version.
 
 ```bash
-pnpm add ai-sparkwrite-editor@1.0.46 @tiptap/react@^3.29.2 @tiptap/extension-document@^3.29.2 @tiptap/extension-paragraph@^3.29.2 @tiptap/extension-text@^3.29.2
+# React (18 or 19)
+pnpm add ai-sparkwrite-editor @tiptap/react @tiptap/pm
+
+# Vue 3
+pnpm add ai-sparkwrite-editor @tiptap/vue-3 @tiptap/pm lucide-vue-next
 ```
 
-The app also needs compatible `react` and `react-dom` (this version supports 18 or 19). Add other directly imported packages only for selected features.
+`@tiptap/extension-document`, `-paragraph`, `-text` are only needed when assembling the editor yourself; the kit brings them. Feature-specific peers: `react-image-crop` (image crop UI, also import `react-image-crop/dist/ReactCrop.css`), `katex` (only when overriding `loadKatex`).
 
-## Minimal editor with a toolbar
-
-This component receives **initial** HTML and emits edits. It does not promise controlled `value` semantics.
-
-Its caller owns persistence through `onChange`; keep network/storage code outside this component.
+## Route 1 — the kit (whole editor, three components)
 
 ```tsx
 'use client';
 
-import { Document } from '@tiptap/extension-document';
-import { Paragraph } from '@tiptap/extension-paragraph';
-import { Text } from '@tiptap/extension-text';
 import { EditorContent, useEditor } from '@tiptap/react';
-import { RichTextProvider } from 'ai-sparkwrite-editor';
-import { Bold, RichTextBold } from 'ai-sparkwrite-editor/bold';
+import {
+  RichTextKit,
+  RichTextKitMenus,
+  RichTextKitToolbar,
+  RichTextProvider,
+} from 'ai-sparkwrite-editor';
 import 'ai-sparkwrite-editor/style.css';
 
-const baseExtensions = [Document, Paragraph, Text];
-const extensions = [...baseExtensions, Bold];
-
-export function RichTextEditor({
-  initialContent = '<p></p>',
+export function Editor({
+  initialContent,
   onChange,
 }: {
   initialContent?: string;
   onChange?: (html: string) => void;
 }) {
   const editor = useEditor({
-    extensions,
-    content: initialContent,
+    extensions: [
+      RichTextKit.configure({
+        ai: { endpoint: '/api/ai' }, // your backend; see ai-backend.md
+        image: { upload: uploadImage }, // (file) => Promise<string>, app-owned
+        placeholder: { placeholder: 'Type / for blocks, Space on an empty line for AI…' },
+        twitter: false,
+      }),
+    ],
+    content: initialContent ?? '<p></p>',
     immediatelyRender: false,
     onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
   });
@@ -52,29 +55,142 @@ export function RichTextEditor({
 
   return (
     <RichTextProvider editor={editor}>
-      <div role="toolbar" aria-label="Text formatting">
-        <RichTextBold />
-      </div>
+      <RichTextKitToolbar />
       <EditorContent editor={editor} />
+      <RichTextKitMenus />
     </RichTextProvider>
   );
 }
 ```
 
-Move CSS to the global entry if required by the framework. The client directive is needed for Next.js App Router; it can be omitted in a client-only Vite app. Keep browser APIs out of server render paths.
+Vue: same four names from `ai-sparkwrite-editor/vue`, `useEditor`/`EditorContent` from `@tiptap/vue-3`, `<RichTextProvider :editor="editor">`.
 
-`RichTextProvider` currently declares `editor: Editor`, `children: React.ReactNode`, and optional `dark?: boolean`. Its implementation does **not** read `dark`; use [theme actions](feature-recipes.md#theme).
+### Kit options (`RichTextKit.configure({ key: false | {...} })`)
 
-## Supporting schema
+Omitted = on (except opt-in). `false` = out, with its button and menus. Object = `.configure()` options of that extension; for an opt-in feature the object switches it on (`{}` if it needs nothing). `RichTextKitOptions` is exported for typing.
 
-Document, Paragraph, and Text form the minimal document. Add HardBreak for soft line breaks, ListItem for bullet/ordered lists, and TextStyle for features using the text-style mark. Placeholder, Dropcursor, Gapcursor, and TrailingNode are optional. See [extension-map.md](extension-map.md) before adding supporting nodes.
+| Group        | On by default                                                                                                                                                                                                            | Opt-in (object switches on)                                                                                                                                                |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Document     | `document`, `paragraph`, `text`, `hardBreak`, `dropcursor`, `gapcursor`, `history`                                                                                                                                       | `placeholder` (`{ placeholder }`)                                                                                                                                          |
+| Text style   | `bold`, `italic`, `underline`, `strike`, `code`, `moreMark`, `textStyle`, `color`, `highlight`, `fontFamily`, `fontSize`, `lineHeight`, `textAlign`, `textDirection`, `indent`, `clear`, `formatPainter` (React), `link` | —                                                                                                                                                                          |
+| Blocks       | `heading`, `bulletList`, `orderedList`, `taskList`, `blockquote`, `notice`, `table`, `divider`, `details`, `codeBlock`, `callout`, `tableOfContents`, `column` (React; opt-in in Vue)                                    | `horizontalRule` (superseded by `divider`)                                                                                                                                 |
+| Media/embeds | `image`, `video`, `iframe` (Embed), `attachment`, `katex`, `mermaid`                                                                                                                                                     | `imageGif` (`{ GIPHY_API_KEY }`), `emoji`, `excalidraw`, `drawer`, `twitter`, `mention` (`{ suggestion }`), `shortMessage` (`{ messages }`) — React only except `imageGif` |
+| Behaviour    | `slashCommand` (React), `searchAndReplace`, `richPaste`, `markdownPaste`, `exportMarkdown`, `exportWord`, `importWord`, `exportPdf`, `codeView`                                                                          | `recorder`                                                                                                                                                                 |
+| AI           | `ai` (set `endpoint`), `aiAutocomplete`                                                                                                                                                                                  | —                                                                                                                                                                          |
 
-Advertise slash commands in a placeholder only when SlashCommand and its list UI are configured.
+`column` widens the document to `(block|columns)+`; lists bring `ListItem`; `textStyle` is the mark colour/font/size/line-height hang on (leave it on when any of those is on).
 
-## Persistence and external updates
+`<RichTextKitToolbar more pinnable defaultPins storageKey className>{extraControls}</RichTextKitToolbar>` — `more={false}` drops the "More tools" panel; panel rows can be dragged onto the toolbar to pin them (persisted in `localStorage` under `storageKey`, default `ai-sparkwrite-editor:kit-toolbar-pins`). `<RichTextKitMenus composer dragHandle />` — `composer={false}` hides the AI dock, an object passes `RichTextAIComposer` props; `dragHandle` is React-only.
 
-- Save HTML with `editor.getHTML()`, JSON with `editor.getJSON()`, or plain text with `editor.getText()`, matching the app's contract.
-- `content` initializes the document. Loading a different document requires explicit replacement or an identity-based remount, following the host app's lifecycle.
-- In Tiptap 3, use `editor.commands.setContent(nextContent, { emitUpdate: false })` for an external replacement without an `onUpdate` feedback loop. Apply only when an external revision needs loading, not on every keystroke or parent rerender; replacement can disrupt selection and editing.
-- Keep a compatible schema when saving and reopening JSON. Removing extensions can lose content that depended on them.
-- For read-only mode, use `editable` or `editor.setEditable(...)`; hiding buttons alone does not prevent editing.
+The kit components only look at registered extension names, so they also work over an editor you assembled yourself.
+
+## Route 2 — assembled
+
+```tsx
+'use client';
+
+import { EditorContent, useEditor } from '@tiptap/react';
+import { Document } from '@tiptap/extension-document';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Text } from '@tiptap/extension-text';
+import { ListItem } from '@tiptap/extension-list';
+import { TextStyle } from '@tiptap/extension-text-style';
+import {
+  AI,
+  AIAutocomplete,
+  RichTextAI,
+  RichTextAIComposer,
+  Bold,
+  RichTextBold,
+  Italic,
+  RichTextItalic,
+  Heading,
+  RichTextHeading,
+  BulletList,
+  RichTextBulletList,
+  Color,
+  RichTextColor,
+  Link,
+  RichTextLink,
+  History,
+  RichTextUndo,
+  RichTextRedo,
+  RichTextBubbleText,
+  RichTextBubbleLink,
+  RichTextProvider,
+  RichTextToolbar,
+  RichTextToolbarDivider,
+} from 'ai-sparkwrite-editor';
+import 'ai-sparkwrite-editor/style.css';
+
+const extensions = [
+  Document,
+  Paragraph,
+  Text,
+  ListItem,
+  TextStyle,
+  History,
+  Heading.configure({ levels: [1, 2, 3] }),
+  Bold,
+  Italic,
+  BulletList,
+  Color,
+  Link,
+  AI.configure({ endpoint: '/api/ai' }),
+  AIAutocomplete,
+];
+
+export function TextEditor() {
+  const editor = useEditor({ extensions, content: '<p></p>', immediatelyRender: false });
+  if (!editor) return null;
+  return (
+    <RichTextProvider editor={editor}>
+      <RichTextToolbar>
+        <RichTextAI />
+        <RichTextToolbarDivider />
+        <RichTextUndo />
+        <RichTextRedo />
+        <RichTextHeading />
+        <RichTextBold />
+        <RichTextItalic />
+        <RichTextColor />
+        <RichTextBulletList />
+        <RichTextLink />
+      </RichTextToolbar>
+      <EditorContent editor={editor} />
+      <RichTextAIComposer />
+      <RichTextBubbleText />
+      <RichTextBubbleLink />
+    </RichTextProvider>
+  );
+}
+```
+
+Per-feature subpaths (`ai-sparkwrite-editor/bold`, `/ai`, `/bubble/text`…) give the same symbols for bundlers that do not tree-shake; the main entry is byte-identical after tree-shaking.
+
+Do not register a library extension and a Tiptap/StarterKit extension with the same name; disable the overlap in StarterKit first.
+
+## Route 3 — headless / plain JS
+
+```ts
+import { Editor } from '@tiptap/core';
+import { Bold, Heading, Table, RichPaste, AI, writeWithAI } from 'ai-sparkwrite-editor/core';
+```
+
+`core` exports every framework-free extension (blocks without node views), the AI engine (`AI` with `mountPanel: null`, `writeWithAI`, `AIAutocomplete`, `generateAIText`, Markdown helpers), the recorder, image bookkeeping and translations. Nothing from React is reachable from it.
+
+## Server rendering
+
+Client component, `immediatelyRender: false`, null guard before the provider, stylesheet imported where the framework allows global CSS. A client directive alone does not stop server prerendering.
+
+## Save, load, read-only
+
+- Read in `onUpdate`, debounced for network saves: `editor.getHTML()` (what most backends store, renders anywhere the stylesheet is loaded), `editor.getJSON()` (exact round-trip), `getMarkdown(editor)` from ExportMarkdown, plain text with `getText()`.
+- `content` initialises. For a document fetched later: `editor.commands.setContent(html, { emitUpdate: false })` once; not on every parent render, not echoing each local edit.
+- Keep the extensions the stored content needs registered when loading it (a `notice`, `divider`, `callout`, `imageBlock` … the schema does not know is dropped).
+- Read-only: `editable: false` in `useEditor` or `editor.setEditable(false)`; the AI dock, menus, Space/Tab entry points hide themselves. Hiding buttons alone does not prevent editing.
+- Images at save time: see feature-recipes.md → "Deleting uploaded images".
+
+## Provider
+
+`RichTextProvider({ editor, children })` renders the `.sparkwrite` root the stylesheet keys off and gives the editor to every control. Its `dark` prop is accepted for compatibility and ignored; use `themeActions.setTheme('dark')`.
