@@ -150,11 +150,17 @@ export const IframeNodeView = defineComponent({
                         class: 'richtext-mx-2.5 richtext-h-4 richtext-w-px richtext-bg-border',
                       })
                     : null,
-                  h(
-                    'div',
-                    { class: 'richtext-flex richtext-items-center richtext-gap-1.5' },
-                    servicesOfKind(kind).map((service) => logo(service))
-                  ),
+                  h('div', { class: 'richtext-flex richtext-items-center richtext-gap-1.5' }, [
+                    h(
+                      'span',
+                      {
+                        class:
+                          'richtext-mr-0.5 richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70',
+                      },
+                      t(`editor.iframe.kind.${kind}`)
+                    ),
+                    ...servicesOfKind(kind).map((service) => logo(service)),
+                  ]),
                 ])
               )
             );

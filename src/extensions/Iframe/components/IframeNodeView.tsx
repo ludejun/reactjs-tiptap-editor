@@ -116,6 +116,9 @@ function IframeNodeView({ editor, node, updateAttributes, deleteNode }: NodeView
                       />
                     ) : null}
                     <div className='richtext-flex richtext-items-center richtext-gap-1.5'>
+                      <span className='richtext-mr-0.5 richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70'>
+                        {t(`editor.iframe.kind.${kind}`)}
+                      </span>
                       {servicesOfKind(kind).map((service) => (
                         <EmbedLogo key={service.key} service={service} tooltip />
                       ))}
