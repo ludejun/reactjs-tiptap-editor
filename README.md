@@ -39,7 +39,7 @@
 
 **Everything else a document needs**
 
-- 50+ extensions: headings, lists, tables, code blocks with language detection, images with cropping and captions, dividers, columns, callouts, details, Katex, Mermaid, Excalidraw, video, iframe, attachments, emoji, mentions, table of contents, search & replace, Word/PDF/Markdown import and export.
+- 50+ extensions: headings, lists, tables, code blocks with language detection, images with cropping and captions, dividers, columns, callouts, notices, details, Katex, Mermaid, Excalidraw, video, iframe, attachments, emoji, mentions, table of contents, search & replace, Word/PDF/Markdown import and export.
 - Paste from Word, Google Docs, Excel and code editors keeps its shape.
 - 16 languages, loaded on demand, with matching CJK, Devanagari and Bengali fonts.
 - Record and replay a writing session as timestamped steps.

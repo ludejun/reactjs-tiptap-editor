@@ -112,12 +112,24 @@ export function RichTextFontFamily() {
 
   const localeScript = SCRIPT_BY_LANGUAGE[String(lang).toLowerCase().split(/[-_]/)[0]];
 
+  // Default first, then the fonts of the interface language's script (someone
+  // writing Chinese wants 宋体 before Georgia), then everything else. The sort
+  // is stable, so each group keeps the configured order.
   const visibleItems = useMemo(() => {
-    return items.filter((item) => {
+    const rank = (item: Item) => {
+      if (item.default) return 0;
       const script = FONT_SCRIPT_BY_VALUE.get(item.font ?? '');
+      return script && script === localeScript ? 1 : 2;
+    };
 
-      return !script || script === localeScript || docScripts.has(script);
-    });
+    return items
+      .filter((item) => {
+        const script = FONT_SCRIPT_BY_VALUE.get(item.font ?? '');
+
+        return !script || script === localeScript || docScripts.has(script);
+      })
+      .map((item) => ({ item, rank: rank(item) }))
+      .sort((a, b) => a.rank - b.rank);
   }, [items, localeScript, docScripts]);
 
   if (!buttonProps) {
@@ -139,11 +151,13 @@ export function RichTextFontFamily() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className='richtext-w-full'>
-        {visibleItems.map((item, index) => {
+        {visibleItems.map(({ item, rank }, index) => {
           // "Default" is the one row whose name is a translated word rather
           // than a font, so it is neither previewed nor shown verbatim.
           const label = item.default ? t('editor.fontFamily.default.tooltip') : item.title;
           const style = item.default ? {} : { fontFamily: item.font };
+          // A hairline after Default and after the language's own fonts.
+          const endsGroup = visibleItems[index + 1] && visibleItems[index + 1].rank !== rank;
 
           return (
             <Fragment key={`font-family-${index}`}>
@@ -153,7 +167,7 @@ export function RichTextFontFamily() {
                 </div>
               </DropdownMenuCheckboxItem>
 
-              {item.default && <DropdownMenuSeparator />}
+              {endsGroup && <DropdownMenuSeparator />}
             </Fragment>
           );
         })}

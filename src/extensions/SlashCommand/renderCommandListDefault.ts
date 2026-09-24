@@ -1,4 +1,5 @@
 import {
+  CircleCheckIcon,
   CodeXmlIcon,
   Columns2Icon,
   Heading1Icon,
@@ -8,15 +9,19 @@ import {
   Heading5Icon,
   Heading6Icon,
   ImageUpIcon,
+  InfoIcon,
   ListCollapseIcon,
+  MegaphoneIcon,
   ListIcon,
   ListOrderedIcon,
   ListTodoIcon,
   MinusIcon,
   PilcrowIcon,
   SeparatorHorizontalIcon,
+  StarIcon,
   TableIcon,
   TableOfContentsIcon,
+  TriangleAlertIcon,
   VideoIcon,
 } from 'lucide-react';
 
@@ -24,6 +29,7 @@ import { BlockquoteLeft as BlockquoteLeftIcon } from '@/components/icons/Blockqu
 import { registerIcons } from '@/components/icons/icons';
 import { emit } from '@/components/ReactBus';
 import { HEADINGS } from '@/constants';
+import { NOTICE_TYPES, type NoticeType } from '@/extensions/Notice/Notice';
 import { EVENTS } from '@/utils/customEvents/events.constant';
 
 import type { CommandList } from './types';
@@ -46,6 +52,11 @@ registerIcons({
   ListOrdered: ListOrderedIcon,
   ListTodo: ListTodoIcon,
   Minus: MinusIcon,
+  Notice: MegaphoneIcon,
+  NoticeInfo: InfoIcon,
+  NoticeSuccess: CircleCheckIcon,
+  NoticeWarning: TriangleAlertIcon,
+  NoticeTip: StarIcon,
   SeparatorHorizontal: SeparatorHorizontalIcon,
   Table: TableIcon,
   TableOfContents: TableOfContentsIcon,
@@ -218,6 +229,39 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
       editor.chain().focus().deleteRange(range).run();
       const EVENT_ID = EVENTS.UPLOAD_IMAGE(editor.id);
       emit(EVENT_ID, true);
+    },
+  });
+
+  // notice: one row, the four types as coloured icons at its right (←/→ or click picks one)
+  const NOTICE_ALIASES: Record<string, string[]> = {
+    info: ['info', 'note', 'xx'],
+    success: ['success', 'done', 'cg'],
+    warning: ['warning', 'warn', 'jg'],
+    tip: ['tip', 'hint', 'jq'],
+  };
+
+  insert.commands.push({
+    name: 'notice',
+    label: t('editor.notice.tooltip'),
+    iconName: 'Notice',
+    description: 'A coloured box with an icon',
+    aliases: ['notice', 'tsk', ...Object.values(NOTICE_ALIASES).flat()],
+    variants: NOTICE_TYPES.map(({ value, color }) => ({
+      value,
+      label: t(`editor.notice.${value}`),
+      iconName: `Notice${value[0].toUpperCase()}${value.slice(1)}`,
+      iconColor: color,
+      aliases: NOTICE_ALIASES[value],
+    })),
+    shouldBeHidden: (editor) => !editor.schema.nodes.notice || editor.isActive('columns'),
+    isActive: (editor) => editor.isActive('notice'),
+    action: ({ editor, range, variant }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setNotice((variant as NoticeType | undefined) ?? 'info')
+        .run();
     },
   });
 

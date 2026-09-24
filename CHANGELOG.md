@@ -4,6 +4,10 @@ All notable changes to ai-sparkwrite-editor are recorded here. The format follow
 
 ## Unreleased
 
+### Added
+
+- `Notice`: info, success, warning and tip boxes holding ordinary editable blocks, saved as `<div class="notice" data-type="…">`. Toolbar dropdown and bubble menu in React and Vue, one slash-menu row with the four types inline, Markdown export as GitHub-style alerts, part of `RichTextKit`.
+
 ### Fixed
 
 - `RichTextKit` registers `TextStyle`, so picking a font family, font size, colour or line height works in the kit (it threw "There is no mark type named 'textStyle'" and the menu appeared stuck).
@@ -14,6 +18,7 @@ All notable changes to ai-sparkwrite-editor are recorded here. The format follow
 
 ### Changed
 
+- Font family menu: the fonts of the interface language's script (微软雅黑, 宋体… under a Chinese UI) come right after Default, before the Latin fonts, each group separated by a hairline.
 - Kit toolbar: tighter spacing so the default row fits a 1024px column on one line (the "⋯" trigger keeps its place at the right end of the last row when it does wrap); pinned controls show a small remove badge on hover and are listed in an "On the Toolbar" group at the bottom of the panel with a remove button; the drag hint moved below the groups. Code block line numbers are smaller (0.75em) and lighter, still on the code's line grid.
 
 ## 1.0.1 — 2026-09-23

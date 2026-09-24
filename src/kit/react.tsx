@@ -20,6 +20,7 @@ import {
   RichTextBubbleLink,
   RichTextBubbleMenuDragHandle,
   RichTextBubbleMermaid,
+  RichTextBubbleNotice,
   RichTextBubbleTable,
   RichTextBubbleText,
   RichTextBubbleTwitter,
@@ -77,6 +78,7 @@ import { Link, RichTextLink } from '@/extensions/Link';
 import { MarkdownPaste } from '@/extensions/MarkdownPaste';
 import { Mention } from '@/extensions/Mention';
 import { Mermaid, RichTextMermaid } from '@/extensions/Mermaid';
+import { Notice, RichTextNotice } from '@/extensions/Notice';
 import { MoreMark, RichTextMoreMark } from '@/extensions/MoreMark';
 import { OrderedList, RichTextOrderedList } from '@/extensions/OrderedList';
 import { Recorder } from '@/extensions/Recorder';
@@ -144,6 +146,7 @@ const REGISTRY = {
   orderedList: { extension: OrderedList, with: [ListItem] },
   taskList: { extension: TaskList },
   blockquote: { extension: Blockquote },
+  notice: { extension: Notice },
   table: { extension: Table },
   divider: { extension: Divider },
   horizontalRule: { extension: HorizontalRule, optIn: true },
@@ -367,6 +370,12 @@ export function RichTextKitToolbar({
           name: 'callout',
           label: t('editor.callout.tooltip'),
           node: <RichTextCallout />,
+        },
+        {
+          key: 'notice',
+          name: 'notice',
+          label: t('editor.notice.tooltip'),
+          node: <RichTextNotice />,
         },
         {
           key: 'details',
@@ -679,6 +688,7 @@ export function RichTextKitMenus({ composer = true, dragHandle = true }: RichTex
       {on('video') ? <RichTextBubbleVideo /> : null}
       {on('imageGif') ? <RichTextBubbleImageGif /> : null}
       {on('callout') ? <RichTextBubbleCallout /> : null}
+      {on('notice') ? <RichTextBubbleNotice /> : null}
       {on('iframe') ? <RichTextBubbleIframe /> : null}
       {on('katex') ? <RichTextBubbleKatex /> : null}
       {on('mermaid') ? <RichTextBubbleMermaid /> : null}

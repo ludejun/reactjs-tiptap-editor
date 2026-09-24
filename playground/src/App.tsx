@@ -39,6 +39,7 @@ import {
   RichTextBubbleVideo,
   RichTextBubbleImageGif,
   RichTextBubbleMermaid,
+  RichTextBubbleNotice,
   RichTextBubbleTable,
   RichTextBubbleText,
   RichTextBubbleTwitter,
@@ -47,6 +48,8 @@ import {
   RichTextBulletList,
   Callout,
   RichTextCallout,
+  Notice,
+  RichTextNotice,
   Clear,
   RichTextClear,
   Code,
@@ -434,6 +437,7 @@ const extensions = [
   }),
   CodeView,
   Callout,
+  Notice,
   Details,
   TableOfContents,
   MarkdownPaste,
@@ -459,6 +463,10 @@ const DEFAULT = `
 <h2>Lists</h2>
 <ul><li><p>Press Tab to indent an item</p><ul><li><p>and Shift+Tab to move it back out</p></li></ul></li><li><p>Ordered lists work the same way</p></li></ul>
 <ol><li><p>First step</p></li><li><p>Second step</p></li></ol>
+<h2>Notices</h2>
+<p>Coloured boxes for what the reader must not miss. Type <code>/notice</code>, or pick one from the toolbar; Enter on an empty last line leaves the box.</p>
+<div class="notice" data-type="success"><p><strong>Saved as plain HTML.</strong> A notice is just <code>&lt;div class="notice" data-type="success"&gt;</code> around ordinary blocks, so it renders anywhere the stylesheet loads.</p></div>
+<div class="notice" data-type="warning"><p>Publishing replaces the live page. Check the table below first.</p></div>
 <h2>Code</h2>
 <p>Code blocks detect their language automatically. Hover one to pick a language, copy it, or delete it.</p>
 <pre class="shj"><code class="language-ts">interface Post {
@@ -1027,6 +1035,10 @@ const PlaygroundToolbar = ({ editor }: { editor: import('@tiptap/core').Editor |
               <RichTextCallout />
             </RichTextToolbarMoreRow>
 
+            <RichTextToolbarMoreRow label={t('editor.notice.tooltip')}>
+              <RichTextNotice />
+            </RichTextToolbarMoreRow>
+
             <RichTextToolbarMoreRow label={t('editor.details.tooltip')}>
               <RichTextDetails />
             </RichTextToolbarMoreRow>
@@ -1204,6 +1216,7 @@ function App() {
 
               {/* Bubble */}
               <RichTextBubbleCallout />
+              <RichTextBubbleNotice />
               <RichTextBubbleDrawer />
               <RichTextBubbleExcalidraw />
               <RichTextBubbleIframe />

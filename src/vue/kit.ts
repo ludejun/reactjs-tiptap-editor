@@ -48,13 +48,14 @@ import {
   TextDirection,
   TextUnderline,
   Video,
+  Notice,
 } from '@/core';
 import { buildKit, extensionNames, type KitOptions, type KitRegistry } from '@/kit/shared';
 
 import { AI, AIAutocomplete, RichTextAI, RichTextAIComposer } from './ai';
 import {
   RichTextBubbleImage,
-  RichTextBubbleLink,
+  RichTextBubbleLink, RichTextBubbleNotice,
   RichTextBubbleTable,
   RichTextBubbleText,
 } from './bubble';
@@ -65,6 +66,7 @@ import {
   RichTextBold,
   RichTextBulletList,
   RichTextCallout,
+  RichTextNotice,
   RichTextClear,
   RichTextCode,
   RichTextCodeBlock,
@@ -154,6 +156,7 @@ const REGISTRY = {
   orderedList: { extension: OrderedList, with: [ListItem] },
   taskList: { extension: TaskList },
   blockquote: { extension: Blockquote },
+  notice: { extension: Notice },
   table: { extension: Table },
   divider: { extension: Divider },
   details: { extension: Details },
@@ -336,6 +339,12 @@ export const RichTextKitToolbar = defineComponent({
               name: 'callout',
               label: t('editor.callout.tooltip'),
               control: RichTextCallout,
+            },
+            {
+              key: 'notice',
+              name: 'notice',
+              label: t('editor.notice.tooltip'),
+              control: RichTextNotice,
             },
             {
               key: 'details',
@@ -588,6 +597,7 @@ export const RichTextKitMenus = defineComponent({
         h(RichTextBubbleText),
         on('table') ? h(RichTextBubbleTable) : null,
         on('link') ? h(RichTextBubbleLink) : null,
+        on('notice') ? h(RichTextBubbleNotice) : null,
         on('image') ? h(RichTextBubbleImage) : null,
       ];
     };

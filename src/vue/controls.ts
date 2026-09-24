@@ -9,6 +9,7 @@ import {
   ArrowRightToLine,
   Baseline,
   Bold,
+  CircleCheck,
   Code,
   Eraser,
   Frame,
@@ -23,6 +24,7 @@ import {
   ListOrdered,
   ListTodo,
   ListTree,
+  Megaphone,
   Paperclip,
   Redo2,
   SeparatorHorizontal,
@@ -30,9 +32,11 @@ import {
   Sparkles,
   Square,
   SquareCode,
+  Star,
   Strikethrough,
   Table as TableIcon,
   TextQuote,
+  TriangleAlert,
   Underline,
   Undo2,
   UnfoldVertical,
@@ -59,6 +63,7 @@ import { DIVIDER_VARIANTS } from '@/extensions/Divider/Divider';
 import { getServiceSrc } from '@/extensions/Iframe/utils';
 import { rememberUploadedImage } from '@/extensions/Image/imageLifecycle';
 import { loadKatex } from '@/extensions/Katex/katex-loader';
+import { NOTICE_TYPES, type NoticeType } from '@/extensions/Notice/Notice';
 import { dataURLtoFile, extractFileExtension, extractFilename } from '@/utils/file';
 import { safeJSONParse } from '@/utils/json';
 import { ensureNameValueOptions } from '@/utils/utils';
@@ -263,6 +268,57 @@ export const RichTextBlockquote = control('RichTextBlockquote', {
   tooltip: 'editor.blockquote.tooltip',
   isActive: (e) => e.isActive('blockquote'),
   run: (e) => e.chain().focus().toggleBlockquote().run(),
+});
+/** Icon, colour and a text-colour class per notice type, shared with the notice bubble.
+ *  The classes are spelled out so Tailwind generates them. */
+export const NOTICE_ICONS: Record<
+  NoticeType,
+  { icon: Component; color: string; className: string }
+> = {
+  info: { icon: Info, color: '#1f6feb', className: '!richtext-text-[#1f6feb]' },
+  success: { icon: CircleCheck, color: '#1a7f37', className: '!richtext-text-[#1a7f37]' },
+  warning: { icon: TriangleAlert, color: '#bf8700', className: '!richtext-text-[#bf8700]' },
+  // A star, like the icon painted in the box itself.
+  tip: { icon: Star, color: '#8250df', className: '!richtext-text-[#8250df]' },
+};
+
+/** A dropdown of the notice types; picking one wraps the selection or retypes the notice. */
+export const RichTextNotice = defineComponent({
+  name: 'RichTextNotice',
+  setup() {
+    const editor = useEditorInstance();
+    const { t } = useLocale();
+    const state = useEditorState(
+      (current) => ({
+        enabled: current.isEditable && hasCommand(current, 'setNotice'),
+        active: current.isActive('notice')
+          ? String(current.getAttributes('notice').type ?? 'info')
+          : '',
+      }),
+      { enabled: false, active: '' }
+    );
+
+    return () =>
+      h(RichTextDropdown, {
+        icon: Megaphone,
+        tooltip: t('editor.notice.tooltip'),
+        width: '10rem',
+        disabled: !state.value.enabled,
+        items: NOTICE_TYPES.map(({ value }) => ({
+          value,
+          label: t(`editor.notice.${value}`),
+          active: state.value.active === value,
+          render: () =>
+            h(NOTICE_ICONS[value].icon, { size: 16, style: { color: NOTICE_ICONS[value].color } }),
+        })),
+        onSelect: (value: string) =>
+          editor.value
+            ?.chain()
+            .focus()
+            .toggleNotice(value as NoticeType)
+            .run(),
+      });
+  },
 });
 export const RichTextBulletList = control('RichTextBulletList', {
   icon: List,
