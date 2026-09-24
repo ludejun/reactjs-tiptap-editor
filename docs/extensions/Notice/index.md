@@ -86,7 +86,7 @@ const editor = useEditor({
 ## How to use
 
 - **Toolbar**: `RichTextNotice` is a dropdown of the four types. Picking one wraps the selected blocks (or the current paragraph); picking the type of the notice you are in removes it; picking another type changes it.
-- **Slash menu**: `/notice`, `/info`, `/success`, `/warning`, `/tip` each insert one entry — "Info notice", "Success notice"… — like the "+" menu of other editors.
+- **Slash menu**: one "Notice" row with the four types as coloured icons at its right — ←/→ or a click picks the type, Enter inserts. Typing `/warning` (or `/success`, `/tip`, `/info`) preselects that type.
 - **Bubble menu**: `RichTextBubbleNotice` appears above the notice the caret is in, with the four types and a remove button.
 - **Keyboard**: Enter on an empty last line leaves the box, the way lists end.
 
@@ -95,7 +95,9 @@ const editor = useEditor({
 ```html
 <div class="notice" data-type="warning">
   <p>Publishing replaces the live page.</p>
-  <ul><li><p>Check the table first.</p></li></ul>
+  <ul>
+    <li><p>Check the table first.</p></li>
+  </ul>
 </div>
 ```
 

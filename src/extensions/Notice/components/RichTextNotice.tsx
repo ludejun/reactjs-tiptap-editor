@@ -16,7 +16,7 @@ import {
   IconComponent,
 } from '@/components';
 import { registerIcons } from '@/components/icons/icons';
-import { NOTICE_TYPES, Notice, type NoticeType } from '@/extensions/Notice/Notice';
+import { Notice, type NoticeType } from '@/extensions/Notice/Notice';
 import { useActive } from '@/hooks/useActive';
 import { useButtonProps } from '@/hooks/useButtonProps';
 
@@ -32,13 +32,15 @@ registerIcons({
   NoticeTip: StarIcon,
 });
 
-/** Icon name and colour for each notice type, shared with the bubble menu. */
-export const NOTICE_ICONS: Record<NoticeType, { icon: string; color: string }> = Object.fromEntries(
-  NOTICE_TYPES.map(({ value, color }) => [
-    value,
-    { icon: `Notice${value[0].toUpperCase()}${value.slice(1)}`, color },
-  ])
-) as Record<NoticeType, { icon: string; color: string }>;
+/** Icon name, colour and a text-colour class per notice type, shared with the bubble menu.
+ *  The classes are spelled out so Tailwind generates them. */
+export const NOTICE_ICONS: Record<NoticeType, { icon: string; color: string; className: string }> =
+  {
+    info: { icon: 'NoticeInfo', color: '#1f6feb', className: '!richtext-text-[#1f6feb]' },
+    success: { icon: 'NoticeSuccess', color: '#1a7f37', className: '!richtext-text-[#1a7f37]' },
+    warning: { icon: 'NoticeWarning', color: '#bf8700', className: '!richtext-text-[#bf8700]' },
+    tip: { icon: 'NoticeTip', color: '#8250df', className: '!richtext-text-[#8250df]' },
+  };
 
 export interface NoticeItem {
   type: NoticeType;

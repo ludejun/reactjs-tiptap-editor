@@ -6,8 +6,8 @@ import { useCallback } from 'react';
 import { ActionButton } from '@/components/ActionButton';
 import { registerIcons } from '@/components/icons/icons';
 import { RichTextToolbarDivider } from '@/components/Toolbar/RichTextToolbar';
-import { NOTICE_TYPES, Notice } from '@/extensions/Notice/Notice';
 import { NOTICE_ICONS } from '@/extensions/Notice/components/RichTextNotice';
+import { NOTICE_TYPES, Notice } from '@/extensions/Notice/Notice';
 import { useActive } from '@/hooks/useActive';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
@@ -29,7 +29,10 @@ export function RichTextBubbleNotice() {
     editor.isActive(Notice.name) ? String(editor.getAttributes(Notice.name).type ?? 'info') : ''
   );
 
-  const shouldShow = useCallback(({ editor: e }: { editor: Editor }) => e.isActive(Notice.name), []);
+  const shouldShow = useCallback(
+    ({ editor: e }: { editor: Editor }) => e.isActive(Notice.name),
+    []
+  );
 
   // Anchor to the whole box, not the caret, so the menu keeps still while typing.
   const getReferencedVirtualElement = useCallback(() => {
@@ -58,6 +61,7 @@ export function RichTextBubbleNotice() {
         {NOTICE_TYPES.map(({ value }) => (
           <ActionButton
             action={() => editor.chain().focus().updateNotice(value).run()}
+            customClass={NOTICE_ICONS[value].className}
             icon={NOTICE_ICONS[value].icon}
             isActive={() => current === value}
             key={value}

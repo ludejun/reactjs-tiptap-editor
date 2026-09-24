@@ -11,6 +11,7 @@ import {
   ImageUpIcon,
   InfoIcon,
   ListCollapseIcon,
+  MegaphoneIcon,
   ListIcon,
   ListOrderedIcon,
   ListTodoIcon,
@@ -28,7 +29,7 @@ import { BlockquoteLeft as BlockquoteLeftIcon } from '@/components/icons/Blockqu
 import { registerIcons } from '@/components/icons/icons';
 import { emit } from '@/components/ReactBus';
 import { HEADINGS } from '@/constants';
-import { NOTICE_TYPES } from '@/extensions/Notice/Notice';
+import { NOTICE_TYPES, type NoticeType } from '@/extensions/Notice/Notice';
 import { EVENTS } from '@/utils/customEvents/events.constant';
 
 import type { CommandList } from './types';
@@ -51,6 +52,7 @@ registerIcons({
   ListOrdered: ListOrderedIcon,
   ListTodo: ListTodoIcon,
   Minus: MinusIcon,
+  Notice: MegaphoneIcon,
   NoticeInfo: InfoIcon,
   NoticeSuccess: CircleCheckIcon,
   NoticeWarning: TriangleAlertIcon,
@@ -74,17 +76,12 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
       commands: [],
     },
     {
-      name: 'notice',
-      title: t('editor.notice.tooltip'),
-      commands: [],
-    },
-    {
       name: 'format',
       title: t('editor.slash.format'),
       commands: [],
     },
   ];
-  const [insert, notices, format] = groups;
+  const [insert, format] = groups;
 
   // heading
   HEADINGS.forEach((level) => {
@@ -235,31 +232,38 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
     },
   });
 
-  // notices: their own group with one coloured entry per type, like most editors' "+" menus
+  // notice: one row, the four types as coloured icons at its right (←/→ or click picks one)
   const NOTICE_ALIASES: Record<string, string[]> = {
-    info: ['info', 'note', 'tsk', 'xx'],
+    info: ['info', 'note', 'xx'],
     success: ['success', 'done', 'cg'],
     warning: ['warning', 'warn', 'jg'],
     tip: ['tip', 'hint', 'jq'],
   };
 
-  for (const { value: type, color } of NOTICE_TYPES) {
-    const notice = { type, aliases: NOTICE_ALIASES[type] ?? [] };
-
-    notices.commands.push({
-      name: `notice-${notice.type}`,
-      label: t(`editor.notice.item.${notice.type}`),
-      iconName: `Notice${type[0].toUpperCase()}${type.slice(1)}`,
+  insert.commands.push({
+    name: 'notice',
+    label: t('editor.notice.tooltip'),
+    iconName: 'Notice',
+    description: 'A coloured box with an icon',
+    aliases: ['notice', 'tsk', ...Object.values(NOTICE_ALIASES).flat()],
+    variants: NOTICE_TYPES.map(({ value, color }) => ({
+      value,
+      label: t(`editor.notice.${value}`),
+      iconName: `Notice${value[0].toUpperCase()}${value.slice(1)}`,
       iconColor: color,
-      description: 'A coloured box with an icon',
-      aliases: ['notice', ...notice.aliases],
-      shouldBeHidden: (editor) => !editor.schema.nodes.notice || editor.isActive('columns'),
-      isActive: (editor) => editor.isActive('notice', { type: notice.type }),
-      action: ({ editor, range }) => {
-        editor.chain().focus().deleteRange(range).setNotice(notice.type).run();
-      },
-    });
-  }
+      aliases: NOTICE_ALIASES[value],
+    })),
+    shouldBeHidden: (editor) => !editor.schema.nodes.notice || editor.isActive('columns'),
+    isActive: (editor) => editor.isActive('notice'),
+    action: ({ editor, range, variant }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setNotice((variant as NoticeType | undefined) ?? 'info')
+        .run();
+    },
+  });
 
   // divider (replaces horizontalRule when registered)
   insert.commands.push({

@@ -56,6 +56,7 @@ export const RichTextBubbleNotice = defineComponent({
             ...NOTICE_TYPES.map(({ value }) =>
               h(RichTextToolbarButton, {
                 key: value,
+                class: NOTICE_ICONS[value].className,
                 icon: NOTICE_ICONS[value].icon,
                 tooltip: t(`editor.notice.${value}`),
                 active: current.value === value,

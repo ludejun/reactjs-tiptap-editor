@@ -269,13 +269,17 @@ export const RichTextBlockquote = control('RichTextBlockquote', {
   isActive: (e) => e.isActive('blockquote'),
   run: (e) => e.chain().focus().toggleBlockquote().run(),
 });
-/** Icon and colour per notice type, shared with the notice bubble. */
-export const NOTICE_ICONS: Record<NoticeType, { icon: Component; color: string }> = {
-  info: { icon: Info, color: '#1f6feb' },
-  success: { icon: CircleCheck, color: '#1a7f37' },
-  warning: { icon: TriangleAlert, color: '#bf8700' },
+/** Icon, colour and a text-colour class per notice type, shared with the notice bubble.
+ *  The classes are spelled out so Tailwind generates them. */
+export const NOTICE_ICONS: Record<
+  NoticeType,
+  { icon: Component; color: string; className: string }
+> = {
+  info: { icon: Info, color: '#1f6feb', className: '!richtext-text-[#1f6feb]' },
+  success: { icon: CircleCheck, color: '#1a7f37', className: '!richtext-text-[#1a7f37]' },
+  warning: { icon: TriangleAlert, color: '#bf8700', className: '!richtext-text-[#bf8700]' },
   // A star, like the icon painted in the box itself.
-  tip: { icon: Star, color: '#8250df' },
+  tip: { icon: Star, color: '#8250df', className: '!richtext-text-[#8250df]' },
 };
 
 /** A dropdown of the notice types; picking one wraps the selection or retypes the notice. */

@@ -6,7 +6,7 @@ All notable changes to ai-sparkwrite-editor are recorded here. The format follow
 
 ### Added
 
-- `Notice`: info, success, warning and tip boxes holding ordinary editable blocks, saved as `<div class="notice" data-type="…">`. Toolbar dropdown and bubble menu in React and Vue, four slash-menu entries, Markdown export as GitHub-style alerts, part of `RichTextKit`.
+- `Notice`: info, success, warning and tip boxes holding ordinary editable blocks, saved as `<div class="notice" data-type="…">`. Toolbar dropdown and bubble menu in React and Vue, one slash-menu row with the four types inline, Markdown export as GitHub-style alerts, part of `RichTextKit`.
 
 ### Fixed
 

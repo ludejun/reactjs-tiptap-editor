@@ -86,7 +86,7 @@ const editor = useEditor({
 ## 使用
 
 - **工具栏**：`RichTextNotice` 是四种类型的下拉。选一种即把选中的块（或当前段落）包进提示块；在提示块里再选同一类型则移除，选另一类型则切换。
-- **斜杠菜单**：`/notice`、`/info`、`/success`、`/warning`、`/tip`（也支持 `tsk`、`cg`、`jg`、`jq` 拼音首字母），每种类型一项：“信息提示块”“成功提示块”……与其他编辑器的 “+” 菜单一致。
+- **斜杠菜单**：只占一行“提示块”，四种类型以彩色图标并排在行末——←/→ 或点击选类型，Enter 插入。输入 `/warning`（或 `/success`、`/tip`、`/info`，也支持 `tsk`、`cg`、`jg`、`jq` 拼音首字母）会预选对应类型。
 - **气泡菜单**：`RichTextBubbleNotice` 出现在光标所在提示块的上方，可切换四种类型或移除。
 - **键盘**：在最后一个空行按 Enter 即跳出提示块，与列表结束的方式相同。
 
@@ -95,7 +95,9 @@ const editor = useEditor({
 ```html
 <div class="notice" data-type="warning">
   <p>发布会覆盖线上页面。</p>
-  <ul><li><p>先检查表格。</p></li></ul>
+  <ul>
+    <li><p>先检查表格。</p></li>
+  </ul>
 </div>
 ```
 
