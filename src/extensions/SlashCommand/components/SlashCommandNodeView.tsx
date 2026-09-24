@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 
-import { IconComponent, Label } from '@/components';
+import { IconComponent } from '@/components';
 import { registerIcons } from '@/components/icons/icons';
 import { AI_COMPOSER_ACTIONS, composerPrompt } from '@/extensions/AI/composer';
 import { writeWithAI } from '@/extensions/AI/writer';
@@ -261,9 +261,19 @@ function SlashCommandNodeView(
           {commandQuery?.map((group, groupIndex) => {
             return (
               <Fragment key={`slash-${group.title}`}>
-                <Label className='richtext-mx-[4px] richtext-mb-[4px] richtext-mt-[8px] !richtext-text-[0.65rem] richtext-uppercase'>
+                {/* A quiet group heading, aligned with the item icons; a hairline
+                    separates groups so the eye lands on the items, not the titles. */}
+                <div
+                  className={cn(
+                    'richtext-mx-1 richtext-mb-0.5 richtext-mt-1.5 richtext-px-1 richtext-pt-1 richtext-text-[0.65rem] richtext-font-medium richtext-uppercase richtext-leading-4 richtext-tracking-wider richtext-text-muted-foreground',
+                    {
+                      'richtext-border-0 richtext-border-t richtext-border-solid richtext-border-border richtext-pt-2':
+                        groupIndex > 0,
+                    }
+                  )}
+                >
                   {group.title}
-                </Label>
+                </div>
 
                 {group.commands.map((command, commandIndex) => {
                   return (
