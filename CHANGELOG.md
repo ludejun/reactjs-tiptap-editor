@@ -2,12 +2,17 @@
 
 All notable changes to ai-sparkwrite-editor are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [semantic versioning](https://semver.org/).
 
-## Unreleased
+## 1.1.0 — 2026-09-24
+
+Everything since 1.0.0. (1.0.1 was bumped in `package.json` but never published; its changes are listed here.)
 
 ### Added
 
 - **Embeds**: the Iframe block recognises 35 services — YouTube, Vimeo, Bilibili, Youku, Tencent Video, Loom, Descript, Spotify, SoundCloud, Google Maps, AMap, Baidu Maps, Figma, Canva, Miro, Whimsical, Excalidraw, dbdiagram, ProcessOn, Modao, Lanhu, Framer, CodePen, CodeSandbox, StackBlitz, JSFiddle, GitHub Gist, Google Docs/Sheets/Slides/Forms, Airtable, Trello, ClickUp, Typeform, Jinshuju — turning a pasted share link (or a copied `<iframe>` embed code) into the embeddable URL, with a sensible frame height per service. Every service shows its real brand mark in the prompt (drawn SVGs, Simple Icons, favicons; the ~29KB of marks beyond the built-in ten load on demand). `resolveEmbed()` and `EMBED_SERVICES` are exported; the prompt lists what works and shows a service's tips; `/embed` (or `/youtube`, `/figma`…) in the slash menu; the toolbar button is now called "Embed".
 - `Notice`: info, success, warning and tip boxes holding ordinary editable blocks, saved as `<div class="notice" data-type="…">`. Toolbar dropdown and bubble menu in React and Vue, one slash-menu row with the four types inline, Markdown export as GitHub-style alerts, part of `RichTextKit`.
+- **Cell background colour** in the table context menu (React and Vue): a palette, "No Fill" and a free colour input.
+- The kit toolbar's panel is three columns with related controls side by side, and its rows can be **dragged onto the toolbar to pin them** (drag back to unpin); pins persist in `localStorage` (`pinnable`, `defaultPins`, `storageKey`). Blockquote moved to the main row; `RichTextIndent` takes `only='indent' | 'outdent'`.
+- Links use `#2f54eb` (`#597ef7` in dark mode), overridable with `--richtext-link` / `--richtext-link-dark`.
 
 ### Fixed
 
@@ -18,27 +23,15 @@ All notable changes to ai-sparkwrite-editor are recorded here. The format follow
 - Links keep the surrounding text's weight; only the colour marks them.
 - The heading and font pickers keep a fixed width, so changing a block's level no longer shifts the toolbar.
 - Code View toggles inside one transaction instead of throwing "Applying a mismatched transaction".
+- The docs site's favicon and touch icons resolve under the GitHub Pages base path.
+- The link bubble no longer disappears when the pointer moves from the link onto its buttons (the editor's `mouseleave` fired after the menu's `mouseenter` and restarted the hide timer).
+- Code block line numbers share the code's font and size, so every number sits on its line; the language picker, copy and delete controls are smaller and quieter.
+- The table context menu is wider so "Paragraph After Table ⌘Enter" stays on one line; the kit's "More tools" panel shows one control per row (indent and outdent were overlapping their label).
 
 ### Changed
 
 - Font family menu: the fonts of the interface language's script (微软雅黑, 宋体… under a Chinese UI) come right after Default, before the Latin fonts, each group separated by a hairline.
 - Kit toolbar: tighter spacing so the default row fits a 1024px column on one line (the "⋯" trigger keeps its place at the right end of the last row when it does wrap); pinned controls show a small remove badge on hover and are listed in an "On the Toolbar" group at the bottom of the panel with a remove button; the drag hint moved below the groups. Code block line numbers are smaller (0.75em) and lighter, still on the code's line grid.
-
-## 1.0.1 — 2026-09-23
-
-### Fixed
-
-- The docs site's favicon and touch icons resolve under the GitHub Pages base path.
-
-- The link bubble no longer disappears when the pointer moves from the link onto its buttons (the editor's `mouseleave` fired after the menu's `mouseenter` and restarted the hide timer).
-- Code block line numbers share the code's font and size, so every number sits on its line; the language picker, copy and delete controls are smaller and quieter.
-- The table context menu is wider so "Paragraph After Table ⌘Enter" stays on one line; the kit's "More tools" panel shows one control per row (indent and outdent were overlapping their label).
-
-### Added
-
-- **Cell background colour** in the table context menu (React and Vue): a palette, "No Fill" and a free colour input.
-- The kit toolbar's panel is three columns with related controls side by side, and its rows can be **dragged onto the toolbar to pin them** (drag back to unpin); pins persist in `localStorage` (`pinnable`, `defaultPins`, `storageKey`). Blockquote moved to the main row; `RichTextIndent` takes `only='indent' | 'outdent'`.
-- Links use `#2f54eb` (`#597ef7` in dark mode), overridable with `--richtext-link` / `--richtext-link-dark`.
 
 ## 1.0.0 — 2026-09-23
 
