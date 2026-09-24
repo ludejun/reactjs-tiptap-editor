@@ -141,28 +141,34 @@ export const IframeNodeView = defineComponent({
           ? t('editor.iframe.invalid')
           : h(
               'div',
-              { class: 'richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-y-2' },
-              EMBED_KINDS.map(({ kind }, index) =>
-                h('div', { key: kind, class: 'richtext-flex richtext-items-center' }, [
-                  index > 0
-                    ? h('span', {
-                        'aria-hidden': 'true',
-                        class: 'richtext-mx-2.5 richtext-h-4 richtext-w-px richtext-bg-border',
-                      })
-                    : null,
-                  h('div', { class: 'richtext-flex richtext-items-center richtext-gap-1.5' }, [
-                    h(
-                      'span',
-                      {
-                        class:
-                          'richtext-mr-0.5 richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70',
-                      },
-                      t(`editor.iframe.kind.${kind}`)
-                    ),
-                    ...servicesOfKind(kind).map((service) => logo(service)),
-                  ]),
-                ])
-              )
+              {
+                // Two categories per row on wide screens, one on phones; the label column
+                // sizes to its longest word, so nothing wraps mid-word.
+                class:
+                  'richtext-grid richtext-grid-cols-[auto_1fr] richtext-items-center richtext-gap-x-2.5 richtext-gap-y-2 sm:richtext-grid-cols-[auto_1fr_auto_1fr]',
+              },
+              EMBED_KINDS.flatMap(({ kind }, index) => [
+                h(
+                  'span',
+                  {
+                    key: `${kind}-label`,
+                    class: [
+                      'richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70',
+                      index % 2 === 1 ? 'sm:richtext-pl-6' : '',
+                    ],
+                  },
+                  t(`editor.iframe.kind.${kind}`)
+                ),
+                h(
+                  'div',
+                  {
+                    key: kind,
+                    class:
+                      'richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-1.5',
+                  },
+                  servicesOfKind(kind).map((service) => logo(service))
+                ),
+              ])
             );
 
       return h(

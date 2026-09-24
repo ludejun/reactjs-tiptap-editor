@@ -1,7 +1,7 @@
 import { NodeViewWrapper } from '@tiptap/react';
 import { FrameIcon, XIcon } from 'lucide-react';
 import { Resizable } from 're-resizable';
-import { useCallback, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 
 import { Button, Input } from '@/components/ui';
 import { EmbedLogo } from '@/extensions/Iframe/components/EmbedLogo';
@@ -106,24 +106,25 @@ function IframeNodeView({ editor, node, updateAttributes, deleteNode }: NodeView
             ) : originalLink.trim() ? (
               t('editor.iframe.invalid')
             ) : (
-              <div className='richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-y-2'>
+              // Two categories per row on wide screens, one on phones; the label column
+              // sizes to its longest word, so nothing wraps mid-word.
+              <div className='richtext-grid richtext-grid-cols-[auto_1fr] richtext-items-center richtext-gap-x-2.5 richtext-gap-y-2 sm:richtext-grid-cols-[auto_1fr_auto_1fr]'>
                 {EMBED_KINDS.map(({ kind }, index) => (
-                  <div className='richtext-flex richtext-items-center' key={kind}>
-                    {index > 0 ? (
-                      <span
-                        aria-hidden='true'
-                        className='richtext-mx-2.5 richtext-h-4 richtext-w-px richtext-bg-border'
-                      />
-                    ) : null}
-                    <div className='richtext-flex richtext-items-center richtext-gap-1.5'>
-                      <span className='richtext-mr-0.5 richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70'>
-                        {t(`editor.iframe.kind.${kind}`)}
-                      </span>
+                  <Fragment key={kind}>
+                    <span
+                      className={cn(
+                        'richtext-whitespace-nowrap richtext-text-[10px] richtext-font-medium richtext-uppercase richtext-tracking-wider richtext-text-muted-foreground/70',
+                        { 'sm:richtext-pl-6': index % 2 === 1 }
+                      )}
+                    >
+                      {t(`editor.iframe.kind.${kind}`)}
+                    </span>
+                    <div className='richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-1.5'>
                       {servicesOfKind(kind).map((service) => (
                         <EmbedLogo key={service.key} service={service} tooltip />
                       ))}
                     </div>
-                  </div>
+                  </Fragment>
                 ))}
               </div>
             )}
