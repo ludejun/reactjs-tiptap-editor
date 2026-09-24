@@ -1,6 +1,7 @@
 import { Node, findParentNode, mergeAttributes } from '@tiptap/core';
 
 import type { ButtonViewParams, GeneralOptions } from '@/types';
+import type { Selection } from '@tiptap/pm/state';
 
 /** The built-in notice kinds and the colour each one is painted with. */
 export const NOTICE_TYPES = [
@@ -123,6 +124,9 @@ export const Notice = /* @__PURE__ */ Node.create<NoticeOptions>({
   },
 
   addKeyboardShortcuts() {
+    const parentNotice = (selection: Selection) =>
+      findParentNode((node) => node.type.name === this.name)(selection);
+
     return {
       // Enter on an empty last line leaves the box, the way lists end.
       Enter: ({ editor }) => {
@@ -131,7 +135,7 @@ export const Notice = /* @__PURE__ */ Node.create<NoticeOptions>({
 
         if (!empty) return false;
 
-        const notice = findParentNode((node) => node.type.name === this.name)(selection);
+        const notice = parentNotice(selection);
 
         if (!notice || $from.depth !== notice.depth + 1 || $from.parent.content.size > 0) {
           return false;
@@ -140,6 +144,52 @@ export const Notice = /* @__PURE__ */ Node.create<NoticeOptions>({
         if ($from.index(notice.depth) !== notice.node.childCount - 1) return false;
 
         return editor.commands.lift(this.name);
+      },
+
+      // Backspace at the start of the first line pulls that line out of the box
+      // (an empty box disappears). Right after a box, the line joins the box's
+      // last paragraph — ProseMirror would otherwise drop it in as a new line,
+      // and two boxes around a deleted blank line would fuse into one.
+      Backspace: ({ editor }) => {
+        const { selection } = editor.state;
+        const { $from, empty } = selection;
+
+        if (!empty || $from.parentOffset !== 0 || !$from.parent.isTextblock) return false;
+
+        const notice = parentNotice(selection);
+
+        if (notice) {
+          if ($from.depth === notice.depth + 1 && $from.index(notice.depth) === 0) {
+            return editor.commands.lift(this.name);
+          }
+
+          return false;
+        }
+
+        const index = $from.index($from.depth - 1);
+        const before = index > 0 ? $from.node($from.depth - 1).child(index - 1) : null;
+
+        return before?.type.name === this.name ? editor.commands.joinTextblockBackward() : false;
+      },
+
+      // Delete at the end of the last line pulls the next line into the box.
+      Delete: ({ editor }) => {
+        const { selection } = editor.state;
+        const { $from, empty } = selection;
+
+        if (!empty || $from.parentOffset !== $from.parent.content.size) return false;
+
+        const notice = parentNotice(selection);
+
+        if (
+          !notice ||
+          $from.depth !== notice.depth + 1 ||
+          $from.index(notice.depth) !== notice.node.childCount - 1
+        ) {
+          return false;
+        }
+
+        return editor.commands.joinTextblockForward();
       },
     };
   },

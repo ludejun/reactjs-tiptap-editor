@@ -88,7 +88,7 @@ const editor = useEditor({
 - **Toolbar**: `RichTextNotice` is a dropdown of the four types. Picking one wraps the selected blocks (or the current paragraph); picking the type of the notice you are in removes it; picking another type changes it.
 - **Slash menu**: one "Notice" row with the four types as coloured icons at its right — ←/→ or a click picks the type, Enter inserts. Typing `/warning` (or `/success`, `/tip`, `/info`) preselects that type.
 - **Bubble menu**: `RichTextBubbleNotice` appears above the notice the caret is in, with the four types and a remove button.
-- **Keyboard**: Enter on an empty last line leaves the box, the way lists end.
+- **Keyboard**: Enter on an empty last line leaves the box, the way lists end. Backspace at the start of the first line pulls that line out (an empty box disappears); Backspace on the line right after a box joins it to the box's last paragraph, and Delete at the end of the box pulls the next line in — two boxes never fuse into one.
 
 ## Saved format
 
