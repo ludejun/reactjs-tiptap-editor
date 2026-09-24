@@ -1,14 +1,14 @@
 ---
-description: Iframe
+description: Embed
 
 next:
   text: Image
   link: /extensions/Image/index.md
 ---
 
-# Iframe
+# Embed
 
-Embed a YouTube video, a Figma file, a Google Sheet, a map, a CodePen — 35 services recognised from their share links — or any web page.
+The `Iframe` extension (`ai-sparkwrite-editor/iframe`), listed here under the name users see in the toolbar. Embed a YouTube video, a Figma file, a Google Sheet, a map, a CodePen — 35 services recognised from their share links — or any web page.
 
 ## Setup
 

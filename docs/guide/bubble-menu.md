@@ -75,7 +75,7 @@ For images, register `Image` in the existing extension array and mount `RichText
 | `RichTextBubbleImage`      | [Image](/extensions/Image/)                             | Edit a selected image.          |
 | `RichTextBubbleVideo`      | [Video](/extensions/Video/)                             | Edit a selected video.          |
 | `RichTextBubbleTable`      | [Table](/extensions/Table/)                             | Table actions, on right click.  |
-| `RichTextBubbleIframe`     | [Iframe](/extensions/Iframe/)                           | Edit an embedded frame.         |
+| `RichTextBubbleIframe`     | [Embed](/extensions/Iframe/)                            | Edit an embedded frame.         |
 | `RichTextBubbleImageGif`   | [ImageGif](/extensions/ImageGif/)                       | Edit a selected GIF.            |
 | `RichTextBubbleDrawer`     | [Drawer](/extensions/Drawer/)                           | Edit a drawing node.            |
 | `RichTextBubbleExcalidraw` | [Excalidraw](/extensions/Excalidraw/)                   | Edit an Excalidraw node.        |

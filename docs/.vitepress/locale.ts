@@ -27,8 +27,10 @@ export function getLocaleConfig(lang: string) {
       link: 'https://github.com/ludejun/ai-sparkwrite-editor/blob/main/CONTRIBUTING.md',
     },
   ];
-  const ext = (name: string): DefaultTheme.SidebarItem => ({
-    text: name,
+  // `text` lets a folder keep its name while the sidebar shows what people look for
+  // (the Iframe extension is listed as "Embed").
+  const ext = (name: string, text = name): DefaultTheme.SidebarItem => ({
+    text,
     link: `${urlPrefix}/extensions/${name}/index.md`,
   });
   const title = 'ai-sparkwrite-editor';
@@ -145,6 +147,7 @@ export function getLocaleConfig(lang: string) {
         ext('Column'),
         ext('Details'),
         ext('Drawer'),
+        ext('Iframe', 'Embed'),
         ext('Emoji'),
         ext('Excalidraw'),
         ext('ExportPdf'),
@@ -157,7 +160,6 @@ export function getLocaleConfig(lang: string) {
         ext('Highlight'),
         ext('History'),
         ext('HorizontalRule'),
-        ext('Iframe'),
         ext('Image'),
         ext('ImageGif'),
         ext('ImportWord'),

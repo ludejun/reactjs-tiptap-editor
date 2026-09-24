@@ -75,7 +75,7 @@ export default function BubbleMenuExample() {
 | `RichTextBubbleImage`      | [Image](/zh/extensions/Image/)           | 编辑一张选中的图片。       |
 | `RichTextBubbleVideo`      | [Video](/zh/extensions/Video/)           | 编辑一段选中的视频。       |
 | `RichTextBubbleTable`      | [Table](/zh/extensions/Table/)           | 表格操作，右键触发。       |
-| `RichTextBubbleIframe`     | [Iframe](/zh/extensions/Iframe/)         | 编辑一个内嵌 frame。       |
+| `RichTextBubbleIframe`     | [Embed](/zh/extensions/Iframe/)          | 编辑一个内嵌 frame。       |
 | `RichTextBubbleImageGif`   | [ImageGif](/zh/extensions/ImageGif/)     | 编辑一个选中的 GIF。       |
 | `RichTextBubbleDrawer`     | [Drawer](/zh/extensions/Drawer/)         | 编辑一个绘图节点。         |
 | `RichTextBubbleExcalidraw` | [Excalidraw](/zh/extensions/Excalidraw/) | 编辑一个 Excalidraw 节点。 |
