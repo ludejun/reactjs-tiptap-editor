@@ -106,17 +106,20 @@ function IframeNodeView({ editor, node, updateAttributes, deleteNode }: NodeView
             ) : originalLink.trim() ? (
               t('editor.iframe.invalid')
             ) : (
-              <div className='richtext-grid richtext-grid-cols-1 richtext-gap-x-6 richtext-gap-y-1.5 sm:richtext-grid-cols-2'>
-                {EMBED_KINDS.map(({ kind }) => (
-                  <div className='richtext-flex richtext-items-center richtext-gap-1.5' key={kind}>
-                    <span className='richtext-w-14 richtext-shrink-0 richtext-text-[11px] richtext-uppercase richtext-tracking-wide richtext-text-muted-foreground/80'>
-                      {t(`editor.iframe.kind.${kind}`)}
-                    </span>
-                    {servicesOfKind(kind).map((service) => (
-                      <span className='richtext-flex' key={service.key} title={service.name}>
-                        <EmbedLogo service={service} />
-                      </span>
-                    ))}
+              <div className='richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-y-2'>
+                {EMBED_KINDS.map(({ kind }, index) => (
+                  <div className='richtext-flex richtext-items-center' key={kind}>
+                    {index > 0 ? (
+                      <span
+                        aria-hidden='true'
+                        className='richtext-mx-2.5 richtext-h-4 richtext-w-px richtext-bg-border'
+                      />
+                    ) : null}
+                    <div className='richtext-flex richtext-items-center richtext-gap-1.5'>
+                      {servicesOfKind(kind).map((service) => (
+                        <EmbedLogo key={service.key} service={service} tooltip />
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>

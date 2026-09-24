@@ -99,15 +99,19 @@ export const IframeNodeView = defineComponent({
     const logo = (service: { key: string; name: string; color: string }) =>
       BRAND_LOGOS[service.key]
         ? h('span', {
-            'aria-hidden': 'true',
+            role: 'img',
+            'aria-label': service.name,
+            title: service.name,
             class:
-              'richtext-inline-flex richtext-size-5 richtext-shrink-0 richtext-text-[20px] richtext-leading-none [&>svg]:richtext-size-full',
+              'richtext-inline-flex richtext-size-5 richtext-shrink-0 richtext-overflow-hidden richtext-rounded-[5px] richtext-leading-none [&>img]:richtext-size-full [&>img]:richtext-object-contain [&>svg]:richtext-size-full',
             innerHTML: BRAND_LOGOS[service.key],
           })
         : h(
             'span',
             {
-              'aria-hidden': 'true',
+              role: 'img',
+              'aria-label': service.name,
+              title: service.name,
               class:
                 'richtext-inline-flex richtext-size-5 richtext-shrink-0 richtext-items-center richtext-justify-center richtext-rounded-[5px] richtext-text-[11px] richtext-font-bold richtext-leading-none',
               style: {
@@ -137,30 +141,21 @@ export const IframeNodeView = defineComponent({
           ? t('editor.iframe.invalid')
           : h(
               'div',
-              {
-                class:
-                  'richtext-grid richtext-grid-cols-1 richtext-gap-x-6 richtext-gap-y-1.5 sm:richtext-grid-cols-2',
-              },
-              EMBED_KINDS.map(({ kind }) =>
-                h(
-                  'div',
-                  { key: kind, class: 'richtext-flex richtext-items-center richtext-gap-1.5' },
-                  [
-                    h(
-                      'span',
-                      {
-                        class:
-                          'richtext-w-14 richtext-shrink-0 richtext-text-[11px] richtext-uppercase richtext-tracking-wide richtext-text-muted-foreground/80',
-                      },
-                      t(`editor.iframe.kind.${kind}`)
-                    ),
-                    ...servicesOfKind(kind).map((service) =>
-                      h('span', { key: service.key, class: 'richtext-flex', title: service.name }, [
-                        logo(service),
-                      ])
-                    ),
-                  ]
-                )
+              { class: 'richtext-flex richtext-flex-wrap richtext-items-center richtext-gap-y-2' },
+              EMBED_KINDS.map(({ kind }, index) =>
+                h('div', { key: kind, class: 'richtext-flex richtext-items-center' }, [
+                  index > 0
+                    ? h('span', {
+                        'aria-hidden': 'true',
+                        class: 'richtext-mx-2.5 richtext-h-4 richtext-w-px richtext-bg-border',
+                      })
+                    : null,
+                  h(
+                    'div',
+                    { class: 'richtext-flex richtext-items-center richtext-gap-1.5' },
+                    servicesOfKind(kind).map((service) => logo(service))
+                  ),
+                ])
               )
             );
 
