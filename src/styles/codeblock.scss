@@ -112,10 +112,12 @@
   padding-right: 0.75em;
   font-family:
     ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
-  font-size: inherit;
+  /* Smaller than the code, but on the same 20px line grid so each number stays on its line. */
+  font-size: 0.75em;
   line-height: var(--richtext-code-line-height);
   text-align: right;
   color: var(--shj-numbers);
+  opacity: 0.8;
   user-select: none;
   pointer-events: none;
 }
