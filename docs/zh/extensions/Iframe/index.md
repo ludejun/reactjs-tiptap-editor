@@ -1,14 +1,14 @@
 ---
-description: 内嵌框架
+description: 嵌入
 
 next:
   text: Image
   link: /zh/extensions/Image/index.md
 ---
 
-# Iframe
+# Embed 嵌入
 
-在一个 iframe 节点中嵌入外部内容。
+即 `Iframe` 扩展（`ai-sparkwrite-editor/iframe`），这里按工具栏上的名字“嵌入”列出。嵌入 YouTube 视频、Figma 文件、Google 表格、地图、CodePen——从分享链接识别 35 个服务——或任意网页。
 
 ## 安装与注册
 
