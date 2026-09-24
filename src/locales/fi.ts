@@ -151,7 +151,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'Solun taustaväri',
   'editor.table.menu.insertParagraphAfterTable': 'Kappale taulukon jälkeen',
   'editor.emoji.tooltip': 'Emoji',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': 'Upota',
   'editor.searchAndReplace.tooltip': 'Etsi ja korvaa',
   'editor.search.dialog.text': 'Etsi',
   'editor.replace.dialog.text': 'Korvaa',

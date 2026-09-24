@@ -161,7 +161,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'Zellenhintergrundfarbe',
   'editor.table.menu.insertParagraphAfterTable': 'Absatz nach der Tabelle',
   'editor.emoji.tooltip': 'Emoji',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': 'Einbetten',
   'editor.searchAndReplace.tooltip': 'Suchen und ersetzen',
   'editor.search.dialog.text': 'Suchen',
   'editor.replace.dialog.text': 'Ersetzen',

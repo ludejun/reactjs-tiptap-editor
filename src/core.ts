@@ -73,7 +73,16 @@ export type {
   VideoUploadProgress,
 } from '@/extensions/Video/Video';
 export { IframeCore as Iframe } from '@/extensions/Iframe/Iframe';
-export { EmbedServiceLink, getExampleUrl, getServiceSrc } from '@/extensions/Iframe/utils';
+export {
+  EmbedServiceLink,
+  getExampleUrl,
+  getServiceSrc,
+  EMBED_SERVICES,
+  GENERIC_EMBED,
+  resolveEmbed,
+  embedServiceOf,
+} from '@/extensions/Iframe/utils';
+export type { EmbedService, EmbedKind, EmbedResolution } from '@/extensions/Iframe/embeds';
 export { KatexCore as Katex, loadKatex } from '@/extensions/Katex/Katex';
 export type {
   IKatexAttrs,

@@ -9,7 +9,13 @@ declare module '@tiptap/core' {
       /**
        * Add an iframe
        */
-      setIframe: (options: { src: string; service: string }) => ReturnType;
+      setIframe: (options: {
+        src: string;
+        /** Service key from `EMBED_SERVICES` (`youtube`, `figma`…); `iframe` for a plain page. */
+        service?: string;
+        width?: number | string;
+        height?: number | string;
+      }) => ReturnType;
     };
   }
 }
@@ -43,7 +49,8 @@ export const IframeCore = /* @__PURE__ */ Node.create({
         t: (key: string) => string;
       }) => ({
         componentProps: {
-          action: (options: { src: string; service: string }) => editor.commands.setIframe(options),
+          action: (options: { src: string; service?: string }) =>
+            editor.commands.setIframe(options),
           upload: extension.options.upload,
           // isActive: () => editor.can().setIframe({}),
           icon: 'Iframe',
@@ -66,6 +73,13 @@ export const IframeCore = /* @__PURE__ */ Node.create({
       src: {
         default: null,
         parseHTML: getDatasetAttribute('src'),
+      },
+      /** Which service the frame shows, for styling and labels; `iframe` for a plain page. */
+      service: {
+        default: null,
+        parseHTML: (element) => element.getAttribute('data-service'),
+        renderHTML: (attributes) =>
+          attributes.service ? { 'data-service': attributes.service } : {},
       },
       defaultShowPicker: {
         default: false,

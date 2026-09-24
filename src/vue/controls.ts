@@ -60,7 +60,7 @@ import { COLORS_LIST, DEFAULT_FONT_SIZE_LIST, DEFAULT_LINE_HEIGHT_LIST } from '@
 import { generateAIText, hasAITransport } from '@/extensions/AI/client';
 import { aiOptionsOf } from '@/extensions/AI/writer';
 import { DIVIDER_VARIANTS } from '@/extensions/Divider/Divider';
-import { getServiceSrc } from '@/extensions/Iframe/utils';
+import { resolveEmbed } from '@/extensions/Iframe/embeds';
 import { rememberUploadedImage } from '@/extensions/Image/imageLifecycle';
 import { loadKatex } from '@/extensions/Katex/katex-loader';
 import { NOTICE_TYPES, type NoticeType } from '@/extensions/Notice/Notice';
@@ -1866,9 +1866,13 @@ export const RichTextIframe = defineComponent({
     const submit = (close: () => void) => {
       const url = link.value.trim();
       if (!url || !editor.value) return;
-      const embed = getServiceSrc(url);
-      const src = (typeof embed === 'string' ? embed : embed.src) || url;
-      editor.value.chain().focus().setIframe({ src, service: '' }).run();
+      const embed = resolveEmbed(url);
+      if (!embed) return;
+      editor.value
+        .chain()
+        .focus()
+        .setIframe({ src: embed.src, service: embed.service.key, height: embed.height })
+        .run();
       close();
     };
 

@@ -151,7 +151,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'セルの背景色',
   'editor.table.menu.insertParagraphAfterTable': '表の後に段落を挿入',
   'editor.emoji.tooltip': '絵文字',
-  'editor.iframe.tooltip': 'iframe',
+  'editor.iframe.tooltip': '埋め込み',
   'editor.searchAndReplace.tooltip': '検索と置換',
   'editor.search.dialog.text': '検索',
   'editor.replace.dialog.text': '置換',
