@@ -3,12 +3,23 @@
   color: hsl(var(--foreground));
 
   .ProseMirror.ProseMirror.ProseMirror {
-    @apply richtext-z-0 richtext-py-16 richtext-pl-20 richtext-pr-8 richtext-caret-black dark:richtext-caret-white lg:richtext-pl-8 lg:richtext-pr-8;
+    @apply richtext-z-0 richtext-caret-black dark:richtext-caret-white;
     /* `outline-0` only zeroes the width; the UA still paints its `outline-style:
        auto` focus ring over the whole editor. */
     outline: none;
     min-height: 180px;
-    padding: 32px 80px;
+    /* Phones: the text needs the width more than the margins do; the left side
+       keeps a little extra for the block handle. Tablets and up widen the gutters
+       so a 700px line of prose does not span the whole screen. */
+    padding: 20px 16px 20px 24px;
+
+    @media (min-width: 640px) {
+      padding: 28px 40px;
+    }
+
+    @media (min-width: 1024px) {
+      padding: 32px 80px;
+    }
 
     .img-placeholder {
       width: fit-content;
