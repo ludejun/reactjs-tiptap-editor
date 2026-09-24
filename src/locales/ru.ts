@@ -161,7 +161,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'Цвет фона ячейки',
   'editor.table.menu.insertParagraphAfterTable': 'Абзац после таблицы',
   'editor.emoji.tooltip': 'Эмодзи',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': 'Встроить',
   'editor.searchAndReplace.tooltip': 'Поиск и замена',
   'editor.search.dialog.text': 'Найти',
   'editor.replace.dialog.text': 'Заменить',

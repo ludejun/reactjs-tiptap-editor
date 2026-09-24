@@ -151,7 +151,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'Màu nền ô',
   'editor.table.menu.insertParagraphAfterTable': 'Đoạn văn sau bảng',
   'editor.emoji.tooltip': 'Biểu tượng',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': 'Nhúng',
   'editor.searchAndReplace.tooltip': 'Tìm kiếm và thay thế',
   'editor.search.dialog.text': 'Tìm kiếm',
   'editor.replace.dialog.text': 'Thay thế',

@@ -161,7 +161,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': '셀 배경색',
   'editor.table.menu.insertParagraphAfterTable': '표 뒤에 단락 삽입',
   'editor.emoji.tooltip': '이모지',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': '임베드',
   'editor.searchAndReplace.tooltip': '찾기 및 바꾸기',
   'editor.search.dialog.text': '찾기',
   'editor.replace.dialog.text': '바꾸기',

@@ -161,7 +161,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'सेल का पृष्ठभूमि रंग',
   'editor.table.menu.insertParagraphAfterTable': 'तालिका के बाद अनुच्छेद',
   'editor.emoji.tooltip': 'इमोजी',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': 'एम्बेड',
   'editor.searchAndReplace.tooltip': 'खोजें और बदलें',
   'editor.search.dialog.text': 'खोजें',
   'editor.replace.dialog.text': 'बदलें',

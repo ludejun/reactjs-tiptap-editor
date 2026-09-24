@@ -161,7 +161,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'Warna latar sel',
   'editor.table.menu.insertParagraphAfterTable': 'Paragraf setelah tabel',
   'editor.emoji.tooltip': 'Emoji',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': 'Sematkan',
   'editor.searchAndReplace.tooltip': 'Cari dan ganti',
   'editor.search.dialog.text': 'Cari',
   'editor.replace.dialog.text': 'Ganti',

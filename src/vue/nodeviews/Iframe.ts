@@ -3,10 +3,15 @@ import { NodeViewWrapper, VueNodeViewRenderer, nodeViewProps } from '@tiptap/vue
 import { Pencil } from 'lucide-vue-next';
 import { defineComponent, h, ref, watch } from 'vue';
 
+import { EMBED_SERVICES, resolveEmbed } from '@/extensions/Iframe/embeds';
 import { IframeCore } from '@/extensions/Iframe/Iframe';
-import { getServiceSrc } from '@/extensions/Iframe/utils';
+
+import { useLocale } from '../context';
 
 import styles from '@/extensions/Iframe/components/index.module.scss';
+
+/** Names of the recognised services, for the prompt's hint line. */
+const SERVICE_NAMES = EMBED_SERVICES.map((service) => service.name).join(' · ');
 
 const INPUT_CLASS =
   'richtext-flex-1 richtext-h-9 richtext-rounded-md richtext-border richtext-border-solid richtext-border-input richtext-bg-background richtext-px-3 richtext-text-sm richtext-text-foreground richtext-outline-none';
@@ -23,6 +28,7 @@ export const IframeNodeView = defineComponent({
   name: 'IframeNodeView',
   props: nodeViewProps,
   setup(props) {
+    const { t } = useLocale();
     const originalLink = ref('');
     const editing = ref(false);
     const resizing = ref(false);
@@ -35,14 +41,16 @@ export const IframeNodeView = defineComponent({
     );
 
     const confirm = () => {
-      if (!originalLink.value) return;
-
-      const urlFormat = getServiceSrc(originalLink.value);
+      const resolved = resolveEmbed(originalLink.value);
+      if (!resolved) return;
 
       props.editor
         .chain()
         .updateAttributes(IframeCore.name, {
-          src: (typeof urlFormat === 'string' ? urlFormat : urlFormat.src) || originalLink.value,
+          src: resolved.src,
+          service: resolved.service.key,
+          // A YouTube frame wants 16:9, a form wants to be tall; keep a size the reader already set.
+          height: props.node.attrs.height === 300 ? resolved.height : props.node.attrs.height,
         })
         .setNodeSelection(props.editor.state.selection.from)
         .focus()
@@ -94,35 +102,64 @@ export const IframeNodeView = defineComponent({
         'div',
         {
           class:
-            'richtext-mx-auto richtext-my-[12px] richtext-flex richtext-max-w-[600px] richtext-items-center richtext-justify-center richtext-gap-[10px] richtext-rounded-[12px] richtext-border richtext-border-solid richtext-border-border richtext-p-[10px]',
+            'richtext-mx-auto richtext-my-[12px] richtext-flex richtext-max-w-[600px] richtext-flex-col richtext-gap-2 richtext-rounded-[12px] richtext-border richtext-border-solid richtext-border-border richtext-p-[10px]',
           contenteditable: 'false',
         },
         [
-          h('input', {
-            class: INPUT_CLASS,
-            type: 'url',
-            placeholder: 'Enter link',
-            value: originalLink.value,
-            onVnodeMounted: (vnode) => (vnode.el as HTMLInputElement).focus(),
-            onInput: (event: Event) => {
-              originalLink.value = (event.target as HTMLInputElement).value;
-            },
-            onKeydown: (event: KeyboardEvent) => {
-              event.stopPropagation();
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                confirm();
-              }
-              if (event.key === 'Escape') {
-                event.preventDefault();
-                editing.value = false;
-              }
-            },
-            onMousedown: (event: MouseEvent) => event.stopPropagation(),
-          }),
-          h('button', { type: 'button', class: BUTTON_CLASS, onClick: confirm }, 'OK'),
+          h('div', { class: 'richtext-flex richtext-items-center richtext-gap-[10px]' }, [
+            h('input', {
+              class: INPUT_CLASS,
+              type: 'url',
+              placeholder: t('editor.iframe.placeholder'),
+              value: originalLink.value,
+              onVnodeMounted: (vnode) => (vnode.el as HTMLInputElement).focus(),
+              onInput: (event: Event) => {
+                originalLink.value = (event.target as HTMLInputElement).value;
+              },
+              onKeydown: (event: KeyboardEvent) => {
+                event.stopPropagation();
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  confirm();
+                }
+                if (event.key === 'Escape') {
+                  event.preventDefault();
+                  editing.value = false;
+                }
+              },
+              onMousedown: (event: MouseEvent) => event.stopPropagation(),
+            }),
+            h('button', { type: 'button', class: BUTTON_CLASS, onClick: confirm }, 'OK'),
+          ]),
+          hint(),
         ]
       );
+
+    // Names the service the typed link belongs to (and its tips), or lists what works.
+    const hint = () => {
+      const typed = originalLink.value.trim();
+      const resolved = typed ? resolveEmbed(typed) : null;
+      const text = resolved
+        ? [
+            h(
+              'span',
+              { class: 'richtext-font-medium richtext-text-foreground' },
+              resolved.service.name
+            ),
+            resolved.service.tips ? ` — ${resolved.service.tips}` : '',
+          ]
+        : typed
+          ? [t('editor.iframe.invalid')]
+          : [`${t('editor.iframe.supported')}: ${SERVICE_NAMES}`];
+
+      return h(
+        'div',
+        {
+          class: 'richtext-px-1 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground',
+        },
+        text
+      );
+    };
 
     return () => {
       const { src, width, height } = props.node.attrs;

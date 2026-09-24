@@ -85,4 +85,34 @@ const editor = useEditor({
 
 ## 使用方式
 
-打开工具栏对话框并提供一个可嵌入的 URL。挂载 `RichTextBubbleIframe` 以获得上下文控件。部分站点会阻止被嵌入到 iframe 中；请使用该服务提供的嵌入 URL，并确保你应用的内容安全策略（CSP）允许该来源。
+点工具栏的 **嵌入**（或输入 `/embed`、`/youtube`、`/figma`……），粘贴一个 **分享链接**——就是从地址栏复制的那种——或者服务“嵌入”对话框里的整段 `<iframe>` 代码。编辑器会识别出是哪个服务，把链接转换成可嵌入地址，按服务设定合适的高度（视频 16:9、表单更高），并提示识别到的服务名。挂载 `RichTextBubbleIframe` 可获得上下文控件（缩放、打开、删除）。
+
+| 服务                                                                                | 类别       | 效果                                                                           |
+| ----------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------ |
+| YouTube、Vimeo、B 站、优酷、腾讯视频、Loom、Descript                                | 视频       | 16:9 播放器                                                                    |
+| Spotify、SoundCloud                                                                 | 音频       | 紧凑播放器                                                                     |
+| Google 地图、高德地图、百度地图                                                     | 地图       | 地点或搜索链接直接变成内嵌地图；Google 短链请用 _分享 → 嵌入地图_ 复制代码粘贴 |
+| Figma、Canva、Miro、Whimsical、Excalidraw、dbdiagram、ProcessOn、墨刀、蓝湖、Framer | 设计与白板 | 可平移的实时文件                                                               |
+| CodePen、CodeSandbox、StackBlitz、JSFiddle、GitHub Gist                             | 代码       | 结果或代码视图                                                                 |
+| Google 文档、Google 表格、Google 幻灯片、Airtable、Trello、ClickUp                  | 文档与数据 | 只读预览                                                                       |
+| Google 表单、Typeform、金数据                                                       | 表单       | 表单本身                                                                       |
+| 其他任意 `https://` 页面                                                            | 网页       | 原样展示；能否被嵌入由对方站点决定                                             |
+
+有些站点拒绝被嵌入（Notion 页面、多数需要登录的页面），此时框内会是空白——这是对方站点的限制，不是编辑器的问题。请确保你应用的内容安全策略（CSP）允许这些来源。
+
+## 代码调用
+
+```ts
+import { resolveEmbed, EMBED_SERVICES } from 'ai-sparkwrite-editor';
+
+const embed = resolveEmbed('https://youtu.be/I4sMhHbHYXM');
+// { service: { key: 'youtube', name: 'YouTube', … }, src: 'https://www.youtube.com/embed/I4sMhHbHYXM', height: 338, url }
+
+editor
+  .chain()
+  .focus()
+  .setIframe({ src: embed.src, service: embed.service.key, height: embed.height })
+  .run();
+```
+
+`EMBED_SERVICES` 是全部已识别服务的列表（key、名称、类别、链接规则、示例、提示）；`resolveEmbed()` 对非链接返回 `null`。保存的 HTML 会在 `<iframe>` 上带 `data-service`，只读页面可以按服务加样式或标签。

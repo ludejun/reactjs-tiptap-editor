@@ -2,6 +2,7 @@ import {
   CircleCheckIcon,
   CodeXmlIcon,
   Columns2Icon,
+  FrameIcon,
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
@@ -29,6 +30,7 @@ import { BlockquoteLeft as BlockquoteLeftIcon } from '@/components/icons/Blockqu
 import { registerIcons } from '@/components/icons/icons';
 import { emit } from '@/components/ReactBus';
 import { HEADINGS } from '@/constants';
+import { EMBED_SERVICES } from '@/extensions/Iframe/embeds';
 import { NOTICE_TYPES, type NoticeType } from '@/extensions/Notice/Notice';
 import { EVENTS } from '@/utils/customEvents/events.constant';
 
@@ -47,6 +49,7 @@ registerIcons({
   Heading5: Heading5Icon,
   Heading6: Heading6Icon,
   HeadingParagraph: PilcrowIcon,
+  Iframe: FrameIcon,
   ImageUp: ImageUpIcon,
   List: ListIcon,
   ListOrdered: ListOrderedIcon,
@@ -262,6 +265,25 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
         .deleteRange(range)
         .setNotice((variant as NoticeType | undefined) ?? 'info')
         .run();
+    },
+  });
+
+  // embed: a YouTube video, a Figma file, a Google Sheet… `/figma` finds it too
+  insert.commands.push({
+    name: 'embed',
+    label: t('editor.iframe.tooltip'),
+    iconName: 'Iframe',
+    description: 'Embed a video, a design file, a document or any web page',
+    aliases: [
+      'embed',
+      'iframe',
+      'qr',
+      'qianru',
+      ...EMBED_SERVICES.map((s) => s.name.toLowerCase()),
+    ],
+    shouldBeHidden: (editor) => !editor.schema.nodes.iframe || editor.isActive('columns'),
+    action: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).setIframe({ src: '' }).run();
     },
   });
 

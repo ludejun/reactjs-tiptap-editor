@@ -161,7 +161,7 @@ const locale = {
   'editor.table.menu.setCellsBgColor': 'Hücre arka plan rengi',
   'editor.table.menu.insertParagraphAfterTable': 'Tablodan sonra paragraf',
   'editor.emoji.tooltip': 'Emoji',
-  'editor.iframe.tooltip': 'Iframe',
+  'editor.iframe.tooltip': 'Göm',
   'editor.searchAndReplace.tooltip': 'Bul ve değiştir',
   'editor.search.dialog.text': 'Bul',
   'editor.replace.dialog.text': 'Değiştir',
