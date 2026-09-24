@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
+
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui';
-import { BRAND_LOGOS, isLightColor, monogramOf } from '@/extensions/Iframe/logos';
+import { BRAND_LOGOS, isLightColor, loadMoreLogos, monogramOf } from '@/extensions/Iframe/logos';
 import { cn } from '@/lib/utils';
 
 import type { EmbedService } from '@/extensions/Iframe/embeds';
@@ -13,7 +15,21 @@ export interface EmbedLogoProps {
 
 /** A service's brand mark (SVG or favicon), or a monogram on its brand colour when there is none. */
 export function EmbedLogo({ service, className, tooltip }: EmbedLogoProps) {
-  const markup = BRAND_LOGOS[service.key];
+  const [markup, setMarkup] = useState<string | undefined>(() => BRAND_LOGOS[service.key]);
+
+  // Marks outside the small built-in set arrive with the on-demand chunk; the
+  // monogram stands in until then (usually one frame).
+  useEffect(() => {
+    if (markup) return;
+    let live = true;
+    void loadMoreLogos().then((logos) => {
+      if (live && logos[service.key]) setMarkup(logos[service.key]);
+    });
+    return () => {
+      live = false;
+    };
+  }, [markup, service.key]);
+
   const mark = markup ? (
     <span
       aria-label={service.name}

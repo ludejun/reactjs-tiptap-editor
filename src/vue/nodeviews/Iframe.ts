@@ -5,7 +5,7 @@ import { defineComponent, h, ref, watch } from 'vue';
 
 import { EMBED_KINDS, resolveEmbed, servicesOfKind } from '@/extensions/Iframe/embeds';
 import { IframeCore } from '@/extensions/Iframe/Iframe';
-import { BRAND_LOGOS, isLightColor, monogramOf } from '@/extensions/Iframe/logos';
+import { BRAND_LOGOS, isLightColor, loadMoreLogos, monogramOf } from '@/extensions/Iframe/logos';
 
 import { useLocale } from '../context';
 
@@ -96,6 +96,12 @@ export const IframeNodeView = defineComponent({
     };
 
     // A service's brand mark, or a monogram on its brand colour when there is no mark.
+    // Marks outside the small built-in set arrive with the on-demand chunk.
+    const logosReady = ref(false);
+    void loadMoreLogos().then(() => {
+      logosReady.value = true;
+    });
+
     const logo = (service: { key: string; name: string; color: string }) =>
       BRAND_LOGOS[service.key]
         ? h('span', {
@@ -125,6 +131,8 @@ export const IframeNodeView = defineComponent({
     // What the block understands: the recognised services as brand marks, grouped by
     // kind. Once a link is typed, the detected service and its tips take the row.
     const hint = () => {
+      // Read so the wall re-renders once the on-demand marks have arrived.
+      void logosReady.value;
       const typed = originalLink.value.trim();
       const resolved = typed ? resolveEmbed(typed) : null;
       const body = resolved
