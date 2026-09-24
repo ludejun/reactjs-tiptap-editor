@@ -261,14 +261,10 @@ function SlashCommandNodeView(
           {commandQuery?.map((group, groupIndex) => {
             return (
               <Fragment key={`slash-${group.title}`}>
-                {/* A quiet group heading, aligned with the item icons, with a
-                    hairline running out to the right — no extra row height. */}
-                <div className='richtext-mx-1 richtext-mb-0.5 richtext-mt-1.5 richtext-flex richtext-items-center richtext-gap-2 richtext-px-1 richtext-text-[0.65rem] richtext-font-medium richtext-uppercase richtext-leading-4 richtext-tracking-wider richtext-text-muted-foreground'>
-                  <span>{group.title}</span>
-                  <span
-                    aria-hidden='true'
-                    className='richtext-h-px richtext-flex-1 richtext-bg-border'
-                  />
+                {/* A quiet group heading: small caps in the muted colour, aligned
+                    with the item icons. Typography alone separates the groups. */}
+                <div className='richtext-mx-1 richtext-mb-0.5 richtext-mt-1.5 richtext-px-1 richtext-text-[0.65rem] richtext-font-semibold richtext-uppercase richtext-leading-4 richtext-tracking-[0.08em] richtext-text-muted-foreground/80'>
+                  {group.title}
                 </div>
 
                 {group.commands.map((command, commandIndex) => {
