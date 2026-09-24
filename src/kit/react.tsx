@@ -306,13 +306,6 @@ export function RichTextKitToolbar({
       label: t('editor.slash.format'),
       entries: [
         {
-          key: 'fontFamily',
-          name: 'fontFamily',
-          label: t('editor.fontFamily.tooltip'),
-          node: <RichTextFontFamily />,
-          wide: true,
-        },
-        {
           key: 'fontSize',
           name: 'fontSize',
           label: t('editor.fontSize.tooltip'),
@@ -529,7 +522,11 @@ export function RichTextKitToolbar({
 
   return (
     <RichTextToolbar
-      className={cn(className, dropTarget === 'toolbar' && 'richtext-kit-toolbar--drop')}
+      className={cn(
+        'richtext-kit-toolbar',
+        className,
+        dropTarget === 'toolbar' && 'richtext-kit-toolbar--drop'
+      )}
       data-pinnable={pinnable || undefined}
       onDragLeave={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDropTarget(null);
@@ -543,7 +540,10 @@ export function RichTextKitToolbar({
           on('undoRedo') && <RichTextUndo key='undo' />,
           on('undoRedo') && <RichTextRedo key='redo' />,
         ],
-        [on('heading') && <RichTextHeading key='heading' />],
+        [
+          on('heading') && <RichTextHeading key='heading' />,
+          on('fontFamily') && <RichTextFontFamily key='fontFamily' />,
+        ],
         [
           on('bold') && <RichTextBold key='bold' />,
           on('italic') && <RichTextItalic key='italic' />,

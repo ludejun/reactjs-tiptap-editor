@@ -397,7 +397,10 @@ export const RichTextKitToolbar = defineComponent({
       return h(
         RichTextToolbar,
         {
-          class: dropTarget.value === 'toolbar' ? 'richtext-kit-toolbar--drop' : undefined,
+          class: [
+            'richtext-kit-toolbar',
+            dropTarget.value === 'toolbar' ? 'richtext-kit-toolbar--drop' : null,
+          ],
           onDragover: accept('toolbar'),
           onDragleave: (event: DragEvent) => {
             const root = event.currentTarget as HTMLElement;

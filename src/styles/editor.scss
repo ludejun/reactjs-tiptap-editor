@@ -353,6 +353,17 @@ div[data-twitter] > div {
   border-radius: 6px;
 }
 
+/* Tighter than the generic toolbar: 1px between buttons, 2px around dividers, 6px sides,
+   so the default kit row (about 20 controls) fits a 1024px column on one line. */
+.richtext-kit-toolbar {
+  gap: 1px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.richtext-kit-toolbar > [aria-hidden].richtext-w-px {
+  margin-left: 2px;
+  margin-right: 2px;
+}
 /* The kit toolbar's "More tools" trigger sits at the right end of the last row. */
 .richtext-kit-toolbar-more {
   display: flex;
@@ -380,24 +391,31 @@ div[data-twitter] > div {
   align-items: center;
   cursor: grab;
 }
-/* Hover a pinned control for a small remove badge, so nobody has to know about dragging back. */
+/* Hover a pinned control for a small remove badge, so nobody has to know about dragging back.
+   A light chip on the corner, outside the button's own hover background. */
 .richtext-kit-toolbar__unpin {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: -5px;
+  right: -5px;
+  z-index: 1;
   display: none;
   align-items: center;
   justify-content: center;
   width: 14px;
   height: 14px;
   padding: 0;
-  border: 0;
+  border: 1px solid hsl(var(--border));
   border-radius: 999px;
-  background: hsl(var(--foreground));
-  color: hsl(var(--background));
+  background: hsl(var(--popover));
+  color: hsl(var(--muted-foreground));
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
   font-size: 10px;
   line-height: 1;
   cursor: pointer;
+}
+.richtext-kit-toolbar__unpin:hover {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--foreground) / 0.4);
 }
 .richtext-kit-toolbar__pinned:hover .richtext-kit-toolbar__unpin,
 .richtext-kit-toolbar__unpin:focus-visible {
