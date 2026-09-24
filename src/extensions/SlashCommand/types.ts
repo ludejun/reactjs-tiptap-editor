@@ -32,6 +32,8 @@ export interface Command {
    * list one row high instead of one row per choice.
    */
   variants?: CommandVariant[];
+  /** Small hint at the right of the row: a few icons and a short text ("+32"). */
+  preview?: { icons: { iconName: string; color?: string }[]; text?: string };
   shouldBeHidden?: (editor: Editor) => boolean;
   /**
    * Keep the command out of the menu until the reader types something that

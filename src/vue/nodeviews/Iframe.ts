@@ -1,22 +1,49 @@
 /* oxlint-disable react-hooks/rules-of-hooks -- Vue composables, not React hooks */
 import { NodeViewWrapper, VueNodeViewRenderer, nodeViewProps } from '@tiptap/vue-3';
-import { Pencil } from 'lucide-vue-next';
-import { defineComponent, h, ref, watch } from 'vue';
+import {
+  ClipboardList,
+  CodeXml,
+  FileText,
+  Frame,
+  LayoutDashboard,
+  MapPin,
+  Music,
+  Pencil,
+  PenTool,
+  Video,
+  X,
+} from 'lucide-vue-next';
+import { defineComponent, h, ref, watch, type Component } from 'vue';
 
-import { EMBED_SERVICES, resolveEmbed } from '@/extensions/Iframe/embeds';
+import {
+  EMBED_KINDS,
+  resolveEmbed,
+  servicesOfKind,
+  type EmbedKind,
+} from '@/extensions/Iframe/embeds';
 import { IframeCore } from '@/extensions/Iframe/Iframe';
 
 import { useLocale } from '../context';
 
 import styles from '@/extensions/Iframe/components/index.module.scss';
 
-/** Names of the recognised services, for the prompt's hint line. */
-const SERVICE_NAMES = EMBED_SERVICES.map((service) => service.name).join(' · ');
+/** One icon per kind of service, drawn in the kind's colour under the prompt. */
+const KIND_ICONS: Record<EmbedKind, Component> = {
+  video: Video,
+  audio: Music,
+  map: MapPin,
+  design: PenTool,
+  board: LayoutDashboard,
+  code: CodeXml,
+  document: FileText,
+  form: ClipboardList,
+  other: Frame,
+};
 
 const INPUT_CLASS =
   'richtext-flex-1 richtext-h-9 richtext-rounded-md richtext-border richtext-border-solid richtext-border-input richtext-bg-background richtext-px-3 richtext-text-sm richtext-text-foreground richtext-outline-none';
 const BUTTON_CLASS =
-  'richtext-w-[60px] richtext-h-9 richtext-rounded-md richtext-border-0 richtext-bg-primary richtext-text-sm richtext-font-medium richtext-text-primary-foreground hover:richtext-bg-primary/90';
+  'richtext-h-9 richtext-px-3 disabled:richtext-opacity-50 richtext-rounded-md richtext-border-0 richtext-bg-primary richtext-text-sm richtext-font-medium richtext-text-primary-foreground hover:richtext-bg-primary/90';
 
 /**
  * Same DOM and classes as the React `IframeNodeView`: a URL prompt until the
@@ -97,19 +124,85 @@ export const IframeNodeView = defineComponent({
       resizing.value = true;
     };
 
+    // What the block understands: one coloured icon per kind, the services in its tooltip.
+    // Once a link is typed, the detected service and its tips take the row.
+    const hint = () => {
+      const typed = originalLink.value.trim();
+      const resolved = typed ? resolveEmbed(typed) : null;
+      const children = resolved
+        ? [
+            h(
+              'span',
+              { class: 'richtext-font-medium richtext-text-foreground' },
+              resolved.service.name
+            ),
+            resolved.service.tips ? h('span', ` — ${resolved.service.tips}`) : null,
+          ]
+        : typed
+          ? [t('editor.iframe.invalid')]
+          : EMBED_KINDS.map(({ kind, color }) =>
+              h(
+                'span',
+                {
+                  key: kind,
+                  class:
+                    'richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded',
+                  style: { color },
+                  title: `${t(`editor.iframe.kind.${kind}`)}: ${servicesOfKind(kind)
+                    .map((service) => service.name)
+                    .join(', ')}`,
+                },
+                [h(KIND_ICONS[kind], { size: 16 })]
+              )
+            );
+
+      return h(
+        'div',
+        {
+          class:
+            'richtext-mt-2 richtext-flex richtext-min-h-6 richtext-items-center richtext-gap-1 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground',
+        },
+        children
+      );
+    };
+
     const prompt = () =>
       h(
         'div',
         {
           class:
-            'richtext-mx-auto richtext-my-[12px] richtext-flex richtext-max-w-[600px] richtext-flex-col richtext-gap-2 richtext-rounded-[12px] richtext-border richtext-border-solid richtext-border-border richtext-p-[10px]',
+            'richtext-my-3 richtext-w-full richtext-rounded-lg richtext-border richtext-border-dashed richtext-border-border richtext-bg-muted/40 richtext-p-3',
           contenteditable: 'false',
         },
         [
-          h('div', { class: 'richtext-flex richtext-items-center richtext-gap-[10px]' }, [
+          h(
+            'div',
+            {
+              class:
+                'richtext-mb-2 richtext-flex richtext-items-center richtext-gap-2 richtext-text-sm richtext-font-medium richtext-text-foreground',
+            },
+            [
+              h(Frame, { size: 16, class: 'richtext-text-muted-foreground' }),
+              h('span', t('editor.iframe.tooltip')),
+              h(
+                'button',
+                {
+                  type: 'button',
+                  title: t('editor.iframe.remove'),
+                  'aria-label': t('editor.iframe.remove'),
+                  class:
+                    'richtext-ml-auto richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded richtext-border-0 richtext-bg-transparent richtext-text-muted-foreground hover:richtext-bg-accent hover:richtext-text-foreground',
+                  onMousedown: (event: MouseEvent) => event.preventDefault(),
+                  onClick: () => props.deleteNode(),
+                },
+                [h(X, { size: 16 })]
+              ),
+            ]
+          ),
+          h('div', { class: 'richtext-flex richtext-items-center richtext-gap-2' }, [
             h('input', {
               class: INPUT_CLASS,
-              type: 'url',
+              type: 'text',
               placeholder: t('editor.iframe.placeholder'),
               value: originalLink.value,
               onVnodeMounted: (vnode) => (vnode.el as HTMLInputElement).focus(),
@@ -129,37 +222,20 @@ export const IframeNodeView = defineComponent({
               },
               onMousedown: (event: MouseEvent) => event.stopPropagation(),
             }),
-            h('button', { type: 'button', class: BUTTON_CLASS, onClick: confirm }, 'OK'),
+            h(
+              'button',
+              {
+                type: 'button',
+                class: BUTTON_CLASS,
+                disabled: !resolveEmbed(originalLink.value),
+                onClick: confirm,
+              },
+              t('editor.iframe.insert')
+            ),
           ]),
           hint(),
         ]
       );
-
-    // Names the service the typed link belongs to (and its tips), or lists what works.
-    const hint = () => {
-      const typed = originalLink.value.trim();
-      const resolved = typed ? resolveEmbed(typed) : null;
-      const text = resolved
-        ? [
-            h(
-              'span',
-              { class: 'richtext-font-medium richtext-text-foreground' },
-              resolved.service.name
-            ),
-            resolved.service.tips ? ` — ${resolved.service.tips}` : '',
-          ]
-        : typed
-          ? [t('editor.iframe.invalid')]
-          : [`${t('editor.iframe.supported')}: ${SERVICE_NAMES}`];
-
-      return h(
-        'div',
-        {
-          class: 'richtext-px-1 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground',
-        },
-        text
-      );
-    };
 
     return () => {
       const { src, width, height } = props.node.attrs;

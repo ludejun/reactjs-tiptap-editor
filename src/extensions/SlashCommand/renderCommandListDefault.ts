@@ -26,12 +26,17 @@ import {
   VideoIcon,
 } from 'lucide-react';
 
+import { Bilibili } from '@/components/icons/Bilibili';
 import { BlockquoteLeft as BlockquoteLeftIcon } from '@/components/icons/Blockquote';
+import { Codepen as CodepenIcon } from '@/components/icons/Codepen';
+import { Figma as FigmaIcon } from '@/components/icons/Figma';
 import { registerIcons } from '@/components/icons/icons';
+import { Youtube as YoutubeIcon } from '@/components/icons/Youtube';
 import { emit } from '@/components/ReactBus';
 import { HEADINGS } from '@/constants';
 import { EMBED_SERVICES } from '@/extensions/Iframe/embeds';
 import { NOTICE_TYPES, type NoticeType } from '@/extensions/Notice/Notice';
+import { getLocaleState } from '@/locales/store';
 import { EVENTS } from '@/utils/customEvents/events.constant';
 
 import type { CommandList } from './types';
@@ -50,6 +55,10 @@ registerIcons({
   Heading6: Heading6Icon,
   HeadingParagraph: PilcrowIcon,
   Iframe: FrameIcon,
+  BrandBilibili: Bilibili,
+  BrandYoutube: YoutubeIcon,
+  BrandFigma: FigmaIcon,
+  BrandCodepen: CodepenIcon,
   ImageUp: ImageUpIcon,
   List: ListIcon,
   ListOrdered: ListOrderedIcon,
@@ -281,6 +290,17 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
       'qianru',
       ...EMBED_SERVICES.map((s) => s.name.toLowerCase()),
     ],
+    // Three well-known marks in their own colours and a count; Bilibili leads under a Chinese interface.
+    preview: {
+      icons: [
+        /^zh/i.test(String(getLocaleState().currentLang))
+          ? { iconName: 'BrandBilibili' }
+          : { iconName: 'BrandYoutube' },
+        { iconName: 'BrandFigma' },
+        { iconName: 'BrandCodepen' },
+      ],
+      text: `+${EMBED_SERVICES.length - 3}`,
+    },
     shouldBeHidden: (editor) => !editor.schema.nodes.iframe || editor.isActive('columns'),
     action: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setIframe({ src: '' }).run();

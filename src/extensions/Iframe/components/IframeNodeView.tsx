@@ -1,9 +1,26 @@
 import { NodeViewWrapper } from '@tiptap/react';
+import {
+  ClipboardListIcon,
+  CodeXmlIcon,
+  FileTextIcon,
+  FrameIcon,
+  LayoutDashboardIcon,
+  MapPinIcon,
+  MusicIcon,
+  PenToolIcon,
+  VideoIcon,
+  XIcon,
+} from 'lucide-react';
 import { Resizable } from 're-resizable';
 import { useCallback, useState } from 'react';
 
 import { Button, Input } from '@/components/ui';
-import { EMBED_SERVICES, resolveEmbed } from '@/extensions/Iframe/embeds';
+import {
+  EMBED_KINDS,
+  resolveEmbed,
+  servicesOfKind,
+  type EmbedKind,
+} from '@/extensions/Iframe/embeds';
 import { IframeCore as Iframe } from '@/extensions/Iframe/Iframe';
 import { cn } from '@/lib/utils';
 import { useLocale } from '@/locales';
@@ -12,10 +29,20 @@ import { useEditableEditor } from '@/store/store';
 import styles from './index.module.scss';
 import type { NodeViewProps } from '@tiptap/react';
 
-/** Names of the recognised services, for the prompt's hint line. */
-const SERVICE_NAMES = EMBED_SERVICES.map((service) => service.name).join(' · ');
+/** One icon per kind of service, drawn in the kind's colour under the prompt. */
+const KIND_ICONS: Record<EmbedKind, typeof VideoIcon> = {
+  video: VideoIcon,
+  audio: MusicIcon,
+  map: MapPinIcon,
+  design: PenToolIcon,
+  board: LayoutDashboardIcon,
+  code: CodeXmlIcon,
+  document: FileTextIcon,
+  form: ClipboardListIcon,
+  other: FrameIcon,
+};
 
-function IframeNodeView({ editor, node, updateAttributes }: NodeViewProps) {
+function IframeNodeView({ editor, node, updateAttributes, deleteNode }: NodeViewProps) {
   const isEditable = useEditableEditor();
   const { t } = useLocale();
 
@@ -54,11 +81,28 @@ function IframeNodeView({ editor, node, updateAttributes }: NodeViewProps) {
   return (
     <NodeViewWrapper>
       {!src && (
-        <div className='richtext-mx-auto richtext-my-[12px] richtext-flex richtext-max-w-[600px] richtext-flex-col richtext-gap-2 richtext-rounded-[12px] richtext-border richtext-border-solid richtext-border-border richtext-p-[10px]'>
-          <div className='richtext-flex richtext-items-center richtext-gap-[10px]'>
+        <div
+          className='richtext-my-3 richtext-w-full richtext-rounded-lg richtext-border richtext-border-dashed richtext-border-border richtext-bg-muted/40 richtext-p-3'
+          contentEditable={false}
+        >
+          <div className='richtext-mb-2 richtext-flex richtext-items-center richtext-gap-2 richtext-text-sm richtext-font-medium richtext-text-foreground'>
+            <FrameIcon className='richtext-size-4 richtext-text-muted-foreground' />
+            <span>{t('editor.iframe.tooltip')}</span>
+            <button
+              aria-label={t('editor.iframe.remove')}
+              className='richtext-ml-auto richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded richtext-border-0 richtext-bg-transparent richtext-text-muted-foreground hover:richtext-bg-accent hover:richtext-text-foreground'
+              onClick={() => deleteNode()}
+              title={t('editor.iframe.remove')}
+              type='button'
+            >
+              <XIcon className='richtext-size-4' />
+            </button>
+          </div>
+
+          <div className='richtext-flex richtext-items-center richtext-gap-2'>
             <Input
               autoFocus
-              className='richtext-flex-1'
+              className='richtext-flex-1 richtext-bg-background'
               onInput={(e) => setOriginalLink(e.currentTarget.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -71,23 +115,41 @@ function IframeNodeView({ editor, node, updateAttributes }: NodeViewProps) {
               value={originalLink}
             />
 
-            <Button className='richtext-w-[60px]' disabled={!resolved} onClick={handleConfirm}>
-              OK
+            <Button disabled={!resolved} onClick={handleConfirm}>
+              {t('editor.iframe.insert')}
             </Button>
           </div>
 
-          <div className='richtext-px-1 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground'>
+          {/* What the block understands: one coloured icon per kind, the services in its tooltip.
+              Once a link is typed, the detected service and its tips take the row. */}
+          <div className='richtext-mt-2 richtext-flex richtext-min-h-6 richtext-items-center richtext-gap-1 richtext-px-0.5 richtext-text-xs richtext-leading-5 richtext-text-muted-foreground'>
             {resolved ? (
               <>
                 <span className='richtext-font-medium richtext-text-foreground'>
                   {resolved.service.name}
                 </span>
-                {resolved.service.tips ? ` — ${resolved.service.tips}` : null}
+                {resolved.service.tips ? <span> — {resolved.service.tips}</span> : null}
               </>
             ) : originalLink.trim() ? (
               t('editor.iframe.invalid')
             ) : (
-              `${t('editor.iframe.supported')}: ${SERVICE_NAMES}`
+              EMBED_KINDS.map(({ kind, color }) => {
+                const Icon = KIND_ICONS[kind];
+                const names = servicesOfKind(kind)
+                  .map((service) => service.name)
+                  .join(', ');
+
+                return (
+                  <span
+                    className='richtext-flex richtext-size-6 richtext-items-center richtext-justify-center richtext-rounded'
+                    key={kind}
+                    style={{ color }}
+                    title={`${t(`editor.iframe.kind.${kind}`)}: ${names}`}
+                  >
+                    <Icon className='richtext-size-4' />
+                  </span>
+                );
+              })
             )}
           </div>
         </div>

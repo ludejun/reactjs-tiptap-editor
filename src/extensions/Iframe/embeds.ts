@@ -44,6 +44,23 @@ const DEFAULT_HEIGHT: Record<EmbedKind, number> = {
   other: 300,
 };
 
+/** The kinds a prompt can show as a row of coloured icons, in display order, with their colour. */
+export const EMBED_KINDS: { kind: EmbedKind; color: string }[] = [
+  { kind: 'video', color: '#d93025' },
+  { kind: 'audio', color: '#1db954' },
+  { kind: 'map', color: '#34a853' },
+  { kind: 'design', color: '#a259ff' },
+  { kind: 'board', color: '#f59e0b' },
+  { kind: 'code', color: '#475569' },
+  { kind: 'document', color: '#2563eb' },
+  { kind: 'form', color: '#0d9488' },
+];
+
+/** The recognised services of one kind, in registry order. */
+export function servicesOfKind(kind: EmbedKind) {
+  return EMBED_SERVICES.filter((service) => service.kind === kind);
+}
+
 const passthrough = (match: RegExpExecArray) => match[0];
 
 /** Adds a query parameter, whatever the link already carries. */
