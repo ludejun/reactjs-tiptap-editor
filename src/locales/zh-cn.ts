@@ -10,6 +10,7 @@ const locale = {
   'editor.delete': '删除',
   'editor.edit': '编辑',
   'editor.settings': '设置',
+  'editor.more.pinHint': '把工具拖到工具栏上即可常驻；拖回这里则移除。',
   'editor.more': '更多工具',
   'editor.importExport': '导入与导出',
   'editor.table_of_content': '目录',

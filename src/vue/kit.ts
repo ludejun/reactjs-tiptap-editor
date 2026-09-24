@@ -6,7 +6,7 @@ import { ListItem } from '@tiptap/extension-list';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { Dropcursor, Gapcursor, Placeholder } from '@tiptap/extensions';
-import { computed, defineComponent, h, type PropType, type VNode } from 'vue';
+import { computed, defineComponent, h, ref, type PropType, type VNode } from 'vue';
 
 import {
   Blockquote,
@@ -215,91 +215,298 @@ function withDividers(groups: Maybe[][]): VNode[] {
   return out;
 }
 
+const DRAG_TYPE = 'application/x-richtext-kit-control';
+const DEFAULT_PINS_KEY = 'ai-sparkwrite-editor:kit-toolbar-pins';
+
+function readPins(key: string): string[] | null {
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (raw === null) return null;
+    const list = JSON.parse(raw);
+    return Array.isArray(list) ? list.filter((item) => typeof item === 'string') : [];
+  } catch {
+    return null;
+  }
+}
+
+function writePins(key: string, pins: string[]) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(pins));
+  } catch {
+    // Storage may be unavailable; pins then last for the session.
+  }
+}
+
+interface PanelEntry {
+  key: string;
+  name: string;
+  label: string;
+  control: Parameters<typeof h>[0];
+}
+
 /**
  * A complete Vue toolbar for `RichTextKit` (or any editor). Each control
- * appears only when its extension is registered. The default slot adds
- * controls before the "More tools" panel.
+ * appears only when its extension is registered. Rows of the "More tools"
+ * panel can be dragged onto the toolbar to pin them there (and back to
+ * unpin); the choice is remembered in localStorage. The default slot adds
+ * controls before the panel.
  */
 export const RichTextKitToolbar = defineComponent({
   name: 'RichTextKitToolbar',
   props: {
     /** The "More tools" panel with the less frequent controls. Default true. */
     more: { type: Boolean, default: true },
+    /** Let users drag panel rows onto the toolbar to keep them there. Default true. */
+    pinnable: { type: Boolean, default: true },
+    /** localStorage key for the pinned controls. */
+    storageKey: { type: String, default: DEFAULT_PINS_KEY },
+    /** Controls pinned before the user changes anything, by panel key. */
+    defaultPins: { type: Array as PropType<string[]>, default: () => [] },
   },
   setup(props, { slots }) {
     const editor = useEditorInstance();
     const { t } = useLocale();
     const names = computed(() => extensionNames(editor.value));
+    const pins = ref<string[]>(readPins(props.storageKey) ?? props.defaultPins);
+    const dropTarget = ref<'toolbar' | 'panel' | null>(null);
+    const setPins = (next: string[]) => {
+      pins.value = next;
+      writePins(props.storageKey, next);
+    };
+    const dragKey = (event: DragEvent) =>
+      event.dataTransfer?.types.includes(DRAG_TYPE) ? event.dataTransfer.getData(DRAG_TYPE) : '';
+    const startDrag = (key: string) => (event: DragEvent) => {
+      event.dataTransfer?.setData(DRAG_TYPE, key);
+      if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
+    };
+    const accept = (target: 'toolbar' | 'panel') => (event: DragEvent) => {
+      if (!props.pinnable || !event.dataTransfer?.types.includes(DRAG_TYPE)) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      dropTarget.value = target;
+    };
 
     return () => {
       const on = (name: string) => names.value.has(name);
-      const row = (name: string, label: string, control: Parameters<typeof h>[0]) =>
-        on(name) ? h(RichTextToolbarMoreRow, { key: name, label }, () => h(control)) : null;
-      const format = [
-        row('fontSize', t('editor.fontSize.tooltip'), RichTextFontSize),
-        row('lineHeight', t('editor.lineheight.tooltip'), RichTextLineHeight),
-        row('richtextIndentOutdent', t('editor.indent.indent'), RichTextIndent),
-        row('richtextIndentOutdent', t('editor.indent.outdent'), RichTextOutdent),
-      ].filter(Boolean) as VNode[];
-      const insert = [
-        row('codeBlock', t('editor.codeblock.tooltip'), RichTextCodeBlock),
-        row('callout', t('editor.callout.tooltip'), RichTextCallout),
-        row('details', t('editor.details.tooltip'), RichTextDetails),
-        row('tableOfContents', t('editor.tableofcontents.tooltip'), RichTextTableOfContents),
-        row('video', t('editor.video.tooltip'), RichTextVideo),
-        row('iframe', t('editor.iframe.tooltip'), RichTextIframe),
-        row('attachment', t('editor.attachment.tooltip'), RichTextAttachment),
-        row('katex', t('editor.katex.tooltip'), RichTextKatex),
-        row('mermaid', t('editor.mermaid.tooltip'), RichTextMermaid),
-      ].filter(Boolean) as VNode[];
-      const showMore = props.more && format.length + insert.length > 0;
+      const groups: { label: string; entries: PanelEntry[] }[] = [
+        {
+          label: t('editor.slash.format'),
+          entries: [
+            {
+              key: 'fontSize',
+              name: 'fontSize',
+              label: t('editor.fontSize.tooltip'),
+              control: RichTextFontSize,
+            },
+            {
+              key: 'lineHeight',
+              name: 'lineHeight',
+              label: t('editor.lineheight.tooltip'),
+              control: RichTextLineHeight,
+            },
+            {
+              key: 'indent',
+              name: 'richtextIndentOutdent',
+              label: t('editor.indent.indent'),
+              control: RichTextIndent,
+            },
+            {
+              key: 'outdent',
+              name: 'richtextIndentOutdent',
+              label: t('editor.indent.outdent'),
+              control: RichTextOutdent,
+            },
+          ],
+        },
+        {
+          label: t('editor.slash.insert'),
+          entries: [
+            {
+              key: 'codeBlock',
+              name: 'codeBlock',
+              label: t('editor.codeblock.tooltip'),
+              control: RichTextCodeBlock,
+            },
+            {
+              key: 'callout',
+              name: 'callout',
+              label: t('editor.callout.tooltip'),
+              control: RichTextCallout,
+            },
+            {
+              key: 'details',
+              name: 'details',
+              label: t('editor.details.tooltip'),
+              control: RichTextDetails,
+            },
+            {
+              key: 'tableOfContents',
+              name: 'tableOfContents',
+              label: t('editor.tableofcontents.tooltip'),
+              control: RichTextTableOfContents,
+            },
+            {
+              key: 'video',
+              name: 'video',
+              label: t('editor.video.tooltip'),
+              control: RichTextVideo,
+            },
+            {
+              key: 'iframe',
+              name: 'iframe',
+              label: t('editor.iframe.tooltip'),
+              control: RichTextIframe,
+            },
+            {
+              key: 'attachment',
+              name: 'attachment',
+              label: t('editor.attachment.tooltip'),
+              control: RichTextAttachment,
+            },
+            {
+              key: 'katex',
+              name: 'katex',
+              label: t('editor.katex.tooltip'),
+              control: RichTextKatex,
+            },
+            {
+              key: 'mermaid',
+              name: 'mermaid',
+              label: t('editor.mermaid.tooltip'),
+              control: RichTextMermaid,
+            },
+          ],
+        },
+      ];
+      const available = groups.flatMap((group) => group.entries).filter((entry) => on(entry.name));
+      const pinned = pins.value
+        .map((key) => available.find((entry) => entry.key === key))
+        .filter((entry): entry is PanelEntry => !!entry);
+      const panelGroups = groups
+        .map((group) => ({
+          ...group,
+          entries: group.entries.filter(
+            (entry) => on(entry.name) && !pins.value.includes(entry.key)
+          ),
+        }))
+        .filter((group) => group.entries.length);
+      const showMore = props.more && panelGroups.length > 0;
 
-      return h(RichTextToolbar, null, () => [
-        ...withDividers([
-          [on('ai') && h(RichTextAI, { key: 'ai' })],
-          [
-            on('undoRedo') && h(RichTextUndo, { key: 'undo' }),
-            on('undoRedo') && h(RichTextRedo, { key: 'redo' }),
-          ],
-          [on('heading') && h(RichTextHeading, { key: 'heading' })],
-          [
-            on('bold') && h(RichTextBold, { key: 'bold' }),
-            on('italic') && h(RichTextItalic, { key: 'italic' }),
-            on('underline') && h(RichTextUnderline, { key: 'underline' }),
-            on('strike') && h(RichTextStrike, { key: 'strike' }),
-            on('code') && h(RichTextCode, { key: 'code' }),
-            on('color') && h(RichTextColor, { key: 'color' }),
-            on('highlight') && h(RichTextHighlight, { key: 'highlight' }),
-            on('clear') && h(RichTextClear, { key: 'clear' }),
-          ],
-          [
-            on('bulletList') && h(RichTextBulletList, { key: 'bulletList' }),
-            on('orderedList') && h(RichTextOrderedList, { key: 'orderedList' }),
-            on('taskList') && h(RichTextTaskList, { key: 'taskList' }),
-            on('blockquote') && h(RichTextBlockquote, { key: 'blockquote' }),
-            on('textAlign') && h(RichTextTextAlign, { key: 'textAlign' }),
-          ],
-          [
-            on('link') && h(RichTextLink, { key: 'link' }),
-            on('image') && h(RichTextImage, { key: 'image' }),
-            on('table') && h(RichTextTable, { key: 'table' }),
-            on('divider') && h(RichTextDivider, { key: 'divider' }),
-          ],
-          [...((slots.default?.() ?? []) as VNode[])],
-        ]),
-        showMore
-          ? h('div', { class: 'richtext-kit-toolbar-more' }, [
-              h(RichTextToolbarMore, { label: t('editor.more') }, () => [
-                format.length
-                  ? h(RichTextToolbarMoreGroup, { label: t('editor.slash.format') }, () => format)
-                  : null,
-                insert.length
-                  ? h(RichTextToolbarMoreGroup, { label: t('editor.slash.insert') }, () => insert)
-                  : null,
-              ]),
-            ])
-          : null,
-      ]);
+      return h(
+        RichTextToolbar,
+        {
+          class: dropTarget.value === 'toolbar' ? 'richtext-kit-toolbar--drop' : undefined,
+          onDragover: accept('toolbar'),
+          onDragleave: (event: DragEvent) => {
+            const root = event.currentTarget as HTMLElement;
+            if (!root.contains(event.relatedTarget as Node | null)) dropTarget.value = null;
+          },
+          onDrop: (event: DragEvent) => {
+            const key = dragKey(event);
+            dropTarget.value = null;
+            if (!key || !props.pinnable) return;
+            event.preventDefault();
+            if (!pins.value.includes(key)) setPins([...pins.value, key]);
+          },
+        },
+        () => [
+          ...withDividers([
+            [on('ai') && h(RichTextAI, { key: 'ai' })],
+            [
+              on('undoRedo') && h(RichTextUndo, { key: 'undo' }),
+              on('undoRedo') && h(RichTextRedo, { key: 'redo' }),
+            ],
+            [on('heading') && h(RichTextHeading, { key: 'heading' })],
+            [
+              on('bold') && h(RichTextBold, { key: 'bold' }),
+              on('italic') && h(RichTextItalic, { key: 'italic' }),
+              on('underline') && h(RichTextUnderline, { key: 'underline' }),
+              on('strike') && h(RichTextStrike, { key: 'strike' }),
+              on('code') && h(RichTextCode, { key: 'code' }),
+              on('color') && h(RichTextColor, { key: 'color' }),
+              on('highlight') && h(RichTextHighlight, { key: 'highlight' }),
+              on('clear') && h(RichTextClear, { key: 'clear' }),
+            ],
+            [
+              on('bulletList') && h(RichTextBulletList, { key: 'bulletList' }),
+              on('orderedList') && h(RichTextOrderedList, { key: 'orderedList' }),
+              on('taskList') && h(RichTextTaskList, { key: 'taskList' }),
+              on('blockquote') && h(RichTextBlockquote, { key: 'blockquote' }),
+              on('textAlign') && h(RichTextTextAlign, { key: 'textAlign' }),
+            ],
+            [
+              on('link') && h(RichTextLink, { key: 'link' }),
+              on('image') && h(RichTextImage, { key: 'image' }),
+              on('table') && h(RichTextTable, { key: 'table' }),
+              on('divider') && h(RichTextDivider, { key: 'divider' }),
+            ],
+            pinned.map((entry) =>
+              h(
+                'span',
+                {
+                  key: `pin-${entry.key}`,
+                  class: 'richtext-kit-toolbar__pinned',
+                  draggable: props.pinnable,
+                  title: entry.label,
+                  onDragstart: startDrag(entry.key),
+                },
+                [h(entry.control)]
+              )
+            ),
+            [...((slots.default?.() ?? []) as VNode[])],
+          ]),
+          showMore
+            ? h(
+                'div',
+                {
+                  class: [
+                    'richtext-kit-toolbar-more',
+                    dropTarget.value === 'panel' ? 'richtext-kit-toolbar-more--drop' : null,
+                  ],
+                  onDragover: accept('panel'),
+                  onDrop: (event: DragEvent) => {
+                    const key = dragKey(event);
+                    dropTarget.value = null;
+                    if (!key || !props.pinnable) return;
+                    event.preventDefault();
+                    event.stopPropagation();
+                    setPins(pins.value.filter((item) => item !== key));
+                  },
+                },
+                [
+                  h(RichTextToolbarMore, { label: t('editor.more'), width: '620px' }, () => [
+                    props.pinnable
+                      ? h('span', { class: 'richtext-kit-toolbar__hint' }, t('editor.more.pinHint'))
+                      : null,
+                    ...panelGroups.map((group) =>
+                      h(
+                        RichTextToolbarMoreGroup,
+                        { key: group.label, label: group.label, columns: 3 },
+                        () =>
+                          group.entries.map((entry) =>
+                            h(
+                              'div',
+                              {
+                                key: entry.key,
+                                class: 'richtext-kit-toolbar__row',
+                                draggable: props.pinnable,
+                                onDragstart: startDrag(entry.key),
+                              },
+                              [
+                                h(RichTextToolbarMoreRow, { label: entry.label }, () =>
+                                  h(entry.control)
+                                ),
+                              ]
+                            )
+                          )
+                      )
+                    ),
+                  ]),
+                ]
+              )
+            : null,
+        ]
+      );
     };
   },
 });

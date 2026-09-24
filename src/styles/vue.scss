@@ -251,7 +251,7 @@ textarea.richtext-vue-field {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 13rem;
+  min-width: 15rem;
   padding: 4px;
   border: 1px solid hsl(var(--border));
   border-radius: 8px;
@@ -292,6 +292,7 @@ textarea.richtext-vue-field {
 .richtext-vue-menu__shortcut {
   margin-left: auto;
   padding-left: 12px;
+  white-space: nowrap;
   color: hsl(var(--muted-foreground));
   font-size: 11px;
   letter-spacing: 0.04em;
@@ -300,6 +301,15 @@ textarea.richtext-vue-field {
   height: 1px;
   margin: 3px 0;
   background: hsl(var(--border));
+}
+.richtext-vue-menu__item span {
+  white-space: nowrap;
+}
+.richtext-vue-menu__palette {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 8px 8px;
 }
 
 /* Colour palette dropdown */

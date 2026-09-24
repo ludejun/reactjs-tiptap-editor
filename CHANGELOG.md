@@ -2,6 +2,22 @@
 
 All notable changes to ai-sparkwrite-editor are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [semantic versioning](https://semver.org/).
 
+## 1.0.1 — 2026-09-23
+
+### Fixed
+
+- The docs site's favicon and touch icons resolve under the GitHub Pages base path.
+
+- The link bubble no longer disappears when the pointer moves from the link onto its buttons (the editor's `mouseleave` fired after the menu's `mouseenter` and restarted the hide timer).
+- Code block line numbers share the code's font and size, so every number sits on its line; the language picker, copy and delete controls are smaller and quieter.
+- The table context menu is wider so "Paragraph After Table ⌘Enter" stays on one line; the kit's "More tools" panel shows one control per row (indent and outdent were overlapping their label).
+
+### Added
+
+- **Cell background colour** in the table context menu (React and Vue): a palette, "No Fill" and a free colour input.
+- The kit toolbar's panel is three columns with related controls side by side, and its rows can be **dragged onto the toolbar to pin them** (drag back to unpin); pins persist in `localStorage` (`pinnable`, `defaultPins`, `storageKey`). Blockquote moved to the main row; `RichTextIndent` takes `only='indent' | 'outdent'`.
+- Links use `#2f54eb` (`#597ef7` in dark mode), overridable with `--richtext-link` / `--richtext-link-dark`.
+
 ## 1.0.0 — 2026-09-23
 
 First release of `ai-sparkwrite-editor`. The code base descends from reactjs-tiptap-editor 1.0.46 and was reworked extensively before this release; the history before this point lives in the `archive/reactjs-tiptap-editor` branch.

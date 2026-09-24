@@ -107,11 +107,16 @@ Lists bring `ListItem` along, `column` widens the document schema to `(block|col
 
 `<RichTextKitToolbar />` lays out: AI · undo, redo · heading, font family · bold, italic, underline, strike, colour, highlight, clear · bullet, ordered and task lists, alignment · link, image, table, code block · a **More tools** panel with the rest (font size, line height, super/subscript, indent, format painter; blockquote, inline code, divider, columns, callout, details, table of contents, emoji, video, GIF, attachment, iframe, Katex, Excalidraw, Mermaid, drawer, Twitter; import Word, export PDF / Word / Markdown; search & replace, text direction, source view). Every control appears only when its extension is registered.
 
-| Prop        | Default | Purpose                                                                           |
-| ----------- | ------- | --------------------------------------------------------------------------------- |
-| `more`      | `true`  | The "More tools" panel                                                            |
-| `children`  | —       | Extra controls, placed after the built-in groups (React); the default slot in Vue |
-| `className` | —       | React: extra classes on the toolbar                                               |
+The panel lays its rows out three per line, related ones side by side (font size · line height · format painter; indent · outdent…). **Drag a row onto the toolbar to pin it there** — it leaves the panel and gets a permanent button; drag the button back onto the "⋯" trigger or the open panel to unpin it. Pins are remembered per browser in `localStorage`.
+
+| Prop          | Default                                 | Purpose                                                                           |
+| ------------- | --------------------------------------- | --------------------------------------------------------------------------------- |
+| `more`        | `true`                                  | The "More tools" panel                                                            |
+| `pinnable`    | `true`                                  | Drag rows out of the panel onto the toolbar, and back                             |
+| `defaultPins` | `[]`                                    | Panel keys pinned until the user changes them, e.g. `['fontSize', 'katex']`       |
+| `storageKey`  | `ai-sparkwrite-editor:kit-toolbar-pins` | Where the pins are stored                                                         |
+| `children`    | —                                       | Extra controls, placed after the built-in groups (React); the default slot in Vue |
+| `className`   | —                                       | React: extra classes on the toolbar                                               |
 
 For a different order or a hand-picked set, compose your own from the controls — see [Toolbar](/guide/toolbar).
 

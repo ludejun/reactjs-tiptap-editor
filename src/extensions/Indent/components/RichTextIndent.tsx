@@ -9,7 +9,12 @@ import { useButtonProps } from '@/hooks/useButtonProps';
 // Icons this module (and its extension's `button()` options) resolves by name.
 registerIcons({ IndentDecrease: IndentDecreaseIcon, IndentIncrease: IndentIncreaseIcon });
 
-export function RichTextIndent() {
+export interface RichTextIndentProps {
+  /** Render one of the two buttons instead of both, for layouts with one control per row. */
+  only?: 'indent' | 'outdent';
+}
+
+export function RichTextIndent({ only }: RichTextIndentProps = {}) {
   const buttonProps = useButtonProps(Indent.name);
 
   const { indent, outdent } = buttonProps?.componentProps ?? {};
@@ -38,23 +43,25 @@ export function RichTextIndent() {
 
   return (
     <>
-      <ActionButton
-        action={onActionIndent}
-        disabled={editorDisabled}
-        icon={indent?.icon}
-        shortcutKeys={indent?.shortcutKeys}
-        tooltip={indent?.tooltip}
-        // tooltipOptions={indent?.tooltipOptions}
-      />
+      {only !== 'outdent' ? (
+        <ActionButton
+          action={onActionIndent}
+          disabled={editorDisabled}
+          icon={indent?.icon}
+          shortcutKeys={indent?.shortcutKeys}
+          tooltip={indent?.tooltip}
+        />
+      ) : null}
 
-      <ActionButton
-        action={onActionOutdent}
-        disabled={editorDisabled}
-        icon={outdent?.icon}
-        shortcutKeys={outdent?.shortcutKeys}
-        tooltip={outdent?.tooltip}
-        // tooltipOptions={tooltipOptions}
-      />
+      {only !== 'indent' ? (
+        <ActionButton
+          action={onActionOutdent}
+          disabled={editorDisabled}
+          icon={outdent?.icon}
+          shortcutKeys={outdent?.shortcutKeys}
+          tooltip={outdent?.tooltip}
+        />
+      ) : null}
     </>
   );
 }

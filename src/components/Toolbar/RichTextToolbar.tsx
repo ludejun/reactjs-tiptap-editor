@@ -160,13 +160,22 @@ export function RichTextToolbarMoreRow({ children, label, wide }: RichTextToolba
   );
 }
 
-/** A titled section of the More panel, two columns of rows. */
+const GROUP_COLUMNS = {
+  2: 'richtext-grid-cols-2',
+  3: 'richtext-grid-cols-3',
+  4: 'richtext-grid-cols-4',
+} as const;
+
+/** A titled section of the More panel: rows in two (default), three or four columns. */
 export function RichTextToolbarMoreGroup({
   children,
   label,
+  columns = 2,
 }: {
   children: React.ReactNode;
   label: string;
+  /** Rows per line. Default 2; a wider panel fits 3. */
+  columns?: 2 | 3 | 4;
 }) {
   return (
     <div className='richtext-flex richtext-flex-col richtext-gap-0.5'>
@@ -174,7 +183,7 @@ export function RichTextToolbarMoreGroup({
         {label}
       </span>
 
-      <div className='richtext-grid richtext-grid-cols-2 richtext-gap-x-2'>{children}</div>
+      <div className={cn('richtext-grid richtext-gap-x-2', GROUP_COLUMNS[columns])}>{children}</div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   BetweenVerticalEndIcon,
   BetweenVerticalStartIcon,
   CornerDownLeftIcon,
+  PaintBucketIcon,
   TableCellsMergeIcon,
   TableCellsSplitIcon,
   Trash2Icon,
@@ -18,12 +19,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   IconComponent,
 } from '@/components';
 import { DeleteColumn as DeleteColumnIcon } from '@/components/icons/DeleteColumn';
 import { DeleteRow as DeleteRowIcon } from '@/components/icons/DeleteRow';
 import { registerIcons } from '@/components/icons/icons';
+import { NoFill } from '@/components/icons/NoFill';
+import { COLORS_LIST } from '@/constants';
 import { Table } from '@/extensions/Table';
 import { useLocale } from '@/locales';
 import { useEditorInstance } from '@/store/editor';
@@ -37,6 +43,7 @@ registerIcons({
   BetweenVerticalEnd: BetweenVerticalEndIcon,
   BetweenVerticalStart: BetweenVerticalStartIcon,
   CornerDownLeft: CornerDownLeftIcon,
+  PaintBucket: PaintBucketIcon,
   DeleteColumn: DeleteColumnIcon,
   DeleteRow: DeleteRowIcon,
   TableCellsMerge: TableCellsMergeIcon,
@@ -81,6 +88,7 @@ function RichTextBubbleTable({ hiddenActions = [] }: RichTextBubbleTableProps) {
         mergeCells: !!commands.mergeCells?.(),
         splitCell: !!commands.splitCell?.(),
         deleteTable: !!commands.deleteTable?.(),
+        cellBackground: !!commands.setTableCellBackground?.('#000000'),
       };
     },
   });
@@ -198,6 +206,7 @@ function RichTextBubbleTable({ hiddenActions = [] }: RichTextBubbleTableProps) {
       disabled: !can.splitCell,
       action: () => editor.chain().focus().splitCell().run(),
     },
+    { key: 'cellBackground', submenu: true },
     { key: 'separator-table', separator: true },
     {
       key: 'insertParagraphAfterTable',
@@ -229,7 +238,7 @@ function RichTextBubbleTable({ hiddenActions = [] }: RichTextBubbleTableProps) {
         />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align='start' className='richtext-w-52' side='bottom' sideOffset={0}>
+      <DropdownMenuContent align='start' className='richtext-w-64' side='bottom' sideOffset={0}>
         {items.map((item) => {
           if ('separator' in item) {
             return <DropdownMenuSeparator key={item.key} />;
@@ -237,6 +246,57 @@ function RichTextBubbleTable({ hiddenActions = [] }: RichTextBubbleTableProps) {
 
           if (isHidden(item.key)) {
             return null;
+          }
+
+          if ('submenu' in item) {
+            return (
+              <DropdownMenuSub key={item.key}>
+                <DropdownMenuSubTrigger
+                  className='richtext-flex richtext-gap-3'
+                  disabled={!can.cellBackground}
+                >
+                  <IconComponent name='PaintBucket' />
+                  <span className='richtext-whitespace-nowrap'>
+                    {t('editor.table.menu.setCellsBgColor')}
+                  </span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className='!richtext-w-auto !richtext-p-1.5' sideOffset={4}>
+                  <button
+                    className='richtext-flex richtext-w-full richtext-items-center richtext-gap-2 richtext-rounded-sm !richtext-border-none !richtext-bg-transparent richtext-px-1.5 richtext-py-1.5 richtext-text-left richtext-text-sm richtext-text-foreground !richtext-outline-none hover:!richtext-bg-accent'
+                    onClick={run(() => editor.chain().focus().unsetTableCellBackground().run())}
+                    type='button'
+                  >
+                    <NoFill />
+                    {t('editor.nofill')}
+                  </button>
+                  <div className='richtext-mt-1 richtext-grid richtext-grid-cols-10 richtext-gap-1 richtext-px-1'>
+                    {COLORS_LIST.map((color) => (
+                      <button
+                        aria-label={color}
+                        className='richtext-size-5 richtext-rounded-sm !richtext-border !richtext-border-solid !richtext-border-border !richtext-p-0 hover:richtext-scale-110'
+                        key={color}
+                        onClick={run(() =>
+                          editor.chain().focus().setTableCellBackground(color).run()
+                        )}
+                        style={{ backgroundColor: color }}
+                        title={color}
+                        type='button'
+                      />
+                    ))}
+                  </div>
+                  <label className='richtext-mt-1.5 richtext-flex richtext-cursor-pointer richtext-items-center richtext-justify-between richtext-gap-2 richtext-rounded-sm richtext-px-1.5 richtext-py-1 richtext-text-sm richtext-text-foreground hover:richtext-bg-accent'>
+                    {t('editor.color.more')}
+                    <input
+                      className='richtext-h-5 richtext-w-7 richtext-cursor-pointer richtext-border-0 richtext-bg-transparent richtext-p-0'
+                      onChange={(event) =>
+                        editor.chain().focus().setTableCellBackground(event.target.value).run()
+                      }
+                      type='color'
+                    />
+                  </label>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            );
           }
 
           return (
@@ -252,9 +312,13 @@ function RichTextBubbleTable({ hiddenActions = [] }: RichTextBubbleTableProps) {
             >
               <IconComponent name={item.icon} />
 
-              <span>{item.label}</span>
+              <span className='richtext-whitespace-nowrap'>{item.label}</span>
 
-              {'shortcut' in item && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+              {'shortcut' in item && (
+                <DropdownMenuShortcut className='richtext-whitespace-nowrap'>
+                  {item.shortcut}
+                </DropdownMenuShortcut>
+              )}
             </DropdownMenuItem>
           );
         })}

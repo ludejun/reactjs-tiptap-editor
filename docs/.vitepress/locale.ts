@@ -5,6 +5,8 @@ import { createTranslate } from './i18n/utils';
 import type { DefaultTheme, HeadConfig, LocaleConfig } from 'vitepress';
 
 const docsLink = 'https://ludejun.github.io/ai-sparkwrite-editor';
+// Head links are not base-aware, unlike `themeConfig.logo`.
+const base = (process.env.DOCS_BASE ?? '/').replace(/\/?$/, '/');
 const githubRepo = 'ludejun/ai-sparkwrite-editor';
 const githubLink: 'https://github.com/ludejun/ai-sparkwrite-editor' = `https://github.com/${githubRepo}`;
 
@@ -42,13 +44,14 @@ export function getLocaleConfig(lang: string) {
     ['meta', { property: 'og:image', content: `${docsLink}/og.png` }],
     ['meta', { property: 'twitter:image', content: `${docsLink}/og.png` }],
     ['meta', { property: 'twitter:card', content: 'summary_large_image' }],
-    ['link', { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' }],
+    ['link', { rel: 'icon', href: `${base}favicon.ico`, type: 'image/x-icon' }],
+    ['link', { rel: 'icon', href: `${base}favicon-32x32.png`, type: 'image/png', sizes: '32x32' }],
     ['meta', { name: 'theme-color', content: '#7c3aed' }],
     [
       'link',
       {
         rel: 'apple-touch-icon',
-        href: '/apple-touch-icon.png',
+        href: `${base}apple-touch-icon.png`,
         sizes: '180x180',
       },
     ],

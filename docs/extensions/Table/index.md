@@ -80,7 +80,6 @@ const editor = useEditor({
 
 :::
 
-
 ## How to use
 
 The library’s `Table` includes row, header, cell, and cell-background extensions. Do not add duplicates. Click the toolbar grid to choose a table size, then select cells to use `RichTextBubbleTable`. You can also call `editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()`.
@@ -92,6 +91,8 @@ under it. Clicking in that space puts the caret after the table rather than in
 the nearest cell — without this, a click to the right of a table looks like the
 caret is stuck inside it. An empty paragraph is inserted first when the table is
 the last block or is followed by another table.
+
+The context menu (right-click a cell) also has **Cell Background Color**: a palette plus a colour input that fills the selected cells through `setTableCellBackground(color)`; "No Fill" calls `unsetTableCellBackground()`.
 
 The same move is available from the keyboard and from the table's context menu
 (right-click a cell → "Paragraph After Table"), where the menu shows the

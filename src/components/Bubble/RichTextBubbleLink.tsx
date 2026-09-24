@@ -15,7 +15,7 @@ export interface BubbleMenuLinkProps {
 }
 
 /** Grace period that lets the pointer travel from the link into the menu. */
-const HIDE_DELAY_MS = 200;
+const HIDE_DELAY_MS = 300;
 
 const PLUGIN_KEY = 'RichTextBubbleLink';
 
@@ -26,6 +26,7 @@ export function RichTextBubbleLink() {
   const [showEdit, setShowEdit] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<HTMLAnchorElement | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const menu = useRef<HTMLDivElement>(null);
 
   const link = hoveredLink?.getAttribute('href') ?? '';
 
@@ -59,10 +60,15 @@ export function RichTextBubbleLink() {
       }
     };
 
-    const onMouseLeave = () => {
-      if (!showEdit) {
-        scheduleHide();
-      }
+    // Leaving the editor for the menu itself must not start the hide timer:
+    // the browser fires this `mouseleave` after React has already delivered
+    // the menu's `onMouseEnter` (which cancels the timer), so without this
+    // check the menu vanished the moment the pointer reached its buttons.
+    const onMouseLeave = (event: MouseEvent) => {
+      if (showEdit) return;
+      const next = event.relatedTarget as Node | null;
+      if (next && menu.current?.contains(next)) return;
+      scheduleHide();
     };
 
     dom.addEventListener('mouseover', onMouseOver);
@@ -181,7 +187,7 @@ export function RichTextBubbleLink() {
       pluginKey={PLUGIN_KEY}
       shouldShow={shouldShow}
     >
-      <div onMouseEnter={cancelHide} onMouseLeave={scheduleHide}>
+      <div ref={menu} onMouseEnter={cancelHide} onMouseLeave={scheduleHide}>
         {showEdit ? (
           <div className='richtext-flex richtext-items-center richtext-gap-2 richtext-rounded-md !richtext-border !richtext-border-solid !richtext-border-border richtext-bg-popover richtext-p-4 richtext-text-popover-foreground richtext-shadow-md richtext-outline-none'>
             <LinkEditBlock editor={editor} onClose={onClose} onSetLink={onSetLink} />

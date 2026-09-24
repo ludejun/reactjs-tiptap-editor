@@ -650,7 +650,7 @@ export const RichTextDivider = defineComponent({
 /* -------------------------------------------------------------------------- */
 
 /** A palette: "default", the swatches, and a native picker for anything else. */
-function colorPalette(
+export function colorPalette(
   colors: readonly string[],
   current: string | undefined,
   labels: { reset: string; more: string },
