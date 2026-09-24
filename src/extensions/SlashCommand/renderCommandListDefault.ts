@@ -1,4 +1,5 @@
 import {
+  CircleCheckIcon,
   CodeXmlIcon,
   Columns2Icon,
   Heading1Icon,
@@ -8,6 +9,7 @@ import {
   Heading5Icon,
   Heading6Icon,
   ImageUpIcon,
+  InfoIcon,
   ListCollapseIcon,
   ListIcon,
   ListOrderedIcon,
@@ -15,8 +17,10 @@ import {
   MinusIcon,
   PilcrowIcon,
   SeparatorHorizontalIcon,
+  StarIcon,
   TableIcon,
   TableOfContentsIcon,
+  TriangleAlertIcon,
   VideoIcon,
 } from 'lucide-react';
 
@@ -24,6 +28,7 @@ import { BlockquoteLeft as BlockquoteLeftIcon } from '@/components/icons/Blockqu
 import { registerIcons } from '@/components/icons/icons';
 import { emit } from '@/components/ReactBus';
 import { HEADINGS } from '@/constants';
+import { NOTICE_TYPES } from '@/extensions/Notice/Notice';
 import { EVENTS } from '@/utils/customEvents/events.constant';
 
 import type { CommandList } from './types';
@@ -46,6 +51,10 @@ registerIcons({
   ListOrdered: ListOrderedIcon,
   ListTodo: ListTodoIcon,
   Minus: MinusIcon,
+  NoticeInfo: InfoIcon,
+  NoticeSuccess: CircleCheckIcon,
+  NoticeWarning: TriangleAlertIcon,
+  NoticeTip: StarIcon,
   SeparatorHorizontal: SeparatorHorizontalIcon,
   Table: TableIcon,
   TableOfContents: TableOfContentsIcon,
@@ -65,12 +74,17 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
       commands: [],
     },
     {
+      name: 'notice',
+      title: t('editor.notice.tooltip'),
+      commands: [],
+    },
+    {
       name: 'format',
       title: t('editor.slash.format'),
       commands: [],
     },
   ];
-  const [insert, format] = groups;
+  const [insert, notices, format] = groups;
 
   // heading
   HEADINGS.forEach((level) => {
@@ -220,6 +234,32 @@ export function renderCommandListDefault({ t }: { t: (path: string) => string })
       emit(EVENT_ID, true);
     },
   });
+
+  // notices: their own group with one coloured entry per type, like most editors' "+" menus
+  const NOTICE_ALIASES: Record<string, string[]> = {
+    info: ['info', 'note', 'tsk', 'xx'],
+    success: ['success', 'done', 'cg'],
+    warning: ['warning', 'warn', 'jg'],
+    tip: ['tip', 'hint', 'jq'],
+  };
+
+  for (const { value: type, color } of NOTICE_TYPES) {
+    const notice = { type, aliases: NOTICE_ALIASES[type] ?? [] };
+
+    notices.commands.push({
+      name: `notice-${notice.type}`,
+      label: t(`editor.notice.item.${notice.type}`),
+      iconName: `Notice${type[0].toUpperCase()}${type.slice(1)}`,
+      iconColor: color,
+      description: 'A coloured box with an icon',
+      aliases: ['notice', ...notice.aliases],
+      shouldBeHidden: (editor) => !editor.schema.nodes.notice || editor.isActive('columns'),
+      isActive: (editor) => editor.isActive('notice', { type: notice.type }),
+      action: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setNotice(notice.type).run();
+      },
+    });
+  }
 
   // divider (replaces horizontalRule when registered)
   insert.commands.push({

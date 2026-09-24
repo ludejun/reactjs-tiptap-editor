@@ -35,6 +35,7 @@
 | [Divider](/zh/extensions/Divider/)                                                                                         | `ai-sparkwrite-editor/divider`         | `RichTextDivider`                          | `variants`（内置 9 种、可编辑文字、编号）、`defaultVariant`、`renderDivider`、`parseRules` |
 | [Column](/zh/extensions/Column/)                                                                                           | `ai-sparkwrite-editor/column`          | `RichTextColumn`                           | `insertColumns({ cols })`                                                                  |
 | [Callout](/zh/extensions/Callout/)                                                                                         | `ai-sparkwrite-editor/callout`         | `RichTextCallout`、`RichTextBubbleCallout` | 提示、技巧、重要、警告、危险                                                               |
+| [Notice](/zh/extensions/Notice/) | `ai-sparkwrite-editor/notice` | `RichTextNotice`、`RichTextBubbleNotice` | 信息、成功、警告、技巧 —— 可编辑块组成的彩色提示框 |
 | [Details](/zh/extensions/Details/)                                                                                         | `ai-sparkwrite-editor/details`         | `RichTextDetails`                          | 可折叠块                                                                                   |
 | [TableOfContents](/zh/extensions/TableOfContents/)                                                                         | `ai-sparkwrite-editor/tableofcontents` | `RichTextTableOfContents`                  | 实时更新的大纲节点                                                                         |
 | [HorizontalRule](/zh/extensions/HorizontalRule/)                                                                           | `ai-sparkwrite-editor/horizontalrule`  | `RichTextHorizontalRule`                   | 已被 Divider 取代；两者只注册其中一个                                                      |
@@ -82,7 +83,7 @@
 
 ## 气泡菜单
 
-分别从 `ai-sparkwrite-editor/bubble/<name>` 引入：`text`、`table`、`media`（图片）、`video`、`link`、`callout`、`drawer`、`excalidraw`、`iframe`、`katex`、`mermaid`、`drag-handle`。见[气泡菜单](/zh/guide/bubble-menu)。
+分别从 `ai-sparkwrite-editor/bubble/<name>` 引入：`text`、`table`、`media`（图片）、`video`、`link`、`callout`、`notice`、`drawer`、`excalidraw`、`iframe`、`katex`、`mermaid`、`drag-handle`。见[气泡菜单](/zh/guide/bubble-menu)。
 
 ## 语言
 

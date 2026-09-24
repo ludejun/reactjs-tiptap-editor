@@ -22,6 +22,7 @@ export * from '@/extensions/Blockquote';
 export * from '@/extensions/Bold';
 export * from '@/extensions/BulletList';
 export * from '@/extensions/Callout';
+export * from '@/extensions/Notice';
 export * from '@/extensions/Clear';
 export * from '@/extensions/Code';
 export * from '@/extensions/CodeBlock';

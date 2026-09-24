@@ -12,6 +12,8 @@ export interface Command {
   description?: string;
   aliases?: string[];
   iconName?: string;
+  /** CSS colour for `iconName`; the notice entries use their box colour. */
+  iconColor?: string;
   iconUrl?: string;
   action: ({ editor, range }: { editor: Editor; range: Range }) => void;
   shouldBeHidden?: (editor: Editor) => boolean;

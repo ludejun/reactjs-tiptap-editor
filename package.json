@@ -211,6 +211,9 @@
       "./callout": [
         "./lib/extensions/Callout/index.d.ts"
       ],
+      "./notice": [
+        "./lib/extensions/Notice/index.d.ts"
+      ],
       "./details": [
         "./lib/extensions/Details/index.d.ts"
       ],
@@ -234,6 +237,9 @@
       ],
       "bubble/callout": [
         "./lib/components/Bubble/RichTextBubbleCallout.d.ts"
+      ],
+      "bubble/notice": [
+        "./lib/components/Bubble/RichTextBubbleNotice.d.ts"
       ],
       "bubble/drawer": [
         "./lib/components/Bubble/RichTextBubbleDrawer.d.ts"
@@ -834,6 +840,16 @@
         "default": "./lib/Callout.js"
       }
     },
+    "./notice": {
+      "require": {
+        "types": "./lib/extensions/Notice/index.d.ts",
+        "default": "./lib/Notice.cjs"
+      },
+      "import": {
+        "types": "./lib/extensions/Notice/index.d.ts",
+        "default": "./lib/Notice.js"
+      }
+    },
     "./details": {
       "require": {
         "types": "./lib/extensions/Details/index.d.ts",
@@ -907,6 +923,16 @@
       "require": {
         "types": "./lib/components/Bubble/RichTextBubbleCallout.d.ts",
         "default": "./lib/RichTextBubbleCallout.cjs"
+      }
+    },
+    "./bubble/notice": {
+      "import": {
+        "types": "./lib/components/Bubble/RichTextBubbleNotice.d.ts",
+        "default": "./lib/RichTextBubbleNotice.js"
+      },
+      "require": {
+        "types": "./lib/components/Bubble/RichTextBubbleNotice.d.ts",
+        "default": "./lib/RichTextBubbleNotice.cjs"
       }
     },
     "./bubble/drawer": {

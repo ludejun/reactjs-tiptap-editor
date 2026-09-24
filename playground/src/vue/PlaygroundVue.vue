@@ -33,6 +33,7 @@ import {
   AIAutocomplete,
   Attachment,
   Callout,
+  Notice,
   CodeBlock,
   Divider,
   Iframe,
@@ -46,10 +47,12 @@ import {
   RichTextBold,
   RichTextBubbleImage,
   RichTextBubbleLink,
+  RichTextBubbleNotice,
   RichTextBubbleTable,
   RichTextBubbleText,
   RichTextBulletList,
   RichTextCallout,
+  RichTextNotice,
   RichTextClear,
   RichTextCode,
   RichTextCodeBlock,
@@ -126,6 +129,7 @@ const editor = useEditor({
     Divider,
     CodeBlock,
     Callout,
+    Notice,
     Details,
     Image.configure({ upload: demoUpload, enableAlt: true }),
     Video.configure({ upload: demoUpload }),
@@ -184,6 +188,7 @@ const editor = useEditor({
               ><RichTextCodeBlock
             /></RichTextToolbarMoreRow>
             <RichTextToolbarMoreRow label="Callout"><RichTextCallout /></RichTextToolbarMoreRow>
+            <RichTextToolbarMoreRow label="Notice"><RichTextNotice /></RichTextToolbarMoreRow>
             <RichTextToolbarMoreRow label="Toggle list"><RichTextDetails /></RichTextToolbarMoreRow>
             <RichTextToolbarMoreRow label="Table of contents"
               ><RichTextTableOfContents
@@ -203,6 +208,7 @@ const editor = useEditor({
       <RichTextBubbleText />
       <RichTextBubbleTable />
       <RichTextBubbleLink />
+      <RichTextBubbleNotice />
       <RichTextBubbleImage />
     </div>
   </RichTextProvider>

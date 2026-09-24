@@ -249,10 +249,15 @@ function SlashCommandNodeView(
                       )}
 
                       {command.iconName && (
-                        <IconComponent
-                          className='!richtext-mr-1 !richtext-text-lg'
-                          name={command.iconName}
-                        />
+                        <span
+                          className='richtext-flex'
+                          style={command.iconColor ? { color: command.iconColor } : undefined}
+                        >
+                          <IconComponent
+                            className='!richtext-mr-1 !richtext-text-lg'
+                            name={command.iconName}
+                          />
+                        </span>
                       )}
 
                       {command.label}

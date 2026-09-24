@@ -31,6 +31,7 @@ const editor = useEditor({
     '<h1>ai-sparkwrite-editor in Vue, from the kit</h1>',
     '<p><code>RichTextKit</code> registers every Vue feature, <code>RichTextKitToolbar</code> and <code>RichTextKitMenus</code> render the UI — three imports from <code>ai-sparkwrite-editor/vue</code>.</p>',
     '<p>Select some text to see the bubble menu, right-click the table for its menu, or click the <strong>AI</strong> button.</p>',
+    '<div class="notice" data-type="tip"><p>Notices are ordinary blocks in a coloured box; put the caret here to switch the type.</p></div>',
     '<table><tbody><tr><th><p>Import</p></th><th><p>Gives you</p></th></tr><tr><td><p>RichTextKit</p></td><td><p>every extension, configured in one place</p></td></tr><tr><td><p>RichTextKitToolbar</p></td><td><p>a toolbar for whatever is registered</p></td></tr><tr><td><p>RichTextKitMenus</p></td><td><p>the composer dock and the bubble menus</p></td></tr></tbody></table>',
   ].join(''),
 });
